@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -253,7 +254,8 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
