@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -253,7 +254,8 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	//Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
@@ -286,7 +288,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		mario->SetState(MARIO_STATE_JUMP);
 		break;
-	case DIK_A: 
+	case DIK_A:
 		mario->Reset();
 		break;
 	}
@@ -297,6 +299,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	CGame *game = CGame::GetInstance();
 	CMario *mario = ((CPlayScene*)scence)->GetPlayer();
 
+	Camera* cam = Camera::getInstance();
+
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
@@ -305,4 +309,28 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	else
 		mario->SetState(MARIO_STATE_IDLE);
+	if (game->IsKeyDown(DIK_L))
+	{
+		cam->setHDirection(1);
+	}
+	else if (game->IsKeyDown(DIK_J))
+	{
+		cam->setHDirection(-1);
+	}
+	else
+	{
+		cam->setHDirection(0);
+	}
+	if (game->IsKeyDown(DIK_I))
+	{
+		cam->setVDirection(-1);
+	}
+	else if (game->IsKeyDown(DIK_K))
+	{
+		cam->setVDirection(1);
+	}
+	else
+	{
+		cam->setVDirection(0);
+	}
 }
