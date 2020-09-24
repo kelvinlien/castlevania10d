@@ -5,8 +5,9 @@ class Camera
 	static Camera * __instance;
 	float x = 0.0f;
 	float y = 0.0f;
-	float movingSpeed = 1.0f;
-	int direction = 0;
+	float movingSpeed = 0.2f;
+	int hDirection = 0;
+	int vDirection = 0;
 public:
 	Camera();
 	~Camera();
@@ -16,7 +17,8 @@ public:
 	void setCamY(float camY);
 	void setCamPos(float camX, float camY);
 	D3DXVECTOR3 getPositionVector(float x, float y);
-	void setDirection(int d) { direction = d; };
+	void setHDirection(int h) { hDirection = h; };
+	void setVDirection(int v) { vDirection = v; };
 	void update(DWORD dt);
 	static Camera* getInstance();
 };

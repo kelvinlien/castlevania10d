@@ -309,16 +309,28 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	else
 		mario->SetState(MARIO_STATE_IDLE);
-	if (game->IsKeyDown(DIK_6))
+	if (game->IsKeyDown(DIK_L))
 	{
-		cam->setDirection(1);
+		cam->setHDirection(1);
 	}
-	else if (game->IsKeyDown(DIK_4))
+	else if (game->IsKeyDown(DIK_J))
 	{
-		cam->setDirection(-1);
+		cam->setHDirection(-1);
 	}
 	else
 	{
-		cam->setDirection(0);
+		cam->setHDirection(0);
+	}
+	if (game->IsKeyDown(DIK_I))
+	{
+		cam->setVDirection(-1);
+	}
+	else if (game->IsKeyDown(DIK_K))
+	{
+		cam->setVDirection(1);
+	}
+	else
+	{
+		cam->setVDirection(0);
 	}
 }
