@@ -1,0 +1,3 @@
+#id	left	top	right	bottom
+1	175	1	191	33	#fire pot
+2	192	1	208	33
