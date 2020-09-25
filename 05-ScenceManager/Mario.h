@@ -14,17 +14,33 @@
 #define MARIO_STATE_JUMP			300
 #define MARIO_STATE_DIE				400
 
-#define MARIO_ANI_BIG_IDLE_RIGHT		0
-#define MARIO_ANI_BIG_IDLE_LEFT			1
+//loaded Simon animation for scene 1
+// TODO: delete those small mario animation after changing corresponding states (make this class Simon's only)
+// remember to update the order of the animations then
+#define SIMON_ANI_IDLE_RIGHT		0
+#define SIMON_ANI_IDLE_LEFT			1
 #define MARIO_ANI_SMALL_IDLE_RIGHT		2
 #define MARIO_ANI_SMALL_IDLE_LEFT			3
 
-#define MARIO_ANI_BIG_WALKING_RIGHT			4
-#define MARIO_ANI_BIG_WALKING_LEFT			5
+#define SIMON_ANI_WALKING_RIGHT			4
+#define SIMON_ANI_WALKING_LEFT			5
 #define MARIO_ANI_SMALL_WALKING_RIGHT		6
 #define MARIO_ANI_SMALL_WALKING_LEFT		7
 
-#define MARIO_ANI_DIE				8
+#define SIMON_ANI_SITTING_RIGHT				8
+#define SIMON_ANI_SITTING_LEFT				9
+
+#define SIMON_ANI_HURTING_RIGHT				10
+#define SIMON_ANI_HURTING_LEFT				11
+
+#define SIMON_ANI_STAND_ATTACKING_RIGHT				12
+#define SIMON_ANI_STAND_ATTACKING_LEFT				13
+
+#define SIMON_ANI_SIT_ATTACKING_RIGHT				14
+#define SIMON_ANI_SIT_ATTACKING_LEFT				15
+
+#define SIMON_ANI_DYING_RIGHT				16
+#define SIMON_ANI_DYING_LEFT				17
 
 #define	MARIO_LEVEL_SMALL	1
 #define	MARIO_LEVEL_BIG		2

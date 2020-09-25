@@ -79,6 +79,8 @@
 # walk
 10032	155	0	170	15	0
 10033	125	0	139	15	0
+
+
 #BRICK
 20001	408	225	424	241	20
 #GOOMBA
@@ -107,9 +109,9 @@
 503	10031	100	10032	100	10033	100
 
 # ==== SIMON =========
-#idle BIG right
+#idle right
 400	11001	100
-#idle BIG left
+#idle left
 401	10001	100
 
 #walk right big
