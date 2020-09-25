@@ -4,7 +4,7 @@
 20	textures\misc.png	176	224	248
 #50	textures\enemies.png	3	26	110
 30	textures\enemies-2.png	0	128	128
-4	textures\brick.png	255	255	255
+
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -33,7 +33,7 @@
 10032	155	0	170	15	0
 10033	125	0	139	15	0
 #BRICK
-20001	0	0	16	16	4
+20001	408	225	424	241	20
 #GOOMBA
 30001	5	14	21	29	10
 30002	25	14	41	29	10
