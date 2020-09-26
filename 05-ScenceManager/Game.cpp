@@ -320,6 +320,7 @@ CGame *CGame::GetInstance()
 #define GAME_FILE_SECTION_SETTINGS 1
 #define GAME_FILE_SECTION_SCENES 2
 
+
 void CGame::_ParseSection_SETTINGS(string line)
 {
 	vector<string> tokens = split(line);

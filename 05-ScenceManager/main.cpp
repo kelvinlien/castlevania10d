@@ -80,6 +80,7 @@ void Render()
 
 		CGame::GetInstance()->GetCurrentScene()->Render();
 
+	
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}

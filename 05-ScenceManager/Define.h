@@ -1,0 +1,12 @@
+#pragma once
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+
+#define TILE_SIZE 32
+#define MAP_MAX_COLUMN 48 
+#define MAP_MAX_ROW 10
+#define MAX_TILES 20
+
+#define TILEMAP_TRANSPARENT_COLOR		D3DCOLOR_XRGB(5,5,5)
+
+

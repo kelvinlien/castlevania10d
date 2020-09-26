@@ -17,6 +17,8 @@ void CAnimation::Add(int spriteId, DWORD time)
 
 	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
 	frames.push_back(frame);
+	DebugOut(L"[INFO] animation added: %d, %d, %d, %d, %d \n", spriteId);
+
 }
 
 // NOTE: sometimes Animation object is NULL ??? HOW ??? 
