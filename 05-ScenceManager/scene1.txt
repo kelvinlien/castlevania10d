@@ -1,10 +1,10 @@
 # id	file_path	transparent_color_r	g	b
+
 [TEXTURES]
 0	textures\mario.png	255	255	255
 20	textures\misc.png	176	224	248
 10	textures\enemies.png	3	26	110
 30	textures\texture-map-1.png 	255	255	255
-
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -115,10 +115,12 @@
 40003	336	117	352	133	20
 40004	355	117	370	133	20
 
-#mapID 	file matrix map
+#mapID	filematrix map
 [MAPMATRIX]
+
+#MAP1
 1	matrix-map-1.txt
-	
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 

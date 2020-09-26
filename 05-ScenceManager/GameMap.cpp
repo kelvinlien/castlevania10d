@@ -47,10 +47,9 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 			idTile = n + 1000;
 			mapSprites.push_back(sprites->Get(idTile));
 		}
-
 		titles.push_back(mapSprites);
-		fs.close();
 	}
+	fs.close();
 }
 
 void CMaps::Add(LPCWSTR dataPath, int ID)
@@ -72,7 +71,6 @@ void CMap::Draw(D3DXVECTOR3 camPosition, int alpha) {
 			// +(int)camPosition.x % 32 để giữ cho camera chuyển động mượt
 			float x = TILE_SIZE * (j - startCol) + camPosition.x - (int)camPosition.x % 32;
 			float y = TILE_SIZE * i + 80;
-			//DebugOut(L"[INFO] Start loading scene resources from : %s \n", tilemap[i][j]);
 			titles[i][j]->Draw(x, y, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 		}
 	}

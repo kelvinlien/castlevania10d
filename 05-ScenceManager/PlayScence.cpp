@@ -11,22 +11,6 @@
 
 using namespace std;
 
-wchar_t * ConvertToWideChar(char * p)
-{
-	wchar_t *r;
-	r = new wchar_t[strlen(p) + 1];
-
-	char *tempsour = p;
-	wchar_t *tempdest = r;
-	while (*tempdest++ = *tempsour++);
-
-	return r;
-}
-CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
-	CScene(id, filePath) {
-	key_handler = new CPlayScenceKeyHandler(this);
-	temp = CMaps::GetInstance();
-}
 
 /*
 	Load scene resources from scene file (textures, sprites, animations and objects)
@@ -50,6 +34,21 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 #define MAX_SCENE_LINE 1024
 
+wchar_t * ConvertToWideChar(char * p)
+{
+	wchar_t *r;
+	r = new wchar_t[strlen(p) + 1];
+
+	char *tempsour = p;
+	wchar_t *tempdest = r;
+	while (*tempdest++ = *tempsour++);
+
+	return r;
+}
+CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
+	CScene(id, filePath) {
+	key_handler = new CPlayScenceKeyHandler(this);
+}
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
 {
@@ -139,11 +138,11 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 void CPlayScene::_ParseSection_MAPMATRIX(string line) 
 {
 	vector<string> tokens = split(line);
-	if (tokens.size() > 2) return;
+	if (tokens.size() < 2) return;
 
 	int ID = atoi(tokens[0].c_str());
 	wstring matrixString = ToWSTR(tokens[1]);
-	temp->Add(matrixString.c_str(), id);
+	CMaps::GetInstance()->Add(matrixString.c_str(), id);
 }
 /*
 	Parse a line in section [OBJECTS] 
@@ -223,11 +222,12 @@ void CPlayScene::Load()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
-		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
+		if (line == "[TEXTURES]") { 
+			section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[SPRITES]") { 
 			section = SCENE_SECTION_SPRITES; continue; }
 		if (line == "[MAPMATRIX]") {
-			section = SCENE_SECTION_MAPMATRIX; continue;}
+			section = SCENE_SECTION_MAPMATRIX; continue; }
 		if (line == "[ANIMATIONS]") { 
 			section = SCENE_SECTION_ANIMATIONS; continue; }
 		if (line == "[ANIMATION_SETS]") { 
@@ -235,7 +235,8 @@ void CPlayScene::Load()
 		if (line == "[OBJECTS]") { 
 			section = SCENE_SECTION_OBJECTS; continue; }
 
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
+		if (line[0] == '[') { 
+			section = SCENE_SECTION_UNKNOWN; continue; }	
 
 		//
 		// data section
@@ -283,13 +284,14 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	//Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
+	Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
 {
 	//test cam
-	temp->Get(id)->Draw(D3DXVECTOR3(0, 0, 0), 255);
+	// nhet camera vaoo truoc tham so alpha = 255
+	CMaps::GetInstance()->Get(id)->Draw(D3DXVECTOR3(0, 0, 0), 255);
 
 	//for (int i = 0; i < objects.size(); i++)
 	//	objects[i]->Render();
