@@ -68,9 +68,9 @@ void CMap::Draw(D3DXVECTOR3 camPosition, int alpha) {
 		for (int j = startCol; j <= endCol; j++)
 		{
 			// +camPosition.x để luôn giữ camera ở chính giữa, vì trong hàm Game::Draw() có trừ cho camPosition.x làm các object đều di chuyển theo
-			// +(int)camPosition.x % 32 để giữ cho camera chuyển động mượt
+			// -(int)camPosition.x % 32 để giữ cho camera chuyển động mượt
 			float x = TILE_SIZE * (j - startCol) + camPosition.x - (int)camPosition.x % 32;
-			float y = TILE_SIZE * i + 80;
+			float y = TILE_SIZE * i;
 			titles[i][j]->Draw(x, y, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 		}
 	}
