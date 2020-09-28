@@ -16,7 +16,8 @@ public:
 	void setCamX(float camX);
 	void setCamY(float camY);
 	void setCamPos(float camX, float camY);
-	D3DXVECTOR3 getPositionVector(float x, float y);
+	D3DXVECTOR3 createPositionVector(float x, float y);
+	D3DXVECTOR3 getPositionVector();
 	void setHDirection(int h) { hDirection = h; };
 	void setVDirection(int v) { vDirection = v; };
 	void update(DWORD dt);

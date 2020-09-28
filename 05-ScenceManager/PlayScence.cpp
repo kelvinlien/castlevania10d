@@ -284,14 +284,14 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
+	//Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	CMaps::GetInstance()->Get(id)->Draw(D3DXVECTOR3(0, 0, 0), 255);
+	CMaps::GetInstance()->Get(id)->Draw(Camera::getInstance()->getPositionVector(), 255);
 
 	//for (int i = 0; i < objects.size(); i++)
 	//	objects[i]->Render();

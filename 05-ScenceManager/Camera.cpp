@@ -34,9 +34,14 @@ void Camera::setCamPos(float camX, float camY)
 	this->y = camY;
 }
 
-D3DXVECTOR3 Camera::getPositionVector(float _x, float _y)
+D3DXVECTOR3 Camera::createPositionVector(float _x, float _y)
 {
 	return D3DXVECTOR3(_x - x, _y - y, 0);
+}
+
+D3DXVECTOR3 Camera::getPositionVector()
+{
+	return D3DXVECTOR3(x,y,0);
 }
 
 void Camera::update(DWORD dt)
