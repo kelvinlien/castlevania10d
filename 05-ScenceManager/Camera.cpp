@@ -47,7 +47,6 @@ D3DXVECTOR3 Camera::getPositionVector()
 void Camera::update(DWORD dt)
 {
 	x += dt * movingSpeed * hDirection;
-	y += dt * movingSpeed * vDirection;
 }
 
 Camera * Camera::getInstance()

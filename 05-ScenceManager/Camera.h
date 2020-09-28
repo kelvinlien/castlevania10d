@@ -7,7 +7,6 @@ class Camera
 	float y = 0.0f;
 	float movingSpeed = 0.2f;
 	int hDirection = 0;
-	int vDirection = 0;
 public:
 	Camera();
 	~Camera();
@@ -19,7 +18,6 @@ public:
 	D3DXVECTOR3 createPositionVector(float x, float y);
 	D3DXVECTOR3 getPositionVector();
 	void setHDirection(int h) { hDirection = h; };
-	void setVDirection(int v) { vDirection = v; };
 	void update(DWORD dt);
 	static Camera* getInstance();
 };
