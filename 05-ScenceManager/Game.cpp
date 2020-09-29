@@ -66,13 +66,13 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
 {
-	Camera * cam = Camera::getInstance();
+	Camera * cam = Camera::GetInstance();
 	RECT r; 
 	r.left = left;
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
-	spriteHandler->Draw(texture, &r, NULL, &cam->createPositionVector(x, y), D3DCOLOR_ARGB(alpha, 255, 255, 255));
+	spriteHandler->Draw(texture, &r, NULL, &cam->CreatePositionVector(x, y), D3DCOLOR_ARGB(alpha, 255, 255, 255));
 }
 
 int CGame::IsKeyDown(int KeyCode)

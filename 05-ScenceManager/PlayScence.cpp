@@ -291,7 +291,7 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	CMaps::GetInstance()->Get(id)->Draw(Camera::getInstance()->getPositionVector(), 255);
+	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	//for (int i = 0; i < objects.size(); i++)
 	//	objects[i]->Render();
@@ -333,7 +333,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	CGame *game = CGame::GetInstance();
 	CMario *mario = ((CPlayScene*)scence)->GetPlayer();
 
-	Camera* cam = Camera::getInstance();
+	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
@@ -343,16 +343,16 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	else
 		mario->SetState(MARIO_STATE_IDLE);
-	if (game->IsKeyDown(DIK_L) && cam->getCamX() < 730)
+	if (game->IsKeyDown(DIK_L) && cam->GetCamX() < 730)
 	{
-		cam->setHDirection(1);
+		cam->SetHDirection(1);
 	}
-	else if (game->IsKeyDown(DIK_J) && cam->getCamX() > 0)
+	else if (game->IsKeyDown(DIK_J) && cam->GetCamX() > 0)
 	{
-		cam->setHDirection(-1);
+		cam->SetHDirection(-1);
 	}
 	else
 	{
-		cam->setHDirection(0);
+		cam->SetHDirection(0);
 	}
 }

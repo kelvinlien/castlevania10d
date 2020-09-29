@@ -52,7 +52,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void Update(DWORD dt)
 {
 	CGame::GetInstance()->GetCurrentScene()->Update(dt);
-	Camera::getInstance()->update(dt);
+	Camera::GetInstance()->Update(dt);
 }
 
 /*

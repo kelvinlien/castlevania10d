@@ -10,15 +10,15 @@ class Camera
 public:
 	Camera();
 	~Camera();
-	float getCamX();
-	float getCamY();
-	void setCamX(float camX);
-	void setCamY(float camY);
-	void setCamPos(float camX, float camY);
-	D3DXVECTOR3 createPositionVector(float x, float y);
-	D3DXVECTOR3 getPositionVector();
-	void setHDirection(int h) { hDirection = h; };
-	void update(DWORD dt);
-	static Camera* getInstance();
+	float GetCamX();
+	float GetCamY();
+	void SetCamX(float camX);
+	void SetCamY(float camY);
+	void SetCamPos(float camX, float camY);
+	D3DXVECTOR3 CreatePositionVector(float x, float y);
+	D3DXVECTOR3 GetPositionVector();
+	void SetHDirection(int h) { hDirection = h; };
+	void Update(DWORD dt);
+	static Camera* GetInstance();
 };
 

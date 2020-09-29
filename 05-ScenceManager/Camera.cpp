@@ -8,48 +8,48 @@ Camera::~Camera()
 {
 }
 
-float Camera::getCamX()
+float Camera::GetCamX()
 {
 	return x;
 }
 
-float Camera::getCamY()
+float Camera::GetCamY()
 {
 	return y;
 }
 
-void Camera::setCamX(float camX)
+void Camera::SetCamX(float camX)
 {
 	this->x = camX;
 }
 
-void Camera::setCamY(float camY)
+void Camera::SetCamY(float camY)
 {
 	this->y = camY;
 }
 
-void Camera::setCamPos(float camX, float camY)
+void Camera::SetCamPos(float camX, float camY)
 {
 	this->x = camX;
 	this->y = camY;
 }
 
-D3DXVECTOR3 Camera::createPositionVector(float _x, float _y)
+D3DXVECTOR3 Camera::CreatePositionVector(float _x, float _y)
 {
 	return D3DXVECTOR3(_x - x, _y - y, 0);
 }
 
-D3DXVECTOR3 Camera::getPositionVector()
+D3DXVECTOR3 Camera::GetPositionVector()
 {
 	return D3DXVECTOR3(x,y,0);
 }
 
-void Camera::update(DWORD dt)
+void Camera::Update(DWORD dt)
 {
 	x += dt * movingSpeed * hDirection;
 }
 
-Camera * Camera::getInstance()
+Camera * Camera::GetInstance()
 {
 	if (__instance == NULL) __instance = new Camera();
 	return __instance;
