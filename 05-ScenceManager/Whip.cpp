@@ -5,36 +5,30 @@
 	SetState(FIREPOT_STATE_IDLE);
 }*/
 
-CWhip::CWhip(float x, float y) : CGameObject()
+CWhip::CWhip()
 {
-	//SetState(FIREPOT_STATE_IDLE);
-
-	start_x = x;
-	start_y = y;
-	this->x = x;
-	this->y = y;
+	SetWeaponType(0);
+	level = WHIP_STATE_LV1;
 }
 
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
 	top = y;
-	switch (state)
+	
+	if (level == WHIP_STATE_LV1)
 	{
-	case WHIP_STATE_LV1:
-		if()
-	default:
-		break;
+	
 	}
 }
 
 void CWhip::Render()
 {
-	int ani = WHIP_ANI_IDLE;
-	/*if (state == FIREPOT_STATE_DIE) {
-		ani = FIREPOT_ANI_DIE;
-	}*/
+	int ani = WHIP_ANI_LV1;
+	if (state == WHIP_STATE_LV2)
+		ani = WHIP_ANI_LV2;
+	if(state == WHIP_STATE_LV3)
+		ani = WHIP_ANI_LV3;
 
 	animation_set->at(ani)->Render(x, y);
-
-	//RenderBoundingBox();
+}
