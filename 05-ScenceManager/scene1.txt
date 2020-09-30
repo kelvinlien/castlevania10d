@@ -3,6 +3,7 @@
 0	textures\mario.png	255	255	255
 20	textures\misc.png	176	224	248
 10	textures\enemies.png	3	26	110
+50	textures\items.png	116	116	116
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -43,7 +44,23 @@
 40002	318	117	334	133	20
 40003	336	117	352	133	20
 40004	355	117	370	133	20
-						
+
+# ITEMS
+# whip
+11000	1	1	17	17	50
+# big heart
+11001	29	6	41	16	50
+# small heart		
+11002	18	1	26	9	50
+# dagger
+11003	1	22	17	31	50
+# money bag
+11004	45	1	60	16	50
+# HOLDERS
+# fire pot
+20010	175	3	191	33	50
+20011	192	1	208	33	50
+				
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -81,7 +98,17 @@
 # die
 702	30003	100
 
-
+# ==== ITEMS=========
+#whip 
+1000	11000	100
+#big heart 
+1001	11001	100
+#small heart
+1002	11002	100
+#dagger
+1003	11003	100
+#money bag
+1004	11004	100
 
 #
 # id	ani1	ani2	ani3
@@ -95,6 +122,8 @@
 22	602
 # GOOMBA
 3	701	702
+# ITEMS
+4	1000	1001	1002	1003	1004		
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
