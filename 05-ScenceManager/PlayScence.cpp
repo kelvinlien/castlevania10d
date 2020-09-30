@@ -319,6 +319,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 		simon->SetState(SIMON_STATE_STAND);
 		break;
+
 	/*case DIK_SPACE:
 		simon->SetIsJump(false);
 		break;*/

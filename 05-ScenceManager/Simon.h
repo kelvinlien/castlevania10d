@@ -75,8 +75,7 @@ public:
 	bool GetIsJump() { return isJump; }
 	void SetIsJump(bool a) { isJump = a; }
 	bool GetIsSit() { return isSit; }
-	void SetIsSit(bool a) { isSit = a; }
-	float GetX() { return this->x; }
+
 	float GetY() { return this->y; }
 
 

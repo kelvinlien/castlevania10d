@@ -45,15 +45,13 @@ void Simon::SetState(int state)
 		if (isJump || isSit)
 			break;
 		vy = -SIMON_JUMP_SPEED_Y;
-		jumpTime = GetTickCount();
 		isJump = true;
 		break;
 	case SIMON_STATE_HIT:
-		if (!isAttack)
-		{
-			vx = 0;
-			isAttack = true;
-		}
+		if (isAttack)
+			break;
+		vx = 0;
+		isAttack = true;
 		break;
 	case SIMON_STATE_SIT:
 		if (!isSit)
@@ -79,10 +77,18 @@ void Simon::Render()
 	else if (vx == 0)
 	{
 		if (isJump) {
-			if (nx > 0)
-				ani = SIMON_ANI_JUMP_DUCK_RIGHT;
-			else
-				ani = SIMON_ANI_JUMP_DUCK_LEFT;
+			if (isAttack) {
+				if (nx > 0)
+					ani = SIMON_ANI_STAND_ATTACKING_RIGHT;
+				else
+					ani = SIMON_ANI_STAND_ATTACKING_LEFT;
+			}
+			else {
+				if (nx > 0)
+					ani = SIMON_ANI_JUMP_DUCK_RIGHT;
+				else
+					ani = SIMON_ANI_JUMP_DUCK_LEFT;
+			}
 		}
 		else
 		{
@@ -136,24 +142,19 @@ void Simon::Render()
 				ani = SIMON_ANI_WALKING_LEFT;
 		}
 	}
-	/*if (isAttack) {
-		if (animation_set->at(ani)->GetCurrentFrame() == 1)
-			this->SetPosition(this->GetX() - 0.3, this->GetY());
-	}*/
 	animation_set->at(ani)->Render(x, y, 255);
 	RenderBoundingBox();
 	if (isAttack) {
 		if (animation_set->at(ani)->GetCurrentFrame() == 2)
 			isAttack = false;
 	}
-	/*isJump = false;*/
-	
-	
+		
 }
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -226,7 +227,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				if (e->ny < 0)
 				{
-					isJump = false;
+					if (isJump == true)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
 				}
 			}
 		}
@@ -242,8 +247,15 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	top = y;
 	right = x + SIMON_BBOX_WIDTH;
 	bottom = y + SIMON_BBOX_HEIGHT;
+	if (isJump)
+	{
+		if(isAttack)
+			bottom = y + SIMON_BBOX_HEIGHT;
+		else
+			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	}
 	if (isSit)
 	{
-		bottom -= SIMON_BBOX_HEIGHT-SIMON_SIT_BBOX_HEIGHT;
+		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 }
