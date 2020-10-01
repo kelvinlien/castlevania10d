@@ -2,7 +2,7 @@
 [TEXTURES]
 0	textures\mario.png	255	255	255
 20	textures\misc.png	176	224	248
-
+40	textures\items.png	176	176	176
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -37,6 +37,10 @@
 40003	336	117	352	133	20
 40004	355	117	370	133	20
 
+#FIREPOT
+50001	175	1	191	33	40
+50002	192	1	208	33	40
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== MARIO =========
@@ -62,6 +66,9 @@
 # ==== QUESTION BRICK =========
 602	40001	1000	40001	100	40002	100	40003	100	40004	100
 
+# ==== FIREPOT  =========
+801	50001	100	50002	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -70,10 +77,12 @@
 1	400	401	402	403	500	501	502	503	599
 # QUESTION BRICK 
 22	602
+# FIREPOT
+4	801
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = FirePot
 # MARIO
 0	17	115	1
 
@@ -85,6 +94,13 @@
 1	100	150	22
 1	115	150	22
 1	130	150	22
+
+# FIREPOT
+4	31	31	4
+4	51	31	4
+4	71	31	4
+4	91	31	4
+4	111	31	4
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

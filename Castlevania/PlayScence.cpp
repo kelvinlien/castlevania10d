@@ -28,7 +28,8 @@ using namespace std;
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
+//#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_FIREPOT	3
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -182,7 +183,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+	case OBJECT_TYPE_FIREPOT: obj = new CFirePot(); break;
 	case OBJECT_TYPE_PORTAL:
 		{	
 			float r = atof(tokens[4].c_str());
@@ -284,7 +286,7 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	//Camera::getInstance()->setCamPos(cx, 0.0f /*cy*/);
+	//Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 }
 
 void CPlayScene::Render()
@@ -293,8 +295,8 @@ void CPlayScene::Render()
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
-	//for (int i = 0; i < objects.size(); i++)
-	//	objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();
 
 }
 
