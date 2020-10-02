@@ -293,8 +293,8 @@ void CPlayScene::Render()
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
-	//for (int i = 0; i < objects.size(); i++)
-	//	objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++)
+		objects[i]->Render();
 
 }
 
