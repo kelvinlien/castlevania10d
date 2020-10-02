@@ -137,17 +137,17 @@ void CMario::Render()
 			ani = SIMON_ANI_WALKING_RIGHT; 
 		else ani = SIMON_ANI_WALKING_LEFT;
 	}
-	else if (level == MARIO_LEVEL_SMALL)
-	{
-		if (vx == 0)
-		{
-			if (nx>0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
-			else ani = MARIO_ANI_SMALL_IDLE_LEFT;
-		}
-		else if (vx > 0)
-			ani = MARIO_ANI_SMALL_WALKING_RIGHT;
-		else ani = MARIO_ANI_SMALL_WALKING_LEFT;
-	}
+	//else if (level == MARIO_LEVEL_SMALL)
+	//{
+	//	if (vx == 0)
+	//	{
+	//		if (nx>0) ani = MARIO_ANI_SMALL_IDLE_RIGHT;
+	//		else ani = MARIO_ANI_SMALL_IDLE_LEFT;
+	//	}
+	//	else if (vx > 0)
+	//		ani = MARIO_ANI_SMALL_WALKING_RIGHT;
+	//	else ani = MARIO_ANI_SMALL_WALKING_LEFT;
+	//}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
