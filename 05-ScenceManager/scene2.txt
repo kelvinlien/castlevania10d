@@ -4,7 +4,7 @@
 20	textures\misc.png	176	224	248
 #50	textures\enemies.png	3	26	110
 30	textures\enemies-2.png	0	128	128
-
+40	textures\simonTexture.png	116	116	116
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]

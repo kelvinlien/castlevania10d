@@ -1,6 +1,6 @@
-# id	file_path	transparent_color_r	g	b
+a# id	file_path	transparent_color_r	g	b
 [TEXTURES]
-0	textures\Simon.png	255	255	255
+0	textures\Simon.png	116	116	116
 20	textures\misc.png	176	224	248
 10	textures\enemies.png	3	26	110
 
@@ -36,7 +36,7 @@
 10010	84	22	100	45	0
 
 #whip/use subweapon
-#stading
+#standing
 10041	1	79	25	109	0
 10042	26	79	42	109	0
 10043	45	80	67	109	0
@@ -44,6 +44,34 @@
 10051	147	79	171	102	0
 10052	172	79	188	102	0
 10053	191	80	213	102	0
+
+
+# SMALL MARIO
+# idle small right
+10021	247	0	259	15	0
+# walk
+10022	275	0	291	15	0
+10023	306	0	320	15	0
+# idle small left
+10031	187	0	198	15	0
+# walk
+10032	155	0	170	15	0
+10033	125	0	139	15	0
+
+
+#BRICK
+20001	408	225	424	241	20
+#GOOMBA
+30001	5	14	21	29	10
+30002	25	14	41	29	10
+#die
+30003	45	21	61	29	10
+
+#brick with question mark animation
+40001	300	117	316	133	20
+40002	318	117	334	133	20
+40003	336	117	352	133	20
+40004	355	117	370	133	20
 						
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -74,6 +102,27 @@
 #ducking whip/use weapon left
 531	10051	100	10052	100	10053	100
 
+#die while facing right
+598	11007	100	11008	100
+#die while facing left
+599	10007	100	10008	100
+
+
+
+
+# ==== BRICK =========
+601	20001	100
+
+# ==== QUESTION MARK BRICK =========
+602	40001	1000	40001	100	40002	100	40003	100	40004	100
+
+
+# ==== GOOMBA  =========
+# walk
+701	30001	100	30002	100
+# die
+702	30003	100
+
 
 
 #
@@ -82,6 +131,12 @@
 [ANIMATION_SETS]
 # SIMON
 1	400	401	500	501	510	511	520	521	530	531
+# BRICK 
+2	601
+# QUESTION MARK BRICK 
+22	602
+# GOOMBA
+3	701	702
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
