@@ -162,7 +162,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
 			//obj = new CPortal(x, y, r, b, scene_id);
-			obj = new Item(x, y, 2);
+			obj = new Item(x, y, 3);
 		}
 		break;
 	default:
@@ -240,7 +240,10 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->isVanish == true)
+			objects.erase(objects.begin() + i);
+		else 
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
