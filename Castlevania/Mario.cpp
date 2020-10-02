@@ -7,6 +7,7 @@
 
 #include "Goomba.h"
 #include "Portal.h"
+#include "FirePot.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
