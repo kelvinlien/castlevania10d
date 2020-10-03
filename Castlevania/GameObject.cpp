@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Sprites.h"
 #include "FirePot.h"
+#include"Mario.h"
 
 CGameObject::CGameObject()
 {
