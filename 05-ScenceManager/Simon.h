@@ -56,7 +56,6 @@ class Simon : public CGameObject
 	bool isAttack = false;
 	bool isSit = false;
 	bool isLand = false;
-	bool isWalk = false;
 
 	float start_x;
 	float start_y;

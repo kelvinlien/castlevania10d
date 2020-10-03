@@ -21,25 +21,23 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_IDLE:
-		vx = 0;
+		 vx = 0;
 		 break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack || isSit)
+		nx = -1;
+		if (isAttack || isSit||isJump)
 			break;
 		vx = -SIMON_WALKING_SPEED;
 		isAttack = false;
-		isWalk = true;
 		isSit = false;
-		nx = -1;
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
- 		if (isAttack || isSit)
+		nx = 1;
+ 		if (isAttack || isSit||isJump)
 			break;
 		vx = SIMON_WALKING_SPEED;
 		isAttack = false;
-		isWalk = true;
 		isSit = false;
-		nx = 1;
 		break;
 	case SIMON_STATE_JUMP:
 		if (isJump || isSit)
