@@ -50,6 +50,8 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 		titles.push_back(mapSprites);
 	}
 	fs.close();
+
+
 }
 
 void CMaps::Add(LPCWSTR dataPath, int ID)
