@@ -7,6 +7,8 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "FirePot.h"
+#include"Mario.h"
 
 CGameObject::CGameObject()
 {
@@ -69,12 +71,15 @@ void CGameObject::CalcPotentialCollisions(
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		{
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
-		if (e->t > 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
-		else
-			delete e;
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
+		}
 	}
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
@@ -129,7 +134,7 @@ void CGameObject::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
+	CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
 }
 
 

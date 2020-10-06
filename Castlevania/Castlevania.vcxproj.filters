@@ -63,6 +63,12 @@
     <ClCompile Include="GameMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Holder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FirePot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -114,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Holder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirePot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
