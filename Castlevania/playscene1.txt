@@ -3,6 +3,7 @@
 0	textures\Simon.png	116	116	116
 20	textures\misc.png	176	224	248
 30	textures\texture-map-1.png 	255	255	255
+40	textures\holder.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -119,6 +120,10 @@
 20001	408	225	424	241	20
 
 
+#FIREPOT
+50001	0	0	32	64	40
+50002	32	0	64	64	40
+
 #mapID	filematrix map
 [MAPMATRIX]
 
@@ -161,6 +166,8 @@
 601	20001	100
 
 
+# ==== FIREPOT  =========
+801	50001	100	50002	100
 
 #
 # id	ani1	ani2	ani3
@@ -170,10 +177,12 @@
 1	400	401	500	501	510	511	520	521	530	531
 # BRICK 
 2	601
+# FIREPOT
+4	801
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = FirePot
 # SIMON
 0	50.0	0	1
 
@@ -208,6 +217,13 @@
 1	416	150	2
 1	432	150	2
 1	448	150	2
+
+# ---- fire pot ----
+3	178	224	4
+3	434	224	4
+3	690	224	4
+3	946	224	4
+3	1202	224	4
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

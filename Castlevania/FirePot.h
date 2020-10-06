@@ -1,19 +1,33 @@
 #pragma once
-#include "GameObject.h"
+#include "Holder.h"
+#include "Brick.h"
 
-#define	FIREPOT_BBOX_WIDTH 16
-#define FIREPOT_BBOX_HEIGHT 32
+#define FIREPOT_GRAVITY			0.002f
+#define FIREPOT_DEFLECT_SPEED 0.2f
 
-#define FIREPOT_ANI_1 1
-#define FIREPOT_ANI_2 2
+#define	FIREPOT_STATE_IDLE	0
+#define FIREPOT_STATE_DIE	100
 
-class CFirePot :public CGameObject
+#define FIREPOT_ANI_IDLE	0
+#define FIREPOT_ANI_DIE	1
+
+#define FIREPOT_BBOX_WIDTH	32
+#define FIREPOT_BBOX_HEIGHT	64
+
+class CFirePot :public CHolder
 {
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	float start_x;			
+	float start_y;
+public:
+	CFirePot(float x = 0.0f, float y = 0.0f);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	//CFirePot() {};
+
 	virtual void Render();
 
-public:
-	CFirePot();
-};
+	//virtual void SetState(int state);
 
+	//void Reset();
+
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+};

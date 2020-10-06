@@ -131,6 +131,7 @@
     <ClCompile Include="FirePot.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="Holder.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="GameMap.h" />
+    <ClInclude Include="Holder.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />

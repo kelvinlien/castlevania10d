@@ -8,7 +8,7 @@
 #include "Goomba.h"
 #include "Koopas.h"
 #include "GameMap.h"
-
+#include "FirePot.h"
 
 class CPlayScene: public CScene
 {
