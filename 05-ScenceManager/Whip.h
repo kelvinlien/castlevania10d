@@ -3,37 +3,40 @@
 
 #define WHIP_TYPE 0
 
-#define WHIP_BBOX_STATE1_WIDTH	8
-#define WHIP_BBOX_STATE1_HEIGHT	24
+#define WHIP_BBOX_SHORT_WIDTH	24
+#define WHIP_BBOX_SHORT_HEIGHT	6
 
-#define WHIP_BBOX_STATE2_WIDTH	16
-#define WHIP_BBOX_STATE2_HEIGHT	19
+#define WHIP_BBOX_LONG_WIDTH	40
+#define WHIP_BBOX_LONG_HEIGHT	6
 
-#define WHIP_BBOX_STATE3_SHORT_WIDTH	24
-#define WHIP_BBOX_STATE3_SHORT_HEIGHT	6
+#define WHIP_FRAME1	0
+#define WHIP_FRAME2	1
+#define WHIP_FRAME3 2
 
-#define WHIP_BBOX_STATE3_LONG_WIDTH	40
-#define WHIP_BBOX_STATE3_LONG_HEIGHT	6
+#define WHIP_STATE_LV1_LEFT	1
+#define WHIP_STATE_LV2_LEFT	2
+#define WHIP_STATE_LV3_LEFT	3
+#define WHIP_STATE_LV1_RIGHT	4
+#define WHIP_STATE_LV2_RIGHT	5
+#define WHIP_STATE_LV3_RIGHT	6
 
-#define WHIP_STATE_LV1	1
-#define WHIP_STATE_LV2	2
-#define WHIP_STATE_LV3	3
-
-#define WHIP_ANI_LV1	0
-#define WHIP_ANI_LV2	1
-#define WHIP_ANI_LV3	2
-
+#define WHIP_ANI_LV1_LEFT	0
+#define WHIP_ANI_LV2_LEFT	1
+#define WHIP_ANI_LV3_LEFT	2
+#define WHIP_ANI_LV1_RIGHT	3
+#define WHIP_ANI_LV2_RIGHT	4
+#define WHIP_ANI_LV3_RIGHT	5
 
 class CWhip :public CWeapon
 {
 	int level;
+	LPSPRITE spr;
 public:
 	CWhip();
-	//virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 
 	virtual void Render();
 
-	//virtual void SetState(int state);
+	void SetState(int state);
 
 	//void Reset();
 
