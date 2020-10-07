@@ -69,7 +69,6 @@ void CPlayScene::_ParseSection_TEXTURES(string line)
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);
-
 	if (tokens.size() < 6) return; // skip invalid lines
 
 	int ID = atoi(tokens[0].c_str());
@@ -187,10 +186,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_FIREPOT: obj = new CFirePot(); break;
 	case OBJECT_TYPE_PORTAL:
 		{	
+
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
+			//obj = new CPortal(x, y, r, b, scene_id);
+			obj = new Item(x, y, 3);
 		}
 		break;
 	default:
@@ -272,7 +273,10 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->isVanish == true)
+			objects.erase(objects.begin() + i);
+		else 
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)

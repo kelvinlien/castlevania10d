@@ -4,6 +4,7 @@
 20	textures\misc.png	176	224	248
 30	textures\texture-map-1.png 	255	255	255
 40	textures\holder.png	255	0	255
+50	textures\items.png	116	116	116
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -119,10 +120,22 @@
 #BRICK
 20001	408	225	424	241	20
 
-
+#HOLDERS
 #FIREPOT
 50001	0	0	32	64	40
 50002	32	0	64	64	40
+
+# ITEMS
+# whip
+61000	1	1	17	17	50
+# big heart
+61001	29	6	41	16	50
+# small heart		
+61002	18	1	26	9	50
+# dagger
+61003	1	22	17	31	50
+# money bag
+61004	45	1	60	16	50
 
 #mapID	filematrix map
 [MAPMATRIX]
@@ -169,6 +182,18 @@
 # ==== FIREPOT  =========
 801	50001	100	50002	100
 
+# ==== ITEMS=========
+#whip 
+1000	61000	100
+#big heart 
+1001	61001	100
+#small heart
+1002	61002	100
+#dagger
+1003	61003	100
+#money bag
+1004	61004	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -178,7 +203,9 @@
 # BRICK 
 2	601
 # FIREPOT
-4	801
+3	801
+# ITEMS
+4	1000	1001	1002	1003	1004
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -219,11 +246,11 @@
 1	448	150	2
 
 # ---- fire pot ----
-3	178	224	4
-3	434	224	4
-3	690	224	4
-3	946	224	4
-3	1202	224	4
+3	178	224	3
+3	434	224	3
+3	690	224	3
+3	946	224	3
+3	1202	224	3
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

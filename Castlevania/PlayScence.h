@@ -9,6 +9,7 @@
 #include "Koopas.h"
 #include "GameMap.h"
 #include "FirePot.h"
+#include "Item.h"
 
 class CPlayScene: public CScene
 {
