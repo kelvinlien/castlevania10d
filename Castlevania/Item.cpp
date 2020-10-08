@@ -1,4 +1,5 @@
 #include "Item.h"
+#include "Simon.h"
 
 Item::Item(int x, int y, int typeID) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
@@ -6,7 +7,7 @@ Item::Item(int x, int y, int typeID) {
 
 	this->x = x;
 	this->y = y;
-	existingTime = 2000;
+	existingTime = 20000;
 
 	this->typeID = typeID;
 	switch (this->typeID)
@@ -52,12 +53,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
 	CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
+
 	{
 		float min_tx, min_ty, nx = 0, ny;
 
@@ -66,25 +62,27 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block 
-		x += min_tx * dx + nx * 0.2f;		
+		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
-		//if (nx != 0) vx = 0;
-		if (ny != 0) {
-			vy = 0;
-			//subtractExistingTime(dt, existingTime);
-			if (existingTime <= 0)
-			{
-				this->isVanish = true;
-			}
-			existingTime -= dt;
+					//if (nx != 0) vx = 0;
+					if (ny != 0) {
+						vy = 0;
+						//counting time to vanish item
+						if (existingTime <= 0)
+						{
+							this->isVanish = true;
+						}
+						existingTime -= dt;
+					}
 		}
-	}	
-}
+	}
 
-void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
-	l = x;
-	t = y;
-	r = x + widthBBox;
-	b = y + heightBBox;
-}
+
+
+		void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
+			l = x;
+			t = y;
+			r = x + widthBBox;
+			b = y + heightBBox;
+		}
