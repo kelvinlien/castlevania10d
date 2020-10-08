@@ -30,16 +30,17 @@
 class CWhip :public CWeapon
 {
 	int level;
-	LPSPRITE spr;
 public:
 	CWhip();
 
-	virtual void Render();
+	void Render();
 
-	void SetState(int state);
+	//void SetState(int state);
 
 	//void Reset();
 
-	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
+
+	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };
 

@@ -1,24 +1,20 @@
 #pragma once
 #include "GameObject.h"
+#include "Sprites.h"
+#include "Animations.h"
 
-#define TYPE_WHIP	0
-#define TYPE_DAGGER	1
+#define WEAPON_ANI_SET_ID	11
 
 class CWeapon :public CGameObject
 {
-	float start_x;			// initial position of Mario at scene
+	float start_x;
 	float start_y;
-	int weaponType;
 
 public:
+	bool available;
+
 	CWeapon();
-	bool isAvailable;
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
-	//virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
-
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) = 0;
 	virtual void Render() = 0;
-
-	int GetWeaponType() {	return weaponType;}
-	void SetWeaponType(int type) {this->weaponType = type;}
 };
-

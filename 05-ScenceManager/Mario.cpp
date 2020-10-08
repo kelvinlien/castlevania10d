@@ -13,6 +13,8 @@ CMario::CMario(float x, float y) : CGameObject()
 	level = MARIO_LEVEL_BIG;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
+	weapon = new CWhip();
+	weapon->SetPosition(41, 41);
 
 	start_x = x; 
 	start_y = y; 
@@ -153,7 +155,8 @@ void CMario::Render()
 	if (untouchable) alpha = 128;
 
 	animation_set->at(ani)->Render(x, y, alpha);
-
+	weapon->Render();
+	
 	RenderBoundingBox();
 }
 

@@ -37,7 +37,8 @@
 40003	336	117	352	133	20
 40004	355	117	370	133	20
 
-#WHIP
+#WEAPON
+#whip
 #left
 #lv1
 50001	1	485	9	509	10
@@ -90,7 +91,8 @@
 # ==== QUESTION BRICK =========
 602	40001	1000	40001	100	40002	100	40003	100	40004	100
 
-# ==== WHIP =========
+# ==== WEAPON =========
+#whip
 #left
 701	50001	200	50002	200	50003	200
 702	50011	200	50012	200	50013	200
@@ -108,12 +110,12 @@
 1	400	401	402	403	500	501	502	503	599
 # QUESTION BRICK 
 22	602
-#WHIP
+#WEAPON
 11	701	702	703	711	712	713
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Whip
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
 # MARIO
 0	17	115	1
 
@@ -125,9 +127,6 @@
 1	100	150	22
 1	115	150	22
 1	130	150	22
-
-#WHIP
-4	41	41	11
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
