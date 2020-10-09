@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "Weapon.h"
+#include "Whip.h"
 
 #define MARIO_WALKING_SPEED		0.15f 
 //0.1f
@@ -52,6 +54,7 @@ class CMario : public CGameObject
 
 	float start_x;			// initial position of Mario at scene
 	float start_y; 
+	CWeapon *weapon;
 public: 
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

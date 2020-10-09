@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include <map> 
+
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -13,7 +15,7 @@
 #define SIMON_STATE_SIT			 200
 #define SIMON_STATE_JUMP		 300
 #define SIMON_STATE_HIT			 400
-#define SIMON_STATE_EAT		 500
+#define SIMON_STATE_LEVEL_UP		500
 #define SIMON_STATE_WALKING_LEFT	600
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
@@ -49,6 +51,8 @@
 #define SIMON_SIT_BBOX_HEIGHT	23
 #define SIMON_TIME_JUMPPING_SIT 10
 
+#define SIMON_TIME_LEVEL_UP_WHIP 1500
+
 class Simon : public CGameObject
 {
 	int level;
@@ -56,9 +60,15 @@ class Simon : public CGameObject
 	bool isAttack = false;
 	bool isSit = false;
 	bool isLand = false;
+	bool isLevelUp = false;
 
 	float start_x;
 	float start_y;
+
+	map<int, int> weapons;
+
+
+	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD jumpTime;
 	float bottomOld;
@@ -67,13 +77,13 @@ public:
 	Simon(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
-
+	void CheckLevelUpState(DWORD dt);
 	void SetLevel(int l) { level = l; }
 	void SetState(int state);
-	void Reset();
 	bool GetIsJump() { return isJump; }
 	void SetIsJump(bool a) { isJump = a; }
 	bool GetIsSit() { return isSit; }
+	bool IsLevelUp() { return isLevelUp; }
 
 	float GetY() { return this->y; }
 

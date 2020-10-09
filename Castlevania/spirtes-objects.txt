@@ -1,0 +1,21 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+50	textures\items.png	116	116	116
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# ITEMS
+# whip
+10000	1	1	17	17	50
+# big heart
+10001	29	6	41	16	50
+# small heart		
+10002	18	1	26	9	50
+# dagger
+10003	1	22	17	31	50
+# money bag
+10004	45	1	60	16	50
+# HOLDERS
+# fire pot
+10010	175	3	191	33	50
+10011	192	1	208	33	50

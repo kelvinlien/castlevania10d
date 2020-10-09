@@ -28,8 +28,8 @@ using namespace std;
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
-//#define OBJECT_TYPE_KOOPAS	3
 #define OBJECT_TYPE_FIREPOT	3
+#define OBJECT_TYPE_WHIP	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -69,7 +69,6 @@ void CPlayScene::_ParseSection_TEXTURES(string line)
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);
-
 	if (tokens.size() < 6) return; // skip invalid lines
 
 	int ID = atoi(tokens[0].c_str());
@@ -187,10 +186,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_FIREPOT: obj = new CFirePot(); break;
 	case OBJECT_TYPE_PORTAL:
 		{	
+
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
+			//obj = new CPortal(x, y, r, b, scene_id);
+			obj = new Item(50, 50, 3);
 		}
 		break;
 	default:
@@ -272,7 +273,10 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->isVanish == true)
+			objects.erase(objects.begin() + i);
+		else 
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -323,12 +327,17 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_SPACE:
 		if (!simon->GetIsJump()) {
+			if (simon->IsLevelUp()) return;
 			simon->SetState(SIMON_STATE_JUMP);
 		}
 		break;
 	case DIK_A:
+	{
+		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_HIT);
 		break;
+	}
+		
 	}
 }
 
@@ -342,12 +351,18 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Mario die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 
-	if (game->IsKeyDown(DIK_RIGHT))
+	if (game->IsKeyDown(DIK_RIGHT)) {
+		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
+	}
+	else if (game->IsKeyDown(DIK_LEFT)) {
+		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN))
+	}
+	else if (game->IsKeyDown(DIK_DOWN)) {
+		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
+	}
 	else
 		simon->SetState(SIMON_STATE_IDLE);
 	if (game->IsKeyDown(DIK_L) && cam->GetCamX() < 730)
@@ -369,6 +384,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
+		if (simon->IsLevelUp()) break;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
 

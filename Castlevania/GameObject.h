@@ -20,6 +20,7 @@ struct CCollisionEvent
 {
 	LPGAMEOBJECT obj;
 	float t, nx, ny;
+
 	
 	float dx, dy;		// *RELATIVE* movement distance between this object and obj
 
@@ -43,6 +44,7 @@ struct CCollisionEvent
 class CGameObject
 {
 public:
+	bool isVanish;
 
 	float x; 
 	float y;
