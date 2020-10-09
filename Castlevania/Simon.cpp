@@ -15,6 +15,7 @@ Simon::Simon(float x, float y) : CGameObject()
 	this->x = x;
 	this->y = y;
 
+	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
 }
 void Simon::SetState(int state)
 {
@@ -167,7 +168,7 @@ void Simon::CheckLevelUpState(DWORD dt) {
 			isLevelUp = false;
 	}
 	else {
-		levelUpTime = 2000;
+		levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 		isLevelUp = false;
 	}
 }
@@ -244,8 +245,20 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
-				//xét điều kiện item là giao ở đây
-				this->SetState(SIMON_STATE_LEVEL_UP);
+
+				if (item->GetType() == TYPE_ITEM_WHIP)
+						this->SetState(SIMON_STATE_LEVEL_UP);
+
+				else {
+					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
+
+					if (item->GetType() == TYPE_ITEM_DAGGER) {
+						temp = weapons.find(TYPE_ITEM_DAGGER);
+						if (temp != weapons.end()) 
+							temp->second += 1; //cộng thêm 1 cái dagger
+					}
+						
+				}
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{

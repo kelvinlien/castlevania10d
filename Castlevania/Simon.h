@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include <map> 
+
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -49,7 +51,7 @@
 #define SIMON_SIT_BBOX_HEIGHT	23
 #define SIMON_TIME_JUMPPING_SIT 10
 
-#define SIMON_TIME_LEVEL_UP_WHIP 2000
+#define SIMON_TIME_LEVEL_UP_WHIP 1500
 
 class Simon : public CGameObject
 {
@@ -63,7 +65,10 @@ class Simon : public CGameObject
 	float start_x;
 	float start_y;
 
-	int levelUpTime = 2000;
+	map<int, int> weapons;
+
+
+	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD jumpTime;
 	float bottomOld;
