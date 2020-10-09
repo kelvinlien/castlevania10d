@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
@@ -24,6 +24,12 @@ void Simon::SetState(int state)
 	case SIMON_STATE_IDLE:
 		 vx = 0;
 		 break;
+	case SIMON_STATE_LEVEL_UP:
+		vx = 0;
+		if (isLevelUp) return;
+		//Để cây roi level up ở đây
+		isLevelUp = true;
+		break;
 	case SIMON_STATE_WALKING_LEFT:
 		nx = -1;
 		if (isAttack || isSit||isJump)
@@ -75,6 +81,7 @@ void Simon::Render()
 		return;
 	else if (vx == 0)
 	{
+		
 		if (isJump) {
 			if (isAttack) {
 				if (nx > 0)
@@ -141,7 +148,11 @@ void Simon::Render()
 				ani = SIMON_ANI_WALKING_LEFT;
 		}
 	}
-	animation_set->at(ani)->Render(x, y, 255);
+	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
+	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
+
+	animation_set->at(ani)->Render(x, y, color);
+
 	RenderBoundingBox();
 	if (isAttack) {
 		if (animation_set->at(ani)->GetCurrentFrame() == 2)
@@ -149,12 +160,25 @@ void Simon::Render()
 	}
 		
 }
+void Simon::CheckLevelUpState(DWORD dt) {
+	if (isLevelUp) {
+		levelUpTime -= dt;
+		if (levelUpTime <= 0)
+			isLevelUp = false;
+	}
+	else {
+		levelUpTime = 2000;
+		isLevelUp = false;
+	}
+}
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
-
-
+	
+	//when simon level up whip
+	CheckLevelUpState(dt);
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -220,6 +244,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
+				//xét điều kiện item là giao ở đây
+				this->SetState(SIMON_STATE_LEVEL_UP);
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
