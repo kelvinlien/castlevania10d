@@ -6,6 +6,7 @@
 #include "Brick.h"
 #include "Portal.h"
 #include"Game.h"
+#include "Item.h"
 Simon::Simon(float x, float y) : CGameObject()
 {
 	SetState(SIMON_STATE_IDLE);
@@ -216,6 +217,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 						SetState(SIMON_STATE_IDLE);
 				}
 			} // if Goomba
+			else if (dynamic_cast<Item *>(e->obj)) {
+				Item *item = dynamic_cast<Item *>(e->obj);
+				item->isVanish = true;
+			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
