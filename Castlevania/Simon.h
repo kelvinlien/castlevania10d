@@ -69,9 +69,9 @@ enum Animation
 #define SIMON_ANI_DYING_LEFT				17
 
 
-#define SIMON_BBOX_WIDTH  16
-#define SIMON_BBOX_HEIGHT 30
-#define SIMON_SIT_BBOX_HEIGHT	23
+#define SIMON_BBOX_WIDTH  60
+#define SIMON_BBOX_HEIGHT 63
+#define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
 
 class Simon : public CGameObject
