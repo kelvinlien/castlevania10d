@@ -14,6 +14,10 @@ Simon::Simon(float x, float y) : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+	heart = 10;
+
+	isActiveSubWeapon = false;
+	subWeapons = new CWeapon();
 
 	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
 }
@@ -241,7 +245,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 						SetState(SIMON_STATE_IDLE);
 				}
-			} // if Goomba
+			} // if item
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;

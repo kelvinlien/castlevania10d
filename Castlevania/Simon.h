@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Weapon.h"
 #include <map> 
 
 
@@ -61,11 +62,14 @@ class Simon : public CGameObject
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
-
+	int heart;
 	float start_x;
 	float start_y;
 
+	//weapons
 	map<int, int> weapons;
+	bool isActiveSubWeapon;
+	CWeapon *subWeapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
