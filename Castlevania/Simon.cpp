@@ -18,7 +18,6 @@ Simon::Simon(float x, float y) : CGameObject()
 	heart = 10;
 
 	isActiveSubWeapon = false;
-	subWeapons = new CWeapon();
 
 	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
 }
@@ -58,11 +57,11 @@ void Simon::SetState(int state)
 		vy = -SIMON_JUMP_SPEED_Y;
 		isJump = true;
 		break;
-	case SIMON_STATE_HIT:
+	case SIMON_STATE_HIT: // đổi thành state attack cho đồng bộ
 		if (isAttack)
 			break;
-		vx = 0;
-		isAttack = true;
+
+		Attack();
 		break;
 	case SIMON_STATE_SIT:
 		if (!isSit)
@@ -287,6 +286,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
+}
+
+void Simon::Attack() {
+	if (CGame::GetInstance()->IsKeyDown(DIK_UP) && this->isActiveSubWeapon) return;
+	
+	vx = 0;
+	isAttack = true;
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {

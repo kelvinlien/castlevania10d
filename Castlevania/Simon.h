@@ -69,7 +69,7 @@ class Simon : public CGameObject
 	//weapons
 	map<int, int> weapons;
 	bool isActiveSubWeapon;
-	CWeapon *subWeapons;
+	//CWeapon *subWeapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -81,14 +81,19 @@ public:
 	Simon(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+	//Level up state
 	void CheckLevelUpState(DWORD dt);
+
+	//actions of Simon
+	void Attack();
+
+	//setter and getter
 	void SetLevel(int l) { level = l; }
 	void SetState(int state);
 	bool GetIsJump() { return isJump; }
 	void SetIsJump(bool a) { isJump = a; }
 	bool GetIsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
-
 	float GetY() { return this->y; }
 
 
