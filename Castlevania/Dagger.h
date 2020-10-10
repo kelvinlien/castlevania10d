@@ -6,6 +6,8 @@
 
 #define		DAGGER_WIDTH_BBOX  16;
 #define		DAGGER_HEIGHT_BBOX  9;
+
+#define DAGGER_VX 0.2f;
 class Dagger :public CWeapon {
 public: 
 	Dagger(int simonX, int simonY);

@@ -14,6 +14,7 @@ Simon::Simon(float x, float y) : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+
 	heart = 10;
 
 	isActiveSubWeapon = false;
