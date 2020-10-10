@@ -5,9 +5,10 @@ Item::Item(int x, int y, int typeID) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 	ani_set = animation_sets->Get(ITEM_ANI_SET_ID);
 
+
 	this->x = x;
 	this->y = y;
-	existingTime = 20000;
+	existingTime = 2000;
 
 	this->typeID = typeID;
 	switch (this->typeID)
@@ -45,7 +46,6 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CGameObject::Update(dt, coObjects);
 	vy = GRAVITY;
 
-	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 

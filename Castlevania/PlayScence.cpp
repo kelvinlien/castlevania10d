@@ -8,6 +8,7 @@
 #include "Portal.h"
 #include "Camera.h"
 #include "GameMap.h"
+#include "Dagger.h"
 
 using namespace std;
 
@@ -191,7 +192,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
 			//obj = new CPortal(x, y, r, b, scene_id);
-			obj = new Item(50, 50, 3);
+			//obj = new Item(50, 50, 3);
+			obj = new Dagger(0, 20);
 		}
 		break;
 	default:
@@ -270,7 +272,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
-
+	//to check object is vanish
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]->isVanish == true)
