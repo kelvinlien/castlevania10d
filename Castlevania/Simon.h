@@ -39,35 +39,13 @@ enum Animation
 	ATTACK_STAND_RIGHT,
 	ATTACK_DUCK_LEFT,
 	ATTACK_DUCK_RIGHT,
+	//go up and attack on stair
 	ATTACK_UP_LEFT,
 	ATTACK_UP_RIGHT,
+	//go down and attack on stair
 	ATTACK_DOWN_LEFT,
 	ATTACK_DOWN_RIGHT
 };
-
-#define SIMON_ANI_IDLE_RIGHT	0
-#define SIMON_ANI_IDLE_LEFT		1
-
-
-#define SIMON_ANI_WALKING_RIGHT 2
-#define SIMON_ANI_WALKING_LEFT	3
-
-
-#define SIMON_ANI_JUMP_DUCK_RIGHT	4
-#define SIMON_ANI_JUMP_DUCK_LEFT	5
-
-#define SIMON_ANI_HURTING_RIGHT				10
-#define SIMON_ANI_HURTING_LEFT				11
-
-#define SIMON_ANI_STAND_ATTACKING_RIGHT				6
-#define SIMON_ANI_STAND_ATTACKING_LEFT				7
-
-#define SIMON_ANI_SIT_ATTACKING_RIGHT				8
-#define SIMON_ANI_SIT_ATTACKING_LEFT				9
-
-#define SIMON_ANI_DYING_RIGHT				16
-#define SIMON_ANI_DYING_LEFT				17
-
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -81,6 +59,7 @@ class Simon : public CGameObject
 	bool isAttack = false;
 	bool isSit = false;
 	bool isLand = false;
+	Animation ani;
 
 	float start_x;
 	float start_y;
