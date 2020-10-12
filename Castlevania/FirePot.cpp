@@ -9,6 +9,11 @@ CFirePot::CFirePot(float x, float y)
 	this->y = y;
 }
 
+void CFirePot::SetState(int state)
+{
+	this->state = state;
+}
+
 void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
@@ -19,11 +24,15 @@ void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bott
 
 void CFirePot::Render()
 {
-	int ani = FIREPOT_ANI_IDLE;
-	/*if (state == FIREPOT_STATE_DIE) {
-		ani = FIREPOT_ANI_DIE;
+	ani = IDLE;
+	/*if (state == FIREPOT_STATE_BREAK) {
+		ani = BREAK;
+		animation_set->at(ani)->Render(x, y);
+		return;
 	}*/
 
+	animation_set->at(ani)->Render(x, y);
+	ani = BREAK;
 	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
