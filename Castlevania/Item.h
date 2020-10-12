@@ -14,17 +14,6 @@
 #define GRAVITY 0.4f
 
 
-enum Animation
-{
-	SMALL_HEART,
-	BIG_HEART,
-	MONEY_BAG_RED,
-	MONEY_BAG_WHITE,
-	MONEY_BAG_BLUE,
-	WHIP_RED,
-	WHIP_BLUE,
-	DAGGER
-};
 
 class Item :public CGameObject {
 public:
@@ -33,6 +22,18 @@ public:
 	int widthBBox;
 	int heightBBox;
 	int typeID;
+
+	enum animation
+	{
+		SMALL_HEART,
+		BIG_HEART,
+		MONEY_BAG_RED,
+		MONEY_BAG_WHITE,
+		MONEY_BAG_BLUE,
+		WHIP_RED,
+		WHIP_BLUE,
+		DAGGER
+	}ani;
 
 	Item() {};
 	~Item() {  };
