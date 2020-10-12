@@ -3,6 +3,14 @@
 
 CAnimationSets * CAnimationSets::__instance = NULL;
 
+LPANIMATION_FRAME CAnimation::Get(int id)
+{
+	LPANIMATION_FRAME frame = frames[id];
+	if (frame == NULL)
+		DebugOut(L"[ERROR] Failed to find animation_frame id: %d\n", id);
+	return frame;
+}
+
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;
