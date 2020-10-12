@@ -77,7 +77,6 @@ void Simon::SetState(int state)
 }
 void Simon::Render()
 {
-	int ani;
 	if (state == SIMON_STATE_DIE)
 		return;
 	else if (vx == 0)
@@ -86,15 +85,15 @@ void Simon::Render()
 		if (isJump) {
 			if (isAttack) {
 				if (nx > 0)
-					ani = SIMON_ANI_STAND_ATTACKING_RIGHT;
+					ani = ATTACK_STAND_RIGHT;
 				else
-					ani = SIMON_ANI_STAND_ATTACKING_LEFT;
+					ani = ATTACK_STAND_LEFT;
 			}
 			else {
 				if (nx > 0)
-					ani = SIMON_ANI_JUMP_DUCK_RIGHT;
+					ani = JUMP_DUCK_RIGHT;
 				else
-					ani = SIMON_ANI_JUMP_DUCK_LEFT;
+					ani = JUMP_DUCK_LEFT;
 			}
 		}
 		else
@@ -103,15 +102,15 @@ void Simon::Render()
 				if (isSit)
 				{
 					if (nx > 0)
-						ani = SIMON_ANI_SIT_ATTACKING_RIGHT;
+						ani = ATTACK_DUCK_RIGHT;
 					else
-						ani = SIMON_ANI_SIT_ATTACKING_LEFT;
+						ani = ATTACK_DUCK_LEFT;
 				}
 				else {
 					if (nx > 0)
-						ani = SIMON_ANI_STAND_ATTACKING_RIGHT;
+						ani = ATTACK_STAND_RIGHT;
 					else
-						ani = SIMON_ANI_STAND_ATTACKING_LEFT;
+						ani = ATTACK_STAND_LEFT;
 				}
 			}
 			else
@@ -120,15 +119,15 @@ void Simon::Render()
 				if (isSit)
 				{
 					if (nx > 0)
-						ani = SIMON_ANI_JUMP_DUCK_RIGHT;
+						ani = JUMP_DUCK_RIGHT;
 					else
-						ani = SIMON_ANI_JUMP_DUCK_LEFT;
+						ani = JUMP_DUCK_LEFT;
 				}
 				else {
 					if (nx > 0)
-						ani = SIMON_ANI_IDLE_RIGHT;
+						ani = IDLE_RIGHT;
 					else
-						ani = SIMON_ANI_IDLE_LEFT;
+						ani = IDLE_LEFT;
 				}
 			}
 		}
@@ -137,16 +136,16 @@ void Simon::Render()
 	{
 		if (isJump) {
 			if (nx > 0)
-				ani = SIMON_ANI_JUMP_DUCK_RIGHT;
+				ani = JUMP_DUCK_RIGHT;
 			else
-				ani = SIMON_ANI_JUMP_DUCK_LEFT;
+				ani = JUMP_DUCK_LEFT;
 		}
 		else
 		{
 			if (nx > 0)
-				ani = SIMON_ANI_WALKING_RIGHT;
+				ani = WALK_RIGHT;
 			else
-				ani = SIMON_ANI_WALKING_LEFT;
+				ani = WALK_LEFT;
 		}
 	}
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
