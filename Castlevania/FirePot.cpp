@@ -12,6 +12,8 @@ CFirePot::CFirePot(float x, float y)
 void CFirePot::SetState(int state)
 {
 	this->state = state;
+	if (state == FIREPOT_STATE_BREAK)
+		break_time = GetTickCount();
 }
 
 void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -25,14 +27,10 @@ void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bott
 void CFirePot::Render()
 {
 	ani = IDLE;
-	/*if (state == FIREPOT_STATE_BREAK) {
+	if (state == FIREPOT_STATE_BREAK) {
 		ani = BREAK;
-		animation_set->at(ani)->Render(x, y);
-		return;
-	}*/
+	}
 
-	animation_set->at(ani)->Render(x, y);
-	ani = BREAK;
 	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
@@ -70,7 +68,14 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		y += min_ty * dy + ny * 0.2f;
 
 		if (ny != 0) {
-			vy = 0;
+			vy = 0;		
+		}
+
+		if (state == FIREPOT_STATE_BREAK && GetTickCount() - break_time > 500)
+		{
+			this->isVanish = true;
+
+			//new item here
 		}
 	}
 

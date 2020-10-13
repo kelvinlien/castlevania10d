@@ -22,6 +22,7 @@ class CFirePot :public CHolder
 	float start_x;			
 	float start_y;
 	Animation ani;
+	DWORD break_time;
 public:
 	CFirePot(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
