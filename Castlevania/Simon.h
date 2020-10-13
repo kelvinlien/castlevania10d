@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Weapon.h"
+#include "Dagger.h"
 #include <map> 
 
 
@@ -62,20 +63,21 @@ class Simon : public CGameObject
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
-	int heart;
+	int hearts;
 	float start_x;
 	float start_y;
 
 	//weapons
 	map<int, int> weapons;
-	bool isActiveSubWeapon;
-	//CWeapon *subWeapons;
+	bool isSubWeapoUsing;
+	CWeapon *subWeapon = NULL;
+
+	vector <CWeapon*> subWeapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD jumpTime;
-	float bottomOld;
 	
 public:
 	Simon(float x = 0.0f, float y = 0.0f);

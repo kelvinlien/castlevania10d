@@ -15,9 +15,9 @@ Simon::Simon(float x, float y) : CGameObject()
 	this->x = x;
 	this->y = y;
 
-	heart = 10;
+	hearts = 5;
 
-	isActiveSubWeapon = false;
+
 
 	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
 }
@@ -157,7 +157,6 @@ void Simon::Render()
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
 	animation_set->at(ani)->Render(x, y, color);
-
 	RenderBoundingBox();
 	if (isAttack) {
 		if (animation_set->at(ani)->GetCurrentFrame() == 2)
@@ -249,18 +248,25 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
-
 				if (item->GetType() == TYPE_ITEM_WHIP)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {
-					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
 
 					if (item->GetType() == TYPE_ITEM_DAGGER) {
-						temp = weapons.find(TYPE_ITEM_DAGGER);
-						if (temp != weapons.end()) 
-							temp->second += 1; //cộng thêm 1 cái dagger
+						CWeapon *subWeapon = new Dagger(x,y);
+						subWeapons.push_back(subWeapon);
+
 					}
+					//map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
+
+					//if (item->GetType() == TYPE_ITEM_DAGGER) {
+					//	temp = weapons.find(TYPE_ITEM_DAGGER);
+					//	if (temp != weapons.end()) 
+					//		temp->second += 1; //cộng thêm 1 cái dagger
+
+					//	
+					//}
 						
 				}
 			}
@@ -289,7 +295,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 
 void Simon::Attack() {
-	if (CGame::GetInstance()->IsKeyDown(DIK_UP) && this->isActiveSubWeapon) return;
+	/*if (CGame::GetInstance()->IsKeyDown(DIK_UP) && this->isSubWeapoUsing) return;
+	else if (CGame::GetInstance()->IsKeyDown(DIK_UP))*/
+	//subWeapons.at(0)->Render();
 	
 	vx = 0;
 	isAttack = true;
