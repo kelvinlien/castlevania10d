@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Weapon.h"
+#include "Dagger.h"
 #include <map> 
 
 
@@ -62,33 +63,39 @@ class Simon : public CGameObject
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
-	int heart;
+	int hearts;
 	float start_x;
 	float start_y;
 
 	//weapons
 	map<int, int> weapons;
-	bool isActiveSubWeapon;
-	CWeapon *subWeapons;
+	bool isSubWeapoUsing;
+	CWeapon *subWeapon = NULL;
+
+	vector <CWeapon*> subWeapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD jumpTime;
-	float bottomOld;
 	
 public:
 	Simon(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+	//Level up state
 	void CheckLevelUpState(DWORD dt);
+
+	//actions of Simon
+	void Attack();
+
+	//setter and getter
 	void SetLevel(int l) { level = l; }
 	void SetState(int state);
 	bool GetIsJump() { return isJump; }
 	void SetIsJump(bool a) { isJump = a; }
 	bool GetIsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
-
 	float GetY() { return this->y; }
 
 

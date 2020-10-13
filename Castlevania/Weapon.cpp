@@ -4,3 +4,5 @@ CWeapon::CWeapon() : CGameObject()
 {
 	available = false;
 }
+
+
