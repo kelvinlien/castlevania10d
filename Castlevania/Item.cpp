@@ -1,7 +1,8 @@
 #include "Item.h"
 #include "Simon.h"
 
-Item::Item(int x, int y, int typeID) {
+
+Item::Item(int x, int y, Animation ani) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 	ani_set = animation_sets->Get(ITEM_ANI_SET_ID);
 
@@ -9,35 +10,31 @@ Item::Item(int x, int y, int typeID) {
 	this->y = y;
 	existingTime = 20000;
 
-	this->typeID = typeID;
-	switch (this->typeID)
+	this->ani = ani;
+	switch (this->ani)
 	{
-	case TYPE_ITEM_WHIP:
-		widthBBox = 16;
-		heightBBox = 16;
-		break;
-	case TYPE_ITEM_BIG_HEART:
+	case SMALL_HEART:
+		widthBBox = 8;
+		heightBBox = 8;
+	break;
+	case BIG_HEART:
 		widthBBox = 12;
 		heightBBox = 10;
 		break;
-	case TYPE_ITEM_SMALL_HEART:
-		widthBBox = 8;
-		heightBBox = 8;
+	case WHIP_RED:
+		widthBBox = 16;
+		heightBBox = 16;
 		break;
-	case TYPE_ITEM_DAGGER:
+	case DAGGER:
 		widthBBox = 16;
 		heightBBox = 9;
-		break;
-	case TYPE_ITEM_MONEY_BAG:
-		widthBBox = 17;
-		heightBBox = 15;
 		break;
 	default:
 		break;
 	}
 }
 void Item::Render() {
-	ani_set->at(typeID)->Render(x, y);
+	ani_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
 

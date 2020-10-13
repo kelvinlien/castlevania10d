@@ -13,7 +13,17 @@
 
 #define GRAVITY 0.4f
 
-
+enum Animation
+{
+	SMALL_HEART,
+	BIG_HEART,
+	MONEY_BAG_RED,
+	MONEY_BAG_WHITE,
+	MONEY_BAG_BLUE,
+	WHIP_RED,
+	WHIP_BLUE,
+	DAGGER
+};
 
 class Item :public CGameObject {
 public:
@@ -21,26 +31,15 @@ public:
 	float existingTime;
 	int widthBBox;
 	int heightBBox;
-	int typeID;
-
-	enum animation
-	{
-		SMALL_HEART,
-		BIG_HEART,
-		MONEY_BAG_RED,
-		MONEY_BAG_WHITE,
-		MONEY_BAG_BLUE,
-		WHIP_RED,
-		WHIP_BLUE,
-		DAGGER
-	}ani;
+	
+	Animation ani;
 
 	Item() {};
 	~Item() {  };
-	Item(int x, int y, int typeID);
+	Item(int x, int y, Animation ani);
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects); // for update collision
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-	int GetType() { return typeID; }
+	Animation GetType() { return ani; }
 };

@@ -14,7 +14,7 @@
 #define SIMON_STATE_IDLE		 100
 #define SIMON_STATE_SIT			 200
 #define SIMON_STATE_JUMP		 300
-#define SIMON_STATE_HIT			 400
+#define SIMON_STATE_ATTACK			 400
 #define SIMON_STATE_LEVEL_UP		500
 #define SIMON_STATE_WALKING_LEFT	600
 #define SIMON_STATE_WALKING_RIGHT	700
@@ -30,7 +30,8 @@
 
 class Simon : public CGameObject
 {
-	int level;
+
+	//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
@@ -45,7 +46,7 @@ class Simon : public CGameObject
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
-	DWORD jumpTime;
+	DWORD attackTime;
 	float bottomOld;
 
 	enum animation
@@ -77,19 +78,28 @@ class Simon : public CGameObject
 	}ani;
 	
 public:
+
 	Simon(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+
+	//Actions of Simon
+	void Attack();
+	void Walk();
+	void Sit();
+	void Jump();
+
+	//State function
 	void CheckLevelUpState(DWORD dt);
-	void SetLevel(int l) { level = l; }
 	void SetState(int state);
-	bool GetIsJump() { return isJump; }
-	void SetIsJump(bool a) { isJump = a; }
-	bool GetIsSit() { return isSit; }
+
+	//Set animation
+	void SetAnimation();
+	
+	//Getter & setter
+	bool IsJump() { return isJump; }
+	bool IsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
-
-	float GetY() { return this->y; }
-
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

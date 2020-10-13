@@ -190,8 +190,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
-			//obj = new CPortal(x, y, r, b, scene_id);
-			obj = new Item(50, 50, 3);
+			obj = new CPortal(x, y, r, b, scene_id);
+			//obj = new Item(50, 50, DAGGER);
 		}
 		break;
 	default:
@@ -326,7 +326,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		if (!simon->GetIsJump()) {
+		if (!simon->IsJump()) {
 			if (simon->IsLevelUp()) return;
 			simon->SetState(SIMON_STATE_JUMP);
 		}
@@ -334,9 +334,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 	{
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_HIT);
+		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
+	case DIK_DOWN:
+		if (simon->IsLevelUp()) return;
+		simon->SetState(SIMON_STATE_SIT);
+		break;
 		
 	}
 }

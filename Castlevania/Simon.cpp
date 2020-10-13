@@ -33,40 +33,20 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_WALKING_LEFT:
 		nx = -1;
-		if (isAttack || isSit||isJump)
-			break;
-		vx = -SIMON_WALKING_SPEED;
-		isAttack = false;
-		isSit = false;
+		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
 		nx = 1;
- 		if (isAttack || isSit||isJump)
-			break;
-		vx = SIMON_WALKING_SPEED;
-		isAttack = false;
-		isSit = false;
+		Walk();
 		break;
 	case SIMON_STATE_JUMP:
-		if (isJump || isSit)
-			break;
-		vy = -SIMON_JUMP_SPEED_Y;
-		isJump = true;
+		Jump();
 		break;
-	case SIMON_STATE_HIT:
-		if (isAttack)
-			break;
-		vx = 0;
-		isAttack = true;
+	case SIMON_STATE_ATTACK:
+		Attack();
 		break;
 	case SIMON_STATE_SIT:
-		if (!isSit)
-		{
-			vx = 0;
-			y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-			isJump = false;
-			isSit = true;
-		}
+		Sit();
 		break;
 	case SIMON_STATE_STAND:
 		y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
@@ -75,13 +55,13 @@ void Simon::SetState(int state)
 	}
 
 }
-void Simon::Render()
+void Simon::SetAnimation()
 {
 	if (state == SIMON_STATE_DIE)
 		return;
 	else if (vx == 0)
 	{
-		
+
 		if (isJump) {
 			if (isAttack) {
 				if (nx > 0)
@@ -148,18 +128,55 @@ void Simon::Render()
 				ani = WALK_LEFT;
 		}
 	}
+}
+
+void Simon::Render()
+{
+	SetAnimation(); // set ani variable
+	
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
 	animation_set->at(ani)->Render(x, y, color);
-
-	RenderBoundingBox();
-	if (isAttack) {
-		if (animation_set->at(ani)->GetCurrentFrame() == 2)
-			isAttack = false;
-	}
-		
+	RenderBoundingBox();	
 }
+
+void Simon::Attack ()
+{
+	if (isAttack)
+		return;
+	vx = 0;
+	isAttack = true;
+	attackTime = GetTickCount();
+}
+
+void Simon::Sit()
+{
+	if (isSit) return;
+	vx = 0;
+	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	isJump = false;
+	isSit = true;
+}
+
+void Simon::Jump()
+{
+	if (isJump || isSit)
+		return;
+	vy = -SIMON_JUMP_SPEED_Y;
+	isJump = true;
+}
+
+void Simon::Walk()
+{
+	if (isAttack || isSit || isJump)
+		return;
+	vx = nx * SIMON_WALKING_SPEED;
+	isAttack = false;
+}
+
+
+
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -175,6 +192,15 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
+	//Ensure render time >= render attack time
+	if (isAttack) {
+		if (GetTickCount() - attackTime > 300)
+		{
+			isAttack = false;
+		}
+	}
+
 	
 	//when simon level up whip
 	CheckLevelUpState(dt);
@@ -245,14 +271,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
 
-				if (item->GetType() == TYPE_ITEM_WHIP)
+				if (item->GetType() == WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {
 					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
 
-					if (item->GetType() == TYPE_ITEM_DAGGER) {
-						temp = weapons.find(TYPE_ITEM_DAGGER);
+					if (item->GetType() == DAGGER) {
+						temp = weapons.find(DAGGER);
 						if (temp != weapons.end()) 
 							temp->second += 1; //cộng thêm 1 cái dagger
 					}
