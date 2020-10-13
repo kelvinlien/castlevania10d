@@ -272,7 +272,10 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (objects[i]->isVanish == true)
+			objects.erase(objects.begin() + i);
+		else
+			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)

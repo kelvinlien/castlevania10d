@@ -3,6 +3,8 @@
 0	textures\Simon.png	116	116	116
 20	textures\misc.png	176	224	248
 30	textures\texture-map-1.png 	255	255	255
+31	textures\hit-effect.png	255	0	255
+32	textures\burn.png	255	0	255
 40	textures\holder.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
@@ -123,6 +125,9 @@
 #FIREPOT
 50001	0	0	32	64	40
 50002	32	0	64	64	40
+#effect
+30011	0	0	16	20	31
+30012	43	0	85	44	32
 
 #WEAPON
 #whip
@@ -197,6 +202,8 @@
 
 # ==== FIREPOT  =========
 801	50001	100	50002	100
+#break
+303	30011	100	30012	100
 
 # ==== WEAPON =========
 #whip
@@ -220,7 +227,7 @@
 #WEAPON
 11	701	702	703	711	712	713
 # FIREPOT
-4	801
+4	801	303
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
