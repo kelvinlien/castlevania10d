@@ -175,7 +175,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new Simon(x,y); 
+		obj = Simon::GetInstance(); 
 		player = (Simon*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");

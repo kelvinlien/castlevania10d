@@ -1,20 +1,27 @@
 #include "Whip.h"
+#include"Simon.h"
+CWhip* CWhip::__instance = NULL;
 
-/*CFirePot::CFirePot()
+CWhip* CWhip::GetInstance()
 {
-	SetState(FIREPOT_STATE_IDLE);
-}*/
-
-CWhip::CWhip()
+	if (__instance == NULL) __instance = new CWhip();
+	return __instance;
+}
+CWhip::CWhip() :CWeapon()
 {
 	level = 1;
+	animation_set = CAnimationSets::GetInstance()->Get(5);
 	available = true;
 }
+void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
+{
+	if (nx > 0)
+		SetPosition(Simon::GetInstance()->x - 20, Simon::GetInstance()->y);
+	else if (nx < 0)
+		SetPosition(Simon::GetInstance()->x - 80, Simon::GetInstance()->y);
 
-//void CWhip::SetState(int state)
-//{
-//	CGameObject::SetState(state);
-//}
+}
+
 
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -38,21 +45,9 @@ void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void CWhip::Render()
 {
-	int ani = WHIP_ANI_LV1_LEFT;
-	if (state == WHIP_STATE_LV2_LEFT)
-		ani = WHIP_ANI_LV2_LEFT;
-	if (state == WHIP_STATE_LV3_LEFT)
-		ani = WHIP_ANI_LV3_LEFT;
-	if (state == WHIP_STATE_LV1_RIGHT)
-		ani = WHIP_ANI_LV1_RIGHT;
-	if (state == WHIP_STATE_LV2_RIGHT)
-		ani = WHIP_ANI_LV2_RIGHT;
-	if(state == WHIP_STATE_LV3_RIGHT)
-		ani = WHIP_ANI_LV3_RIGHT;
-	animation_set->at(ani)->Render(x, y);
-}
-
-void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
-{
-
+	if (Simon::GetInstance()->GetDirect() < 0)
+		animation_set->at(WHIP_ANI_LV1_LEFT)->Render(x, y, 255);
+	else
+		animation_set->at(WHIP_ANI_LV1_RIGHT)->Render(x, y, 255);
+	RenderBoundingBox();
 }

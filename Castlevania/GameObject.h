@@ -71,6 +71,8 @@ public:
 	float GetPostionY() { return y; }
 	float GetPostionX() { return x; }
 
+	int GetDirect() { return nx; }
+	void SetDirect(int nx) { this->nx = nx; }
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();
