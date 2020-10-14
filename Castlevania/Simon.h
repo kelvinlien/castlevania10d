@@ -42,13 +42,11 @@ class Simon : public CGameObject
 	float start_x;
 	float start_y;
 
-	map<int, int> weapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
-	float bottomOld;
 
 	enum animation
 	{

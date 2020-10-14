@@ -75,11 +75,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		}
 	}
 
-
-
-		void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
-			l = x;
-			t = y;
-			r = x + widthBBox;
-			b = y + heightBBox;
-		}
+void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
+	l = x;
+	t = y;
+	r = x + widthBBox;
+	b = y + heightBBox;
+}

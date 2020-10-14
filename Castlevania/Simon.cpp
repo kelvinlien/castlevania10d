@@ -15,7 +15,6 @@ Simon::Simon(float x, float y) : CGameObject()
 	this->x = x;
 	this->y = y;
 
-	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
 }
 void Simon::SetState(int state)
 {
