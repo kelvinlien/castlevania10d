@@ -7,11 +7,7 @@
 
 class CWeapon :public CGameObject
 {
-	float start_x;
-	float start_y;
-
 public:
-	bool available;
 
 	CWeapon();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) {};

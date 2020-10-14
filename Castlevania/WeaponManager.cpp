@@ -1,6 +1,6 @@
 #include "WeaponManager.h"
 
-CWeapon WeaponManager::createWeapon() {
+CWeapon* WeaponManager::createWeapon() {
 	if (amount < 1) return;
 	switch (available)
 	{
