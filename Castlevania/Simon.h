@@ -37,6 +37,7 @@ class Simon : public CGameObject
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
+	bool isUsingSubWeapon = false;
 
 	float start_x;
 	float start_y;
