@@ -15,11 +15,6 @@ Simon::Simon(float x, float y) : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
-
-	WeaponManager *weaponManager= new WeaponManager();
-
-	subWeapon = weaponManager->createWeapon(DAGGER);
-
 }
 
 void Simon::SetState(int state)
@@ -138,7 +133,8 @@ void Simon::SetAnimation()
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-	subWeapon->Render();
+	if (subWeapon != NULL)
+		subWeapon->Render();
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
@@ -198,7 +194,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
-	subWeapon->Update(dt, coObjects);
+	if (subWeapon != NULL)
+		subWeapon->Update(dt, coObjects);
 
 	//Ensure render time >= render attack time
 	if (isAttack) {
@@ -273,18 +270,18 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 						SetState(SIMON_STATE_IDLE);
 				}
-			} // if Goomba
+			} // if Item
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
 
-				if (item->GetType() == ANI_WHIP_RED)
+				if (item->GetType() == ITEM_WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {
 
-					if (item->GetType() == DAGGER) {
-						
+					if (item->GetType() == ITEM_DAGGER) {
+						subWeapon = WeaponManager::GetInstance()->createWeapon(DAGGER);
 					}
 						
 				}
