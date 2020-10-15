@@ -133,18 +133,26 @@ void Simon::SetAnimation()
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-	if (subWeapon != NULL)
-		subWeapon->Render();
+
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
 	animation_set->at(ani)->Render(x, y, color);
+	//render subweapon
+	if (subWeapon != NULL && isUsingSubWeapon)
+		subWeapon->Render();
 	RenderBoundingBox();	
 }
 
 void Simon::Attack ()
 {
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && isUsingSubWeapon)) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && !isUsingSubWeapon)) {
+		if (animation_set->at(ani)->GetCurrentFrame() == 0)
+			isUsingSubWeapon = true;
+	}
+
 	if (isAttack)
 		return;
 	vx = 0;
@@ -179,6 +187,7 @@ void Simon::Walk()
 
 
 
+
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -190,11 +199,14 @@ void Simon::CheckLevelUpState(DWORD dt) {
 		isLevelUp = false;
 	}
 }
+
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
-	if (subWeapon != NULL)
+
+	
+	if(subWeapon != NULL && isUsingSubWeapon)
 		subWeapon->Update(dt, coObjects);
 
 	//Ensure render time >= render attack time

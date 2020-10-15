@@ -7,8 +7,8 @@ Dagger::Dagger() : CWeapon()
 	vx = DAGGER_VX;
 
 	//Replace simon_x, simon_y
-	x = 50;
-	y = 50;
+	x = 200;
+	y = 230;
 }
 void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
 	left = x;
