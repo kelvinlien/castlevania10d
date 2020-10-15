@@ -16,9 +16,9 @@ CWhip::CWhip() :CWeapon()
 void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	if (nx > 0)
-		SetPosition(Simon::GetInstance()->x - 20, Simon::GetInstance()->y);
+		SetPosition((Simon::GetInstance()->x - 20), Simon::GetInstance()->y);
 	else if (nx < 0)
-		SetPosition(Simon::GetInstance()->x - 80, Simon::GetInstance()->y);
+		SetPosition((Simon::GetInstance()->x - 80), Simon::GetInstance()->y);
 
 }
 
@@ -26,20 +26,19 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (level == 1 || level == 2)
-		if (animation_set->at(WHIP_ANI_LV1_LEFT)->GetCurrentFrame() == 2 || animation_set->at(WHIP_ANI_LV2_LEFT)->GetCurrentFrame() == 2 || animation_set->at(WHIP_ANI_LV1_RIGHT)->GetCurrentFrame() == 2 || animation_set->at(WHIP_ANI_LV2_RIGHT)->GetCurrentFrame() == 2)
+		if (animation_set->at(WHIP_ANI_LV1_RIGHT)->GetCurrentFrame() == 2 )  
 		{
-			left = x;
-			top = y;
-			right = x + WHIP_BBOX_SHORT_WIDTH;
-			bottom = y + WHIP_BBOX_SHORT_HEIGHT;
+			left = Simon::GetInstance()->x +60;
+			top = Simon::GetInstance()->y+20;
+			right = left+50;
+			bottom = top + 15;
 		}
-	else
-		if (animation_set->at(WHIP_ANI_LV3_LEFT)->GetCurrentFrame() == 2 || animation_set->at(WHIP_ANI_LV3_RIGHT)->GetCurrentFrame() == 2)
+		else if (animation_set->at(WHIP_ANI_LV1_LEFT)->GetCurrentFrame() == 2)
 		{
-			left = x;
-			top = y;
-			right = x + WHIP_BBOX_LONG_WIDTH;
-			bottom = y + WHIP_BBOX_LONG_HEIGHT;
+			left = Simon::GetInstance()->x -50;
+			top = Simon::GetInstance()->y + 20;
+			right = left + 50;
+			bottom = top + 15;
 		}
 }
 
@@ -49,5 +48,5 @@ void CWhip::Render()
 		animation_set->at(WHIP_ANI_LV1_LEFT)->Render(x, y, 255);
 	else
 		animation_set->at(WHIP_ANI_LV1_RIGHT)->Render(x, y, 255);
-	RenderBoundingBox();
+	RenderBoundingBox(x,y);
 }

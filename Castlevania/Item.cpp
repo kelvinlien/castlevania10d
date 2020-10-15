@@ -35,7 +35,7 @@ Item::Item(int x, int y, Animation ani) {
 }
 void Item::Render() {
 	ani_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	RenderBoundingBox(x,y);
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
