@@ -7,6 +7,7 @@
 #include "Portal.h"
 #include"Game.h"
 #include "Item.h"
+
 Simon::Simon(float x, float y) : CGameObject()
 {
 	SetState(SIMON_STATE_IDLE);
@@ -15,7 +16,12 @@ Simon::Simon(float x, float y) : CGameObject()
 	this->x = x;
 	this->y = y;
 
+	WeaponManager *weaponManager= new WeaponManager();
+
+	subWeapon = weaponManager->createWeapon(DAGGER);
+
 }
+
 void Simon::SetState(int state)
 {
 	CGameObject::SetState(state);
@@ -132,7 +138,8 @@ void Simon::SetAnimation()
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-	
+	subWeapon->Render();
+
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
@@ -191,6 +198,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+	subWeapon->Update(dt, coObjects);
 
 	//Ensure render time >= render attack time
 	if (isAttack) {
@@ -270,7 +278,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
 
-				if (item->GetType() == WHIP_RED)
+				if (item->GetType() == ANI_WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {

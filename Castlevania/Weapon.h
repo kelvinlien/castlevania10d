@@ -3,7 +3,7 @@
 #include "Sprites.h"
 #include "Animations.h"
 
-#define WEAPON_ANI_SET_ID	11
+#define WEAPON_ANI_SET_ID	5
 
 class CWeapon :public CGameObject
 {

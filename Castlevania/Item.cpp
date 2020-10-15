@@ -13,19 +13,19 @@ Item::Item(int x, int y, Animation ani) {
 	this->ani = ani;
 	switch (this->ani)
 	{
-	case SMALL_HEART:
+	case ANI_SMALL_HEART:
 		widthBBox = 16;
 		heightBBox = 16;
 	break;
-	case BIG_HEART:
+	case ANI_BIG_HEART:
 		widthBBox = 24;
 		heightBBox = 16;
 		break;
-	case WHIP_RED:
+	case ANI_WHIP_RED:
 		widthBBox = 32;
 		heightBBox = 32;
 		break;
-	case DAGGER:
+	case ANI_DAGGER:
 		widthBBox = 32;
 		heightBBox = 16;
 		break;
