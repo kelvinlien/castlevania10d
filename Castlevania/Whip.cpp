@@ -8,7 +8,7 @@
 CWhip::CWhip()
 {
 	level = 1;
-	available = true;
+	//available = true;
 }
 
 //void CWhip::SetState(int state)

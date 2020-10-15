@@ -274,12 +274,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {
-					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
 
 					if (item->GetType() == DAGGER) {
-						temp = weapons.find(DAGGER);
-						if (temp != weapons.end()) 
-							temp->second += 1; //cộng thêm 1 cái dagger
+						
 					}
 						
 				}

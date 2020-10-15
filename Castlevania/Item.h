@@ -5,11 +5,6 @@
 
 #define ITEM_ANI_SET_ID	4
 
-#define TYPE_ITEM_WHIP 0
-#define TYPE_ITEM_BIG_HEART 1
-#define TYPE_ITEM_SMALL_HEART 2
-#define TYPE_ITEM_DAGGER 3
-#define TYPE_ITEM_MONEY_BAG 4
 
 #define GRAVITY 0.4f
 

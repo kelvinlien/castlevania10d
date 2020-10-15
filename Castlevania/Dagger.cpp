@@ -11,3 +11,6 @@ void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	right = x + DAGGER_BBOX_WIDTH;
 	bottom = y + DAGGER_BBOX_HEIGHT;
 }
+void Dagger::Render() {
+
+}

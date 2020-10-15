@@ -1,5 +1,6 @@
 #pragma once
 #include "Weapon.h"
+#include "Dagger.h"
 
 enum Available
 {
@@ -13,5 +14,6 @@ public:
 	//getter & setter 
 	void setAvailable(Available available) { this->available = available; };
 	int getAmount() { return this->amount; };
+
 	virtual CWeapon *createWeapon();
 };
