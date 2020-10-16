@@ -9,6 +9,9 @@ enum Available
 };
 
 class WeaponManager {
+
+	static WeaponManager * __instance;
+
 	Available available;
 	int amount;
 public:
@@ -16,4 +19,5 @@ public:
 	//getter & setter 
 	int getAmount() { return this->amount; };
 	CWeapon *createWeapon(Available available);
+	static WeaponManager * GetInstance();
 };

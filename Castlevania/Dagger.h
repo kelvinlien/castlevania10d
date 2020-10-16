@@ -5,6 +5,8 @@
 #define DAGGER_BBOX_HEIGHT 32
 #define DAGGER_BBOX_WIDTH 32
 #define DAGGER_VX 0.2f
+#define ANI_DAGGER_LEFT 6
+#define ANI_DAGGER_RIGHT 7
 
 
 class Dagger :public CWeapon {
