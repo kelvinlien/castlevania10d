@@ -3,11 +3,12 @@
 
 Dagger::Dagger() : CWeapon()
 {
-	ani = CWeapon::animation_set->at(7);
+	//check Simon'nx here to set nx for Dagger 
+	ani = CWeapon::animation_set->at(ANI_DAGGER_RIGHT);
 	vx = DAGGER_VX;
 
 	//Replace simon_x, simon_y
-	x = 200;
+	x = 250;
 	y = 230;
 }
 void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
@@ -50,6 +51,8 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			if (dynamic_cast<CFirePot*>(e->obj))
 			{
 				this->isVanish = true;
+				e->obj->isVanish = true;
+
 			}
 			if (dynamic_cast<CBrick*>(e->obj))
 			{

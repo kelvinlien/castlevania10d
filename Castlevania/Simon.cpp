@@ -7,7 +7,13 @@
 #include "Portal.h"
 #include"Game.h"
 #include "Item.h"
+Simon * Simon::__instance = NULL;
 
+Simon *Simon::GetInstance()
+{
+	if (__instance == NULL) __instance = new Simon();
+	return __instance;
+}
 Simon::Simon(float x, float y) : CGameObject()
 {
 	SetState(SIMON_STATE_IDLE);
@@ -140,19 +146,23 @@ void Simon::Render()
 
 	animation_set->at(ani)->Render(x, y, color);
 	//render subweapon
-	if (subWeapon != NULL && isUsingSubWeapon)
-		subWeapon->Render();
+	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
+		subWeapons->Render();
 	RenderBoundingBox();	
 }
 
 void Simon::Attack ()
 {
-	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && isUsingSubWeapon)) return;
-	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && !isUsingSubWeapon)) {
-		if (animation_set->at(ani)->GetCurrentFrame() == 0)
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
 			isUsingSubWeapon = true;
+			if (subWeapons->isVanish) {
+				subWeapons->isVanish = false;
+				subWeapons->SetPosition(250, 230); // to reset position of Dagger
+			}
 	}
-
+	else		
+		isUsingSubWeapon = false;
 	if (isAttack)
 		return;
 	vx = 0;
@@ -206,8 +216,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	vy += SIMON_GRAVITY * dt;
 
 	
-	if(subWeapon != NULL && isUsingSubWeapon)
-		subWeapon->Update(dt, coObjects);
+	if (subWeapons != NULL && isUsingSubWeapon) {
+		if (subWeapons->isVanish) 
+			isUsingSubWeapon = false;
+
+		subWeapons->Update(dt, coObjects);
+	}
+
 
 	//Ensure render time >= render attack time
 	if (isAttack) {
@@ -293,7 +308,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				else {
 
 					if (item->GetType() == ITEM_DAGGER) {
-						subWeapon = WeaponManager::GetInstance()->createWeapon(DAGGER);
+						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
 					}
 						
 				}

@@ -32,7 +32,8 @@
 
 class Simon : public CGameObject
 {
-	CWeapon *subWeapon;
+	CWeapon *subWeapons;
+	static Simon * __instance;
 
 
 	//Flag of Simon's state
@@ -105,6 +106,8 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+
+	static Simon * GetInstance();
 };
 
 
