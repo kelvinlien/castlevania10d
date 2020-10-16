@@ -75,7 +75,7 @@ public:
 	void SetDirect(int nx) { this->nx = nx; }
 	int GetState() { return this->state; }
 
-	void RenderBoundingBox(int _x,int _y);
+	void RenderBoundingBox();
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 

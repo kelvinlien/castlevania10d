@@ -164,10 +164,12 @@ void Simon::Attack ()
 {
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
+			subWeapons->SetPosition(x, y + 20);
+			subWeapons->nx = nx;
+			
 			isUsingSubWeapon = true;
 			if (subWeapons->isVanish) {
 				subWeapons->isVanish = false;
-				subWeapons->SetPosition(250, 230); // to reset position of Dagger
 			}
 	}
 	else		
@@ -245,7 +247,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	if (subWeapons != NULL && isUsingSubWeapon) {
 		if (subWeapons->isVanish) 
 			isUsingSubWeapon = false;
-
+		
 		subWeapons->Update(dt, coObjects);
 	}
 

@@ -53,7 +53,6 @@ class Simon : public CGameObject
 
 	DWORD attackTime;
 
-	static Simon* __instance;
 
 	enum animation
 	{
@@ -106,6 +105,7 @@ public:
 	bool IsJump() { return isJump; }
 	bool IsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
+	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

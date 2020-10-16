@@ -49,5 +49,5 @@ void CWhip::Render()
 		animation_set->at(WHIP_ANI_LV1_LEFT)->Render(x, y, 255);
 	else
 		animation_set->at(WHIP_ANI_LV1_RIGHT)->Render(x, y, 255);
-	RenderBoundingBox(x,y);
+	RenderBoundingBox();
 }

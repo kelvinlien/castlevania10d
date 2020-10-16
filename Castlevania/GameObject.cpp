@@ -119,7 +119,7 @@ void CGameObject::FilterCollision(
 }
 
 
-void CGameObject::RenderBoundingBox(int _x,int _y)
+void CGameObject::RenderBoundingBox()
 {
 	RECT rect;
 

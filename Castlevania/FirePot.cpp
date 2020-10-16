@@ -26,7 +26,7 @@ void CFirePot::Render()
 
 	animation_set->at(ani)->Render(x, y);
 
-	RenderBoundingBox(x,y);
+	RenderBoundingBox();
 }
 
 void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
