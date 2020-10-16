@@ -71,9 +71,11 @@ public:
 	float GetPostionY() { return y; }
 	float GetPostionX() { return x; }
 
+	int GetDirect() { return nx; }
+	void SetDirect(int nx) { this->nx = nx; }
 	int GetState() { return this->state; }
 
-	void RenderBoundingBox();
+	void RenderBoundingBox(int _x,int _y);
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 

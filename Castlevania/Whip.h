@@ -30,17 +30,17 @@
 class CWhip :public CWeapon
 {
 	int level;
+	static CWhip* __instance;
+	float xOffset;
+	float yOffset;
 public:
 	CWhip();
-
+	void SetLevel(int level) { this->level = level; }
+	int GetLevel() { return level; }
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
-
-	//void SetState(int state);
-
-	//void Reset();
-
-	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
-
+	void SetTrend(int nx) { this->nx = nx; }
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	static CWhip * GetInstance();
 };
 

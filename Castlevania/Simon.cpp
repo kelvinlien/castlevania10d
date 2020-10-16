@@ -7,20 +7,22 @@
 #include "Portal.h"
 #include"Game.h"
 #include "Item.h"
-Simon * Simon::__instance = NULL;
+#include "Whip.h"
+Simon* Simon::__instance = NULL;
 
-Simon *Simon::GetInstance()
+Simon* Simon::GetInstance()
 {
 	if (__instance == NULL) __instance = new Simon();
 	return __instance;
 }
-Simon::Simon(float x, float y) : CGameObject()
+Simon::Simon() : CGameObject()
 {
 	SetState(SIMON_STATE_IDLE);
 	start_x = x;
 	start_y = y;
 	this->x = x;
 	this->y = y;
+	CWhip::GetInstance();
 }
 
 void Simon::SetState(int state)
@@ -57,6 +59,8 @@ void Simon::SetState(int state)
 	case SIMON_STATE_STAND:
 		y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 		isSit = false;
+		if (isAttack)
+			isAttack = false;
 		break;
 	}
 
@@ -144,6 +148,11 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
+	if (isAttack)
+	{
+		CWhip::GetInstance()->Render();
+	}
+
 	animation_set->at(ani)->Render(x, y, color);
 	//render subweapon
 	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
@@ -165,6 +174,14 @@ void Simon::Attack ()
 		isUsingSubWeapon = false;
 	if (isAttack)
 		return;
+	if (nx > 0) {
+		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+	}
+	else {
+		animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+	}
 	vx = 0;
 	isAttack = true;
 	attackTime = GetTickCount();
@@ -172,7 +189,16 @@ void Simon::Attack ()
 
 void Simon::Sit()
 {
+	
 	if (isSit) return;
+	if (nx > 0) {
+		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+	}
+	else {
+		animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+	}
 	vx = 0;
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isJump = false;
@@ -225,14 +251,22 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	//Ensure render time >= render attack time
-	if (isAttack) {
-		if (GetTickCount() - attackTime > 300)
-		{
-			isAttack = false;
+	if (isAttack == true && GetTickCount() - attackTime > 350) {
+		isAttack = false;
+		CWhip::GetInstance()->Update(dt, coObjects);
+		vx = 0;
+		if (nx > 0) {
+			animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
+			animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+		}
+		else {
+			animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
+			animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
 		}
 	}
 
-	
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	
@@ -332,15 +366,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
+	CWhip::GetInstance()->SetTrend(nx);
+	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
+	left = x+12;
 	top = y;
-	right = x + SIMON_BBOX_WIDTH;
+	right = x + SIMON_BBOX_WIDTH-10;
 	bottom = y + SIMON_BBOX_HEIGHT;
 	if (isJump)
 	{

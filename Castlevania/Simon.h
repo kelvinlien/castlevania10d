@@ -53,6 +53,8 @@ class Simon : public CGameObject
 
 	DWORD attackTime;
 
+	static Simon* __instance;
+
 	enum animation
 	{
 		IDLE_LEFT,
@@ -83,7 +85,7 @@ class Simon : public CGameObject
 
 public:
 
-	Simon(float x = 0.0f, float y = 0.0f);
+	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
 
@@ -106,7 +108,6 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-
 	static Simon * GetInstance();
 };
 

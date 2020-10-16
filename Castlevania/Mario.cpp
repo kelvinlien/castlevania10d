@@ -158,7 +158,7 @@ void CMario::Render()
 	animation_set->at(ani)->Render(x, y, alpha);
 	weapon->Render();
 	
-	RenderBoundingBox();
+	RenderBoundingBox(x,y);
 }
 
 void CMario::SetState(int state)
