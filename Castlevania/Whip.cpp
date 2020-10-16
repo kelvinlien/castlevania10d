@@ -11,7 +11,7 @@ CWhip::CWhip() :CWeapon()
 {
 	level = 1;
 	animation_set = CAnimationSets::GetInstance()->Get(5);
-	available = true;
+	//available = true;
 }
 void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {

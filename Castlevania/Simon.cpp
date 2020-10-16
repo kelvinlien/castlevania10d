@@ -24,6 +24,7 @@ Simon::Simon() : CGameObject()
 	this->y = y;
 	CWhip::GetInstance();
 }
+
 void Simon::SetState(int state)
 {
 	CGameObject::SetState(state);
@@ -142,7 +143,8 @@ void Simon::SetAnimation()
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-	
+
+
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
@@ -152,11 +154,24 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
-	RenderBoundingBox(x,y);	
+	//render subweapon
+	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
+		subWeapons->Render();
+	RenderBoundingBox();	
 }
 
 void Simon::Attack ()
 {
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
+			isUsingSubWeapon = true;
+			if (subWeapons->isVanish) {
+				subWeapons->isVanish = false;
+				subWeapons->SetPosition(250, 230); // to reset position of Dagger
+			}
+	}
+	else		
+		isUsingSubWeapon = false;
 	if (isAttack)
 		return;
 	if (nx > 0) {
@@ -208,6 +223,7 @@ void Simon::Walk()
 
 
 
+
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -219,10 +235,20 @@ void Simon::CheckLevelUpState(DWORD dt) {
 		isLevelUp = false;
 	}
 }
+
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
+	
+	if (subWeapons != NULL && isUsingSubWeapon) {
+		if (subWeapons->isVanish) 
+			isUsingSubWeapon = false;
+
+		subWeapons->Update(dt, coObjects);
+	}
+
 
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
@@ -305,21 +331,18 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 						SetState(SIMON_STATE_IDLE);
 				}
-			} // if Goomba
+			} // if Item
 			else if (dynamic_cast<Item *>(e->obj)) {
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
 
-				if (item->GetType() == WHIP_RED)
+				if (item->GetType() == ITEM_WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
 
 				else {
-					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
 
-					if (item->GetType() == DAGGER) {
-						temp = weapons.find(DAGGER);
-						if (temp != weapons.end()) 
-							temp->second += 1; //cộng thêm 1 cái dagger
+					if (item->GetType() == ITEM_DAGGER) {
+						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
 					}
 						
 				}

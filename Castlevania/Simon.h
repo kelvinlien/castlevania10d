@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "WeaponManager.h"
 #include <map> 
 
 
@@ -28,8 +29,12 @@
 
 #define SIMON_TIME_LEVEL_UP_WHIP 1500
 
+
 class Simon : public CGameObject
 {
+	CWeapon *subWeapons;
+	static Simon * __instance;
+
 
 	//Flag of Simon's state
 	bool isJump;
@@ -37,11 +42,11 @@ class Simon : public CGameObject
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
+	bool isUsingSubWeapon = false;
 
 	float start_x;
 	float start_y;
 
-	map<int, int> weapons;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -77,7 +82,7 @@ class Simon : public CGameObject
 		ATTACK_DOWN_LEFT,
 		ATTACK_DOWN_RIGHT
 	}ani;
-	
+
 public:
 
 	Simon();
@@ -96,7 +101,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
-	
+
 	//Getter & setter
 	bool IsJump() { return isJump; }
 	bool IsSit() { return isSit; }
