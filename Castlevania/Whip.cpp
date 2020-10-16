@@ -25,21 +25,22 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (level == 1 || level == 2)
-		if (animation_set->at(WHIP_ANI_LV1_RIGHT)->GetCurrentFrame() == 2 )  
+	if (level == 1 || level == 2) {
+		if (animation_set->at(WHIP_ANI_LV1_RIGHT)->GetCurrentFrame() == 2 && Simon::GetInstance()->GetDirect() > 0)
 		{
-			left = Simon::GetInstance()->x +60;
-			top = Simon::GetInstance()->y+20;
-			right = left+50;
-			bottom = top + 15;
-		}
-		else if (animation_set->at(WHIP_ANI_LV1_LEFT)->GetCurrentFrame() == 2)
-		{
-			left = Simon::GetInstance()->x -50;
+			left = Simon::GetInstance()->x + 60;
 			top = Simon::GetInstance()->y + 20;
 			right = left + 50;
 			bottom = top + 15;
 		}
+		else if (animation_set->at(WHIP_ANI_LV1_LEFT)->GetCurrentFrame() == 2 && Simon::GetInstance()->GetDirect() < 0)
+		{
+			left = Simon::GetInstance()->x - 50;
+			top = Simon::GetInstance()->y + 20;
+			right = left + 50;
+			bottom = top + 15;
+		}
+	}
 }
 
 void CWhip::Render()
