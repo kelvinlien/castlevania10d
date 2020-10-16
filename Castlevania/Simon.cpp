@@ -148,7 +148,7 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
-	if (isAttack)
+	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
 	}
