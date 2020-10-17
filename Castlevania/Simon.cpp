@@ -221,9 +221,6 @@ void Simon::Walk()
 	isAttack = false;
 }
 
-
-
-
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -234,6 +231,26 @@ void Simon::CheckLevelUpState(DWORD dt) {
 		levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 		isLevelUp = false;
 	}
+}
+
+void Simon::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT> *coObjects,
+	vector<LPCOLLISIONEVENT> &coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		{
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+				if (e->t > 0 && e->t <= 1.0f)
+					coEvents.push_back(e);
+				else
+					delete e;
+		}
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
@@ -366,7 +383,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
-	CWhip::GetInstance()->SetTrend(nx);
+	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

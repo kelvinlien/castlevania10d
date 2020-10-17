@@ -37,9 +37,13 @@ public:
 	CWhip();
 	void SetLevel(int level) { this->level = level; }
 	int GetLevel() { return level; }
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
-	void SetTrend(int nx) { this->nx = nx; }
+
+	bool isCollision(RECT r1, RECT r2);
+	void SetDirect(int nx) { this->nx = nx; }
+	void SetAnimation();
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	static CWhip * GetInstance();
 };
