@@ -323,6 +323,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO)
+		return;
+
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -352,8 +356,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
-	// disable control key when Mario die 
-	if (simon->GetState() == SIMON_STATE_DIE) return;
+	// disable control key when Simon die or pass scene 
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) 
+		return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp()) return;
@@ -385,6 +390,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO)
+		return;
+
 	switch (KeyCode)
 	{
 	case DIK_DOWN:

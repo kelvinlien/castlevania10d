@@ -10,7 +10,7 @@
 #define SIMON_GRAVITY			0.002f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
 
-
+#define SIMON_STATE_AUTO	0
 #define SIMON_STATE_IDLE		 100
 #define SIMON_STATE_SIT			 200
 #define SIMON_STATE_JUMP		 300
@@ -35,7 +35,6 @@ class Simon : public CGameObject
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
-	bool isLand = false;
 	bool isLevelUp = false;
 
 	float start_x;
