@@ -22,9 +22,16 @@ void Simon::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	/*case SIMON_STATE_AUTO:
+		if (isJump)
+			nx = -1;
+		else
+			nx = 1;
+		Walk();
+		break;*/
 	case SIMON_STATE_IDLE:
-		 vx = 0;
-		 break;
+		vx = 0;
+		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
@@ -57,8 +64,18 @@ void Simon::SetState(int state)
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE)
+	if (state == SIMON_STATE_DIE )
 		return;
+	/*else if (state == SIMON_STATE_AUTO)
+	{
+		if (vx != 0)
+		{
+			if (isJump)
+				ani = WALK_LEFT;
+			else  if (nx == 1)
+				ani = WALK_RIGHT;
+		}
+	}*/
 	else if (vx == 0)
 	{
 
@@ -201,6 +218,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
+
 	
 	//when simon level up whip
 	CheckLevelUpState(dt);
@@ -240,13 +258,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			vy = 0;
 		}
 
-
 		//
 		// Collision logic with other objects
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			
 
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
@@ -288,7 +307,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				SetState(SIMON_STATE_AUTO);
+				vx = SIMON_WALKING_SPEED;
+				x += dx;
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
