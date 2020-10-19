@@ -45,17 +45,17 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			rect2.right = (int)r2;
 			rect2.bottom = (int)b2;
 			if (!(r1 < l2 || l1 > r2|| t1 > b2 || b1 < t2))
-				e->SetState(FIREPOT_STATE_DIE);
+				e->SetState(FIREPOT_STATE_BREAK);
 		}
 		  
 	}
 
 
 }
-bool CWhip::isCollision(RECT r1, RECT r2)   
-{
-	return !(r1.right < r2.left || r1.left > r2.right || r1.top > r2.bottom || r1.bottom < r2.top);
-}
+//bool CWhip::isCollision(RECT r1, RECT r2)   
+//{
+//	return !(r1.right < r2.left || r1.left > r2.right || r1.top > r2.bottom || r1.bottom < r2.top);
+//}
 
 
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
