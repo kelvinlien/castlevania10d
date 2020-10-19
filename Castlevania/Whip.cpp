@@ -52,10 +52,10 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 }
-bool CWhip::isCollision(RECT r1, RECT r2)   
-{
-	return !(r1.right < r2.left || r1.left > r2.right || r1.top > r2.bottom || r1.bottom < r2.top);
-}
+//bool CWhip::isCollision(RECT r1, RECT r2)   
+//{
+//	return !(r1.right < r2.left || r1.left > r2.right || r1.top > r2.bottom || r1.bottom < r2.top);
+//}
 
 
 void CWhip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
