@@ -37,11 +37,12 @@ public:
 	CWhip();
 	void SetLevel(int level) { this->level = level; }
 	int GetLevel() { return level; }
+	void LevelUp();
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	void Render();
 
-	bool isCollision(RECT r1, RECT r2);
+	/*bool isCollision(RECT r1, RECT r2);*/   //can use this to check collision for whip or only use the code i write in Update
 	void SetDirect(int nx) { this->nx = nx; }
 	void SetAnimation();
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);

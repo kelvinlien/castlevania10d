@@ -176,11 +176,11 @@ void Simon::Attack ()
 		return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
 	}
 	else {
 		animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
 	}
 	vx = 0;
 	isAttack = true;
@@ -193,11 +193,11 @@ void Simon::Sit()
 	if (isSit) return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
 	}
 	else {
 		animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
 	}
 	vx = 0;
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
@@ -275,12 +275,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx > 0) {
 			animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
 			animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
-			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() +2)->ResetFrame();
 		}
 		else {
 			animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
 			animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
-			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() -1)->ResetFrame();
 		}
 	}
 
