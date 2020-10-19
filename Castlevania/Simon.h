@@ -35,6 +35,7 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
+	int hearts = 5;
 
 	//Flag of Simon's state
 	bool isJump;

@@ -160,17 +160,18 @@ void Simon::Render()
 	RenderBoundingBox();	
 }
 
-void Simon::Attack ()
+void Simon::Attack()
 {
-	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
-	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
-			subWeapons->SetPosition(x, y + 10);
-			subWeapons->nx = nx;
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)|| hearts < 1) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
+		hearts--;
+		subWeapons->SetPosition(x, y + 10);
+		subWeapons->nx = nx;
 			
-			isUsingSubWeapon = true;
-			if (subWeapons->isVanish) {
+		isUsingSubWeapon = true;
+		if (subWeapons->isVanish) {
 				subWeapons->isVanish = false;
-			}
+		}
 	}
 	else		
 		isUsingSubWeapon = false;
@@ -340,11 +341,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 				if (item->GetType() == ITEM_WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
-
 				else {
 
 					if (item->GetType() == ITEM_DAGGER) {
 						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
+					}
+					else if (item->GetType() == ITEM_BIG_HEART) {
+						hearts ++;
 					}
 						
 				}
