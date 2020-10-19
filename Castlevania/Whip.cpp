@@ -45,7 +45,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			rect2.right = (int)r2;
 			rect2.bottom = (int)b2;
 			if (!(r1 < l2 || l1 > r2|| t1 > b2 || b1 < t2))
-				e->SetState(FIREPOT_STATE_DIE);
+				e->SetState(FIREPOT_STATE_BREAK);
 		}
 		  
 	}
