@@ -4,6 +4,8 @@
 1	textures\simon-death.png	255	0	255
 20	textures\floor.png	255	255	255
 30	textures\holder.png	255	0	255
+31	textures\hit-effect.png	255	0	255
+32	textures\burn.png	255	0	255
 40	textures\item.png	255	0	255
 50	textures\whip.png	255	0	255
 51	textures\dagger.png	255	0	255
@@ -165,6 +167,9 @@
 #FIREPOT
 30001	0	0	32	64	30
 30002	32	0	64	64	30
+#effect
+30011	0	0	16	20	31
+30012	43	0	85	44	32
 
 #ITEM
 #small heart
@@ -295,7 +300,7 @@
 #candle
 302	30006	100	30007	100
 #break
-303	30011	100
+303	30011	100	30012	100
 
 # ==== ITEMS=========
 #small heart
