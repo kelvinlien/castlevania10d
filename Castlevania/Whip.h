@@ -44,7 +44,6 @@ public:
 
 	/*bool isCollision(RECT r1, RECT r2);*/   //can use this to check collision for whip or only use the code i write in Update
 	void SetDirect(int nx) { this->nx = nx; }
-	void SetAnimation();
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	static CWhip * GetInstance();
 };

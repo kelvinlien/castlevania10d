@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "WeaponManager.h"
+#include "Whip.h"
 #include <map> 
 
 
@@ -107,6 +108,7 @@ public:
 	bool IsJump() { return isJump; }
 	bool IsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
+	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
