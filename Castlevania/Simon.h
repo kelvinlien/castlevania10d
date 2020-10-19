@@ -53,7 +53,6 @@ class Simon : public CGameObject
 
 	DWORD attackTime;
 
-	static Simon* __instance;
 
 	enum animation
 	{
@@ -88,6 +87,7 @@ public:
 	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 
 	//Actions of Simon
 	void Attack();

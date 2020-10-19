@@ -176,11 +176,11 @@ void Simon::Attack ()
 		return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
 	}
 	else {
 		animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
 	}
 	vx = 0;
 	isAttack = true;
@@ -193,11 +193,11 @@ void Simon::Sit()
 	if (isSit) return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
 	}
 	else {
 		animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
-		CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
 	}
 	vx = 0;
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
@@ -221,9 +221,6 @@ void Simon::Walk()
 	isAttack = false;
 }
 
-
-
-
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -234,6 +231,26 @@ void Simon::CheckLevelUpState(DWORD dt) {
 		levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 		isLevelUp = false;
 	}
+}
+
+void Simon::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT> *coObjects,
+	vector<LPCOLLISIONEVENT> &coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		{
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+				if (e->t > 0 && e->t <= 1.0f)
+					coEvents.push_back(e);
+				else
+					delete e;
+		}
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
@@ -258,12 +275,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx > 0) {
 			animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
 			animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
-			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_RIGHT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() +2)->ResetFrame();
 		}
 		else {
 			animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
 			animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
-			CWhip::GetInstance()->animation_set->at(WHIP_ANI_LV1_LEFT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() -1)->ResetFrame();
 		}
 	}
 
@@ -366,7 +383,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
-	CWhip::GetInstance()->SetTrend(nx);
+	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

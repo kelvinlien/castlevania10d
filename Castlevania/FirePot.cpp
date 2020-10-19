@@ -20,13 +20,13 @@ void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bott
 void CFirePot::Render()
 {
 	int ani = FIREPOT_ANI_IDLE;
-	/*if (state == FIREPOT_STATE_DIE) {
-		ani = FIREPOT_ANI_DIE;
-	}*/
+	if (state == FIREPOT_STATE_DIE) {
+		return;
+	}
 
 	animation_set->at(ani)->Render(x, y);
 
-	RenderBoundingBox(x,y);
+	RenderBoundingBox();
 }
 
 void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
