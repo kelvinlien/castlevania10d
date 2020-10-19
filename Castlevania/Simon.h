@@ -53,7 +53,6 @@ class Simon : public CGameObject
 
 	DWORD attackTime;
 
-	static Simon* __instance;
 
 	enum animation
 	{

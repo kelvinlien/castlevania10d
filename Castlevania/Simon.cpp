@@ -157,7 +157,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	RenderBoundingBox(x, y);	
 }
 
 void Simon::Attack ()

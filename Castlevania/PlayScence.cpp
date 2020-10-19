@@ -292,7 +292,11 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	//Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	// check if current player pos is in map range and update cam pos accordingly
+	if (cx > 0 && cx < 730)
+	{
+		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	}
 }
 
 void CPlayScene::Render()
@@ -371,18 +375,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 	else
 		simon->SetState(SIMON_STATE_IDLE);
-	if (game->IsKeyDown(DIK_L) && cam->GetCamX() < 730)
-	{
-		cam->SetHDirection(1);
-	}
-	else if (game->IsKeyDown(DIK_J) && cam->GetCamX() > 0)
-	{
-		cam->SetHDirection(-1);
-	}
-	else
-	{
-		cam->SetHDirection(0);
-	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
