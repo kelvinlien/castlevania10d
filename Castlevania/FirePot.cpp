@@ -1,12 +1,33 @@
 #include "FirePot.h"
-CFirePot::CFirePot(float x, float y)
-{
-	SetState(FIREPOT_STATE_IDLE);
 
+void CFirePot:: SetItem(int itemType) {
+	ItemType type;
+	switch (itemType)
+	{
+	case 0:
+		type = ITEM_SMALL_HEART;
+		break;
+	case 5:
+		type = ITEM_WHIP_RED;
+		break;
+	case 7:
+		type = ITEM_DAGGER;
+		break;
+	default:
+		break;
+	}
+	this->itemType = type;
+}
+CFirePot::CFirePot(int itemType)
+{
+
+	SetState(FIREPOT_STATE_IDLE);
+	SetItem(itemType);
 	start_x = x;
 	start_y = y;
 	this->x = x;
 	this->y = y;
+
 }
 
 void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -20,10 +41,6 @@ void CFirePot::GetBoundingBox(float& left, float& top, float& right, float& bott
 void CFirePot::Render()
 {
 	int ani = FIREPOT_ANI_IDLE;
-	/*if (state == FIREPOT_STATE_DIE) {
-		ani = FIREPOT_ANI_DIE;
-	}*/
-
 	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
@@ -31,6 +48,10 @@ void CFirePot::Render()
 
 void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	/*if (IsBroken())
+	{
+		item.Update(dt, coObjects);
+	}*/
 	CGameObject::Update(dt, coObjects);
 	vy += FIREPOT_GRAVITY * dt;
 

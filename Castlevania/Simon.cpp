@@ -164,7 +164,7 @@ void Simon::Attack ()
 {
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
-			subWeapons->SetPosition(x, y + 20);
+			subWeapons->SetPosition(x, y + 10);
 			subWeapons->nx = nx;
 			
 			isUsingSubWeapon = true;
