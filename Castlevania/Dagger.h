@@ -2,6 +2,9 @@
 #include "Weapon.h"
 #include "FirePot.h"
 #include "Simon.h"
+#include "Camera.h"
+#include "Define.h"
+#include "Utils.h"
 #define DAGGER_BBOX_HEIGHT 16
 #define DAGGER_BBOX_WIDTH 32
 #define DAGGER_VX 0.35f

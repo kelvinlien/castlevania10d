@@ -148,7 +148,7 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
-	if (isAttack)
+	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
 	}
@@ -164,7 +164,7 @@ void Simon::Attack ()
 {
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
-			subWeapons->SetPosition(x, y + 20);
+			subWeapons->SetPosition(x, y + 10);
 			subWeapons->nx = nx;
 			
 			isUsingSubWeapon = true;

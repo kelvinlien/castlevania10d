@@ -185,7 +185,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_FIREPOT: obj = new CFirePot(); break;
+	case OBJECT_TYPE_FIREPOT: {
+		int type = atof(tokens[4].c_str());
+
+		obj = new CFirePot(type);
+		break;
+	}
+	
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -275,8 +281,19 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->isVanish == true)
+		 if (objects[i]->isVanish == true)
+		 {
+			 if (dynamic_cast<CFirePot*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
+				
+				 ItemType type = firePot->GetItemType();
+				 obj = new Item(firePot->x, firePot->y, type);
+				 objects.push_back(obj);
+			 }
 			objects.erase(objects.begin() + i);
+		 }
 		else 
 			objects[i]->Update(dt, &coObjects);
 	}

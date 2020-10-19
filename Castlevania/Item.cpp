@@ -2,13 +2,13 @@
 #include "Simon.h"
 
 
-Item::Item(int x, int y, Animation ani) {
+Item::Item(int x, int y, ItemType ani) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 	ani_set = animation_sets->Get(ITEM_ANI_SET_ID);
 
 	this->x = x;
 	this->y = y;
-	existingTime = 20000;
+	existingTime = 2000;
 
 	this->ani = ani;
 	switch (this->ani)
