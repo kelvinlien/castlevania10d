@@ -3,13 +3,7 @@
 
 Dagger::Dagger() : CWeapon()
 {
-	//check Simon'nx here to set nx for Dagger 
-	ani = CWeapon::animation_set->at(ANI_DAGGER_RIGHT);
-	vx = DAGGER_VX;
-
-	//Replace simon_x, simon_y
-	x = 250;
-	y = 230;
+	
 }
 void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
 	left = x;
@@ -17,16 +11,30 @@ void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	right = x + DAGGER_BBOX_WIDTH;
 	bottom = y + DAGGER_BBOX_HEIGHT;
 }
-void Dagger::Render() {
-	ani->Render(x, y);
+
+void Dagger::SetAnimation() {
+	if (nx > 0)
+		ani = CWeapon::animation_set->at(ANI_DAGGER_RIGHT);
+	else
+		ani = CWeapon::animation_set->at(ANI_DAGGER_LEFT);
 }
 
-void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
+void Dagger::Render() {
+	this->SetAnimation();
+		ani->Render(x, y);
+	RenderBoundingBox();
+}
 
+
+
+void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
+	
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
+	
+	vx = nx * DAGGER_VX;
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
@@ -35,6 +43,10 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	{
 		x += dx;
 		y += dy;
+		if (x < Camera::GetInstance()->GetCamX() ||
+			x > Camera::GetInstance()->GetCamX() + SCREEN_WIDTH) {
+			isVanish = true;
+		}
 	}
 	else
 	{
@@ -52,7 +64,6 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			{
 				this->isVanish = true;
 				e->obj->isVanish = true;
-
 			}
 			if (dynamic_cast<CBrick*>(e->obj))
 			{

@@ -5,9 +5,9 @@
 
 #define ITEM_ANI_SET_ID	4
 
-#define GRAVITY 0.4f
+#define GRAVITY 0.2f
 
-enum Animation
+enum ItemType
 {
 	ITEM_SMALL_HEART,
 	ITEM_BIG_HEART,
@@ -26,14 +26,14 @@ public:
 	int widthBBox;
 	int heightBBox;
 	
-	Animation ani;
+	ItemType ani;
 
 	Item() {};
 	~Item() {  };
-	Item(int x, int y, Animation ani);
+	Item(int x, int y, ItemType ani);
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects); // for update collision
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-	Animation GetType() { return ani; }
+	ItemType GetType() { return ani; }
 };

@@ -148,7 +148,7 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
-	if (isAttack)
+	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
 	}
@@ -160,15 +160,18 @@ void Simon::Render()
 	RenderBoundingBox();	
 }
 
-void Simon::Attack ()
+void Simon::Attack()
 {
-	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
-	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon)) {
-			isUsingSubWeapon = true;
-			if (subWeapons->isVanish) {
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)|| hearts < 1) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
+		hearts--;
+		subWeapons->SetPosition(x, y + 10);
+		subWeapons->nx = nx;
+			
+		isUsingSubWeapon = true;
+		if (subWeapons->isVanish) {
 				subWeapons->isVanish = false;
-				subWeapons->SetPosition(250, 230); // to reset position of Dagger
-			}
+		}
 	}
 	else		
 		isUsingSubWeapon = false;
@@ -262,7 +265,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	if (subWeapons != NULL && isUsingSubWeapon) {
 		if (subWeapons->isVanish) 
 			isUsingSubWeapon = false;
-
+		
 		subWeapons->Update(dt, coObjects);
 	}
 
@@ -355,11 +358,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 				if (item->GetType() == ITEM_WHIP_RED)
 						this->SetState(SIMON_STATE_LEVEL_UP);
-
 				else {
 
 					if (item->GetType() == ITEM_DAGGER) {
 						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
+					}
+					else if (item->GetType() == ITEM_BIG_HEART) {
+						hearts ++;
 					}
 						
 				}

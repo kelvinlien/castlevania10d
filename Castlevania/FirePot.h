@@ -19,16 +19,17 @@ class CFirePot :public CHolder
 	float start_x;			
 	float start_y;
 	DWORD break_time;
+	ItemType itemType;
 public:
-	CFirePot(float x = 0.0f, float y = 0.0f);
+	CFirePot(int itemType);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
-	//CFirePot() {};
 
 	virtual void Render();
 
 	void SetState(int state);
 
-	//void Reset();
-
+	//Getter & setter
+	void SetItem(int itemType);
+	ItemType GetItemType() { return itemType; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 };

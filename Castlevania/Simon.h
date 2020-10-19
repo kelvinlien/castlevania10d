@@ -35,6 +35,7 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
+	int hearts = 5;
 
 	//Flag of Simon's state
 	bool isJump;
@@ -106,6 +107,7 @@ public:
 	bool IsJump() { return isJump; }
 	bool IsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
+	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
