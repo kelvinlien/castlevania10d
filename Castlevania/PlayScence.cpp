@@ -381,15 +381,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
-	// disable control key when Mario die 
+	// disable control key when Simon die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
 	}
 	else if (game->IsKeyDown(DIK_LEFT)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
@@ -408,9 +408,5 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		if (simon->IsLevelUp()) break;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
-
-	/*case DIK_SPACE:
-		simon->SetIsJump(false);
-		break;*/
 	}
 }

@@ -356,15 +356,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
 
-				if (item->GetType() == ITEM_WHIP_RED)
-						this->SetState(SIMON_STATE_LEVEL_UP);
+				if (item->GetType() == ITEM_WHIP_RED) {
+					this->SetState(SIMON_STATE_LEVEL_UP);
+					CWhip::GetInstance()->LevelUp();
+				}
 				else {
 
 					if (item->GetType() == ITEM_DAGGER) {
 						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
 					}
 					else if (item->GetType() == ITEM_BIG_HEART) {
-						hearts ++;
+						hearts += 5;
 					}
 						
 				}
