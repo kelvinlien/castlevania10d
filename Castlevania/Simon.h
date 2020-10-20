@@ -28,7 +28,7 @@
 #define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
 
-#define SIMON_TIME_LEVEL_UP_WHIP 1500
+#define SIMON_TIME_LEVEL_UP_WHIP 700
 
 
 class Simon : public CGameObject

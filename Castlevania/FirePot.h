@@ -14,6 +14,8 @@
 #define FIREPOT_BBOX_WIDTH	32
 #define FIREPOT_BBOX_HEIGHT	64
 
+#define FIREPOT_BREAK_TIME 200
+
 class CFirePot :public CHolder
 {
 	float start_x;			

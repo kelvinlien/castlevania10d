@@ -98,7 +98,7 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			vy = 0;
 		}
 
-		if (state == FIREPOT_STATE_BREAK && GetTickCount() - break_time > 500)
+		if (state == FIREPOT_STATE_BREAK && ((GetTickCount() - break_time) > FIREPOT_BREAK_TIME))
 		{
 			this->isVanish = true;
 		}

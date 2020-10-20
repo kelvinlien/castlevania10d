@@ -157,7 +157,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	//RenderBoundingBox();	
 }
 
 void Simon::Attack()
@@ -173,7 +173,7 @@ void Simon::Attack()
 				subWeapons->isVanish = false;
 		}
 	}
-	else		
+	else 
 		isUsingSubWeapon = false;
 	if (isAttack)
 		return;
