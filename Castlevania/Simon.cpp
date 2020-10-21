@@ -162,17 +162,15 @@ void Simon::Render()
 
 void Simon::Attack()
 {
-
-	
+	// normal attack
 	if (isAttack)
 		return;
-	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP) && !isUsingSubWeapon)) {
+	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP))) {
 		vx = 0;
 		isAttack = true;
 		attackTime = GetTickCount();
 	}
-		
-
+	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
 		hearts--;
@@ -181,13 +179,14 @@ void Simon::Attack()
 	
 		isUsingSubWeapon = true;
 		subWeapons->isVanish = false;
+
 		isAttack = true;
 		attackTime = GetTickCount();
-
 	}
 	else 
 		isUsingSubWeapon = false;
 		
+	// set animation for whip
 	if (nx > 0) {
 		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
