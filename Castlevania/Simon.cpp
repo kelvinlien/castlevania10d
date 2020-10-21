@@ -155,28 +155,39 @@ void Simon::Render()
 
 	animation_set->at(ani)->Render(x, y, color);
 	//render subweapon
-	if (subWeapons != NULL && isUsingSubWeapon && !subWeapons ->isVanish) 
+	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
 	//RenderBoundingBox();	
 }
 
 void Simon::Attack()
 {
-	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)|| hearts < 1) return;
+
+	
+	if (isAttack)
+		return;
+	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP) && !isUsingSubWeapon)) {
+		vx = 0;
+		isAttack = true;
+		attackTime = GetTickCount();
+	}
+		
+
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
 		hearts--;
 		subWeapons->SetPosition(x, y + 10);
 		subWeapons->nx = nx;
-			
+	
 		isUsingSubWeapon = true;
-		if (subWeapons->isVanish) {
-				subWeapons->isVanish = false;
-		}
+		subWeapons->isVanish = false;
+		isAttack = true;
+		attackTime = GetTickCount();
+
 	}
 	else 
 		isUsingSubWeapon = false;
-	if (isAttack)
-		return;
+		
 	if (nx > 0) {
 		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
@@ -185,9 +196,7 @@ void Simon::Attack()
 		animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
 	}
-	vx = 0;
-	isAttack = true;
-	attackTime = GetTickCount();
+
 }
 
 void Simon::Sit()
@@ -262,11 +271,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	vy += SIMON_GRAVITY * dt;
 
 	
-	if (subWeapons != NULL && isUsingSubWeapon) {
+	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
 			isUsingSubWeapon = false;
-		
-		subWeapons->Update(dt, coObjects);
+		else 
+			subWeapons->Update(dt, coObjects);
 	}
 
 

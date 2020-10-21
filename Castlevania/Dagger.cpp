@@ -1,9 +1,9 @@
 #include "Dagger.h"
 
 
-Dagger::Dagger() : CWeapon()
+Dagger::Dagger()
 {
-	
+	isVanish = true;
 }
 void Dagger::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
 	left = x;
@@ -20,9 +20,11 @@ void Dagger::SetAnimation() {
 }
 
 void Dagger::Render() {
-	this->SetAnimation();
+	if (!isVanish) {
+		this->SetAnimation();
 		ani->Render(x, y);
-	RenderBoundingBox();
+		RenderBoundingBox();
+	}
 }
 
 
@@ -32,6 +34,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+
 
 	
 	vx = nx * DAGGER_VX;
