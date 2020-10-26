@@ -315,7 +315,9 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
-	if (cx > 0 && cx < 730)
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	int mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}

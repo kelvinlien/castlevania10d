@@ -10,6 +10,7 @@
 #include "GameMap.h"
 #include "FirePot.h"
 #include "Item.h"
+#include "GameMap.h"
 
 class CPlayScene: public CScene
 {
