@@ -31,6 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -137,6 +138,7 @@
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -164,6 +166,7 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -177,6 +180,20 @@
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="Whip.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bunifu_UI_v1.52">
+      <HintPath>E:\Map Editor\Application Files\MapEditor_1_0_0_1\bunifu_ui_v1.52.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework">
+      <HintPath>E:\Map Editor\Application Files\MapEditor_1_0_0_1\MetroFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Design">
+      <HintPath>E:\Map Editor\Application Files\MapEditor_1_0_0_1\MetroFramework.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts">
+      <HintPath>E:\Map Editor\Application Files\MapEditor_1_0_0_1\MetroFramework.Fonts.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
