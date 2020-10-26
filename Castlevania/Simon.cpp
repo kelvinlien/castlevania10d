@@ -1,4 +1,5 @@
-﻿#include <algorithm>
+﻿
+#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
@@ -40,10 +41,12 @@ void Simon::SetState(int state)
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
+		if (isAttack) break;
 		nx = -1;
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
+		if (isAttack) break;
 		nx = 1;
 		Walk();
 		break;
@@ -57,10 +60,10 @@ void Simon::SetState(int state)
 		Sit();
 		break;
 	case SIMON_STATE_STAND:
+		if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
+			break;
 		y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 		isSit = false;
-		if (isAttack)
-			isAttack = false;
 		break;
 	}
 
@@ -201,7 +204,7 @@ void Simon::Attack()
 void Simon::Sit()
 {
 	
-	if (isSit) return;
+	if (isJump || isSit || isAttack) return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
@@ -218,7 +221,7 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit)
+	if (isJump || isSit || isAttack)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
@@ -292,6 +295,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
 			animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
 			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() -1)->ResetFrame();
+		}
+		if (isSit && !CGame::GetInstance()->IsKeyDown(DIK_DOWN))  //check neu dang danh luc ngoi thi danh het roi dung hoac ngoi tiep
+		{
+				y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+				isSit = false;
 		}
 	}
 
