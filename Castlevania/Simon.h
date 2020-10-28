@@ -46,8 +46,6 @@ class Simon : public CGameObject
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
 
-	float start_x;
-	float start_y;
 
 
 
