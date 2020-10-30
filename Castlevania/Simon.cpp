@@ -37,7 +37,6 @@ void Simon::SetState(int state)
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
-		//Để cây roi level up ở đây
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
@@ -60,10 +59,7 @@ void Simon::SetState(int state)
 		Sit();
 		break;
 	case SIMON_STATE_STAND:
-		if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
-			break;
-		y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-		isSit = false;
+		Stand();
 		break;
 	}
 
@@ -160,9 +156,14 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	//RenderBoundingBox();	
+	RenderBoundingBox();	
 }
-
+void Simon::Stand(){
+	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
+		return;
+	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	isSit = false;
+}
 void Simon::Attack()
 {
 	// normal attack
@@ -420,10 +421,7 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	bottom = y + SIMON_BBOX_HEIGHT;
 	if (isJump)
 	{
-		if(isAttack)
-			bottom = y + SIMON_BBOX_HEIGHT;
-		else
-			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
 	{

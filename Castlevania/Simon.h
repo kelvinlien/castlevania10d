@@ -96,6 +96,7 @@ public:
 	void Walk();
 	void Sit();
 	void Jump();
+	void Stand();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
