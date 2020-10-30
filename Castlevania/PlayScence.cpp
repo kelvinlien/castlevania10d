@@ -183,7 +183,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_BRICK: {
+		//to assign mapWidth
+		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+		int amountOfBrick = mapWidth / BRICK_WIDTH; 
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < amountOfBrick; i++) {
+			obj = new CBrick();
+			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+		
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
@@ -207,12 +228,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
+	if (!dynamic_cast<CBrick*>(obj)) {
+		obj->SetPosition(x, y);
 
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+	}
+		
 }
 
 void CPlayScene::Load()
@@ -264,6 +288,10 @@ void CPlayScene::Load()
 	f.close();
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	//to assign mapWidth
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
@@ -303,7 +331,6 @@ void CPlayScene::Update(DWORD dt)
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
-	DebugOut(L"[CHECK] Simon pos %f\n", cx);
 
 	if (cx < -14)
 	{
@@ -315,8 +342,7 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
-	int mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
 	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
