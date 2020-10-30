@@ -19,7 +19,7 @@ protected:
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
-
+	int mapWidth;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
