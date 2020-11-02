@@ -9,8 +9,6 @@
 
 class CHolder :public CGameObject
 {
-	float start_x;			
-	float start_y;
 	int holderType;
 	bool isBroken = false;
 

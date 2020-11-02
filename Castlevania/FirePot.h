@@ -18,8 +18,6 @@
 
 class CFirePot :public CHolder
 {
-	float start_x;			
-	float start_y;
 	DWORD break_time;
 	ItemType itemType;
 public:
