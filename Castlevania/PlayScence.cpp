@@ -304,7 +304,6 @@ void CPlayScene::Update(DWORD dt)
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
-	DebugOut(L"[CHECK] Simon pos %f\n", cx);
 
 	if (cx < -14)
 	{
