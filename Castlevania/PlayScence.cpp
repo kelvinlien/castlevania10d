@@ -206,6 +206,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				obj->SetPosition(x + BRICK_WIDTH * i, y);
 			else
 				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
@@ -345,12 +346,13 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CGame *game = CGame::GetInstance();
+	 
+
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
-	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
+	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}

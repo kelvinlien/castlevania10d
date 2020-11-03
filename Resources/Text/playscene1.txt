@@ -358,7 +358,7 @@
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	289	2
+1	0	437	2
 # ---- fire pot ----
 #last number is type of item
 3	178	224	3	1
@@ -376,4 +376,3 @@
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 50	300	98	0	316	150	2
-
