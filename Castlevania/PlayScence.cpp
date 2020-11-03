@@ -184,11 +184,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
 	case OBJECT_TYPE_BRICK: {
+		int amountOfBrick;
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+		if (currentMapID == 1)
+			amountOfBrick = mapWidth / BRICK_WIDTH;
+		else
+			amountOfBrick = mapWidth / (BRICK_WIDTH * 2);
 
-		int amountOfBrick = mapWidth / BRICK_WIDTH; 
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -198,7 +202,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			if (currentMapID == 1)
+				obj->SetPosition(x + BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
