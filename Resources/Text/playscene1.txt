@@ -1,15 +1,15 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
-0	textures\simon.png	255	0	255
-1	textures\simon-death.png	255	0	255
-20	textures\floor.png	255	255	255
-30	textures\holder.png	255	0	255
-31	textures\hit-effect.png	255	0	255
-32	textures\burn.png	255	0	255
-40	textures\item.png	255	0	255
-50	textures\whip.png	255	0	255
-51	textures\dagger.png	255	0	255
-100	textures\texture-map-1.png	255	255	255
+0	..\Resources\Texture\simon.png	255	0	255
+1	..\Resources\Texture\simon-death.png	255	0	255
+20	..\Resources\Texture\floor.png	255	255	255
+30	..\Resources\Texture\holder.png	255	0	255
+31	..\Resources\Texture\hit-effect.png	255	0	255
+32	..\Resources\Texture\burn.png	255	0	255
+40	..\Resources\Texture\item.png	255	0	255
+50	..\Resources\Texture\whip.png	255	0	255
+51	..\Resources\Texture\dagger.png	255	0	255
+100	..\Resources\Texture\texture-map-1.png	255	255	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -230,7 +230,7 @@
 [MAPMATRIX]
 
 #MAP1
-1	matrix-map-1.txt
+1	..\Resources\Text\matrix-map-1.txt
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
