@@ -207,7 +207,7 @@
 
 
 #FLOOR
-20001	1536	0	1568	32	20
+20001	0	0	33	29	20
 
 #HOLDERS
 #FIREPOT
@@ -794,7 +794,7 @@
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	289	2
+1	0	441	2
 
 # ---- fire pot ----
 #last number is type of item
@@ -808,7 +808,7 @@
 #4	178	224	5
 
 # SIMON
-0	50.0	0	1
+0	50	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
