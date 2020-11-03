@@ -3,7 +3,7 @@
 [TEXTURES]
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
-20	..\Resources\Texture\floor.png	255	255	255
+20	..\Resources\Texture\floor_2.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
 40	..\Resources\Texture\item.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
