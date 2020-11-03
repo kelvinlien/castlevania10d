@@ -6,7 +6,7 @@ CGhost::CGhost(float x, float y, int nx):CEnemy()
 	this->x = x;
 	this->y = y;
 	this->type = 1; // 1 là ghost nên thay bằng enum
-
+	isActive=true;
 	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
@@ -61,7 +61,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 }
 
 void CGhost::Render() {
-	int ani = GHOST_ANI_RIGHT;
+	ani = GHOST_ANI_RIGHT;
 	if (this->nx < 0)
 		ani = GHOST_ANI_LEFT;
 

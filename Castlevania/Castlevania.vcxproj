@@ -138,6 +138,7 @@
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Holder.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />

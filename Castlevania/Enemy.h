@@ -5,7 +5,6 @@ class CEnemy: public CGameObject
 {
 protected:
 	bool isActive;
-	float leftLimit;
 	int type;
 public:
 	CEnemy();
