@@ -292,6 +292,8 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+	CGameObject *obj = new Item(100, 0, ITEM_SMALL_HEART);
+	objects.push_back(obj);
 	
 }
 
