@@ -156,7 +156,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	//RenderBoundingBox();	
+	RenderBoundingBox();	
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -256,12 +256,42 @@ void Simon::CalcPotentialCollisions(
 	{
 		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
 		{
+			//Check collision AABB of Simon & Item
+			if (dynamic_cast<Item *>(coObjects->at(i)))
+			{
+				Item *item = dynamic_cast<Item *>(coObjects->at(i));
+				float l1, t1, r1, b1;
+				float l2, t2, r2, b2;
+
+				GetBoundingBox(l1, t1, r1, b1);
+				item->GetBoundingBox(l2, t2, r2, b2);
+
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				{
+					item->isVanish = true;
+					if (item->GetType() == ITEM_WHIP_RED) {
+						this->SetState(SIMON_STATE_LEVEL_UP);
+						CWhip::GetInstance()->LevelUp();
+					}
+					else {
+
+						if (item->GetType() == ITEM_DAGGER) {
+							subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
+						}
+						else if (item->GetType() == ITEM_BIG_HEART) {
+							hearts += 5;
+						}
+					}
+					continue;
+				}
+			}
+
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
-				if (e->t > 0 && e->t <= 1.0f)
-					coEvents.push_back(e);
-				else
-					delete e;
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
 		}
 	}
 
@@ -272,7 +302,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
-
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
@@ -369,10 +398,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 						SetState(SIMON_STATE_IDLE);
 				}
 			} // if Item
-			else if (dynamic_cast<Item *>(e->obj)) {
+			else if (dynamic_cast<Item *>(e->obj)) 
+			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
-
 				if (item->GetType() == ITEM_WHIP_RED) {
 					this->SetState(SIMON_STATE_LEVEL_UP);
 					CWhip::GetInstance()->LevelUp();
@@ -385,7 +414,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					else if (item->GetType() == ITEM_BIG_HEART) {
 						hearts += 5;
 					}
-						
 				}
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
