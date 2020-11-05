@@ -16,6 +16,8 @@ Item::Item(int x, int y, ItemType ani) {
 	case ITEM_SMALL_HEART:
 		widthBBox = 16;
 		heightBBox = 16;
+		vx = 0.07;
+		start_x = x;
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
@@ -39,10 +41,18 @@ void Item::Render() {
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
-	CGameObject::Update(dt, coObjects);
 	vy = GRAVITY;
-
+	if (ani == ITEM_SMALL_HEART)
+	{
+		vy = GRAVITY / 3;
+		if ((start_x > x && start_x - x > 30.0 && vx < 0) || (start_x < x && x - start_x > 30.0 && vx > 0))
+		{
+			DebugOut(L"[INFO] start_x, x, vx of small heart %f %f %f \n", start_x, x, vx);
+			vx = -vx;
+		}
+	}
 	CGameObject::Update(dt, coObjects);
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -64,6 +74,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
 					if (nx != 0) vx = 0;
 					if (ny != 0) {
+						vx = 0;
 						vy = 0;
 						//counting time to vanish item
 						if (existingTime <= 0)

@@ -219,7 +219,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
+			obj = new Item(300, 0, ITEM_SMALL_HEART);
 		}
 		break;
 	default:
@@ -292,8 +292,6 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	CGameObject *obj = new Item(100, 0, ITEM_SMALL_HEART);
-	objects.push_back(obj);
 	
 }
 
