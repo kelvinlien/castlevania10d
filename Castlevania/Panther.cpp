@@ -134,4 +134,5 @@ void CPanther::Render() {
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+
 }
