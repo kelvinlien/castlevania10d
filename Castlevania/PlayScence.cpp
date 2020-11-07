@@ -25,6 +25,11 @@ using namespace std;
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPMATRIX 7
 
+#define SCENE_SECTION_ANI_SET		8
+#define SCENE_SECTION_ITEM		9
+#define SCENE_SECTION_FIREPOT	10
+#define SCENE_SECTION_OBJECT		11
+
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
@@ -238,6 +243,120 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 		
 }
+/*
+	Parse Scene Ani_set
+*/
+void CPlayScene::_ParseSection_SCENE_ANI_SET(string line) {
+
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open the Whip path ");
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading Whip resources %s\n", path);
+}
+/*
+
+	Parse Scene Object 
+
+*/
+void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
+{
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open the Simon path ");
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading Simon resources %s\n", path);
+}
 
 void CPlayScene::Load()
 {
@@ -262,13 +381,12 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_SPRITES; continue; }
 		if (line == "[MAPMATRIX]") {
 			section = SCENE_SECTION_MAPMATRIX; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
-
+		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]")
+		{
+			section = SCENE_SECTION_OBJECT; continue;		}
+		if (line == "[ITEM]" || line == "[WHIP]") 
+		{
+			section = SCENE_SECTION_ANI_SET; continue;		}
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
@@ -280,9 +398,8 @@ void CPlayScene::Load()
 			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
 			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 			case SCENE_SECTION_MAPMATRIX: _ParseSection_MAPMATRIX(line); break;
-			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_ANI_SET: _ParseSection_SCENE_ANI_SET(line); break;
+			case SCENE_SECTION_OBJECT: _ParseSection_SCENE_OBJECT(line); break;
 		}
 	}
 	f.close();
