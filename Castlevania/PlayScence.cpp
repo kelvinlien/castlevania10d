@@ -268,7 +268,9 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_ANIMATION_SETS; continue; }
 		if (line == "[OBJECTS]") { 
 			section = SCENE_SECTION_OBJECTS; continue; }
-
+		if (line == "[ENEMY]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
