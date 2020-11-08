@@ -358,6 +358,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
+
 }
 
 void CPlayScene::Render()
@@ -369,6 +370,28 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	// Bbox 2 dau cau thang
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+
+	CGame::GetInstance()->Draw(1232, 377, bbox, 1232, 377, 1264, 440, 50);  //int left, int top, int right, int bottom, int alpha
+
+	CGame::GetInstance()->Draw(1360, 249, bbox, 1360, 249, 1392, 312, 50);
+
+	CGame::GetInstance()->Draw(1424, 249, bbox, 1424, 249, 1456, 312, 50);
+
+	CGame::GetInstance()->Draw(1488, 185, bbox, 1488, 185, 1520, 248, 50);
+
+	CGame::GetInstance()->Draw(1808, 185, bbox, 1808, 185, 1840, 248, 50);
+
+	CGame::GetInstance()->Draw(1872, 249, bbox, 1872, 249, 1904, 312, 50);
+
+	CGame::GetInstance()->Draw(2576, 377, bbox, 2576, 377, 2608, 440, 50);
+
+	CGame::GetInstance()->Draw(2768, 185, bbox, 2768, 185, 2800, 248, 50);
+
+	CGame::GetInstance()->Draw(3408, 249, bbox, 3408, 249, 3440, 312, 50);
+
+	CGame::GetInstance()->Draw(3536, 377, bbox, 3536, 377, 3568, 440, 50);
 }
 
 /*
