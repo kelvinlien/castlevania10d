@@ -27,6 +27,7 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_MAPMATRIX(string line);
 	
+	void _ParseSection_SCENE_OBJECT(string line);
 public: 
 	CPlayScene(int id, LPCWSTR filePath);
 

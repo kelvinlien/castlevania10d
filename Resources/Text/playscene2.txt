@@ -1,5 +1,7 @@
-# id	file_path	transparent_color_r	g	b
+[ENEMY]
+0	..\Resources\Text\Enemy.txt
 
+# id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
@@ -9,9 +11,6 @@
 50	..\Resources\Texture\whip.png	255	0	255
 51	..\Resources\Texture\dagger.png	255	0	255
 52	..\Resources\Texture\holy_water.png	255	0	255
-60	..\Resources\Texture\ghost.png	255	0	255
-61	..\Resources\Texture\panther.png	255	0	255
-62	..\Resources\Texture\fishman.png	255	0	255
 70	..\Resources\Texture\burn.png	255	0	255
 71	..\Resources\Texture\effect400.png	255	0	255
 72	..\Resources\Texture\effect700.png	255	0	255
@@ -295,52 +294,6 @@
 50019	74	2	86	26	52
 50020	96	0	128	26	52
 
-#ENEMY
-
-#Ghost
-#Left
-60001	0	0	32	64	60
-60002	36	0	68	64	60
-
-#Right
-60011	77	0	109	64	60
-60012	113	0	145	64	60
-
-
-#Panther
-#Left
-#Idle
-61000	0	0	64	32	61
-#Leap
-61001	192	0	256	32	61
-#Moving
-61002	68	0	132	32	61
-61003	134	0	198	32	61
-
-#Right
-#Idle
-61010	472	0	536	32	61
-#Leap
-61011	264	0	328	32	61
-#Moving
-61012	404	0	468	32	61
-61013	338	0	402	32	61
-
-#Fishman
-#Left
-#Idle
-62000	69	0	101	64	62
-#Moving
-62001	34	0	66	64	62
-62002	0	0	32	64	62
-
-#Right
-#Idle
-62010	115	0	147	64	62
-#Moving
-62011	148	0	180	64	62
-62012	184	0	216	64	62
-
 #Effect
 #Burn
 70000	18	10	24	36	70
@@ -421,7 +374,7 @@
 #2
 80028	31	29	44	42	80
 #3
-80039	46	29	59	42	80
+80029	46	29	59	42	80
 #4
 80030	61	29	74	42	80
 #5
@@ -577,43 +530,6 @@
 515	51017	100
 # using
 506	50018	100	50019	100	50020	100
-
-# ==== ENEMY  =========
-#ghost
-#moving left
-600	60001	100	60002	100
-#moving right
-601	60011	100	60012	100
-
-#panther
-#idle left
-610	61000	100
-#idle right
-611	61010	100
-
-#leap left
-612	61001	100
-#leap right
-613	61011	100
-
-#moving left
-614	61002	100	61003	100
-#moving right
-615	61012	100	61013	100
-
-
-
-#fishman
-#idle left
-620	62000	100
-#idle right
-621	62010	100
-
-#moving left
-622	62000	100	62001	100	62002	100
-
-#moving right
-623	62010	100	62011	100	62012	100
 
 # ==== EFFECT =========
 #Burn
@@ -772,8 +688,6 @@
 4	401	402	406	407	408	411	412	416	417	418	419
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506
-#ENEMY
-6	600	601	610	611	612	613	614	615	620	621	622	623
 #EFFECT
 7	700	701	702	703	704
 #BOARD
@@ -783,14 +697,7 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 2 = Goomba
-
-# GOOMBA
-2	200	135	3
-2	260	135	3
-2	320	135	3
-2	480	135	3
-2	500	135	3
+# type: 0 = Simon , 1 = Brick, 3 = Firepot
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
