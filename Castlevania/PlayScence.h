@@ -29,8 +29,7 @@ protected:
 
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
-	
-public: 
+public:
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
