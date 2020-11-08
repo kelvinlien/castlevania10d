@@ -257,7 +257,7 @@ void CPlayScene::_ParseSection_SCENE_ANI_SET(string line) {
 	file.open(path);
 
 	if (file.fail())
-		DebugOut(L"[ERR] Cannot open the Whip path ");
+		DebugOut(L"[ERR] Cannot open %d\n",line);
 
 	// current resource section flag
 	int section = SCENE_SECTION_UNKNOWN;
@@ -295,7 +295,7 @@ void CPlayScene::_ParseSection_SCENE_ANI_SET(string line) {
 		}
 	}
 	file.close();
-	DebugOut(L"[INFO] Done loading Whip resources %s\n", path);
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
 }
 /*
 
@@ -313,7 +313,7 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 	file.open(path);
 
 	if (file.fail())
-		DebugOut(L"[ERR] Cannot open the Simon path ");
+		DebugOut(L"[ERR] Cannot open %d\n", path);
 
 	// current resource section flag
 	int section = SCENE_SECTION_UNKNOWN;
@@ -355,7 +355,7 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 		}
 	}
 	file.close();
-	DebugOut(L"[INFO] Done loading Simon resources %s\n", path);
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
 }
 
 void CPlayScene::Load()
@@ -379,9 +379,18 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[SPRITES]") { 
 			section = SCENE_SECTION_SPRITES; continue; }
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
 		if (line == "[MAPMATRIX]") {
 			section = SCENE_SECTION_MAPMATRIX; continue; }
-		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]")
+		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]" || line == "[ENEMY]")
 		{
 			section = SCENE_SECTION_OBJECT; continue;		}
 		if (line == "[ITEM]" || line == "[WHIP]") 
@@ -398,6 +407,9 @@ void CPlayScene::Load()
 			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
 			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 			case SCENE_SECTION_MAPMATRIX: _ParseSection_MAPMATRIX(line); break;
+			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 			case SCENE_SECTION_ANI_SET: _ParseSection_SCENE_ANI_SET(line); break;
 			case SCENE_SECTION_OBJECT: _ParseSection_SCENE_OBJECT(line); break;
 		}
