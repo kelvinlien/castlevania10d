@@ -90,11 +90,10 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{
 				if (isJump = true)
 				{
-					isJump = false;
 					jumpCount--;
-					if (Simon::GetInstance()->nx > 0)
+					if (Simon::GetInstance()->x - this->x < 0 && this->nx > 0)
 						nx = -1;
-					else if (Simon::GetInstance()->nx < 0)
+					else if (Simon::GetInstance()->x - this->x > 0 && this->nx < 0)
 						nx = 1;
 					Run();
 				}

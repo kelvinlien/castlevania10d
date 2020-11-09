@@ -14,7 +14,6 @@
 #define GHOST_WALKING_SPEED 0.15f 
 class CGhost:public CEnemy
 {
-	float rightLimit;
 	int ani;
 public:
 	CGhost(float x, float y, int nx);
