@@ -30,6 +30,7 @@ using namespace std;
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_WHIP	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -164,7 +165,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-
+	int amount;
+	if (object_type == 5) {
+		amount = atoi(tokens[4].c_str());
+	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
@@ -212,7 +216,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_BRICKS_GROUP: {
+		int amountOfBrick = amount;
 		
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < amountOfBrick; i++) {
+			obj = new CBrick();
+			
+			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
