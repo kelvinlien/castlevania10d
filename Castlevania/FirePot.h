@@ -2,7 +2,7 @@
 #include "Holder.h"
 #include "Brick.h"
 
-#define FIREPOT_GRAVITY			0.002f
+#define FIREPOT_GRAVITY			0.00f
 #define FIREPOT_DEFLECT_SPEED 0.2f
 
 #define	FIREPOT_STATE_IDLE	0
