@@ -46,8 +46,6 @@ class Simon : public CGameObject
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
 
-	float start_x;
-	float start_y;
 
 
 
@@ -96,6 +94,7 @@ public:
 	void Walk();
 	void Sit();
 	void Jump();
+	void Stand();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);

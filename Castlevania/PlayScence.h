@@ -10,6 +10,7 @@
 #include "GameMap.h"
 #include "FirePot.h"
 #include "Item.h"
+#include "GameMap.h"
 
 class CPlayScene: public CScene
 {
@@ -18,15 +19,17 @@ protected:
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
-
+	int mapWidth;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_MAPMATRIX(string line);
-	
-public: 
+
+	void _ParseSection_SCENE_ANI_SET(string line);
+	void _ParseSection_SCENE_OBJECT(string line);
+public:
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();

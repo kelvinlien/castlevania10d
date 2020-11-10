@@ -97,6 +97,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Panther.cpp">
+    <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -186,6 +187,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Panther.h">
+    <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
