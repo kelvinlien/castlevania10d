@@ -378,29 +378,26 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
 		{
 			//trigger cau thang duoi
-			if (((((x + SIMON_BBOX_WIDTH - 10 >= 1232 && x + SIMON_BBOX_WIDTH - 10 < 1248) || (x + SIMON_BBOX_WIDTH - 10 >= 1248 && x + 12 < 1248) || (x + 12 >= 1248 && x + 12 < 1264)) && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 2576 && x + SIMON_BBOX_WIDTH - 10 < 2592) || (x + SIMON_BBOX_WIDTH - 10 >= 2592 && x + 12 < 2592) || (x + 12 >= 2592 && x + 12 < 2608)) && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 1424 && x + SIMON_BBOX_WIDTH - 10 < 1440) || (x + SIMON_BBOX_WIDTH - 10 >= 1440 && x + 12 < 1440) || (x + 12 >= 1440 && x + 12 < 1456)) && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 1872 && x + SIMON_BBOX_WIDTH - 10 < 1888) || (x + SIMON_BBOX_WIDTH - 10 >= 1888 && x + 12 < 1888) || (x + 12 >= 1888 && x + 12 < 1904)) && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 3536 && x + SIMON_BBOX_WIDTH - 10 < 3552) || (x + SIMON_BBOX_WIDTH - 10 >= 3552 && x + 12 < 3552) || (x + 12 >= 3552 && x + 12 < 3568)) && y >= 377 && y + SIMON_BBOX_HEIGHT < 441))
-				&& CGame::GetInstance()->IsKeyDown(DIK_UP))
+			if (((x + SIMON_BBOX_WIDTH - 10 >= 1232 && x + 12 < 1264 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2576 && x + 12 < 2608 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1424 && x + 12 < 1456 && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1872 && x + 12 < 1904 && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3536 && x + 12 < 3568 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)) && CGame::GetInstance()->IsKeyDown(DIK_UP))
 			{
 				state = SIMON_STATE_GO_UP_STAIR;
 			}
 
 			//trigger cau thang tren
-			if (((((x + SIMON_BBOX_WIDTH - 10 >= 1360 && x + SIMON_BBOX_WIDTH - 10 < 1376) || (x + SIMON_BBOX_WIDTH - 10 >= 1376 && x + 12 < 1376) || (x + 12 >= 1376 && x + 12 < 1392)) && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 1488 && x + SIMON_BBOX_WIDTH - 10 < 1504) || (x + SIMON_BBOX_WIDTH - 10 >= 1504 && x + 12 < 1504) || (x + 12 >= 1504 && x + 12 < 1520)) && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 1808 && x + SIMON_BBOX_WIDTH - 10 < 1824) || (x + SIMON_BBOX_WIDTH - 10 >= 1824 && x + 12 < 1824) || (x + 12 >= 1824 && x + 12 < 1840)) && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 2768 && x + SIMON_BBOX_WIDTH - 10 < 2784) || (x + SIMON_BBOX_WIDTH - 10 >= 2784 && x + 12 < 2784) || (x + 12 >= 2784 && x + 12 < 2800)) && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
-				|| (((x + SIMON_BBOX_WIDTH - 10 >= 3408 && x + SIMON_BBOX_WIDTH - 10 < 3424) || (x + SIMON_BBOX_WIDTH - 10 >= 3424 && x + 12 < 3424) || (x + 12 >= 3424 && x + 12 < 3440)) && y >= 249 && y + SIMON_BBOX_HEIGHT < 313))
-				&& CGame::GetInstance()->IsKeyDown(DIK_DOWN))
+			if (((x + SIMON_BBOX_WIDTH - 10 >= 1360 && x + 12 < 1392 && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1488 && x + 12 < 1520 && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1808 && x + 12 < 1840 && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2768 && x + 12 < 2800 && y >= 185 && y + SIMON_BBOX_HEIGHT < 249)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3408 && x + 12 < 3440 && y >= 249 && y + SIMON_BBOX_HEIGHT < 313)) && CGame::GetInstance()->IsKeyDown(DIK_DOWN))
 			{
 				state = SIMON_STATE_GO_DOWN_STAIR;
 			}
 		}
-		DebugOut(L"[CHECK] Simon top: %f\n", y);
-		DebugOut(L"[CHECK] Simon bottom: %f\n", y + SIMON_BBOX_HEIGHT);
+		
 		//
 		// Collision logic with other objects
 		//
