@@ -349,6 +349,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		if (state == SIMON_STATE_AUTO) {
+			dx /= 1000;
+		}
+		
 		x += dx;
 		y += dy;
 	}
@@ -365,7 +369,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		if (nx != 0) {
+			if (state != SIMON_STATE_AUTO) {
+				vx = 0;
+			}
+		}
 		if (ny != 0) {
 			vy = 0;
 		}
@@ -418,7 +426,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				SetState(SIMON_STATE_AUTO);
+				vx = SIMON_WALKING_SPEED;
+				x += dx;
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
