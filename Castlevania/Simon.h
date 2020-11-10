@@ -47,7 +47,8 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-
+	bool up;
+	bool down;
 
 
 
@@ -111,6 +112,8 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsUp() { return up; }
+	bool IsDown() { return down; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
