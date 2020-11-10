@@ -12,6 +12,9 @@
 
 #define GHOST_GRAVITY 0.002f
 #define GHOST_WALKING_SPEED 0.15f 
+
+#define GHOST_BBOX_WIDTH	32
+#define GHOST_BBOX_HEIGHT	64
 class CGhost:public CEnemy
 {
 	int ani;

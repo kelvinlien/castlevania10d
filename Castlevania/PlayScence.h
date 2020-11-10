@@ -12,10 +12,15 @@
 #include "Item.h"
 #include "GameMap.h"
 
+
+#include "Ghost.h"
+
 class CPlayScene: public CScene
 {
 protected: 
-	Simon *player;					// A play scene has to have player, right? 
+	Simon *player;					// A play scene has to have player, right?
+
+	CGhost *ghost;					// Beta ghost for testing purpose
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;

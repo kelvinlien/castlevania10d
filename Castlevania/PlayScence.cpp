@@ -33,7 +33,7 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_WHIP	4
 
@@ -188,7 +188,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
+	case OBJECT_TYPE_GHOST: 		
+	if (ghost != NULL)
+	{
+		DebugOut(L"[ERROR] GHOST object was created before!\n");
+		return;
+	}
+	obj = new CGhost(x, y, -1); ghost = (CGhost*)obj; break;
 	case OBJECT_TYPE_BRICK: {
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
@@ -481,6 +487,17 @@ void CPlayScene::Update(DWORD dt)
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+
+	if (ghost != NULL)
+	{
+		float gx, gy;
+		ghost->GetPosition(gx, gy);
+
+		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
+		{
+			ghost->SetDirect(-(ghost->GetDirect()));
+		}
+	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 

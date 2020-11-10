@@ -7,11 +7,11 @@ CGhost::CGhost(float x, float y, int nx):CEnemy()
 	this->y = y;
 	this->type = 1; // 1 là ghost nên thay bằng enum
 	isActive=true;
-	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	vx = GHOST_WALKING_SPEED * this->nx;
 	CGameObject::Update(dt);
 	vy += GHOST_GRAVITY * dt;
 
@@ -67,10 +67,13 @@ void CGhost::Render() {
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	animation_set->at(ani)->Render(x, y, color);
-
+	RenderBoundingBox();
 }
 
 void CGhost::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-
+	left = x;
+	top = y;
+	right = x + GHOST_BBOX_WIDTH;
+	bottom = y + GHOST_BBOX_HEIGHT;
 }
