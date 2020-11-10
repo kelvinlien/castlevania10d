@@ -2,8 +2,11 @@
 #include "GameObject.h"
 #include "WeaponManager.h"
 #include "Whip.h"
-#include <map> 
+#include <map>
+#include "GameMap.h"
 
+#define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
+#define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -46,7 +49,8 @@ class Simon : public CGameObject
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
 
-
+	//flag is true when simon comes and render portal, back part of the castle  
+	bool flag;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -109,6 +113,7 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsFlagOn() { return flag; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
