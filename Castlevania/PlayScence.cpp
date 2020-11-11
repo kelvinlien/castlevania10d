@@ -29,7 +29,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_WHIP	4
+#define OBJECT_TYPE_CANDLE	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -210,6 +210,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
+		break;
+	}
+
+	case OBJECT_TYPE_CANDLE: {
+		int type = atof(tokens[4].c_str());
+
+		obj = new CCandle(type);
 		break;
 	}
 	

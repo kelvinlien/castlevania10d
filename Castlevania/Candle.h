@@ -1,6 +1,5 @@
 #pragma once
 #include "Holder.h"
-#define CANDLE_GRAVITY			0.002f
 #define CANDLE_DEFLECT_SPEED 0.2f
 
 #define	CANDLE_STATE_IDLE	0

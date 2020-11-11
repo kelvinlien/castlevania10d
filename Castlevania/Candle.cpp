@@ -84,7 +84,7 @@ void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		item.Update(dt, coObjects);
 	}*/
 	CGameObject::Update(dt, coObjects);
-	vy += CANDLE_GRAVITY * dt;
+	vy = 0;
 
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
