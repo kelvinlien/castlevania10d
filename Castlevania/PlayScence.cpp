@@ -29,8 +29,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_WHIP	4
-#define OBJECT_TYPE_CANDLE	5
+#define OBJECT_TYPE_CANDLE	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -199,7 +198,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
