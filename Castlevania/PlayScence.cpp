@@ -326,6 +326,15 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(firePot->x, firePot->y, type);
 				 objects.push_back(obj);
 			 }
+			 else if (dynamic_cast<CCandle*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CCandle *candle = dynamic_cast<CCandle*>(objects[i]);
+
+				 ItemType type = candle->GetItemType();
+				 obj = new Item(candle->x, candle->y, type);
+				 objects.push_back(obj);
+			 }
 			objects.erase(objects.begin() + i);
 		 }
 		else 

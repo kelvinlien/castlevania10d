@@ -1,4 +1,5 @@
 #include "Candle.h"
+#include "Utils.h"
 void CCandle::SetItem(int itemType) {
 	ItemType type;
 	switch (itemType)
@@ -55,7 +56,10 @@ void CCandle::SetState(int state)
 {
 	this->state = state;
 	if (state == CANDLE_STATE_BREAK)
+	{
 		break_time = GetTickCount();
+		DebugOut(L"[INFO] Current break_time %f\n", break_time);
+	}
 }
 
 void CCandle::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -102,6 +106,7 @@ void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else
 	{
+		DebugOut(L"[INFO] Current GetTickCount %f\n", GetTickCount());
 		float min_tx, min_ty, nx = 0, ny;
 
 		float rdx = 0;

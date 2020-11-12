@@ -85,7 +85,6 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		vy = GRAVITY / 3;
 		if ((start_x > x && start_x - x > 30.0 && vx < 0) || (start_x < x && x - start_x > 30.0 && vx > 0))
 		{
-			DebugOut(L"[INFO] start_x, x, vx of small heart %f %f %f \n", start_x, x, vx);
 			vx = -vx;
 		}
 	}
