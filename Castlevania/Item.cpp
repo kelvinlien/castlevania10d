@@ -17,6 +17,7 @@ Item::Item(int x, int y, ItemType ani) {
 		widthBBox = 16;
 		heightBBox = 16;
 		start_x = x;
+		vx = 0.09;
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
@@ -81,8 +82,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	vy = GRAVITY;
 	if (ani == ITEM_SMALL_HEART)
 	{
-		vx = 0.07;
-		vy = GRAVITY / 3;
+		vy = GRAVITY / 2;
 		if ((start_x > x && start_x - x > 30.0 && vx < 0) || (start_x < x && x - start_x > 30.0 && vx > 0))
 		{
 			vx = -vx;
