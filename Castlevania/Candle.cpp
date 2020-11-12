@@ -1,4 +1,5 @@
 #include "Candle.h"
+#include "Utils.h"
 void CCandle::SetItem(int itemType) {
 	ItemType type;
 	switch (itemType)
@@ -55,7 +56,9 @@ void CCandle::SetState(int state)
 {
 	this->state = state;
 	if (state == CANDLE_STATE_BREAK)
+	{
 		break_time = GetTickCount();
+	}
 }
 
 void CCandle::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -94,32 +97,25 @@ void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	CalcPotentialCollisions(coObjects, coEvents);
 
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
+	//Candle is set to the wall and not collide with floor like Firepot so empty coEvents checking is bypassed to be able to continue
+
+	float min_tx, min_ty, nx = 0, ny;
+
+	float rdx = 0;
+	float rdy = 0;
+	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+	// block 
+	x += min_tx * dx + nx * 0.2f;
+	y += min_ty * dy + ny * 0.2f;
+
+	if (ny != 0) {
+		vy = 0;
 	}
-	else
+
+	if (state == CANDLE_STATE_BREAK && ((GetTickCount() - break_time) > CANDLE_BREAK_TIME))
 	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		float rdx = 0;
-		float rdy = 0;
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		// block 
-		x += min_tx * dx + nx * 0.2f;
-		y += min_ty * dy + ny * 0.2f;
-
-		if (ny != 0) {
-			vy = 0;
-		}
-
-		if (state == CANDLE_STATE_BREAK && ((GetTickCount() - break_time) > CANDLE_BREAK_TIME))
-		{
-			this->isVanish = true;
-		}
+		this->isVanish = true;
 	}
 
 	// clean up collision events

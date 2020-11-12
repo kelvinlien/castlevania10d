@@ -226,7 +226,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
-			obj = new Item(300, 0, ITEM_SMALL_HEART);
+			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
 	default:
@@ -324,6 +324,15 @@ void CPlayScene::Update(DWORD dt)
 				
 				 ItemType type = firePot->GetItemType();
 				 obj = new Item(firePot->x, firePot->y, type);
+				 objects.push_back(obj);
+			 }
+			 else if (dynamic_cast<CCandle*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CCandle *candle = dynamic_cast<CCandle*>(objects[i]);
+
+				 ItemType type = candle->GetItemType();
+				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
 			objects.erase(objects.begin() + i);

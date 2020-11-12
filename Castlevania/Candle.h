@@ -11,7 +11,7 @@
 #define CANDLE_BBOX_WIDTH	16
 #define CANDLE_BBOX_HEIGHT	32
 
-#define CANDLE_BREAK_TIME 100
+#define CANDLE_BREAK_TIME 200
 
 class CCandle :public CHolder
 {

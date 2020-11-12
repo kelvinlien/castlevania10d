@@ -9,6 +9,7 @@
 #include"Game.h"
 #include "Item.h"
 #include "Whip.h"
+#include "Candle.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -254,7 +255,7 @@ void Simon::CalcPotentialCollisions(
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)) && !dynamic_cast<CCandle *>(coObjects->at(i)))
 		{
 			//Check collision AABB of Simon & Item
 			if (dynamic_cast<Item *>(coObjects->at(i)))
