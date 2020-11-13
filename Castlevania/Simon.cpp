@@ -63,7 +63,6 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_HURT:
 		//On stair's logic here
-
 		isJump = true;
 		Hurt();
 		break;
@@ -89,7 +88,7 @@ void Simon::SetAnimation()
 		else
 			ani = IDLE_RIGHT;
 	
-		if (nx < 0) ani = static_cast<animation>(ani - 1);
+		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation righ 1 index
 }
 
 void Simon::Render()
@@ -117,6 +116,11 @@ void Simon::Stand(){
 	isSit = false;
 }
 void Simon::Hurt() {
+	vy = -0.3f;
+	if (vx == 0) 
+		vx += -1  * nx;
+	else 
+		vx = -0.1 * nx;
 	isHurt = true;
 }
 void Simon::Attack()
@@ -253,6 +257,7 @@ void Simon::CalcPotentialCollisions(
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 				{
 					SetState(SIMON_STATE_HURT);
+					coObjects->at(i)->isVanish = true;
 					continue;
 				}
 			}
@@ -387,6 +392,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
 				SetState(SIMON_STATE_HURT);
+				coObjects->at(i)->isVanish = true;
+
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
