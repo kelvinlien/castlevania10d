@@ -32,8 +32,9 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_IDLE:
-		vx = 0;
-		break;
+		if (isHurt) return;
+			vx = 0;
+			break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
@@ -63,6 +64,7 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_HURT:
 		//On stair's logic here
+		if (isHurt) return;
 		isJump = true;
 		Hurt();
 		break;
@@ -117,10 +119,7 @@ void Simon::Stand(){
 }
 void Simon::Hurt() {
 	vy = -0.3f;
-	if (vx == 0) 
-		vx += -1  * nx;
-	else 
-		vx = -0.1 * nx;
+	vx = -0.1 * nx;
 	isHurt = true;
 }
 void Simon::Attack()
@@ -341,7 +340,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		if (nx != 0) {
+			if (isHurt) return;
+			vx = 0;
+		}
 		if (ny != 0) {
 			vy = 0;
 		}
