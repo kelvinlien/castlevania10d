@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "WeaponManager.h"
 #include "Whip.h"
+#include "Enemy.h"
 #include <map> 
 
 
@@ -22,6 +23,8 @@
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
 #define SIMON_STATE_STAND			900
+#define SIMON_STATE_HURT			1000			
+#define SIMON_STATE_AFTER_HURT		1100			
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -37,6 +40,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
+	int blood = 16;
 
 	//Flag of Simon's state
 	bool isJump;
@@ -45,7 +49,7 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-
+	bool isHurt = false;
 
 
 
@@ -95,6 +99,7 @@ public:
 	void Sit();
 	void Jump();
 	void Stand();
+	void Hurt();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);

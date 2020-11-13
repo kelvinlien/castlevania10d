@@ -32,8 +32,8 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_IDLE:
-		 vx = 0;
-		 break;
+		vx = 0;
+		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
@@ -61,8 +61,11 @@ void Simon::SetState(int state)
 	case SIMON_STATE_STAND:
 		Stand();
 		break;
+	case SIMON_STATE_HURT:
+		isJump = true;
+		Hurt();
+		break;
 	}
-
 }
 void Simon::SetAnimation()
 {
@@ -70,7 +73,6 @@ void Simon::SetAnimation()
 		return;
 	else if (vx == 0)
 	{
-
 		if (isJump) {
 			if (isAttack) {
 				if (nx > 0)
@@ -104,7 +106,6 @@ void Simon::SetAnimation()
 			}
 			else
 			{
-
 				if (isSit)
 				{
 					if (nx > 0)
@@ -163,6 +164,9 @@ void Simon::Stand(){
 		return;
 	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isSit = false;
+}
+void Simon::Hurt() {
+	DebugOut(L"[INFO] Is Hurting...");
 }
 void Simon::Attack()
 {
@@ -256,6 +260,7 @@ void Simon::CalcPotentialCollisions(
 	{
 		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
 		{
+
 			//Check collision AABB of Simon & Item
 			if (dynamic_cast<Item *>(coObjects->at(i)))
 			{
@@ -282,6 +287,21 @@ void Simon::CalcPotentialCollisions(
 							hearts += 5;
 						}
 					}
+					continue;
+				}
+			}
+			else if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			{
+				CEnemy *enemy = dynamic_cast<CEnemy *>(coObjects->at(i));
+				float l1, t1, r1, b1;
+				float l2, t2, r2, b2;
+
+				GetBoundingBox(l1, t1, r1, b1);
+				enemy->GetBoundingBox(l2, t2, r2, b2);
+
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				{
+					enemy->isVanish = true;
 					continue;
 				}
 			}
@@ -377,7 +397,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
@@ -415,6 +434,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
+
+			else if (dynamic_cast<CEnemy *>(e->obj))
+			{
+				DebugOut(L"[INFO] attacked by enemy...");
+			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
@@ -431,6 +455,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
+			DebugOut(L"[INFO] attacked by %s ...\n", e->obj);
+
 		}
 	}
 

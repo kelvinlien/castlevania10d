@@ -194,7 +194,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERROR] GHOST object was created before!\n");
 		return;
 	}
-	obj = new CGhost(x, y, -1); ghost = (CGhost*)obj; break;
+	obj = new CGhost(x, y, -1);
+	ghost = (CGhost*)obj;
+	break;
 	case OBJECT_TYPE_BRICK: {
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
@@ -448,7 +450,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
