@@ -62,6 +62,8 @@ void Simon::SetState(int state)
 		Stand();
 		break;
 	case SIMON_STATE_HURT:
+		//On stair's logic here
+
 		isJump = true;
 		Hurt();
 		break;
@@ -69,81 +71,30 @@ void Simon::SetState(int state)
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE)
-		return;
-	else if (vx == 0)
-	{
-		if (isJump) {
-			if (isAttack) {
-				if (nx > 0)
-					ani = ATTACK_STAND_RIGHT;
-				else
-					ani = ATTACK_STAND_LEFT;
-			}
-			else {
-				if (nx > 0)
-					ani = JUMP_DUCK_RIGHT;
-				else
-					ani = JUMP_DUCK_LEFT;
-			}
-		}
+	if (state == SIMON_STATE_DIE) return;
+		if (isHurt)
+			ani = HURT_RIGHT;
+		else if (isJump && isAttack) 
+			ani = ATTACK_STAND_RIGHT;
+		else if (isJump)
+			ani = JUMP_DUCK_RIGHT;
+		else if (isAttack && isSit)
+			ani = ATTACK_DUCK_RIGHT;
+		else if (isAttack)
+			ani = ATTACK_STAND_RIGHT;
+		else if (isSit)
+			ani = JUMP_DUCK_RIGHT;
+		else if (vx != 0)
+			ani = WALK_RIGHT;
 		else
-		{
-			if (isAttack) {
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = ATTACK_DUCK_RIGHT;
-					else
-						ani = ATTACK_DUCK_LEFT;
-				}
-				else {
-					if (nx > 0)
-						ani = ATTACK_STAND_RIGHT;
-					else
-						ani = ATTACK_STAND_LEFT;
-				}
-			}
-			else
-			{
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = JUMP_DUCK_RIGHT;
-					else
-						ani = JUMP_DUCK_LEFT;
-				}
-				else {
-					if (nx > 0)
-						ani = IDLE_RIGHT;
-					else
-						ani = IDLE_LEFT;
-				}
-			}
-		}
-	}
-	else if (vx != 0)
-	{
-		if (isJump) {
-			if (nx > 0)
-				ani = JUMP_DUCK_RIGHT;
-			else
-				ani = JUMP_DUCK_LEFT;
-		}
-		else
-		{
-			if (nx > 0)
-				ani = WALK_RIGHT;
-			else
-				ani = WALK_LEFT;
-		}
-	}
+			ani = IDLE_RIGHT;
+	
+		if (nx < 0) ani = static_cast<animation>(ani - 1);
 }
 
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
@@ -166,7 +117,7 @@ void Simon::Stand(){
 	isSit = false;
 }
 void Simon::Hurt() {
-	DebugOut(L"[INFO] Is Hurting...");
+	isHurt = true;
 }
 void Simon::Attack()
 {
@@ -301,7 +252,7 @@ void Simon::CalcPotentialCollisions(
 
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 				{
-					enemy->isVanish = true;
+					SetState(SIMON_STATE_HURT);
 					continue;
 				}
 			}
@@ -321,7 +272,7 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
-	//vy += SIMON_GRAVITY * dt;
+	vy += SIMON_GRAVITY * dt;
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
@@ -390,7 +341,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			vy = 0;
 		}
 
-
 		//
 		// Collision logic with other objects
 		//
@@ -434,10 +384,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
-				DebugOut(L"[INFO] attacked by enemy...");
+				SetState(SIMON_STATE_HURT);
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
@@ -459,6 +408,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		}
 	}
+
 
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
