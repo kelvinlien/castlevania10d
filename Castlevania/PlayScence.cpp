@@ -329,6 +329,7 @@ void CPlayScene::Load()
 	
 }
 void CPlayScene::LoadTriggerStair() {
+	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
 	TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
 	TriggerStair *s1 = new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT);
 	TriggerStair *s2 = new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT);
@@ -339,16 +340,17 @@ void CPlayScene::LoadTriggerStair() {
 	TriggerStair *s7 = new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT);
 	TriggerStair *s8 = new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT);
 	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);
-	triggerStairs.push_back(s0);
-	triggerStairs.push_back(s1);
-	triggerStairs.push_back(s2);
-	triggerStairs.push_back(s3);
-	triggerStairs.push_back(s4);
-	triggerStairs.push_back(s5);
-	triggerStairs.push_back(s6);
-	triggerStairs.push_back(s7);
-	triggerStairs.push_back(s8);
-	triggerStairs.push_back(s9);
+	triggerStairs->Add(s0);
+	triggerStairs->Add(s1);
+	triggerStairs->Add(s2);
+	triggerStairs->Add(s3);
+	triggerStairs->Add(s4);
+	triggerStairs->Add(s5);
+	triggerStairs->Add(s6);
+	triggerStairs->Add(s7);
+	triggerStairs->Add(s8);
+	triggerStairs->Add(s9);
+
 }
 void CPlayScene::Update(DWORD dt)
 {
@@ -417,9 +419,9 @@ void CPlayScene::Render()
 
 	// Bbox 2 dau cau thang
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-	for (int i = 0; i < 10; i++) {
-		triggerStairs[i]->Render();
-	}
+	/*for (int i = 0; i < 10; i++) {
+		TriggerStairs::GetInstance()->Get(i)->Render();
+	}*/
 }
 
 /*

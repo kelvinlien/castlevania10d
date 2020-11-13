@@ -35,3 +35,15 @@ public:
 	~TriggerStair() {};
 };
 typedef TriggerStair *LTRIGGER_STAIR;
+
+class TriggerStairs
+{
+	static TriggerStairs * __instance;
+	vector<LTRIGGER_STAIR> triggerStairs; // manage every trigger stair
+
+public:
+	void Add(LTRIGGER_STAIR triggerStair);
+	LTRIGGER_STAIR Get(int ID) { return triggerStairs[ID]; }
+
+	static TriggerStairs * GetInstance();
+};

@@ -20,7 +20,6 @@ protected:
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
-	vector<TriggerStair*> triggerStairs;
 	int mapWidth;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -40,7 +39,6 @@ public:
 	virtual void LoadTriggerStair();
 
 	Simon * GetPlayer() { return player; } 
-	vector<TriggerStair*> getTriggerStairs() { return triggerStairs; }
 	//friend class CPlayScenceKeyHandler;
 };
 

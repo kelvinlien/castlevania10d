@@ -38,7 +38,6 @@ class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
-	std::vector<LTRIGGER_STAIR> triggerStairs;
 
 	int hearts = 5;
 

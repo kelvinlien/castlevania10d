@@ -9,6 +9,7 @@
 #include"Game.h"
 #include "Item.h"
 #include "Whip.h"
+#include "Textures.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
