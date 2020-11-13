@@ -51,7 +51,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
 
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -271,6 +270,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 void CPlayScene::Load()
 {
+	if (id == 2)
+		LoadTriggerStair();
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -326,7 +328,28 @@ void CPlayScene::Load()
 	objects.push_back(obj);
 	
 }
-
+void CPlayScene::LoadTriggerStair() {
+	TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s1 = new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s2 = new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s3 = new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s4 = new TriggerStair(1808, 183, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s5 = new TriggerStair(1872, 247, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s6 = new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s7 = new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s8 = new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);
+	triggerStairs.push_back(s0);
+	triggerStairs.push_back(s1);
+	triggerStairs.push_back(s2);
+	triggerStairs.push_back(s3);
+	triggerStairs.push_back(s4);
+	triggerStairs.push_back(s5);
+	triggerStairs.push_back(s6);
+	triggerStairs.push_back(s7);
+	triggerStairs.push_back(s8);
+	triggerStairs.push_back(s9);
+}
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -394,26 +417,9 @@ void CPlayScene::Render()
 
 	// Bbox 2 dau cau thang
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-
-	CGame::GetInstance()->Draw(1232, 377, bbox, 1232, 377, 1264, 440, 50);  //int left, int top, int right, int bottom, int alpha
-
-	CGame::GetInstance()->Draw(1360, 247, bbox, 1360, 247, 1392, 310, 50);
-
-	CGame::GetInstance()->Draw(1424, 247, bbox, 1424, 247, 1456, 310, 50);
-
-	CGame::GetInstance()->Draw(1488, 183, bbox, 1488, 183, 1520, 246, 50);
-
-	CGame::GetInstance()->Draw(1808, 183, bbox, 1808, 183, 1840, 246, 50);
-
-	CGame::GetInstance()->Draw(1872, 247, bbox, 1872, 247, 1904, 310, 50);
-
-	CGame::GetInstance()->Draw(2576, 377, bbox, 2576, 377, 2608, 440, 50);
-
-	CGame::GetInstance()->Draw(2768, 183, bbox, 2768, 183, 2800, 246, 50);
-
-	CGame::GetInstance()->Draw(3408, 247, bbox, 3408, 247, 3440, 310, 50);
-
-	CGame::GetInstance()->Draw(3536, 377, bbox, 3536, 377, 3568, 440, 50);
+	for (int i = 0; i < 10; i++) {
+		triggerStairs[i]->Render();
+	}
 }
 
 /*

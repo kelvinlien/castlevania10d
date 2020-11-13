@@ -3,6 +3,7 @@
 #include "WeaponManager.h"
 #include "Whip.h"
 #include <map> 
+#include "TriggerStair.h"
 
 
 #define SIMON_WALKING_SPEED		0.15f 
@@ -37,6 +38,7 @@ class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
+	std::vector<LTRIGGER_STAIR> triggerStairs;
 
 	int hearts = 5;
 
@@ -88,6 +90,7 @@ class Simon : public CGameObject
 public:
 
 	Simon();
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
 	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
