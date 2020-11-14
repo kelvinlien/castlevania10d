@@ -132,9 +132,8 @@ void Simon::SitAfterFall() {
 	startSit = GetTickCount();
 	isSit = true; 
 	isFall = true;
-	isHurt = false;
-	y += 32;
-	vy = 0;
+	y += 33;
+	vx = 0;
 }
 void Simon::Attack()
 {
@@ -434,6 +433,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 						isJump = false;
 						if (isHurt)
 						{
+							isHurt = false;
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
 						}
 					}
