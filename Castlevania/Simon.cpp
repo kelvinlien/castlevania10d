@@ -68,7 +68,11 @@ void Simon::SetState(int state)
 		isJump = true;
 		Hurt();
 		break;
+	case SIMON_STATE_SIT_AFTER_FALL:
+		SitAfterFall();
+		break;
 	}
+	
 }
 void Simon::SetAnimation()
 {
@@ -116,11 +120,21 @@ void Simon::Stand(){
 		return;
 	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isSit = false;
+	isFall = false;
+	isJump = false;
 }
 void Simon::Hurt() {
-	vy = -0.3f;
-	vx = -0.1 * nx;
+	vx = -0.1*nx;
+	vy = -0.4f;
 	isHurt = true;
+}
+void Simon::SitAfterFall() {
+	startSit = GetTickCount();
+	isSit = true; 
+	isFall = true;
+	isHurt = false;
+	y += 32;
+	vy = 0;
 }
 void Simon::Attack()
 {
@@ -256,11 +270,12 @@ void Simon::CalcPotentialCollisions(
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 				{
 					SetState(SIMON_STATE_HURT);
-					coObjects->at(i)->isVanish = true;
+					enemy->isVanish = true;
 					continue;
 				}
 			}
-
+			
+	
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 			if (e->t > 0 && e->t <= 1.0f)
@@ -310,7 +325,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
-	
+
+	//Update when Simon is hurt
+	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
+	{
+		startSit = 0;
+		SetState(SIMON_STATE_STAND);
+	}
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -406,15 +428,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				if (e->ny < 0)
 				{
-					if (isJump == true)
+					if (isJump)
 					{
 						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 						isJump = false;
+						if (isHurt)
+						{
+							SetState(SIMON_STATE_SIT_AFTER_FALL);
+						}
 					}
 				}
 			}
-			DebugOut(L"[INFO] attacked by %s ...\n", e->obj);
-
 		}
 	}
 
@@ -429,14 +453,16 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x+12;
 	top = y;
-	right = x + SIMON_BBOX_WIDTH-10;
+	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
 	if (isJump)
 	{
+		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
 	{
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
+	
 }
