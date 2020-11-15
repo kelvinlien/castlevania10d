@@ -4,9 +4,11 @@
 #include "Whip.h"
 #include <map> 
 
-
+// ON STAIR SPEED
+#define SIMON_ON_STAIR_SPEED_X		0.05f 
+#define SIMON_ON_STAIR_SPEED_Y		0.05f 
+//
 #define SIMON_WALKING_SPEED		0.15f 
-//0.1f
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -22,6 +24,8 @@
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
 #define SIMON_STATE_STAND			900
+#define SIMON_STATE_GO_UP_STAIR		1000
+#define SIMON_STATE_GO_DOWN_STAIR	2000
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -33,10 +37,14 @@
 
 class Simon : public CGameObject
 {
+	int currentFrame;
+
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
+	int directionY;
 	int hearts = 5;
+	int stairNx = 1;
 
 	//Flag of Simon's state
 	bool isJump;
@@ -45,7 +53,8 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-
+	bool canGoOnStair = false;
+	bool isOnStair = false;
 
 
 
@@ -79,7 +88,18 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		//idle on stair
+		IDLE_STAIR_UP_LEFT_0,
+		IDLE_STAIR_UP_LEFT_1,
+		IDLE_STAIR_UP_RIGHT_0,
+		IDLE_STAIR_UP_RIGHT_1,
+
+		IDLE_STAIR_DOWN_LEFT_0,
+		IDLE_STAIR_DOWN_LEFT_1,
+		IDLE_STAIR_DOWN_RIGHT_0,
+		IDLE_STAIR_DOWN_RIGHT_1
+		
 	}ani;
 
 public:
@@ -95,6 +115,8 @@ public:
 	void Sit();
 	void Jump();
 	void Stand();
+	void GoUp();
+	void GoDown();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -109,6 +131,7 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsOnStair() { return isOnStair; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

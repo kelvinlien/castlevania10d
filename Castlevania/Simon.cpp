@@ -23,6 +23,7 @@ Simon::Simon() : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+	canGoOnStair = true;
 	CWhip::GetInstance();
 }
 
@@ -42,11 +43,25 @@ void Simon::SetState(int state)
 	case SIMON_STATE_WALKING_LEFT:
 		if (isAttack) break;
 		nx = -1;
+		if (isOnStair) {
+			if (stairNx > 0)             //check the direct of stair
+				GoDown();
+			else
+				GoUp();
+			break;
+		}
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
 		if (isAttack) break;
 		nx = 1;
+		if (isOnStair){
+			if (stairNx > 0)
+				GoUp();
+			else
+				GoDown();
+			break;
+		}
 		Walk();
 		break;
 	case SIMON_STATE_JUMP:
@@ -56,10 +71,20 @@ void Simon::SetState(int state)
 		Attack();
 		break;
 	case SIMON_STATE_SIT:
-		Sit();
+		if (canGoOnStair)
+			GoDown();
+		else
+			Sit();
 		break;
 	case SIMON_STATE_STAND:
 		Stand();
+		break;
+	case SIMON_STATE_GO_UP_STAIR:
+		if (canGoOnStair)
+			if (stairNx > 0)
+				nx = 1;
+			else nx = -1;
+			GoUp();
 		break;
 	}
 
@@ -87,36 +112,74 @@ void Simon::SetAnimation()
 		}
 		else
 		{
-			if (isAttack) {
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = ATTACK_DUCK_RIGHT;
-					else
-						ani = ATTACK_DUCK_LEFT;
+			if(isOnStair){
+				if (directionY < 0) {
+					if (isAttack) {
+
+						if (nx > 0)
+							ani = ATTACK_UP_RIGHT;
+						else
+							ani = ATTACK_UP_LEFT;
+					}
+					else {                                //check idle on stair or do something 
+						if (nx > 0)
+						{
+								ani = IDLE_STAIR_UP_RIGHT_1;
+						}
+						else
+						{
+							if (currentFrame == 0)
+								ani = IDLE_STAIR_UP_LEFT_0;
+							else 
+								ani = IDLE_STAIR_UP_LEFT_1;
+						}
+					}
 				}
 				else {
-					if (nx > 0)
-						ani = ATTACK_STAND_RIGHT;
-					else
-						ani = ATTACK_STAND_LEFT;
+					if (isAttack) {
+
+						if (nx > 0)
+							ani = ATTACK_DOWN_RIGHT;
+						else
+							ani = ATTACK_DOWN_LEFT;
+					}
+					else { //check idle on stair or do something 
+
+					}
 				}
 			}
-			else
-			{
-
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = JUMP_DUCK_RIGHT;
-					else
-						ani = JUMP_DUCK_LEFT;
+			else {
+				 if (isAttack) {
+					if (isSit)
+					{
+						if (nx > 0)
+							ani = ATTACK_DUCK_RIGHT;
+						else
+							ani = ATTACK_DUCK_LEFT;
+					}
+					else {
+						if (nx > 0)
+							ani = ATTACK_STAND_RIGHT;
+						else
+							ani = ATTACK_STAND_LEFT;
+					}
 				}
-				else {
-					if (nx > 0)
-						ani = IDLE_RIGHT;
-					else
-						ani = IDLE_LEFT;
+				else
+				{
+
+					if (isSit)
+					{
+						if (nx > 0)
+							ani = JUMP_DUCK_RIGHT;
+						else
+							ani = JUMP_DUCK_LEFT;
+					}
+					else {
+						if (nx > 0)
+							ani = IDLE_RIGHT;
+						else
+							ani = IDLE_LEFT;
+					}
 				}
 			}
 		}
@@ -131,10 +194,26 @@ void Simon::SetAnimation()
 		}
 		else
 		{
-			if (nx > 0)
-				ani = WALK_RIGHT;
-			else
-				ani = WALK_LEFT;
+			if (isOnStair) {
+				if (directionY < 0) {
+					if (nx > 0)
+						ani = STAIR_UP_RIGHT;
+					else
+						ani = STAIR_UP_LEFT;
+				}
+				else {
+					if (nx > 0)
+						ani = STAIR_DOWN_RIGHT;
+					else
+						ani = STAIR_DOWN_LEFT;
+				}
+			}
+			else {
+				if (nx > 0)
+					ani = WALK_RIGHT;
+				else
+					ani = WALK_LEFT;
+			}
 		}
 	}
 }
@@ -153,6 +232,7 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
+	currentFrame = animation_set->at(ani)->GetCurrentFrame();
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
@@ -201,11 +281,31 @@ void Simon::Attack()
 	}
 
 }
+void Simon::GoUp()
+{
+	directionY = -1;
+	vx = nx * SIMON_ON_STAIR_SPEED_X;
+	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
+	
+	isOnStair = true;
+	isSit = false;
+	isJump = false;
+}
+void Simon::GoDown()
+{
+	directionY = 1;
+	vx = nx * SIMON_ON_STAIR_SPEED_X;
+	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
+
+	isOnStair = true;
+	isSit = false;
+	isJump = false;
+}
 
 void Simon::Sit()
 {
 	
-	if (isJump || isSit || isAttack) return;
+	if (isJump || isSit || isAttack || isOnStair) return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
@@ -222,7 +322,7 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit || isAttack)
+	if (isJump || isSit || isAttack || isOnStair)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
@@ -230,9 +330,9 @@ void Simon::Jump()
 
 void Simon::Walk()
 {
-	if (isAttack || isSit || isJump)
+	if (isAttack || isSit || isJump )
 		return;
-	vx = nx * SIMON_WALKING_SPEED;
+	vx = SIMON_WALKING_SPEED;
 	isAttack = false;
 }
 
@@ -301,16 +401,18 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
+	if(!isOnStair)
 	vy += SIMON_GRAVITY * dt;
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
-			isUsingSubWeapon = false;
+			isUsingSubWeapon = false;	
 		else 
 			subWeapons->Update(dt, coObjects);
 	}
 
-
+	if (directionY != 0)
+		vy = 0;
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
 		isAttack = false;
@@ -365,7 +467,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		/*if (nx != 0) vx = 0;*/
 		if (ny != 0) {
 			vy = 0;
 		}
@@ -378,26 +480,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -SIMON_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else if (e->nx != 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-						SetState(SIMON_STATE_IDLE);
-				}
-			} // if Item
-			else if (dynamic_cast<Item *>(e->obj)) 
+			 // if Item
+			if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
@@ -436,6 +520,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
+
+	DebugOut(L"simon right is : %f \n", this->x);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
