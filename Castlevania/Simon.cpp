@@ -64,7 +64,6 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_HURT:
 		//On stair's logic here
-		if (isHurt) return;
 		isJump = true;
 		Hurt();
 		break;
@@ -134,6 +133,7 @@ void Simon::SitAfterFall() {
 	isFall = true;
 	y += 33;
 	vx = 0;
+	vy = 0;
 }
 void Simon::Attack()
 {
@@ -193,7 +193,7 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit || isAttack)
+	if (isJump || isSit || isAttack || isHurt)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
