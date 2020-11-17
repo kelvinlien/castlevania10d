@@ -14,13 +14,21 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vx = GHOST_WALKING_SPEED * this->nx;
 	CGameObject::Update(dt);
 	vy += GHOST_GRAVITY * dt;
+	vector<LPGAMEOBJECT> coObjectsGhost;
+
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CBrick *>(coObjects->at(i)))
+
+			coObjectsGhost.push_back(coObjects->at(i));
+	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 	if(isActive)
-	  CalcPotentialCollisions(coObjects, coEvents);
+	  CalcPotentialCollisions(&coObjectsGhost, coEvents);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -41,18 +49,17 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (ny != 0) vy = 0;
 
 
-		//
-		// Collision logic with other objects
-		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
+		
+		 //Collision logic with other objects
+		
+		//for (UINT i = 0; i < coEventsResult.size(); i++)
+		//{
+		//	LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
-			{
-				
-			}
-		}
+		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
+		//	{
+		//	}
+		//}
 	}
 
 	// clean up collision events

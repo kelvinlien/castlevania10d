@@ -103,7 +103,7 @@ void Simon::Render()
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-	else if (isUntouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
+	else if (isUntouchable) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, 127);
 	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
@@ -286,8 +286,6 @@ void Simon::CalcPotentialCollisions(
 				}
 				else {
 					enemy->x += enemy->dx;
-					enemy->y += enemy->dy;
-
 				}
 				
 			}
@@ -448,8 +446,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				}
 				else {
 					e->obj->x += e->obj->dx;
-					e->obj->y += e->obj->dy;
-					//DebugOut(L"[Info] Keep going.. %d \n");
+					DebugOut(L"[Info] Keep going.. %d \n");
 				}
 				//coObjects->at(i)->isVanish = true;
 
@@ -504,6 +501,7 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	}
 	if (isSit)
 	{
+		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	

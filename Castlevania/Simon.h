@@ -36,7 +36,7 @@
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
 #define SIMON_HURT_TIME	 500
-#define SIMON_SIT_AFTER_FALL_TIME	 500
+#define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
 
@@ -131,6 +131,7 @@ public:
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsHurt() { return isHurt; }
+	bool IsUntouchable() { return isUntouchable; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
