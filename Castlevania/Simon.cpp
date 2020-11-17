@@ -432,12 +432,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				if (e->ny < 0)
 				{
-					if (isHurt)
-					{
-						isHurt = false;
-						isJump = false;
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-						SetState(SIMON_STATE_SIT_AFTER_FALL);
+					if (ny < 0) {
+						if (isHurt)
+						{
+							isHurt = false;
+							isJump = false;
+							y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+							SetState(SIMON_STATE_SIT_AFTER_FALL);
+						}
 					}
 					if (isJump)
 					{
@@ -469,8 +471,7 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	top = y;
 	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
-	if (isHurt)
-		bottom += 2;
+
 	if (isJump)
 	{
 		if (isHurt) return;
