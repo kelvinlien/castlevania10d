@@ -31,6 +31,13 @@ void Simon::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case SIMON_STATE_DIE:
+		isDead = true;
+		isUntouchable = false;
+		isSit = false;
+		isFall = false;
+
+		break;
 	case SIMON_STATE_IDLE:
 		if (isHurt) return;
 			vx = 0;
@@ -75,8 +82,10 @@ void Simon::SetState(int state)
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE) return;
-		if (isHurt)
+//	if (state == SIMON_STATE_DIE) return;
+		if (isDead)
+			ani = DEATH_RIGHT;
+		else if (isHurt)
 			ani = HURT_RIGHT;
 		else if (isJump && isAttack) 
 			ani = ATTACK_STAND_RIGHT;
@@ -113,7 +122,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	//RenderBoundingBox();	
+	RenderBoundingBox();	
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -279,6 +288,9 @@ void Simon::CalcPotentialCollisions(
 			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 			{
 				if (!isUntouchable) {
+					health -= 2;
+					if (health <= 0)
+
 					if (enemy->nx == nx) {
 						this->nx = -enemy->nx;
 					}
@@ -345,7 +357,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
 	{
 		startSit = 0;
-		SetState(SIMON_STATE_STAND);
+
+		if (health <= 0) {
+			SetState(SIMON_STATE_DIE);
+
+		}
+		else
+			SetState(SIMON_STATE_STAND);
 	}
 	if (isUntouchable && (GetTickCount() - startUntouchable > SIMON_UNTOUCHABLE_TIME))
 	{
@@ -356,12 +374,22 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+	vector<LPGAMEOBJECT> coObjectsWhenDie;
 
 	coEvents.clear();
 
 	// turn off collision when simon die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
+	else {
+		//to make sure when simon die he just can collide with Brick
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CBrick *>(coObjects->at(i)))
+				coObjectsWhenDie.push_back(coObjects->at(i));
+		}
+		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
+	}
 
 
 	// No collision occured, proceed normally
@@ -439,9 +467,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
 				if (!isUntouchable) {
+					health -= 2;
 					if (e->obj->nx == nx) {
 						this->nx = -e->obj->nx;
 					}
+					
 					SetState(SIMON_STATE_HURT);
 				}
 				else {
@@ -493,7 +523,12 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	top = y;
 	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
-
+	if (isDead) {
+		left -= 12;
+		top -= 50;
+		right = x + SIMON_BBOX_WIDTH + 10;
+		bottom =  10;
+	}
 	if (isJump)
 	{
 		if (isHurt) return;

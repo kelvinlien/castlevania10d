@@ -46,7 +46,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
-	int blood = 16;
+	int health = 2;
 
 	//time variables
 	DWORD startSit;
@@ -65,6 +65,7 @@ class Simon : public CGameObject
 	bool isHurt = false;
 	bool isFall = false;
 	bool isUntouchable = false;
+	bool isDead = false;
 
 
 
