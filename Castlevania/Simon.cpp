@@ -65,6 +65,7 @@ void Simon::SetState(int state)
 	case SIMON_STATE_HURT:
 		//On stair's logic here
 		Hurt();
+		StartUntouchable();
 		break;
 	case SIMON_STATE_SIT_AFTER_FALL:
 		SitAfterFall();
@@ -102,7 +103,7 @@ void Simon::Render()
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-
+	else if (isUntouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
 	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
@@ -112,7 +113,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	//RenderBoundingBox();	
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -122,19 +123,25 @@ void Simon::Stand(){
 	isFall = false;
 	isJump = false;
 }
+
 void Simon::Hurt() {
+	startHurt = GetTickCount();
 	vx = -0.1*nx;
 	vy = -0.4f;
 	isHurt = true;
-	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	y -= 17;
 }
 void Simon::SitAfterFall() {
 	startSit = GetTickCount();
 	isSit = true; 
 	isFall = true;
-	y += 33;
+	y += 17;
 	vx = 0;
 	vy = 0;
+}
+void Simon::StartUntouchable() {
+	isUntouchable = true;
+	startUntouchable = GetTickCount();
 }
 void Simon::Attack()
 {
@@ -271,12 +278,18 @@ void Simon::CalcPotentialCollisions(
 
 			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 			{
-				if (enemy->nx == nx) {
-					this->nx = -enemy->nx;
+				if (!isUntouchable) {
+					if (enemy->nx == nx) {
+						this->nx = -enemy->nx;
+					}
+					SetState(SIMON_STATE_HURT);
 				}
-				SetState(SIMON_STATE_HURT);
-				enemy->isVanish = true;
-				continue;
+				else {
+					enemy->x += enemy->dx;
+					enemy->y += enemy->dy;
+
+				}
+				
 			}
 		}
 
@@ -335,6 +348,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	{
 		startSit = 0;
 		SetState(SIMON_STATE_STAND);
+	}
+	if (isUntouchable && (GetTickCount() - startUntouchable > SIMON_UNTOUCHABLE_TIME))
+	{
+		startUntouchable = 0;
+		isUntouchable = false;
+
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -421,25 +440,31 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
-				if (e->obj->nx == nx) {
-					this->nx = -e->obj->nx;
+				if (!isUntouchable) {
+					if (e->obj->nx == nx) {
+						this->nx = -e->obj->nx;
+					}
+					SetState(SIMON_STATE_HURT);
 				}
-				SetState(SIMON_STATE_HURT);
-				coObjects->at(i)->isVanish = true;
+				else {
+					e->obj->x += e->obj->dx;
+					e->obj->y += e->obj->dy;
+					//DebugOut(L"[Info] Keep going.. %d \n");
+				}
+				//coObjects->at(i)->isVanish = true;
 
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
 				if (e->ny < 0)
 				{
-					if (ny < 0) {
-						if (isHurt)
-						{
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+					{
+
 							isHurt = false;
 							isJump = false;
-							y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+							//y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
-						}
 					}
 					if (isJump)
 					{

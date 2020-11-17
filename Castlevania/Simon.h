@@ -35,7 +35,9 @@
 
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
+#define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 500
+#define SIMON_UNTOUCHABLE_TIME	 2000
 
 
 class Simon : public CGameObject
@@ -48,6 +50,8 @@ class Simon : public CGameObject
 
 	//time variables
 	DWORD startSit;
+	DWORD startHurt;
+	DWORD startUntouchable;
 	DWORD attackTime;
 
 
@@ -60,6 +64,7 @@ class Simon : public CGameObject
 	bool isUsingSubWeapon = false;
 	bool isHurt = false;
 	bool isFall = false;
+	bool isUntouchable = false;
 
 
 
@@ -110,6 +115,7 @@ public:
 	void Stand();
 	void Hurt();
 	void SitAfterFall();
+	void StartUntouchable();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
