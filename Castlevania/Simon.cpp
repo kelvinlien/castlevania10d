@@ -31,6 +31,17 @@ void Simon::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case SIMON_STATE_AUTO:
+		if (!flag)
+		{
+			nx = -1;
+		}
+		else
+		{
+			nx = 1;
+		}
+		Walk();
+		break;
 	case SIMON_STATE_IDLE:
 		 vx = 0;
 		 break;
@@ -156,7 +167,26 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	RenderBoundingBox();
+
+	
+	if (flag)
+	{
+		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
+		int endCol = startCol + SCREEN_WIDTH / 32;
+		int numOfRow = CMaps::GetInstance()->Get(1)->GetTitles().size();
+		for (int i = 0; i < numOfRow; i++)
+		{
+			for (int j = startCol; j <= endCol; j++)
+			{
+				float x = TILE_SIZE * (j - startCol) + Camera::GetInstance()->GetCamX() - (int)Camera::GetInstance()->GetCamX() % 32;
+				float y = TILE_SIZE * i;
+				//draw back part of the castle
+				if (j >= 44)
+					CMaps::GetInstance()->Get(1)->GetTitles()[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+			}
+		}
+	}
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -349,6 +379,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		if (state == SIMON_STATE_AUTO) {
+			dx /= 1000;
+		}
+		
 		x += dx;
 		y += dy;
 	}
@@ -365,11 +399,27 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		if (nx != 0) {
+			if (state != SIMON_STATE_AUTO) {
+				vx = 0;
+			}
+		}
 		if (ny != 0) {
 			vy = 0;
 		}
 
+		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
+		{
+			if (GetPostionX() >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
+			{
+				SetState(SIMON_STATE_AUTO);
+			}
+			else if (GetPostionX() >= SIMON_AUTO_GO_AHEAD_POSITION_X && GetPostionX() < SIMON_AUTO_GO_BACK_POSITION_X)
+			{
+				flag = true;
+				SetState(SIMON_STATE_AUTO);
+			}
+		}
 
 		//
 		// Collision logic with other objects
@@ -418,7 +468,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
