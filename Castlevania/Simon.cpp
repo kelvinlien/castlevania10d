@@ -36,7 +36,8 @@ void Simon::SetState(int state)
 		isUntouchable = false;
 		isSit = false;
 		isFall = false;
-
+		y -= 30;
+		vy = 0;
 		break;
 	case SIMON_STATE_IDLE:
 		if (isHurt) return;
@@ -71,8 +72,8 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_HURT:
 		//On stair's logic here
-		Hurt();
 		StartUntouchable();
+		Hurt();
 		break;
 	case SIMON_STATE_SIT_AFTER_FALL:
 		SitAfterFall();
@@ -122,7 +123,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	//RenderBoundingBox();	
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -289,17 +290,14 @@ void Simon::CalcPotentialCollisions(
 			{
 				if (!isUntouchable) {
 					health -= 2;
-					if (health <= 0)
-
 					if (enemy->nx == nx) {
-						this->nx = -enemy->nx;
+						this->nx = - enemy->nx;
 					}
 					SetState(SIMON_STATE_HURT);
 				}
 				else {
 					enemy->x += enemy->dx;
 				}
-				
 			}
 		}
 
@@ -360,7 +358,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (health <= 0) {
 			SetState(SIMON_STATE_DIE);
-
 		}
 		else
 			SetState(SIMON_STATE_STAND);
@@ -476,10 +473,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				}
 				else {
 					e->obj->x += e->obj->dx;
-					DebugOut(L"[Info] Keep going.. %d \n");
+					//DebugOut(L"[Info] Keep going.. %d \n");
 				}
-				//coObjects->at(i)->isVanish = true;
-
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
@@ -519,15 +514,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x+12;
+
+	left = x + 12;
 	top = y;
 	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
+
 	if (isDead) {
 		left -= 12;
-		top -= 50;
-		right = x + SIMON_BBOX_WIDTH + 10;
-		bottom =  10;
+		right += 12;
+		top += 40;
+		bottom += 2;
 	}
 	if (isJump)
 	{

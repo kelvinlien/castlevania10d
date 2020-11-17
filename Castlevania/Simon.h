@@ -46,7 +46,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
-	int health = 2;
+	int health = 16;
 
 	//time variables
 	DWORD startSit;
