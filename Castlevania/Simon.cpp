@@ -414,17 +414,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-			else if (dynamic_cast<CEnemy *>(e->obj))
-			{
-				SetState(SIMON_STATE_HURT);
-				coObjects->at(i)->isVanish = true;
-
-			}
-			else if (dynamic_cast<CPortal *>(e->obj))
-			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
 				if (e->ny < 0)
@@ -441,6 +430,18 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CEnemy *>(e->obj))
+			{
+				SetState(SIMON_STATE_HURT);
+				coObjects->at(i)->isVanish = true;
+
+			}
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			
 		}
 	}
 
