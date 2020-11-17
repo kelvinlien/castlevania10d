@@ -92,7 +92,8 @@ void Simon::SetAnimation()
 		else
 			ani = IDLE_RIGHT;
 	
-		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation righ 1 index
+		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+
 }
 
 void Simon::Render()
@@ -270,6 +271,9 @@ void Simon::CalcPotentialCollisions(
 
 			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 			{
+				if (enemy->nx == nx) {
+					this->nx = -enemy->nx;
+				}
 				SetState(SIMON_STATE_HURT);
 				enemy->isVanish = true;
 				continue;
@@ -417,6 +421,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
+				if (e->obj->nx == nx) {
+					this->nx = -e->obj->nx;
+				}
 				SetState(SIMON_STATE_HURT);
 				coObjects->at(i)->isVanish = true;
 
@@ -462,11 +469,11 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	top = y;
 	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
+	if (isHurt)
+		bottom += 2;
 	if (isJump)
 	{
-		if (isHurt) 
-			bottom += 2;
-		else 
+		if (isHurt) return;
 			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
