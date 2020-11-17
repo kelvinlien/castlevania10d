@@ -257,31 +257,32 @@ void Simon::CalcPotentialCollisions(
 					continue;
 				}
 			}
-			else if (dynamic_cast<CEnemy *>(coObjects->at(i)))
-			{
-				CEnemy *enemy = dynamic_cast<CEnemy *>(coObjects->at(i));
-				float l1, t1, r1, b1;
-				float l2, t2, r2, b2;
-
-				GetBoundingBox(l1, t1, r1, b1);
-				enemy->GetBoundingBox(l2, t2, r2, b2);
-
-				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-				{
-					SetState(SIMON_STATE_HURT);
-					enemy->isVanish = true;
-					continue;
-				}
-			}
 			
-	
-			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-			if (e->t > 0 && e->t <= 1.0f)
-				coEvents.push_back(e);
-			else
-				delete e;
 		}
+		else if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+		{
+			CEnemy *enemy = dynamic_cast<CEnemy *>(coObjects->at(i));
+			float l1, t1, r1, b1;
+			float l2, t2, r2, b2;
+
+			GetBoundingBox(l1, t1, r1, b1);
+			enemy->GetBoundingBox(l2, t2, r2, b2);
+
+			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+			{
+				SetState(SIMON_STATE_HURT);
+				enemy->isVanish = true;
+				continue;
+			}
+		}
+
+
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+		if (e->t > 0 && e->t <= 1.0f)
+			coEvents.push_back(e);
+		else
+			delete e;
 	}
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
