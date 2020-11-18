@@ -188,14 +188,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GHOST: 		
-	if (ghost != NULL)
-	{
-		DebugOut(L"[ERROR] GHOST object was created before!\n");
-		return;
+	case OBJECT_TYPE_GHOST: {
+		if (ghost != NULL)
+		{
+			DebugOut(L"[ERROR] GHOST object was created before!\n");
+			return;
+		}
+		int itemType = atof(tokens[4].c_str());
+		obj = new CGhost(x, y, -1, itemType);
+		ghost = (CGhost*)obj;
 	}
-	obj = new CGhost(x, y, -1);
-	ghost = (CGhost*)obj;
 	break;
 	case OBJECT_TYPE_BRICK: {
 		//to assign mapWidth
@@ -466,6 +468,15 @@ void CPlayScene::Update(DWORD dt)
 				
 				 ItemType type = firePot->GetItemType();
 				 obj = new Item(firePot->x, firePot->y, type);
+				 objects.push_back(obj);
+			 }
+			 else if (dynamic_cast<CGhost*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CGhost *Ghost = dynamic_cast<CGhost*>(objects[i]);
+
+				 ItemType type = Ghost->GetItemType();
+				 obj = new Item(Ghost->x, Ghost->y, type);
 				 objects.push_back(obj);
 			 }
 			objects.erase(objects.begin() + i);
