@@ -181,7 +181,7 @@ void Simon::Render()
 			for (int j = startCol; j <= endCol; j++)
 			{
 				float x = TILE_SIZE * (j - startCol) + Camera::GetInstance()->GetCamX() - (int)Camera::GetInstance()->GetCamX() % 32;
-				float y = TILE_SIZE * i;
+				float y = TILE_SIZE * i + 151;
 				//draw back part of the castle
 				if (j >= 44)
 					CMaps::GetInstance()->Get(1)->GetTitles()[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
@@ -263,7 +263,10 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	vx = nx * SIMON_WALKING_SPEED;
+	if (flag)
+		vx = nx * SIMON_WALKING_SPEED / 2;
+	else 	
+		vx = nx * SIMON_WALKING_SPEED;
 	isAttack = false;
 }
 
@@ -380,10 +383,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		if (state == SIMON_STATE_AUTO) {
-			dx /= 1000;
-		}
-		
 		x += dx;
 		y += dy;
 	}
@@ -411,11 +410,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
 		{
-			if (GetPostionX() >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
+			if (x >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
 			{
 				SetState(SIMON_STATE_AUTO);
 			}
-			else if (GetPostionX() >= SIMON_AUTO_GO_AHEAD_POSITION_X && GetPostionX() < SIMON_AUTO_GO_BACK_POSITION_X)
+			else if (x >= SIMON_AUTO_GO_AHEAD_POSITION_X && x < SIMON_AUTO_GO_BACK_POSITION_X)
 			{
 				flag = true;
 				SetState(SIMON_STATE_AUTO);
@@ -469,7 +468,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
