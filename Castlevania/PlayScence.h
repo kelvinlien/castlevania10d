@@ -9,6 +9,7 @@
 #include "Koopas.h"
 #include "GameMap.h"
 #include "FirePot.h"
+#include "Candle.h"
 #include "Item.h"
 #include "GameMap.h"
 

@@ -16,18 +16,58 @@ Item::Item(int x, int y, ItemType ani) {
 	case ITEM_SMALL_HEART:
 		widthBBox = 16;
 		heightBBox = 16;
+		start_x = x;
+		vx = 0.09;
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
 		heightBBox = 16;
+		start_x = x;
+		break;
+	case ITEM_MONEY_BAG_RED:
+		widthBBox = 30;
+		heightBBox = 30;
+		start_x = x;
+		break;
+	case ITEM_MONEY_BAG_WHITE:
+		widthBBox = 30;
+		heightBBox = 30;
+		start_x = x;
+		break;
+	case ITEM_MONEY_BAG_BLUE:
+		widthBBox = 30;
+		heightBBox = 30;
+		start_x = x;
 		break;
 	case ITEM_WHIP_RED:
 		widthBBox = 32;
 		heightBBox = 32;
+		start_x = x;
+		break;
+	case ITEM_WHIP_BLUE:
+		widthBBox = 32;
+		heightBBox = 32;
+		start_x = x;
 		break;
 	case ITEM_DAGGER:
 		widthBBox = 32;
 		heightBBox = 16;
+		start_x = x;
+		break;
+	case ITEM_STOP_WATCH:
+		widthBBox = 40;
+		heightBBox = 32;
+		start_x = x;
+		break;
+	case ITEM_CROSS:
+		widthBBox = 32;
+		heightBBox = 32;
+		start_x = x;
+		break;
+	case ITEM_HOLY_WATER:
+		widthBBox = 32;
+		heightBBox = 32;
+		start_x = x;
 		break;
 	default:
 		break;
@@ -39,10 +79,17 @@ void Item::Render() {
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
-	CGameObject::Update(dt, coObjects);
 	vy = GRAVITY;
-
+	if (ani == ITEM_SMALL_HEART)
+	{
+		vy = GRAVITY / 2;
+		if ((start_x > x && start_x - x > 30.0 && vx < 0) || (start_x < x && x - start_x > 30.0 && vx > 0))
+		{
+			vx = -vx;
+		}
+	}
 	CGameObject::Update(dt, coObjects);
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -64,6 +111,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
 					if (nx != 0) vx = 0;
 					if (ny != 0) {
+						vx = 0;
 						vy = 0;
 						//counting time to vanish item
 						if (existingTime <= 0)
