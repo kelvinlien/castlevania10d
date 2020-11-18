@@ -7,7 +7,7 @@
 
 #define EFFECT_ANI_SET_ID	7
 
-#define GRAVITY 0.2f
+#define GRAVITY 0.3f
 
 enum ItemType
 {

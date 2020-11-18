@@ -21,7 +21,7 @@ Item::Item(int x, int y, ItemType ani) {
 		widthBBox = 16;
 		heightBBox = 16;
 		start_x = x;
-		vx = 0.09;
+		vx = 0.1;
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
@@ -137,14 +137,14 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 							}
 							existingTime -= dt;
 						}
-						else
+					}
+					if (isEaten)
+					{
+						if (effectTime <= 0)
 						{
-							if (effectTime <= 0)
-							{
-								this->isVanish = true;
-							}
-							effectTime -= dt;
+							this->isVanish = true;
 						}
+						effectTime -= dt;
 					}
 		}
 	}
@@ -172,16 +172,22 @@ void Item::BeingProcessed()
 		effect = ONE_THOUSAND_EFFECT;
 		this->y -= 20;
 		effectTime = 1000;
+		widthBBox = 37;
+		heightBBox = 16;
 		break;
 	case ITEM_MONEY_BAG_WHITE:
 		effect = SEVEN_HUNDRED_EFFECT;
 		this->y -= 20;
 		effectTime = 1000;
+		widthBBox = 28;
+		heightBBox = 16;
 		break;
 	case ITEM_MONEY_BAG_BLUE:
 		effect = FOUR_HUNDRED_EFFECT;
 		this->y -= 20;
 		effectTime = 1000;
+		widthBBox = 29;
+		heightBBox = 16;
 		break;
 	case ITEM_WHIP_RED:
 		simon->SetState(SIMON_STATE_LEVEL_UP);
