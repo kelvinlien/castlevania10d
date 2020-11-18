@@ -12,6 +12,7 @@ Item::Item(int x, int y, ItemType ani) {
 	existingTime = 2000;
 	effectTime = 0;
 	isEaten = false;
+	effect = BURN_EFFECT;
 
 	this->ani = ani;
 	switch (this->ani)
@@ -77,7 +78,14 @@ Item::Item(int x, int y, ItemType ani) {
 	}
 }
 void Item::Render() {
-	ani_set->at(ani)->Render(x, y);
+	if (!isEaten)
+	{
+		ani_set->at(ani)->Render(x, y);
+	}
+	else
+	{
+		ani_set->at(effect)->Render(x, y);
+	}
 	RenderBoundingBox();
 }
 
@@ -90,6 +98,10 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		{
 			vx = -vx;
 		}
+	}
+	if (isEaten)
+	{
+		vy = 0;
 	}
 	CGameObject::Update(dt, coObjects);
 
@@ -148,15 +160,6 @@ void Item::BeingProcessed()
 {
 	Simon *simon = Simon::GetInstance();
 	isEaten = true;
-	if (effectTime == 0)
-	{
-		isVanish = true;
-	}
-	else
-	{
-		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
-		ani_set = animation_sets->Get(EFFECT_ANI_SET_ID);
-	}
 	switch (ani)
 	{
 	case ITEM_SMALL_HEART:
@@ -166,11 +169,19 @@ void Item::BeingProcessed()
 		simon->SetHearts(simon->GetHearts() + 5);
 		break;
 	case ITEM_MONEY_BAG_RED:
-		ani = 
+		effect = ONE_THOUSAND_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
 		break;
 	case ITEM_MONEY_BAG_WHITE:
+		effect = SEVEN_HUNDRED_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
 		break;
 	case ITEM_MONEY_BAG_BLUE:
+		effect = FOUR_HUNDRED_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
 		break;
 	case ITEM_WHIP_RED:
 		simon->SetState(SIMON_STATE_LEVEL_UP);
@@ -189,5 +200,15 @@ void Item::BeingProcessed()
 		break;
 	default:
 		break;
+	}
+
+	if (effectTime == 0)
+	{
+		isVanish = true;
+	}
+	else
+	{
+		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+		ani_set = animation_sets->Get(EFFECT_ANI_SET_ID);
 	}
 }
