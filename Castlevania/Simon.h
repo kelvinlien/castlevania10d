@@ -4,6 +4,7 @@
 #include "Whip.h"
 #include <map>
 #include "GameMap.h"
+#include "Utils.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
@@ -114,6 +115,11 @@ public:
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsFlagOn() { return flag; }
+
+	void SetHearts(int _hearts) {  hearts = _hearts; }
+	int GetHearts() { return hearts; }
+
+	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
