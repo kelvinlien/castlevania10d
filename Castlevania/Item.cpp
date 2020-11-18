@@ -10,6 +10,8 @@ Item::Item(int x, int y, ItemType ani) {
 	this->x = x;
 	this->y = y;
 	existingTime = 2000;
+	effectTime = 0;
+	isEaten = false;
 
 	this->ani = ani;
 	switch (this->ani)
@@ -134,18 +136,41 @@ void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 void Item::BeingProcessed()
 {
 	Simon *simon = Simon::GetInstance();
-	isVanish = true;
-	if ( ani == ITEM_WHIP_RED) {
+	isEaten = true;
+	if (effectTime == 0)
+	{
+		isVanish = true;
+	}
+	switch (ani)
+	{
+	case ITEM_SMALL_HEART:
+		simon->SetHearts(simon->GetHearts() + 1);
+		break;
+	case ITEM_BIG_HEART:
+		simon->SetHearts(simon->GetHearts() + 5);
+		break;
+	case ITEM_MONEY_BAG_RED:
+		break;
+	case ITEM_MONEY_BAG_WHITE:
+		break;
+	case ITEM_MONEY_BAG_BLUE:
+		break;
+	case ITEM_WHIP_RED:
 		simon->SetState(SIMON_STATE_LEVEL_UP);
 		CWhip::GetInstance()->LevelUp();
-	}
-	else {
-
-		if (ani == ITEM_DAGGER) {
-			 simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
-		}
-		else if (ani == ITEM_BIG_HEART) {
-			simon->SetHearts(simon->GetHearts() + 5);
-		}
+		break;
+	case ITEM_WHIP_BLUE:
+		break;
+	case ITEM_DAGGER:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
+		break;
+	case ITEM_STOP_WATCH:
+		break;
+	case ITEM_CROSS:
+		break;
+	case ITEM_HOLY_WATER:
+		break;
+	default:
+		break;
 	}
 }

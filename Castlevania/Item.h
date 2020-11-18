@@ -26,8 +26,10 @@ class Item :public CGameObject {
 public:
 	LPANIMATION_SET ani_set;
 	float existingTime;
+	float effectTime;
 	int widthBBox;
 	int heightBBox;
+	bool isEaten;
 	
 	ItemType ani;
 
