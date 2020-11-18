@@ -277,30 +277,7 @@ void Simon::CalcPotentialCollisions(
 			}
 			
 		}
-		else if (dynamic_cast<CEnemy *>(coObjects->at(i)))
-		{
-			CEnemy *enemy = dynamic_cast<CEnemy *>(coObjects->at(i));
-			float l1, t1, r1, b1;
-			float l2, t2, r2, b2;
-
-			GetBoundingBox(l1, t1, r1, b1);
-			enemy->GetBoundingBox(l2, t2, r2, b2);
-
-			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-			{
-				if (!isUntouchable) {
-					health -= 2;
-					if (enemy->nx == nx) {
-						this->nx = - enemy->nx;
-					}
-					SetState(SIMON_STATE_HURT);
-				}
-				else {
-					enemy->x += enemy->dx;
-				}
-			}
-		}
-
+		
 
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
@@ -472,8 +449,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					SetState(SIMON_STATE_HURT);
 				}
 				else {
-					e->obj->x += e->obj->dx;
-					//DebugOut(L"[Info] Keep going.. %d \n");
+					if (e->nx != 0) x += dx;
+					if (e->ny != 0) y += dy;
 				}
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
