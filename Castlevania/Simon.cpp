@@ -294,16 +294,23 @@ void Simon::CalcPotentialCollisions(
 			if (dynamic_cast<Item *>(coObjects->at(i)))
 			{
 				Item *item = dynamic_cast<Item *>(coObjects->at(i));
-				float l1, t1, r1, b1;
-				float l2, t2, r2, b2;
-
-				GetBoundingBox(l1, t1, r1, b1);
-				item->GetBoundingBox(l2, t2, r2, b2);
-
-				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				if (item->isEaten)
 				{
-					item->BeingProcessed();
 					continue;
+				}
+				else
+				{
+					float l1, t1, r1, b1;
+					float l2, t2, r2, b2;
+
+					GetBoundingBox(l1, t1, r1, b1);
+					item->GetBoundingBox(l2, t2, r2, b2);
+
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					{
+						item->BeingProcessed();
+						continue;
+					}
 				}
 			}
 
