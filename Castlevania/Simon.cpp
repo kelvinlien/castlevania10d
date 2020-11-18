@@ -40,7 +40,6 @@ void Simon::SetState(int state)
 		vy = 0;
 		break;
 	case SIMON_STATE_IDLE:
-		if (isHurt) return;
 			vx = 0;
 			break;
 	case SIMON_STATE_LEVEL_UP:
