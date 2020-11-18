@@ -550,6 +550,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -581,6 +582,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Simon die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
+	if (simon->IsHurt()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -591,7 +593,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
 	else
@@ -600,10 +602,11 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (simon->IsLevelUp()) break;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
