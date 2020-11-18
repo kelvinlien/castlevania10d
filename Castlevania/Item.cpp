@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "Simon.h"
+#include "Weapon.h"
 
 
 Item::Item(int x, int y, ItemType ani) {
@@ -128,4 +129,23 @@ void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 	t = y;
 	r = x + widthBBox;
 	b = y + heightBBox;
+}
+
+void Item::BeingProcessed()
+{
+	Simon *simon = Simon::GetInstance();
+	isVanish = true;
+	if ( ani == ITEM_WHIP_RED) {
+		simon->SetState(SIMON_STATE_LEVEL_UP);
+		CWhip::GetInstance()->LevelUp();
+	}
+	else {
+
+		if (ani == ITEM_DAGGER) {
+			 simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
+		}
+		else if (ani == ITEM_BIG_HEART) {
+			simon->SetHearts(simon->GetHearts() + 5);
+		}
+	}
 }

@@ -302,20 +302,7 @@ void Simon::CalcPotentialCollisions(
 
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 				{
-					item->isVanish = true;
-					if (item->GetType() == ITEM_WHIP_RED) {
-						this->SetState(SIMON_STATE_LEVEL_UP);
-						CWhip::GetInstance()->LevelUp();
-					}
-					else {
-
-						if (item->GetType() == ITEM_DAGGER) {
-							subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-						}
-						else if (item->GetType() == ITEM_BIG_HEART) {
-							hearts += 5;
-						}
-					}
+					item->BeingProcessed();
 					continue;
 				}
 			}
@@ -450,20 +437,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
-				item->isVanish = true;
-				if (item->GetType() == ITEM_WHIP_RED) {
-					this->SetState(SIMON_STATE_LEVEL_UP);
-					CWhip::GetInstance()->LevelUp();
-				}
-				else {
-
-					if (item->GetType() == ITEM_DAGGER) {
-						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-					}
-					else if (item->GetType() == ITEM_BIG_HEART) {
-						hearts += 5;
-					}
-				}
+				item->BeingProcessed();
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
