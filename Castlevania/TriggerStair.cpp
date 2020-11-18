@@ -19,10 +19,17 @@ TriggerStair::TriggerStair(float l, float t, int type, int direct)
 	this->direct = direct;
 	x = l;
 	y = t;
-	middlePoint = x + width / 2;
-	if (direct == 1)
-		offset = -6;
-	standingPoint = middlePoint + offset;
+	//middlePoint = x + width / 2;
+	//if (direct == 1)
+	//	offset = -0;
+	////if (type == 0)
+	//	standingPoint = middlePoint + offset;
+	//else
+		//standingPoint = middlePoint - 50;
+		if (direct == 1)
+			standingPoint = x + width;
+		else
+			standingPoint = x;
 }
 
 
@@ -39,16 +46,9 @@ void TriggerStair::GetBoundingBox(float &l, float &t, float &r, float &b)
 	b = y + height;
 }
 
-bool TriggerStair::IsFrontContainSimon()
+bool TriggerStair::IsContainSimon()
 {
-	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 >= x && Simon::GetInstance()->GetPostionX() < middlePoint && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() + SIMON_BBOX_HEIGHT < y + height)
-		return true;
-	return false;
-}
-
-bool TriggerStair::IsBackContainSimon()
-{
-	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 >= middlePoint && Simon::GetInstance()->GetPostionX() < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() + SIMON_BBOX_HEIGHT < y + height)
+	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - 4 >= x && Simon::GetInstance()->GetPostionX() + 12 + 4 < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() < y + height + 1)
 		return true;
 	return false;
 }

@@ -783,14 +783,7 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 2 = Goomba
-
-# GOOMBA
-2	200	135	3
-2	260	135	3
-2	320	135	3
-2	480	135	3
-2	500	135	3
+# type: 0 = Simon , 1 = Brick
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
@@ -818,7 +811,7 @@
 5	3328	311	2	3
 
 # SIMON
-0	50	0	1
+0	1000	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

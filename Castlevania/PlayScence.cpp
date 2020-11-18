@@ -185,7 +185,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -419,9 +418,9 @@ void CPlayScene::Render()
 
 	// Bbox 2 dau cau thang
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-	/*for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		TriggerStairs::GetInstance()->Get(i)->Render();
-	}*/
+	}
 }
 
 /*
@@ -443,6 +442,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -458,10 +460,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	}
 	case DIK_DOWN:
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
 	}
 }
 
@@ -473,7 +477,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die 
-	if (simon->GetState() == SIMON_STATE_DIE) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -484,6 +488,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
@@ -493,6 +500,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_DOWN:

@@ -33,7 +33,7 @@
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
 
-
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
@@ -48,15 +48,18 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
+	
+	//Flag of trigger stair
 	bool up;
 	bool down;
-
-
+	bool flagUp;
+	bool flagDown;
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
 
+	TriggerStairs *triggerStairs;
 
 	enum animation
 	{
@@ -87,9 +90,7 @@ class Simon : public CGameObject
 	}ani;
 
 public:
-
 	Simon();
-
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
 	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
@@ -116,6 +117,10 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsUp() { return up; }
 	bool IsDown() { return down; }
+	bool IsFlagUp() { return flagUp; }
+	bool IsFlagDown() { return flagDown; }
+	void SetUpDown(int i);
+	void SetSimonAutoAction(int i);
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

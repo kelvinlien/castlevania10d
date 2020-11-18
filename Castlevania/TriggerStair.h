@@ -9,20 +9,19 @@
 
 class TriggerStair :public CGameObject
 {
-	int width = 32;
-	int height = 63;
+	float width = 32;
+	float height = 63;
 	int type;
 	int direct;	//stair direction
-	int standingPoint;
-	int middlePoint;
-	int offset = 6;	//distance from standingPoint to middlePoint
+	float standingPoint;
+	float middlePoint;
+	float offset = 0;	//distance from standingPoint to middlePoint
 
 public:
 	TriggerStair() {};
 	TriggerStair(float l, float t, int type, int direct);
 
-	bool IsFrontContainSimon();
-	bool IsBackContainSimon();
+	bool IsContainSimon();
 	void Render();
 	void GetBoundingBox(float &l, float &t, float &r, float &b);
 
@@ -30,7 +29,7 @@ public:
 	//getter & setter
 	int GetType() { return type; }
 	int GetDirect() { return direct; }
-	int GetStandingPoint() { return standingPoint; }
+	float GetStandingPoint() { return standingPoint; }
 
 	~TriggerStair() {};
 };
@@ -43,7 +42,7 @@ class TriggerStairs
 
 public:
 	void Add(LTRIGGER_STAIR triggerStair);
-	LTRIGGER_STAIR Get(int ID) { return triggerStairs[ID]; }
+	LTRIGGER_STAIR Get(int ID) { return triggerStairs.at(ID); }
 
 	static TriggerStairs * GetInstance();
 };
