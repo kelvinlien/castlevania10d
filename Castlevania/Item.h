@@ -5,6 +5,8 @@
 
 #define ITEM_ANI_SET_ID	4
 
+#define EFFECT_ANI_SET_ID	7
+
 #define GRAVITY 0.2f
 
 enum ItemType
@@ -22,6 +24,15 @@ enum ItemType
 	ITEM_HOLY_WATER
 };
 
+enum EffectType
+{
+	BURN_EFFECT,
+	FOUR_HUNDRED_EFFECT,
+	SEVEN_HUNDRED_EFFECT,
+	ONE_THOUSAND_EFFECT,
+	HIT_EFFECT
+};
+
 class Item :public CGameObject {
 public:
 	LPANIMATION_SET ani_set;
@@ -32,6 +43,8 @@ public:
 	bool isEaten;
 	
 	ItemType ani;
+
+	EffectType effect;
 
 	Item() {};
 	~Item() {  };

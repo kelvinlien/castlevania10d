@@ -117,11 +117,22 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						vx = 0;
 						vy = 0;
 						//counting time to vanish item
-						if (existingTime <= 0)
+						if (!isEaten)
 						{
-							this->isVanish = true;
+							if (existingTime <= 0)
+							{
+								this->isVanish = true;
+							}
+							existingTime -= dt;
 						}
-						existingTime -= dt;
+						else
+						{
+							if (effectTime <= 0)
+							{
+								this->isVanish = true;
+							}
+							effectTime -= dt;
+						}
 					}
 		}
 	}
@@ -141,6 +152,11 @@ void Item::BeingProcessed()
 	{
 		isVanish = true;
 	}
+	else
+	{
+		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+		ani_set = animation_sets->Get(EFFECT_ANI_SET_ID);
+	}
 	switch (ani)
 	{
 	case ITEM_SMALL_HEART:
@@ -150,6 +166,7 @@ void Item::BeingProcessed()
 		simon->SetHearts(simon->GetHearts() + 5);
 		break;
 	case ITEM_MONEY_BAG_RED:
+		ani = 
 		break;
 	case ITEM_MONEY_BAG_WHITE:
 		break;
