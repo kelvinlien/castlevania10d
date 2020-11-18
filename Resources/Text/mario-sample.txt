@@ -1,0 +1,6 @@
+[SETTINGS]
+start	1
+#scene list
+[SCENES]
+1	..\Resources\Text\playscene1.txt
+2	..\Resources\Text\playscene2.txt

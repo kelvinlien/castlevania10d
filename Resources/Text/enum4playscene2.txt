@@ -1,0 +1,112 @@
+- Simon: dùng animation set và enum như cũ.
+- Holder: như cũ, chuyển type qua candles.
+- Item:
+enum ItemType
+{
+	ITEM_SMALL_HEART,
+	ITEM_BIG_HEART,
+	ITEM_MONEY_BAG_RED,
+	ITEM_MONEY_BAG_WHITE,
+	ITEM_MONEY_BAG_BLUE,
+	ITEM_WHIP_RED,
+	ITEM_WHIP_BLUE,
+	ITEM_DAGGER,
+	ITEM_STOP_WATCH,
+	ITEM_CROSS,
+	ITEM_HOLY_WATER
+};
+- WEAPON:
+#define WEAPON_ANI_SET_ID	5
+enum WeaponType
+{
+	WHIP_LV1_LEFT,
+	WHIP_LV2_LEFT,
+	WHIP_LV3_LEFT,
+	WHIP_LV1_RIGHT,
+	WHIP_LV2_RIGHT,
+	WHIP_LV3_RIGHT,
+	DAGGER_LEFT,
+	DAGGER_RIGHT,
+	HOLY_WATER_LEFT,
+	HOLY_WATER_RIGHT,
+	HOLY_WATER_USING
+};
+- ENEMY:
+#define ENEMY_ANI_SET_ID	6
+enum EnemyType
+{
+	GHOST_MOVING_LEFT,
+	GHOST_MOVING_RIGHT,
+	PANTHER_IDLE_LEFT,
+	PANTHER_IDLE_RIGHT,
+	PANTHER_LEAP_LEFT,
+	PANTHER_LEAP_RIGHT,
+	PANTHER_MOVING_LEFT,
+	PANTHER_MOVING_RIGHT,
+	FISHMAN_IDLE_LEFT,
+	FISHMAN_IDLE_RIGHT,
+	FISHMAN_MOVING_LEFT,
+	FISHMAN_MOVING_RIGHT
+};
+- EFFECT:
+#define EFFECT_ANI_SET_ID	7
+enum EffectType
+{
+	BURN_EFFECT,
+	400_EFFECT,
+	700_EFFECT,
+	1000_EFFECT,
+	HIT_EFFECT
+};
+- BOARD:
+#define BOARD_ANI_SET_ID	8
+enum EnemyType
+{
+	A,
+	B,
+	C,
+	D,
+	E,
+	F,
+	G,
+	H,
+	I,
+	J,
+	K,
+	L,
+	M,
+	N,
+	O,
+	P,
+	Q,
+	R,
+	S,
+	T,
+	U,
+	V,
+	W,
+	X,
+	Y,
+	Z,
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	-,
+	RED_HEALTH,
+	ORANGE_HEALTH
+};
+- DOOR:
+#define DOOR_ANI_SET_ID	9
+enum EnemyType
+{
+	CLOSED_DOOR,
+	OPENING_DOOR,
+	OPENED_DOOR
+};
