@@ -194,6 +194,8 @@ void Item::BeingProcessed()
 		CWhip::GetInstance()->LevelUp();
 		break;
 	case ITEM_WHIP_BLUE:
+		simon->SetState(SIMON_STATE_LEVEL_UP);
+		CWhip::GetInstance()->LevelUp();
 		break;
 	case ITEM_DAGGER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
