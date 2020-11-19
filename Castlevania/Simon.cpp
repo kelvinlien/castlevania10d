@@ -45,6 +45,13 @@ void Simon::SetState(int state)
 	case SIMON_STATE_WALKING_LEFT:
 		if (isAttack || isJump) break;
 		nx = -1;
+		//if(onStair) {
+		//	if (stairNx > 0)             //check the direct of stair
+		//		GoDown();
+		//	else
+		//		GoUp();
+		//	break;
+		//}
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
@@ -81,6 +88,17 @@ void Simon::SetAnimation()
 			ani = STAIR_DOWN_RIGHT;
 		else
 			ani = STAIR_DOWN_LEFT;
+	else if (state == SIMON_STATE_IDLE_ON_STAIR)
+		if (nx > 0)
+			if (directionY > 0)
+				ani = IDLE_STAIR_DOWN_RIGHT;
+			else
+				ani = IDLE_STAIR_UP_RIGHT;
+		else
+			if (directionY > 0)
+				ani = IDLE_STAIR_DOWN_LEFT;
+			else
+				ani = IDLE_STAIR_UP_LEFT;
 	else if (vx == 0)
 	{
 
@@ -100,19 +118,57 @@ void Simon::SetAnimation()
 		}
 		else
 		{
-			if (isAttack) {
-				if (isSit)
+			if (onStair)
+			{
+				if (directionY < 0)
 				{
-					if (nx > 0)
-						ani = ATTACK_DUCK_RIGHT;
+					if (isAttack) {
+						if (isSit)
+						{
+							if (nx > 0)
+								ani = ATTACK_DUCK_RIGHT;
+							else
+								ani = ATTACK_DUCK_LEFT;
+						}
+						else {
+							if (nx > 0)
+								ani = ATTACK_STAND_RIGHT;
+							else
+								ani = ATTACK_STAND_LEFT;
+						}
+					}
 					else
-						ani = ATTACK_DUCK_LEFT;
+					{
+						if (nx > 0)
+							ani = IDLE_STAIR_UP_RIGHT;
+						else
+							ani = IDLE_STAIR_UP_LEFT;
+					}
 				}
-				else {
-					if (nx > 0)
-						ani = ATTACK_STAND_RIGHT;
+				else
+				{
+					if (isAttack) {
+						if (isSit)
+						{
+							if (nx > 0)
+								ani = ATTACK_DUCK_RIGHT;
+							else
+								ani = ATTACK_DUCK_LEFT;
+						}
+						else {
+							if (nx > 0)
+								ani = ATTACK_STAND_RIGHT;
+							else
+								ani = ATTACK_STAND_LEFT;
+						}
+					}
 					else
-						ani = ATTACK_STAND_LEFT;
+					{
+						if (nx > 0)
+							ani = IDLE_STAIR_DOWN_RIGHT;
+						else
+							ani = IDLE_STAIR_DOWN_LEFT;
+					}
 				}
 			}
 			else
@@ -362,8 +418,18 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		
 		x += dx;
 		y += dy;
+
+		if (nx != 0 && (state == SIMON_STATE_GO_UP_STAIR || state == SIMON_STATE_GO_DOWN_STAIR) && GetTickCount() - time >= 150)
+		{
+			//if (!flagDown)
+			vx = 0;
+			vy = 0;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+
 	}
 	else
 	{
@@ -397,13 +463,24 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				{
 					SetUpDown(i);
 					if (up || down)
+					{
 						SetSimonAutoAction(i);
+						if (flagUp || flagDown)
+							onStair = true;
+						else
+							onStair = false;
+						/*if (y < triggerStairs->Get(i)->GetPostionY() - 16)
+						{
+							this->vx = 0;
+							this->vy = 0;
+						}*/
+					}
 				}
 			}
 		}
-		DebugOut(L"[CHECK] Simon left: %f\n", x + 12);
+		DebugOut(L"[CHECK] Simon left: %f\n", x + 12.0f);
 		DebugOut(L"[CHECK] Simon y: %f\n", y);
-		DebugOut(L"[CHECK] Simon right: %f\n", x + SIMON_BBOX_WIDTH - 10);
+		DebugOut(L"[CHECK] Simon right: %f\n", x + SIMON_BBOX_WIDTH - 10.0f);
 		DebugOut(L"[CHECK] Simon bottom: %f\n", y + SIMON_BBOX_HEIGHT);
 		DebugOut(L"[CHECK] Simon vx: %f\n", this->vx);
 		DebugOut(L"[CHECK] Simon vy: %f\n", this->vy);
@@ -521,17 +598,21 @@ void Simon::SetSimonAutoAction(int i)
 					this->flagUp = true;
 					this->flagDown = false;
 					SetState(SIMON_STATE_GO_UP_STAIR);
-					this->vx = 0.1;
-					this->vy = -0.1;
+					this->vx = 0.1f;
+					this->vy = -0.1f;
+					directionY = -1;
+					
 				}
 				else
 				{
 					this->flagDown = true;
 					this->flagUp = false;
 					SetState(SIMON_STATE_GO_DOWN_STAIR);
-					this->vx = 0.1;
-					this->vy = 0.1;
+					this->vx = 0.1f;
+					this->vy = 0.1f;
+					directionY = 1;
 				}
+				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
 			
 		}
@@ -548,6 +629,7 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_UP_STAIR);
 					this->vx = -0.1;
 					this->vy = -0.1;
+					directionY = -1;
 				}
 				else
 				{
@@ -556,7 +638,9 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_DOWN_STAIR);
 					this->vx = -0.1;
 					this->vy = 0.1;
+					directionY = 1;
 				}
+				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
 		}
 	}
@@ -575,6 +659,7 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_UP_STAIR);
 					this->vx = -0.1;
 					this->vy = -0.1;
+					directionY = -1;
 				}
 				else
 				{
@@ -583,7 +668,9 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_DOWN_STAIR);
 					this->vx = -0.1;
 					this->vy = 0.1;
+					directionY = 1;
 				}
+				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
 		}
 		else
@@ -599,6 +686,7 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_UP_STAIR);
 					this->vx = -0.1;
 					this->vy = -0.1;
+					directionY = -1;
 				}
 				else
 				{
@@ -607,8 +695,11 @@ void Simon::SetSimonAutoAction(int i)
 					SetState(SIMON_STATE_GO_DOWN_STAIR);
 					this->vx = -0.1;
 					this->vy = 0.1;
+					directionY = 1;
 				}
+				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
 		}
 	}
+	time = GetTickCount();
 }

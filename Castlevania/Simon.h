@@ -25,6 +25,7 @@
 #define SIMON_STATE_STAND			900
 #define SIMON_STATE_GO_UP_STAIR	1000
 #define SIMON_STATE_GO_DOWN_STAIR	1100
+#define SIMON_STATE_IDLE_ON_STAIR	1200
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -54,6 +55,11 @@ class Simon : public CGameObject
 	bool down;
 	bool flagUp;
 	bool flagDown;
+	bool onStair;
+
+	int directionY;
+	int stairNx;
+	DWORD time;
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
@@ -86,7 +92,11 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		IDLE_STAIR_UP_LEFT,
+		IDLE_STAIR_UP_RIGHT,
+		IDLE_STAIR_DOWN_LEFT,
+		IDLE_STAIR_DOWN_RIGHT
 	}ani;
 
 public:
@@ -119,6 +129,7 @@ public:
 	bool IsDown() { return down; }
 	bool IsFlagUp() { return flagUp; }
 	bool IsFlagDown() { return flagDown; }
+	bool IsOnStair() { return onStair; }
 	void SetUpDown(int i);
 	void SetSimonAutoAction(int i);
 
