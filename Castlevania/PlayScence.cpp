@@ -526,7 +526,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	case DIK_DOWN:
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
+		if (simon->CanGoOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
 		break;
 		
 	}
@@ -552,7 +555,11 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
+
+		if (simon->CanGoOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else 
+			simon->SetState(SIMON_STATE_SIT);
 	}
 	else if (game->IsKeyDown(DIK_UP)) {
 		if (simon->IsLevelUp()) return;

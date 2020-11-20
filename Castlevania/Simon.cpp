@@ -71,20 +71,24 @@ void Simon::SetState(int state)
 		Attack();
 		break;
 	case SIMON_STATE_SIT:
-		if (canGoOnStair)
-			GoDown();
-		else
-			Sit();
+		Sit();
 		break;
 	case SIMON_STATE_STAND:
 		Stand();
 		break;
 	case SIMON_STATE_GO_UP_STAIR:
-		if (canGoOnStair)
-			if (stairNx > 0)
-				nx = 1;
-			else nx = -1;
-			GoUp();
+		if (!canGoOnStair) return;
+		nx = 1;
+		if (stairNx < 0)
+			nx = -1;
+		GoUp();
+		break;
+	case SIMON_STATE_GO_DOWN_STAIR:
+		if (!canGoOnStair) return;
+		nx = -1;
+		if (stairNx < 0)
+			nx = 1;
+		GoDown();
 		break;
 	}
 
@@ -129,7 +133,6 @@ void Simon::SetAnimation()
 			ani = IDLE_STAIR_DOWN_RIGHT;
 	}
 	
-
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
