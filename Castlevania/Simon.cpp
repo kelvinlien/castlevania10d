@@ -91,131 +91,46 @@ void Simon::SetState(int state)
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE)
-		return;
-	else if (vx == 0)
-	{
-
-		if (isJump) {
-			if (isAttack) {
-				if (nx > 0)
-					ani = ATTACK_STAND_RIGHT;
-				else
-					ani = ATTACK_STAND_LEFT;
-			}
-			else {
-				if (nx > 0)
-					ani = JUMP_DUCK_RIGHT;
-				else
-					ani = JUMP_DUCK_LEFT;
-			}
-		}
+	if (state == SIMON_STATE_DIE) return;
+	
+	if (!isOnStair) {
+		//use this code when merging
+		/*if (isDead)
+		ani = DEATH_RIGHT;*/
+		/*else if (isHurt)
+		ani = HURT_RIGHT;*/
+		if (isJump && isAttack)
+			ani = ATTACK_STAND_RIGHT;
+		else if (isJump)
+			ani = JUMP_DUCK_RIGHT;
+		else if (isAttack && isSit)
+			ani = ATTACK_DUCK_RIGHT;
+		else if (isAttack)
+			ani = ATTACK_STAND_RIGHT;
+		else if (isSit)
+			ani = JUMP_DUCK_RIGHT;
+		else if (vx != 0)
+			ani = WALK_RIGHT;
 		else
-		{
-			if(isOnStair){
-				if (directionY < 0) {
-					if (isAttack) {
-
-						if (nx > 0)
-							ani = ATTACK_UP_RIGHT;
-						else
-							ani = ATTACK_UP_LEFT;
-					}
-					else {                                //check idle on stair or do something 
-						if (nx > 0)
-						{
-								ani = IDLE_STAIR_UP_RIGHT_1;
-						}
-						else
-						{
-							if (currentFrame == 0)
-								ani = IDLE_STAIR_UP_LEFT_0;
-							else 
-								ani = IDLE_STAIR_UP_LEFT_1;
-						}
-					}
-				}
-				else {
-					if (isAttack) {
-
-						if (nx > 0)
-							ani = ATTACK_DOWN_RIGHT;
-						else
-							ani = ATTACK_DOWN_LEFT;
-					}
-					else { //check idle on stair or do something 
-
-					}
-				}
-			}
-			else {
-				 if (isAttack) {
-					if (isSit)
-					{
-						if (nx > 0)
-							ani = ATTACK_DUCK_RIGHT;
-						else
-							ani = ATTACK_DUCK_LEFT;
-					}
-					else {
-						if (nx > 0)
-							ani = ATTACK_STAND_RIGHT;
-						else
-							ani = ATTACK_STAND_LEFT;
-					}
-				}
-				else
-				{
-
-					if (isSit)
-					{
-						if (nx > 0)
-							ani = JUMP_DUCK_RIGHT;
-						else
-							ani = JUMP_DUCK_LEFT;
-					}
-					else {
-						if (nx > 0)
-							ani = IDLE_RIGHT;
-						else
-							ani = IDLE_LEFT;
-					}
-				}
-			}
-		}
+			ani = IDLE_RIGHT;
 	}
-	else if (vx != 0)
-	{
-		if (isJump) {
-			if (nx > 0)
-				ani = JUMP_DUCK_RIGHT;
-			else
-				ani = JUMP_DUCK_LEFT;
-		}
+	else {
+		if (isAttack && directionY < 0)
+			ani = ATTACK_UP_RIGHT;
+		else if (isAttack && directionY > 0)
+			ani = ATTACK_DOWN_RIGHT;
+		else if (vx != 0 && directionY < 0)
+			ani = STAIR_UP_RIGHT;
+		else if (vx != 0 && directionY > 0)
+			ani = STAIR_DOWN_RIGHT;
+		else if (directionY < 0)
+			ani = IDLE_STAIR_UP_RIGHT;
 		else
-		{
-			if (isOnStair) {
-				if (directionY < 0) {
-					if (nx > 0)
-						ani = STAIR_UP_RIGHT;
-					else
-						ani = STAIR_UP_LEFT;
-				}
-				else {
-					if (nx > 0)
-						ani = STAIR_DOWN_RIGHT;
-					else
-						ani = STAIR_DOWN_LEFT;
-				}
-			}
-			else {
-				if (nx > 0)
-					ani = WALK_RIGHT;
-				else
-					ani = WALK_LEFT;
-			}
-		}
+			ani = IDLE_STAIR_DOWN_RIGHT;
 	}
+	
+
+	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
 void Simon::Render()
@@ -332,7 +247,7 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump )
 		return;
-	vx = SIMON_WALKING_SPEED;
+	vx = nx * SIMON_WALKING_SPEED;
 	isAttack = false;
 }
 

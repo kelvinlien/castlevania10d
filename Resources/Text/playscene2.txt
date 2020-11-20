@@ -469,22 +469,14 @@
 #downing right
 122	11036	100	11037	100	11038	100
 
-#idle stair up left sprite 0
-123	10011	100
-#idle stair up left sprite 1
+#idle stair up left sprite 
 124	10012	100
-#idle stair up right sprite 0
-125	11011	100
-#idle stair up right sprite 1
+#idle stair up right sprite 
 126	11012	100
 
-#idle stair down left sprite 0
-127	10016	100
-#idle stair down left sprite 1
+#idle stair down left sprite 
 128	10017	100
-#idle stair down right sprite 0
-129	11016	100
-#idle stair down right sprite 1
+#idle stair down right sprite 
 130	11017	100
 
 # ==== FLOOR =========
@@ -696,7 +688,7 @@
 #
 [ANIMATION_SETS]
 # SIMON
-1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126	127	128	129	130
+1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	124	126	128	130
 # FLOOR 
 2	201
 # HOLDER
