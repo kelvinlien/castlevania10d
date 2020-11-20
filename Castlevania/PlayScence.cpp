@@ -33,7 +33,7 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_PANTHER	2
+#define OBJECT_TYPE_PANTHER	5
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_WHIP	4
 
@@ -189,7 +189,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, 1200, 1000, -1);break;
+		obj = new CPanther(x, y, 600, 480, -1);break;
 	case OBJECT_TYPE_BRICK: {
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();

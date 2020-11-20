@@ -8,7 +8,7 @@ CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft, int nx) 
 	this->y = y;
 	this->xJumpRight = xJumpRight;
 	this->xJumpLeft = xJumpLeft;
-	type = 2;
+	type = 5;  // panther type
 	jumpCount = 1;
 	isActive = true;
 	isJump = false;
@@ -17,7 +17,7 @@ CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft, int nx) 
 }
 void CPanther::Jump()
 {
-	if (isJump) 
+	if (isJump || isRun) 
 		return;
 	isJump = true;
 	isRun = false;
@@ -26,7 +26,7 @@ void CPanther::Jump()
 }
 void CPanther::Run()
 {
-	if (isRun)
+	if (isRun || isJump)
 		return;
 	isRun = true;
 	isJump = false;
@@ -39,26 +39,33 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt);
 	vy += PANTHER_GRAVITY * dt;
 
-	if (nx > 0)
+	if (this->nx > 0)
 		distance = PANTHER_RIGHT_DISTANCE;
 	else distance = PANTHER_LEFT_DISTANCE;
 
-	if (abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - this->x) <= distance || abs(Simon::GetInstance()->GetPostionX() - (this->x + PANTHER_BBOX_WIDTH)) <= distance)
+	if (abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - this->x) <= distance || abs(Simon::GetInstance()->GetPostionX() + 12 - (this->x + PANTHER_BBOX_WIDTH)) <= distance)
 		Run();
 	if(isRun && jumpCount == 1)
 	{
-		if ((nx > 0 && x >= xJumpRight) || (nx < 0 && x <= xJumpLeft))
+		if ((this->nx > 0 && x >= xJumpRight) || (this->nx < 0 && x <= xJumpLeft))
 		{
 			Jump();
 		}
 
 	}
+	vector<LPGAMEOBJECT> coObjectsPanther;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+	
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if(!dynamic_cast<Simon *> (coObjects->at(i)))
+		coObjectsPanther.push_back(coObjects->at(i));
+	}
 
 	coEvents.clear();
 	if (isActive)
-		CalcPotentialCollisions(coObjects, coEvents);
+		CalcPotentialCollisions(&coObjectsPanther, coEvents);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -75,8 +82,12 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) {}
-		if (ny != 0) vy = 0;
+		if (nx != 0);
+		if (ny != 0) {
+			if (isJump)
+			jumpCount--;
+			vy = 0;
+		}
 
 
 		//
@@ -88,15 +99,12 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				if (isJump)
-				{
-					jumpCount--;
-					if (Simon::GetInstance()->x - this->x < 0 && this->nx > 0)
-						nx = -1;
-					else if (Simon::GetInstance()->x - this->x > 0 && this->nx < 0)
-						nx = 1;
-					Run();
-				}
+				if
+				if (Simon::GetInstance()->x - this->x < 0 && this->nx > 0)
+					this->nx = -1;
+				else if (Simon::GetInstance()->x - this->x > 0 && this->nx < 0)
+					this->nx = 1;
+				Run();
 			}
 		}
 	}
