@@ -85,6 +85,7 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_GO_DOWN_STAIR:
 		if (!canGoOnStair) return;
+
 		nx = -1;
 		if (stairNx < 0)
 			nx = 1;
@@ -167,11 +168,10 @@ void Simon::Attack()
 	// normal attack
 	if (isAttack)
 		return;
-	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP))) {
-		vx = 0;
-		isAttack = true;
-		attackTime = GetTickCount();
-	}
+
+	vx = 0;
+	isAttack = true;
+	attackTime = GetTickCount();
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
@@ -201,6 +201,7 @@ void Simon::Attack()
 }
 void Simon::GoUp()
 {
+	if (isAttack) return;
 	directionY = -1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
@@ -211,6 +212,7 @@ void Simon::GoUp()
 }
 void Simon::GoDown()
 {
+	if (isAttack) return;
 	directionY = 1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
