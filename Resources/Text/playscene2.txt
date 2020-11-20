@@ -697,19 +697,11 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 3 = Firepot
+# type: 0 = Simon , 1 = Brick, 2 = Ghost, 3 = Panther
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
 1	0	289	2
-
-# ---- fire pot ----
-#last number is type of item
-3	178	224	3	1
-3	434	224	3	5
-3	690	224	3	5
-3	946	224	3	1
-3	1202	224	3	7
 
 # ---- whip ----
 #4	178	224	5

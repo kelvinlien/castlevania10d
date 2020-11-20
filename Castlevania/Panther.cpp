@@ -1,7 +1,7 @@
 #include "Panther.h"
 #include"Simon.h"
 #include"Brick.h"
-CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft,int nx) :CEnemy()
+CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft, int nx) :CEnemy()
 {
 	this->nx = nx;
 	this->x = x;
@@ -17,7 +17,7 @@ CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft,int nx) :
 }
 void CPanther::Jump()
 {
-	if (isJump == true) 
+	if (isJump) 
 		return;
 	isJump = true;
 	isRun = false;
@@ -26,7 +26,7 @@ void CPanther::Jump()
 }
 void CPanther::Run()
 {
-	if (isRun == true)
+	if (isRun)
 		return;
 	isRun = true;
 	isJump = false;
@@ -35,7 +35,7 @@ void CPanther::Run()
 	vx = PANTHER_RUN_SPEED*this->nx;
 }
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
-{
+{	
 	CGameObject::Update(dt);
 	vy += PANTHER_GRAVITY * dt;
 
@@ -43,9 +43,9 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		distance = PANTHER_RIGHT_DISTANCE;
 	else distance = PANTHER_LEFT_DISTANCE;
 
-	if (abs(Simon::GetInstance()->x - this->x) <= distance)
+	if (abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - this->x) <= distance || abs(Simon::GetInstance()->GetPostionX() - (this->x + PANTHER_BBOX_WIDTH)) <= distance)
 		Run();
-	if(isRun == true && jumpCount == 1)
+	if(isRun && jumpCount == 1)
 	{
 		if ((nx > 0 && x >= xJumpRight) || (nx < 0 && x <= xJumpLeft))
 		{
@@ -88,7 +88,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				if (isJump = true)
+				if (isJump)
 				{
 					jumpCount--;
 					if (Simon::GetInstance()->x - this->x < 0 && this->nx > 0)
@@ -106,7 +106,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 }
 void CPanther::SetAnimation()
 {
-	 ani = PANTHER_ANI_SIT_LEFT;
+	ani = PANTHER_ANI_SIT_LEFT;
 	if (nx > 0)
 	{
 		if (isSit)
@@ -118,9 +118,9 @@ void CPanther::SetAnimation()
 	}
 	else {
 		if (isRun)
-			ani = PANTHER_ANI_RUN_RIGHT;
+			ani = PANTHER_ANI_RUN_LEFT;
 		else if (isJump)
-			ani = PANTHER_ANI_JUMP_RIGHT;
+			ani = PANTHER_ANI_JUMP_LEFT;
 	}
 }
 void CPanther::Render() {
@@ -129,9 +129,13 @@ void CPanther::Render() {
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	animation_set->at(ani)->Render(x, y, color);
 
+	RenderBoundingBox();
 }
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-
+	left = x;
+	top = y;
+	right = x + PANTHER_BBOX_WIDTH;
+	bottom = y + PANTHER_BBOX_HEIGHT;
 }
