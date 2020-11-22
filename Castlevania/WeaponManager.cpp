@@ -15,6 +15,8 @@ CWeapon* WeaponManager::createWeapon(Available available) {
 	{
 	case DAGGER:
 		return new Dagger();
+	case HOLYWATER:
+		return new HolyWater();
 	default:
 		break;
 	}

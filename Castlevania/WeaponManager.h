@@ -1,11 +1,13 @@
 #pragma once
 #include "Weapon.h"
 #include "Dagger.h"
+#include "HolyWater.h"
 
 
 enum Available
 {
 	DAGGER,
+	HOLYWATER,
 };
 
 class WeaponManager {

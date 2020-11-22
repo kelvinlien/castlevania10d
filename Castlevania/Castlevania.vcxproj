@@ -138,6 +138,7 @@
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Holder.cpp" />
+    <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
+    <ClInclude Include="HolyWater.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />

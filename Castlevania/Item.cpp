@@ -205,6 +205,7 @@ void Item::BeingProcessed()
 	case ITEM_CROSS:
 		break;
 	case ITEM_HOLY_WATER:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
 		break;
 	default:
 		break;
