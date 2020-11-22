@@ -6,8 +6,8 @@
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"
-#define HOLY_WATER_BBOX_HEIGHT 16
-#define HOLY_WATER_BBOX_WIDTH 16
+#define HOLY_WATER_BBOX_HEIGHT 32
+#define HOLY_WATER_BBOX_WIDTH 32
 #define HOLY_WATER_VX 0.35f
 #define HOLY_WATER_VY 0.35f
 #define ANI_HOLY_WATER_LEFT 8

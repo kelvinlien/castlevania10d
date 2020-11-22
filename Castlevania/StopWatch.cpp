@@ -1,44 +1,19 @@
-#include "HolyWater.h"
+#include "StopWatch.h"
 
 
-HolyWater::HolyWater()
+StopWatch::StopWatch()
 {
 	isVanish = true;
 }
-void HolyWater::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
-	left = x;
-	top = y;
-	right = x + HOLY_WATER_BBOX_WIDTH;
-	bottom = y + HOLY_WATER_BBOX_HEIGHT;
-}
-
-void HolyWater::SetAnimation() {
-	if (nx > 0)
-		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_RIGHT);
-	else
-		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_LEFT);
-}
-
-void HolyWater::Render() {
-	if (!isVanish) {
-		this->SetAnimation();
-		ani->Render(x, y);
-		RenderBoundingBox();
-	}
-}
 
 
-
-void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
+void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 
-
-	vx = nx * HOLY_WATER_VX;
-	vy = nx * HOLY_WATER_VY;
 
 	coEvents.clear();
 

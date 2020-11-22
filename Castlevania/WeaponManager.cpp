@@ -17,6 +17,8 @@ CWeapon* WeaponManager::createWeapon(Available available) {
 		return new Dagger();
 	case HOLYWATER:
 		return new HolyWater();
+	case STOPWATCH:
+		return new StopWatch();
 	default:
 		break;
 	}

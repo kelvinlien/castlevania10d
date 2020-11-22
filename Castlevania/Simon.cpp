@@ -446,6 +446,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->BeingProcessed();
+
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
