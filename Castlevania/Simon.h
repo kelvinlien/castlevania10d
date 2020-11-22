@@ -5,8 +5,8 @@
 #include <map> 
 
 // ON STAIR SPEED
-#define SIMON_ON_STAIR_SPEED_X		0.05f 
-#define SIMON_ON_STAIR_SPEED_Y		0.05f 
+#define SIMON_ON_STAIR_SPEED_X		0.08f
+#define SIMON_ON_STAIR_SPEED_Y		0.08f
 //
 #define SIMON_WALKING_SPEED		0.15f 
 #define SIMON_JUMP_SPEED_Y		0.5f
@@ -26,6 +26,7 @@
 #define SIMON_STATE_STAND			900
 #define SIMON_STATE_GO_UP_STAIR		1000
 #define SIMON_STATE_GO_DOWN_STAIR	2000
+#define SIMON_STATE_IDLE_ON_STAIR	3000
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -33,6 +34,7 @@
 #define SIMON_TIME_JUMPPING_SIT 10
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
+#define SIMON_TIME_AUTO_WALK_ON_STAIR 100
 
 
 class Simon : public CGameObject
@@ -61,6 +63,7 @@ class Simon : public CGameObject
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
+	DWORD startWalkOnStair;
 
 
 	enum animation

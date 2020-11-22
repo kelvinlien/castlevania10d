@@ -33,6 +33,7 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_IDLE:
+		if (isOnStair) return;
 		 vx = 0;
 		 break;
 	case SIMON_STATE_LEVEL_UP:
@@ -85,11 +86,14 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_GO_DOWN_STAIR:
 		if (!canGoOnStair) return;
-
 		nx = -1;
 		if (stairNx < 0)
 			nx = 1;
 		GoDown();
+		break;
+	case SIMON_STATE_IDLE_ON_STAIR:
+		vy = 0;
+		vx = 0;
 		break;
 	}
 
@@ -181,7 +185,6 @@ void Simon::Attack()
 	
 		isUsingSubWeapon = true;
 		subWeapons->isVanish = false;
-
 		isAttack = true;
 		attackTime = GetTickCount();
 	}
@@ -205,7 +208,8 @@ void Simon::GoUp()
 	directionY = -1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
-	
+
+	startWalkOnStair = GetTickCount();
 	isOnStair = true;
 	isSit = false;
 	isJump = false;
@@ -217,6 +221,7 @@ void Simon::GoDown()
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
 
+	startWalkOnStair = GetTickCount();
 	isOnStair = true;
 	isSit = false;
 	isJump = false;
@@ -331,8 +336,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			subWeapons->Update(dt, coObjects);
 	}
 
-	if (directionY != 0)
-		vy = 0;
+
+	/*if (directionY != 0)
+		vy = 0;*/
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
 		isAttack = false;
@@ -358,6 +364,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	
+	//Update when Simon is onStair
+	if (isOnStair && (GetTickCount() - startWalkOnStair > SIMON_TIME_AUTO_WALK_ON_STAIR)) {
+		startWalkOnStair = 0;
+		SetState(SIMON_STATE_IDLE_ON_STAIR);
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -371,8 +382,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
-		x += dx;
-		y += dy;
+		if (isOnStair) {
+			x += dx;
+			DebugOut(L"Vx on stair is : %f \n", this->vx);
+
+			y += dy;
+		}
+		else {
+			x += dx;
+			y += dy;
+		}
+		
 	}
 	else
 	{
@@ -387,7 +407,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		/*if (nx != 0) vx = 0;*/
+		if (nx != 0) vx = 0;
 		if (ny != 0) {
 			vy = 0;
 		}
@@ -441,7 +461,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 
-	DebugOut(L"simon right is : %f \n", this->x);
+	//DebugOut(L"simon right is : %f \n", this->x);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
