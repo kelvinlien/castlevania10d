@@ -309,6 +309,7 @@ void Simon::CalcPotentialCollisions(
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					{
 						item->BeingProcessed();
+						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
 						continue;
 					}
 				}
@@ -445,6 +446,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->BeingProcessed();
+
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{

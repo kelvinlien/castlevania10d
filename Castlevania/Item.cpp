@@ -201,10 +201,12 @@ void Item::BeingProcessed()
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
 		break;
 	case ITEM_STOP_WATCH:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 		break;
 	case ITEM_CROSS:
 		break;
 	case ITEM_HOLY_WATER:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
 		break;
 	default:
 		break;
