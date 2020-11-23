@@ -17,6 +17,7 @@ using namespace std;
 
 class CGame
 {
+	D3DCOLOR backgroundColor = D3DCOLOR_XRGB(0, 0, 0);
 	static CGame * __instance;
 	HWND hWnd;									// Window handle
 
@@ -59,6 +60,9 @@ public:
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	int GetCurrentSceneID() { return current_scene; }
 	void SwitchScene(int scene_id);
+
+	void SetBackgroundColor(D3DCOLOR newColor) { backgroundColor = newColor; }
+	D3DCOLOR GetBackgroundColor() { return backgroundColor; }
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
