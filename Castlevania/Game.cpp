@@ -307,6 +307,10 @@ void CGame::SweptAABB(
 
 }
 
+/*
+	Update world status for this frame
+	dt: time period between beginning of last frame and beginning of this frame
+*/
 void CGame::Update(DWORD dt)
 {
 	this->GetCurrentScene()->Update(dt);
@@ -325,7 +329,7 @@ void CGame::Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		CGame::GetInstance()->GetCurrentScene()->Render();
+		this->GetCurrentScene()->Render();
 
 
 		spriteHandler->End();
