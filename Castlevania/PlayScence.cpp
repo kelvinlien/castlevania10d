@@ -443,7 +443,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{
@@ -477,7 +477,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -501,7 +501,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsUp() || simon->IsDown()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{

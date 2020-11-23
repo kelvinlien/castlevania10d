@@ -51,10 +51,10 @@ class Simon : public CGameObject
 	bool isUsingSubWeapon = false;
 	
 	//Flag of trigger stair
-	bool up;
-	bool down;
-	bool flagUp;
-	bool flagDown;
+	bool readyToUpStair;
+	bool readyToDownStair;
+	bool canGoUpStair;
+	bool canGoDownStair;
 	bool onStair;
 
 	int directionY;
@@ -111,6 +111,8 @@ public:
 	void Sit();
 	void Jump();
 	void Stand();
+	void GoUp();
+	void GoDown();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -125,13 +127,13 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
-	bool IsUp() { return up; }
-	bool IsDown() { return down; }
-	bool IsFlagUp() { return flagUp; }
-	bool IsFlagDown() { return flagDown; }
+	bool IsReadyToUpStair() { return readyToUpStair; }
+	bool IsReadyToDownStair() { return readyToDownStair; }
+	bool IsCanGoUpStair() { return canGoUpStair; }
+	bool IsCanGoDownStair() { return canGoDownStair; }
 	bool IsOnStair() { return onStair; }
-	void SetUpDown(int i);
-	void SetSimonAutoAction(int i);
+	void SetReadyToGoStair(int i);
+	void SetSimonAutoActionToGoStair(int i);
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
