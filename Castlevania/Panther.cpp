@@ -36,12 +36,10 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += PANTHER_GRAVITY * dt;
 
 	float distance;
-	if (this->nx > 0)
-		distance = PANTHER_RIGHT_DISTANCE;
-	else distance = PANTHER_LEFT_DISTANCE;
+	distance = PANTHER_DISTANCE;
 
 	//float simonCenterX = (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH) / 2;
-	if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH + 10 - this->x) <= distance)
+	if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH / 2 + 10 - (this->x + PANTHER_BBOX_WIDTH / 2)) <= distance)
 	{
 		
 		isSit = false;
@@ -117,7 +115,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (jumpCount == 1)
 	{
-		if (this->nx < 0 && abs(x - backupX) >= 90)
+		if (this->nx != 0 && abs(x - backupX) >= 90)
 		{
 			vx = 0;
 			jumpCount = 0;

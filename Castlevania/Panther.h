@@ -11,8 +11,7 @@
 #define PANTHER_RUN_SPEED_WHEN_JUMP 0.2f
 #define PANTHER_RUN_SPEED    0.15f
 
-#define PANTHER_LEFT_DISTANCE 96.0f//100.0f
-#define PANTHER_RIGHT_DISTANCE 96.0f//200.0f
+#define PANTHER_DISTANCE 158.0f	//from Simon centerX to Panther centerX 
 #define PANTHER_GRAVITY 0.002f
 
 #define PANTHER_BBOX_WIDTH	64
