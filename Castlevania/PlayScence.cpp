@@ -36,6 +36,7 @@ using namespace std;
 #define OBJECT_TYPE_PANTHER	5
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_WHIP	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -170,7 +171,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-
+	int amount;
+	if (object_type == 5) {
+		amount = atoi(tokens[4].c_str());
+	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
@@ -191,11 +195,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, 600, 480, -1); break;
 	case OBJECT_TYPE_BRICK: {
+		int amountOfBrick;
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+		if (currentMapID == 1)
+			amountOfBrick = mapWidth / BRICK_WIDTH;
+		else
+			amountOfBrick = mapWidth / (BRICK_WIDTH * 2);
 
-		int amountOfBrick = mapWidth / BRICK_WIDTH; 
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -205,13 +213,35 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			if (currentMapID == 1)
+				obj->SetPosition(x + BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
 		break;
 	}
+	case OBJECT_TYPE_BRICKS_GROUP: {
+		int amountOfBrick = amount;
 		
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < amountOfBrick; i++) {
+			obj = new CBrick();
+			
+			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	/*case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
@@ -471,12 +501,13 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CGame *game = CGame::GetInstance();
+	 
+
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
-	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
+	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
