@@ -7,6 +7,8 @@
 #include <d3dx9.h>
 
 #define DIRECTINPUT_VERSION 0x0800
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
+#define ALTERNATE_BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
 #include <dinput.h>
 
 #include "Scence.h"
@@ -17,7 +19,7 @@ using namespace std;
 
 class CGame
 {
-	D3DCOLOR backgroundColor = D3DCOLOR_XRGB(0, 0, 0);
+	D3DCOLOR backgroundColor = BACKGROUND_COLOR;
 	static CGame * __instance;
 	HWND hWnd;									// Window handle
 
