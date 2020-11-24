@@ -5,12 +5,13 @@
 #include "GameObject.h"
 #include "Brick.h"
 #include "Simon.h"
-#include "Goomba.h"
+#include "FirePot.h"
 #include "Koopas.h"
 #include "GameMap.h"
 #include "FirePot.h"
 #include "Item.h"
 #include "GameMap.h"
+#include "Panther.h"
 
 class CPlayScene: public CScene
 {
@@ -26,8 +27,10 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_MAPMATRIX(string line);
-	
-public: 
+
+	void _ParseSection_SCENE_ANI_SET(string line);
+	void _ParseSection_SCENE_OBJECT(string line);
+public:
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();

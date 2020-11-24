@@ -1,0 +1,30 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+20	..\Resources\Texture\floor_1.png	255	255	255
+
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#FLOOR
+20001	1536	0	1568	32	20
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ==== FLOOR =========
+201	20001	100
+
+#
+# id	ani1	ani2	ani3
+#
+[ANIMATION_SETS]
+# FLOOR 
+2	201
+
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = FirePot
+# BRICK 
+# --- platform ---
+1	0	289	2
