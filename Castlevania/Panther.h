@@ -8,8 +8,8 @@
 #define PANTHER_ANI_JUMP_RIGHT	  3
 
 #define PANTHER_JUMP_SPEED_Y 0.4f
-#define PANTHER_RUN_SPEED_WHEN_JUMP 0.2f
-#define PANTHER_RUN_SPEED    0.15f
+#define PANTHER_RUN_SPEED_WHEN_JUMP 0.3f
+#define PANTHER_RUN_SPEED    0.2f
 
 #define PANTHER_DISTANCE 158.0f	//from Simon centerX to Panther centerX 
 #define PANTHER_GRAVITY 0.002f
@@ -24,14 +24,13 @@ class CPanther:public CEnemy
 	bool isSit;
 	float xJumpRight;
 	float xJumpLeft;
-	float backupX;
 	int jumpCount;
 
 	int ani;
 
 public:
 	//CPanther(){}
-	CPanther(float x, float y,float xJumpRight,float xJumpLeft, int nx);
+	CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();

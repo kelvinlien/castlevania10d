@@ -1,14 +1,13 @@
 #include "Panther.h"
 #include"Simon.h"
 #include"Brick.h"
-CPanther::CPanther(float x, float y, float xJumpRight, float xJumpLeft, int nx) :CEnemy()
+CPanther::CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx) :CEnemy()
 {
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
 	this->xJumpRight = xJumpRight;
 	this->xJumpLeft = xJumpLeft;
-	this->backupX = x;
 	type = 5;  // panther type
 
 	isActive = false;
@@ -23,6 +22,7 @@ void CPanther::Jump()
 	vx = PANTHER_RUN_SPEED_WHEN_JUMP * this->nx;
 	vy = -PANTHER_JUMP_SPEED_Y;
 	isJump = true;
+	isRun = false;
 }
 void CPanther::Run()
 {
@@ -45,6 +45,10 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isSit = false;
 		isActive = true;
 		jumpCount = 1;
+		if (Simon::GetInstance()->x < this->x)
+			this->nx = -1;
+		else
+			this->nx = 1;
 		Run();
 	}
 
@@ -82,32 +86,40 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else
 			y += dy;
 
-		if (ny == -1) {
-			vy = 0;
-			if (isJump) {
-
-				isJump = false;
-				if (Simon::GetInstance()->x - this->x < 0 && this->nx > 0)
-					this->nx = -1;
-				else if (Simon::GetInstance()->x - this->x > 0 && this->nx < 0)
-					this->nx = 1;
-				Run();
-			}
-		}
+		//if (ny == -1) {
+		//	vy = 0;
+		//	if (isJump) {
+		//		isJump = false;
+		//		if (Simon::GetInstance()->x < this->x)// && this->nx > 0)
+		//			this->nx = -1;
+		//		else //if (Simon::GetInstance()->x >= this->x > 0)// && this->nx < 0)
+		//			this->nx = 1;
+		//		Run();
+		//	}
+		//}
 
 
 		//
 		// Collision logic with other objects
 		//
-		/*for (UINT i = 0; i < coEventsResult.size(); i++)
+		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				
+				vy = 0;
+				if (isJump) {
+
+					isJump = false;
+					if (Simon::GetInstance()->x < this->x)// && this->nx > 0)
+						this->nx = -1;
+					else //if (Simon::GetInstance()->x >= this->x > 0)// && this->nx < 0)
+						this->nx = 1;
+					Run();
+				}
 			}
-		}*/
+		}
 	}
 
 	// clean up collision events
@@ -115,7 +127,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (jumpCount == 1)
 	{
-		if (this->nx != 0 && abs(x - backupX) >= 90)
+		if (this->nx < 0 && x < xJumpLeft || this->nx > 0 && x + PANTHER_BBOX_WIDTH >= xJumpRight)
 		{
 			vx = 0;
 			jumpCount = 0;
