@@ -701,7 +701,7 @@
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	441	2
+1	0	289	2
 
 # ---- whip ----
 #4	178	224	5
