@@ -92,8 +92,16 @@ void Simon::SetState(int state)
 		GoDown();
 		break;
 	case SIMON_STATE_IDLE_ON_STAIR:
-		vy = 0;
-		vx = 0;
+		float remainDistanceX = abs(fmod((this->x - prevX), 1.60));
+		float remainDistanceY = abs(fmod((this->y - prevY), 1.60));
+		DebugOut(L"remainDistanceX is : %f \n", remainDistanceX);
+		DebugOut(L"remainDistanceY is : %f \n", remainDistanceY);
+
+		if (remainDistanceX >= 1.45 && remainDistanceY >= 1.45) {
+			vy = 0;
+			vx = 0;
+		}
+	
 		break;
 	}
 
@@ -208,8 +216,8 @@ void Simon::GoUp()
 	directionY = -1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
-
-	startWalkOnStair = GetTickCount();
+	prevX = this->x; // to get position when simon start go up stair
+	prevY = this->y;
 	isOnStair = true;
 	isSit = false;
 	isJump = false;
@@ -220,8 +228,8 @@ void Simon::GoDown()
 	directionY = 1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
-
-	startWalkOnStair = GetTickCount();
+	prevX = this->x; // to get position when simon start go up stair
+	prevY = this->y;
 	isOnStair = true;
 	isSit = false;
 	isJump = false;
@@ -364,11 +372,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	
-	//Update when Simon is onStair
-	if (isOnStair && (GetTickCount() - startWalkOnStair > SIMON_TIME_AUTO_WALK_ON_STAIR)) {
-		startWalkOnStair = 0;
-		SetState(SIMON_STATE_IDLE_ON_STAIR);
-	}
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -380,19 +384,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
+	if (coEvents.size() == 0 && !isAutoWalk2D)
 	{
-		if (isOnStair) {
-			x += dx;
-			DebugOut(L"Vx on stair is : %f \n", this->vx);
-
-			y += dy;
-		}
-		else {
 			x += dx;
 			y += dy;
-		}
-		
 	}
 	else
 	{

@@ -3,6 +3,8 @@
 #include "WeaponManager.h"
 #include "Whip.h"
 #include <map> 
+#include <cmath> 
+
 
 // ON STAIR SPEED
 #define SIMON_ON_STAIR_SPEED_X		0.08f
@@ -34,7 +36,6 @@
 #define SIMON_TIME_JUMPPING_SIT 10
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
-#define SIMON_TIME_AUTO_WALK_ON_STAIR 100
 
 
 class Simon : public CGameObject
@@ -47,6 +48,10 @@ class Simon : public CGameObject
 	int directionY;
 	int hearts = 5;
 	int stairNx = 1;
+	//to handle on stair
+	float prevX = 0.0;
+	float prevY = 0.0;
+
 
 	//Flag of Simon's state
 	bool isJump;
@@ -57,13 +62,12 @@ class Simon : public CGameObject
 	bool isUsingSubWeapon = false;
 	bool canGoOnStair = false;
 	bool isOnStair = false;
-
+	bool isAutoWalk2D = false;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
-	DWORD startWalkOnStair;
 
 
 	enum animation
