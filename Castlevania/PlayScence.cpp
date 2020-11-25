@@ -8,7 +8,7 @@
 #include "Portal.h"
 #include "Camera.h"
 #include "GameMap.h"
-
+#include "BlinkEffect.h"
 using namespace std;
 
 
@@ -499,6 +499,7 @@ void CPlayScene::Render()
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	BlinkEffect::GetInstance()->Draw(170);
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
