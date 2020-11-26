@@ -67,13 +67,18 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}*/
 	CGameObject::Update(dt, coObjects);
 	vy += FIREPOT_GRAVITY * dt;
-
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
+	vector<LPGAMEOBJECT> firepotCoObjects;
+
+	for (int i = 0; i < coObjects->size(); i++) {
+		if (dynamic_cast<CBrick*>(coObjects->at(i)))
+			firepotCoObjects.push_back(coObjects->at(i));
+	}
 	coEvents.clear();
    
-	CalcPotentialCollisions(coObjects, coEvents);
+	CalcPotentialCollisions(&firepotCoObjects, coEvents);
 	
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
