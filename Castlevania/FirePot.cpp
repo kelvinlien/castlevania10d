@@ -11,7 +11,7 @@ void CFirePot:: SetItem(int itemType) {
 		type = ITEM_BIG_HEART;
 		break;
 	case 5:
-		type = ITEM_WHIP_RED;
+		type = ITEM_WHIP;
 		break;
 	case 7:
 		type = ITEM_DAGGER;
