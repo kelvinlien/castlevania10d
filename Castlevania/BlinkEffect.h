@@ -9,7 +9,7 @@ class BlinkEffect
 	bool isActive;
 	static BlinkEffect* __instance;
 public:
-	BlinkEffect() { isActive = true; };
+	BlinkEffect() { isActive = false; };
 	void SetIsActive(bool _isActive) { isActive = _isActive; }
 	bool GetIsActive() { return isActive; }
 	void Draw(int alpha);

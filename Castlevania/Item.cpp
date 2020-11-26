@@ -2,6 +2,7 @@
 #include "Simon.h"
 #include "Weapon.h"
 #include "Game.h"
+#include "BlinkEffect.h"
 
 
 Item::Item(int x, int y, ItemType ani) {
@@ -85,7 +86,10 @@ void Item::Render() {
 	}
 	else
 	{
-		ani_set->at(effect)->Render(x, y);
+		if (ani != ITEM_CROSS)
+		{
+			ani_set->at(effect)->Render(x, y);
+		}
 	}
 	RenderBoundingBox();
 }
@@ -141,12 +145,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					}
 					if (isEaten)
 					{
-						if (ani == ITEM_CROSS)
-						{
-							ActivateCrossEffect(dt);
-						}
 						if (effectTime <= 0)
 						{
+							BlinkEffect::GetInstance()->SetIsActive(false);
 							this->isVanish = true;
 						}
 						effectTime -= dt;
@@ -209,7 +210,8 @@ void Item::BeingProcessed()
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 		break;
 	case ITEM_CROSS:
-		effectTime = 2000;
+		effectTime = 1000;
+		BlinkEffect::GetInstance()->SetIsActive(true);
 		break;
 	case ITEM_HOLY_WATER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
@@ -226,32 +228,5 @@ void Item::BeingProcessed()
 	{
 		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 		ani_set = animation_sets->Get(EFFECT_ANI_SET_ID);
-	}
-}
-
-void Item::ActivateCrossEffect(DWORD dt)
-{
-	if (existingTime <= 0)
-	{
-		CGame::GetInstance()->SetBackgroundColor(D3DCOLOR_XRGB(0, 0, 0));
-		elapsedTime = 0;
-	}
-	else
-	{
-		elapsedTime += dt;
-		if (elapsedTime >= TIME_BEFORE_SWITCHING_TO_OTHER_BACKGROUND_COLOR_WHILE_USING_CROSS)
-		{
-			elapsedTime = 0;
-			CGame* game = CGame::GetInstance();
-
-			if (game->GetBackgroundColor() == BACKGROUND_COLOR)
-			{
-				game->SetBackgroundColor(ALTERNATE_BACKGROUND_COLOR);
-			}
-			else
-			{
-				game->SetBackgroundColor(BACKGROUND_COLOR);
-			}
-		}
 	}
 }

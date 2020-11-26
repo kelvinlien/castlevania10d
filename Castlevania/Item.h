@@ -43,7 +43,6 @@ public:
 	int widthBBox;
 	int heightBBox;
 	bool isEaten;
-	float elapsedTime = 0;
 	
 	ItemType ani;
 
@@ -58,5 +57,4 @@ public:
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	ItemType GetType() { return ani; }
 	void BeingProcessed();
-	void ActivateCrossEffect(DWORD dt);
 };
