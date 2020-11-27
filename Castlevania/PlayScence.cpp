@@ -220,7 +220,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_CANDLE: {
 		int type = atof(tokens[4].c_str());
-
 		obj = new CCandle(type);
 		break;
 	}
