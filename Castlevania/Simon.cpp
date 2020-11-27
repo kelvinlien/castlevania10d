@@ -80,81 +80,31 @@ void Simon::SetAnimation()
 {
 	if (state == SIMON_STATE_DIE)
 		return;
-	else if (vx == 0)
-	{
-
-		if (isJump) {
-			if (isAttack) {
-				if (nx > 0)
-					ani = ATTACK_STAND_RIGHT;
-				else
-					ani = ATTACK_STAND_LEFT;
-			}
-			else {
-				if (nx > 0)
-					ani = JUMP_DUCK_RIGHT;
-				else
-					ani = JUMP_DUCK_LEFT;
-			}
-		}
-		else
-		{
-			if (isAttack) {
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = ATTACK_DUCK_RIGHT;
-					else
-						ani = ATTACK_DUCK_LEFT;
-				}
-				else {
-					if (nx > 0)
-						ani = ATTACK_STAND_RIGHT;
-					else
-						ani = ATTACK_STAND_LEFT;
-				}
-			}
-			else
-			{
-
-				if (isSit)
-				{
-					if (nx > 0)
-						ani = JUMP_DUCK_RIGHT;
-					else
-						ani = JUMP_DUCK_LEFT;
-				}
-				else {
-					if (nx > 0)
-						ani = IDLE_RIGHT;
-					else
-						ani = IDLE_LEFT;
-				}
-			}
-		}
-	}
+	/*if (isDead)
+		ani = DEATH_RIGHT;
+	else if (isHurt)
+		ani = HURT_RIGHT;*/
+	else if (isJump && isAttack)
+		ani = ATTACK_STAND_RIGHT;
+	else if (isJump)
+		ani = JUMP_DUCK_RIGHT;
+	else if (isAttack && isSit)
+		ani = ATTACK_DUCK_RIGHT;
+	else if (isAttack)
+		ani = ATTACK_STAND_RIGHT;
+	else if (isSit)
+		ani = JUMP_DUCK_RIGHT;
 	else if (vx != 0)
-	{
-		if (isJump) {
-			if (nx > 0)
-				ani = JUMP_DUCK_RIGHT;
-			else
-				ani = JUMP_DUCK_LEFT;
-		}
-		else
-		{
-			if (nx > 0)
-				ani = WALK_RIGHT;
-			else
-				ani = WALK_LEFT;
-		}
-	}
+		ani = WALK_RIGHT;
+	else
+		ani = IDLE_RIGHT;
+
+	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
@@ -165,9 +115,15 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
+
+	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
+		subWeapons->SetIsThrown(true);
+	}
+	
 	//render subweapon
-	if (subWeapons != NULL  && !subWeapons ->isVanish) 
+	if (subWeapons != NULL && !subWeapons->isVanish) {
 		subWeapons->Render();
+	}
 	RenderBoundingBox();
 
 	
@@ -208,15 +164,14 @@ void Simon::Attack()
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
-		hearts--;
-		subWeapons->SetPosition(x, y + 10);
-		subWeapons->nx = nx;
-	
-		isUsingSubWeapon = true;
-		subWeapons->isVanish = false;
-
-		isAttack = true;
-		attackTime = GetTickCount();
+			hearts--;
+			subWeapons->SetPosition(x - 15, y + 15);
+			subWeapons->nx = nx;
+			isAttack = true;
+			attackTime = GetTickCount();
+			isUsingSubWeapon = true;
+			subWeapons->isVanish = false;
+			DebugOut(L"[INFO] 3\n");
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -303,7 +258,7 @@ void Simon::CalcPotentialCollisions(
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 				{
 					item->isVanish = true;
-					if (item->GetType() == ITEM_WHIP_RED) {
+					if (item->GetType() == ITEM_WHIP) {
 						this->SetState(SIMON_STATE_LEVEL_UP);
 						CWhip::GetInstance()->LevelUp();
 					}
@@ -451,7 +406,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
-				if (item->GetType() == ITEM_WHIP_RED) {
+				if (item->GetType() == ITEM_WHIP) {
 					this->SetState(SIMON_STATE_LEVEL_UP);
 					CWhip::GetInstance()->LevelUp();
 				}
