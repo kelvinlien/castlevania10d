@@ -35,7 +35,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_WHIP	4
+#define OBJECT_TYPE_CANDLE	4
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -214,7 +214,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
@@ -226,6 +226,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
+		break;
+	}
+
+	case OBJECT_TYPE_CANDLE: {
+		int type = atof(tokens[4].c_str());
+
+		obj = new CCandle(type);
 		break;
 	}
 	
@@ -441,8 +448,6 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	CGameObject *obj = new Item(100, 0, ITEM_SMALL_HEART);
-	objects.push_back(obj);
 	
 }
 
@@ -477,6 +482,14 @@ void CPlayScene::Update(DWORD dt)
 
 				 ItemType type = Ghost->GetItemType();
 				 obj = new Item(Ghost->x, Ghost->y, type);
+         objects.push_back(obj);
+			 else if (dynamic_cast<CCandle*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CCandle *candle = dynamic_cast<CCandle*>(objects[i]);
+
+				 ItemType type = candle->GetItemType();
+				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
 			objects.erase(objects.begin() + i);
@@ -551,6 +564,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
+
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -581,8 +598,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die 
-	if (simon->GetState() == SIMON_STATE_DIE) return;
 	if (simon->IsHurt()) return;
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -603,6 +621,10 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
+
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+
 	switch (KeyCode)
 	{
 	case DIK_DOWN:

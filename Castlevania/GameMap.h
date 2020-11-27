@@ -22,6 +22,7 @@ public:
 	void LoadMap(LPCWSTR dataPath); // load map matrix
 	void Draw(D3DXVECTOR3 camPosition, int alpha); 
 	int getMapWidth() { return this->mapWidth; }
+	vector<vector<LPSPRITE>> GetTitles() { return titles; }
 };
 typedef CMap * LPTILEMAP;
 

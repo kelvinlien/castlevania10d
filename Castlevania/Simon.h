@@ -4,16 +4,20 @@
 #include "Whip.h"
 #include "Enemy.h"
 #include <map> 
+#include "GameMap.h"
+#include "Utils.h"
 
+#define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
+#define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
-#define SIMON_GRAVITY			0.002f
+#define SIMON_GRAVITY			0.0015f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
 
-
+#define SIMON_STATE_AUTO	0
 #define SIMON_STATE_IDLE		 100
 #define SIMON_STATE_SIT			 200
 #define SIMON_STATE_JUMP		 300
@@ -67,6 +71,9 @@ class Simon : public CGameObject
 	bool isUntouchable = false;
 	bool isDead = false;
 
+
+	//flag is true when simon comes and render portal, back part of the castle  
+	bool flag;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -133,6 +140,12 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
+	bool IsFlagOn() { return flag; }
+
+	void SetHearts(int _hearts) {  hearts = _hearts; }
+	int GetHearts() { return hearts; }
+
+	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

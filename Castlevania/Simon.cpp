@@ -9,6 +9,7 @@
 #include"Game.h"
 #include "Item.h"
 #include "Whip.h"
+#include "Candle.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -38,6 +39,16 @@ void Simon::SetState(int state)
 		isFall = false;
 		y -= 30;
 		vy = 0;
+	case SIMON_STATE_AUTO:
+		if (!flag)
+		{
+			nx = -1;
+		}
+		else
+		{
+			nx = 1;
+		}
+		Walk();
 		break;
 	case SIMON_STATE_IDLE:
 			vx = 0;
@@ -122,7 +133,26 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	//RenderBoundingBox();	
+	RenderBoundingBox();
+
+	
+	if (flag)
+	{
+		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
+		int endCol = startCol + SCREEN_WIDTH / 32;
+		int numOfRow = CMaps::GetInstance()->Get(1)->GetTitles().size();
+		for (int i = 0; i < numOfRow; i++)
+		{
+			for (int j = startCol; j <= endCol; j++)
+			{
+				float x = TILE_SIZE * (j - startCol) + Camera::GetInstance()->GetCamX() - (int)Camera::GetInstance()->GetCamX() % 32;
+				float y = TILE_SIZE * i + 151;
+				//draw back part of the castle
+				if (j >= 44)
+					CMaps::GetInstance()->Get(1)->GetTitles()[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+			}
+		}
+	}
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -220,7 +250,10 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	vx = nx * SIMON_WALKING_SPEED;
+	if (flag)
+		vx = nx * SIMON_WALKING_SPEED / 2;
+	else 	
+		vx = nx * SIMON_WALKING_SPEED;
 	isAttack = false;
 }
 
@@ -242,36 +275,31 @@ void Simon::CalcPotentialCollisions(
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)) && !dynamic_cast<CCandle *>(coObjects->at(i)))
 		{
 
 			//Check collision AABB of Simon & Item
 			if (dynamic_cast<Item *>(coObjects->at(i)))
 			{
 				Item *item = dynamic_cast<Item *>(coObjects->at(i));
-				float l1, t1, r1, b1;
-				float l2, t2, r2, b2;
-
-				GetBoundingBox(l1, t1, r1, b1);
-				item->GetBoundingBox(l2, t2, r2, b2);
-
-				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				if (item->isEaten)
 				{
-					item->isVanish = true;
-					if (item->GetType() == ITEM_WHIP_RED) {
-						this->SetState(SIMON_STATE_LEVEL_UP);
-						CWhip::GetInstance()->LevelUp();
-					}
-					else {
-
-						if (item->GetType() == ITEM_DAGGER) {
-							subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-						}
-						else if (item->GetType() == ITEM_BIG_HEART) {
-							hearts += 5;
-						}
-					}
 					continue;
+				}
+				else
+				{
+					float l1, t1, r1, b1;
+					float l2, t2, r2, b2;
+
+					GetBoundingBox(l1, t1, r1, b1);
+					item->GetBoundingBox(l2, t2, r2, b2);
+
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					{
+						item->BeingProcessed();
+						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
+						continue;
+					}
 				}
 			}
 			
@@ -385,7 +413,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		y += min_ty * dy + ny * 0.4f;
 
 		if (!isHurt) {
-			if (nx != 0) {
+			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
 			}
 			if (ny != 0) {
@@ -393,6 +421,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 		}
 		
+
+		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
+		{
+			if (x >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
+			{
+				SetState(SIMON_STATE_AUTO);
+			}
+			else if (x >= SIMON_AUTO_GO_AHEAD_POSITION_X && x < SIMON_AUTO_GO_BACK_POSITION_X)
+			{
+				flag = true;
+				SetState(SIMON_STATE_AUTO);
+			}
+		}
 
 		//
 		// Collision logic with other objects
@@ -422,20 +463,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
-				item->isVanish = true;
-				if (item->GetType() == ITEM_WHIP_RED) {
-					this->SetState(SIMON_STATE_LEVEL_UP);
-					CWhip::GetInstance()->LevelUp();
-				}
-				else {
+				item->BeingProcessed();
 
-					if (item->GetType() == ITEM_DAGGER) {
-						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-					}
-					else if (item->GetType() == ITEM_BIG_HEART) {
-						hearts += 5;
-					}
-				}
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{

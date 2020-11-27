@@ -49,7 +49,7 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 			case 1:
 				idTile = n + 1000;
 				break;
-			case 2: 
+			case 2:
 				idTile = n + 2000;
 				break;
 			case 3:
@@ -58,7 +58,7 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 			default:
 				break;
 			}
-			 
+
 			mapSprites.push_back(sprites->Get(idTile));
 		}
 		titles.push_back(mapSprites);
@@ -78,15 +78,19 @@ void CMap::Draw(D3DXVECTOR3 camPosition, int alpha) {
 
 	int startCol = (int)camPosition.x / 32;
 	int endCol = startCol + SCREEN_WIDTH / 32;
+	int offSet = 150;
+	if (mapID == 2)
+		offSet = 120;
+
 	int numOfRow = titles.size();
-	for (int i = 0; i < numOfRow ; i++)
+	for (int i = 0; i < numOfRow; i++)
 	{
 		for (int j = startCol; j <= endCol; j++)
 		{
 			// +camPosition.x để luôn giữ camera ở chính giữa, vì trong hàm Game::Draw() có trừ cho camPosition.x làm các object đều di chuyển theo
 			// -(int)camPosition.x % 32 để giữ cho camera chuyển động mượt
 			float x = TILE_SIZE * (j - startCol) + camPosition.x - (int)camPosition.x % 32;
-			float y = TILE_SIZE * i;
+			float y = TILE_SIZE * i + offSet;
 			titles[i][j]->Draw(x, y, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 		}
 	}
