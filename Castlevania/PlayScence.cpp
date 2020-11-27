@@ -482,7 +482,8 @@ void CPlayScene::Update(DWORD dt)
 
 				 ItemType type = Ghost->GetItemType();
 				 obj = new Item(Ghost->x, Ghost->y, type);
-         objects.push_back(obj);
+				 objects.push_back(obj);
+			 }
 			 else if (dynamic_cast<CCandle*>(objects[i])) {
 				 CGameObject *obj; //temp obj to create item
 
@@ -568,25 +569,23 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
-	switch (KeyCode)
-	{
+	switch (KeyCode) {
 	case DIK_SPACE:
 		if (!simon->IsJump()) {
 			if (simon->IsLevelUp()) return;
 			simon->SetState(SIMON_STATE_JUMP);
 		}
 		break;
-	case DIK_A:
-	{
+	case DIK_A: {
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
-	case DIK_DOWN:
+	case DIK_DOWN: {
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
+		}
 	}
 }
 

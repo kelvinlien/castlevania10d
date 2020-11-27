@@ -39,6 +39,7 @@ void Simon::SetState(int state)
 		isFall = false;
 		y -= 30;
 		vy = 0;
+		break;
 	case SIMON_STATE_AUTO:
 		if (!flag)
 		{
