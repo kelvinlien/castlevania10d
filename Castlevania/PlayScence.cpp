@@ -24,6 +24,7 @@ using namespace std;
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPMATRIX 7
+#define SCENE_SECTION_OBJECT		11
 
 #define SCENE_SECTION_ANI_SET		8
 #define SCENE_SECTION_ITEM		9
@@ -32,7 +33,7 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 
@@ -187,7 +188,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
+	case OBJECT_TYPE_GHOST: {
+		if (ghost != NULL)
+		{
+			DebugOut(L"[ERROR] GHOST object was created before!\n");
+			return;
+		}
+		int itemType = atof(tokens[4].c_str());
+		obj = new CGhost(x, y, -1, itemType);
+		ghost = (CGhost*)obj;
+	}
+	break;
 	case OBJECT_TYPE_BRICK: {
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
@@ -403,6 +414,15 @@ void CPlayScene::Load()
 		if (line == "[ITEM]" || line == "[WHIP]") 
 		{
 			section = SCENE_SECTION_ANI_SET; continue;		}
+		if (line == "[ANIMATIONS]") { 
+			section = SCENE_SECTION_ANIMATIONS; continue; }
+		if (line == "[ANIMATION_SETS]") { 
+			section = SCENE_SECTION_ANIMATION_SETS; continue; }
+		if (line == "[OBJECTS]") { 
+			section = SCENE_SECTION_OBJECTS; continue; }
+		if (line == "[ENEMY]") {
+			section = SCENE_SECTION_OBJECT; continue;
+		}
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
@@ -437,7 +457,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
@@ -455,6 +475,14 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(firePot->x, firePot->y, type);
 				 objects.push_back(obj);
 			 }
+			 else if (dynamic_cast<CGhost*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CGhost *Ghost = dynamic_cast<CGhost*>(objects[i]);
+
+				 ItemType type = Ghost->GetItemType();
+				 obj = new Item(Ghost->x, Ghost->y, type);
+         objects.push_back(obj);
 			 else if (dynamic_cast<CCandle*>(objects[i])) {
 				 CGameObject *obj; //temp obj to create item
 
@@ -485,6 +513,17 @@ void CPlayScene::Update(DWORD dt)
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+
+	if (ghost != NULL)
+	{
+		float gx, gy;
+		ghost->GetPosition(gx, gy);
+
+		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
+		{
+			ghost->SetDirect(-(ghost->GetDirect()));
+		}
+	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
@@ -524,6 +563,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
@@ -557,6 +597,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
+	// disable control key when Simon die 
+	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
@@ -569,7 +611,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
 	else
@@ -578,6 +620,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
@@ -585,7 +628,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (simon->IsLevelUp()) break;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
