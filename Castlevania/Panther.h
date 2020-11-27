@@ -9,7 +9,7 @@
 
 #define PANTHER_JUMP_SPEED_Y 0.4f
 #define PANTHER_RUN_SPEED_WHEN_JUMP 0.3f
-#define PANTHER_RUN_SPEED    0.2f
+#define PANTHER_RUN_SPEED    0.35f
 
 #define PANTHER_DISTANCE 158.0f	//from Simon centerX to Panther centerX 
 #define PANTHER_GRAVITY 0.002f
@@ -25,6 +25,8 @@ class CPanther:public CEnemy
 	float xJumpRight;
 	float xJumpLeft;
 	int jumpCount;
+
+	DWORD startJumpTime;
 
 	int ani;
 

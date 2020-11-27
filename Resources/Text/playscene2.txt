@@ -1,6 +1,3 @@
-[ENEMY]
-0	..\Resources\Text\Enemy.txt
-
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\simon.png	255	0	255
@@ -720,3 +717,6 @@
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 50	300	98	0	316	150	2
+
+[ENEMY]
+0	..\Resources\Text\Enemy.txt

@@ -23,6 +23,7 @@ void CPanther::Jump()
 	vy = -PANTHER_JUMP_SPEED_Y;
 	isJump = true;
 	isRun = false;
+	startJumpTime = GetTickCount();
 }
 void CPanther::Run()
 {
@@ -165,6 +166,7 @@ void CPanther::Render() {
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (isJump && y < 350) return;
 	left = x;
 	top = y;
 	right = x + PANTHER_BBOX_WIDTH;

@@ -175,6 +175,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (object_type == 5) {
 		amount = atoi(tokens[4].c_str());
 	}
+
+	float jumpLeftX, jumpRightX;
+	int directX;
+	if (object_type == 10)
+	{
+		jumpLeftX = atoi(tokens[4].c_str());
+		jumpRightX = atoi(tokens[5].c_str());
+		directX = atoi(tokens[6].c_str());
+	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
@@ -193,7 +202,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, 1370, 1480, -1); break;
+		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
