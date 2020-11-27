@@ -460,6 +460,16 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
+		if (dynamic_cast<CEnemy*>(objects[i])) {
+		if (BlinkEffect::GetInstance()->GetIsActive())
+		{
+			CGameObject *obj; //temp obj to create item
+
+			CEnemy *enemy = dynamic_cast<CEnemy*>(objects[i]);
+			// Conventional state for enemy: death is 30
+			enemy->SetState(30);
+		}
+		 }
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
