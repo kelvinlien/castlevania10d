@@ -23,12 +23,10 @@ class CFirePot :public CHolder
 public:
 	CFirePot(int itemType);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
-
 	virtual void Render();
 
-	void SetState(int state);
-
 	//Getter & setter
+	void SetState(int state);
 	void SetItem(int itemType);
 	ItemType GetItemType() { return itemType; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

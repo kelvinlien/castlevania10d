@@ -1,5 +1,5 @@
 #include "StopWatch.h"
-
+#include"Ghost.h"
 
 StopWatch::StopWatch()
 {
@@ -9,12 +9,45 @@ StopWatch::StopWatch()
 
 void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
+	
+	if (stopTime == NULL)
+	{
+		stopTime = GetTickCount();
+		for (int i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			{
+				CEnemy *e = NULL;
+				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				{
+				case 1:
+					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				default:
+					break;
+				}
+				e->SetState(ENEMY_STATE_STOP);
+			}
+		}
+	}
+	if (GetTickCount() - stopTime > 10000)
+	{
+		for (int i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			{
+				CEnemy *e = dynamic_cast<CGhost*>(coObjects->at(i));
+				e->SetState(ENEMY_STATE_MOVE);
+			}
+		}
+		stopTime = 0;
+	}
+
+
+	//***********************************//
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
-
-
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
