@@ -22,6 +22,7 @@ void CEnemy::SetState(int state)
 			isLock = false;
 			vx = backUpVx;
 			vy = backUpVy;
+			animation_set->at(ani)->SetLock(false);
 			break;
 	}
 }

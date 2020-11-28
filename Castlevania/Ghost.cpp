@@ -78,10 +78,11 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CGhost::Render() {
 	
-	ani = GHOST_ANI_RIGHT;
-	if (this->nx < 0 && state != GHOST_STATE_DIE)
+	if( nx >0 && state != GHOST_STATE_DIE)
+		ani = GHOST_ANI_RIGHT;
+	else if (nx < 0 && state != GHOST_STATE_DIE)
 		ani = GHOST_ANI_LEFT;
-	else if (state == GHOST_STATE_DIE)
+	else
 		ani = GHOST_ANI_DIE;
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
