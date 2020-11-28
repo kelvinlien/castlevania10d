@@ -16,6 +16,9 @@ protected:
 	ItemType itemType;
 	int ani;
 
+	float backUpVx;
+	float backUpVy;
+
 public:
 	CEnemy();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom)=0;

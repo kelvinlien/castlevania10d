@@ -8,6 +8,7 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	this->y = y;
 	this->type = 1; // 1 là ghost nên thay bằng enum
 	isActive=true;
+	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
 void CGhost::SetState(int state)
@@ -20,10 +21,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == GHOST_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
-
-	vx = GHOST_WALKING_SPEED * this->nx;
-
-	if(!isLock)						//if ghost is locked we need to stop the function Update
+	
 	CGameObject::Update(dt);
 
 	vy += GHOST_GRAVITY * dt;
