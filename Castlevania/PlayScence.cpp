@@ -33,9 +33,9 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_PANTHER	5
+#define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_BRICKS_GROUP	10
+#define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
 
 #define OBJECT_TYPE_PORTAL	50
@@ -243,7 +243,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	/*case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
