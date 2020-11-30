@@ -6,7 +6,7 @@ HolyWater::HolyWater()
 	isVanish = true;
 	isBreak = false;
 	SetState(STATE_HOLY_WATER_THROW);
-	this->vy = -HOLY_WATER_VY;
+	//this->vy = -HOLY_WATER_VY;
 }
 
 void HolyWater::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
@@ -26,13 +26,14 @@ void HolyWater::SetState(int state)
 	switch (state)
 	{
 	case STATE_HOLY_WATER_THROW:
+		/*CWeapon::animation_set->at(ANI_HOLY_WATER_USING)->ResetFrame();*/
 		break;
 	case STATE_HOLY_WATER_BREAK:
+		if (isBreak) return;
 		isBreak = true;
 		startBurnTime = GetTickCount();
 		break;
-	}
-		
+	}		
 }
 
 void HolyWater::SetAnimation() {
@@ -42,11 +43,13 @@ void HolyWater::SetAnimation() {
 		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_LEFT);
 	if (isBreak)
 		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_USING);
+	/*else
+		CWeapon::animation_set->at(ANI_HOLY_WATER_USING)->ResetFrame();*/
 }
 
 void HolyWater::Render() {
 	
-	if (canBeRender)
+	if (!isVanish && GetIsThrown())
 	{
 		this->SetAnimation();
 		ani->Render(x, y);
@@ -56,20 +59,27 @@ void HolyWater::Render() {
 
 void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
-	if (!isVanish && (Simon::GetInstance()->animation_set->at(ATTACK_STAND_LEFT)->GetCurrentFrame() == 2 || Simon::GetInstance()->animation_set->at(ATTACK_STAND_RIGHT)->GetCurrentFrame() == 2)) {
-		canBeRender = true;
-	}
-
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
+	if (!GetIsThrown()) return;
+
+	/*if (Simon::GetInstance()->nx == 1)
+		SetPosition(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - 4, Simon::GetInstance()->GetPostionY() + 20);
+	else if (Simon::GetInstance()->nx == -1)
+		SetPosition(Simon::GetInstance()->GetPostionX() + 12 - 16 + 4, Simon::GetInstance()->GetPostionY() + 20);*/
+
+	//this->vy = -HOLY_WATER_VY;
 	this->vx = this->nx * HOLY_WATER_VX;
 	this->vy += HOLY_WATER_GRAVITY;
 	
-	if (isBreak && GetTickCount() - startBurnTime >= BURN_TIME)
+
+	if (isBreak && (GetTickCount() - startBurnTime >= BURN_TIME))
 	{
+		this->isBreak = false;
 		this->isVanish = true;
+		//SetState(STATE_HOLY_WATER_THROW);
 	}
 	coEvents.clear();
 

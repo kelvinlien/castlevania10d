@@ -18,13 +18,12 @@
 #define ANI_HOLY_WATER_RIGHT 9
 #define ANI_HOLY_WATER_USING 10
 #define HOLY_WATER_GRAVITY	0.015f
-#define BURN_TIME	300
+#define BURN_TIME	500
 
 class HolyWater :public CWeapon {
 	LPANIMATION ani;
 	DWORD startBurnTime;
 	bool isBreak;
-	bool canBeRender;
 public:
 	HolyWater();
 	void GetBoundingBox(float &left, float &top, float &right, float &bottom);

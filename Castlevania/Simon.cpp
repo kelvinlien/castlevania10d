@@ -165,6 +165,11 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
+
+	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
+		subWeapons->SetIsThrown(true);
+	}
+
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
