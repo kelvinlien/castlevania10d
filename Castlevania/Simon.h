@@ -139,6 +139,7 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsOnStair() { return isOnStair; }
 	bool CanGoOnStair() { return canGoOnStair; }
+	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

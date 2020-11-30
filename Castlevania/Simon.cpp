@@ -92,13 +92,12 @@ void Simon::SetState(int state)
 		GoDown();
 		break;
 	case SIMON_STATE_AUTOWALK_ON_STAIR:
-		if (isAutoWalkOnStair) return;
 		isAutoWalkOnStair = true;
 		break;
 	case SIMON_STATE_IDLE_ON_STAIR:
 		vy = 0;
 		vx = 0;
-		simonAutoWalkDistanceX = 0;
+		isAutoWalkOnStair = false;
 		break;
 	}
 
@@ -173,9 +172,11 @@ void Simon::Stand(){
 	isSit = false;
 }
 void Simon::Attack()
-{
+{	
+
 	// normal attack
-	if (isAttack)
+
+	if (isAttack || isAutoWalkOnStair)
 		return;
 
 	vx = 0;
