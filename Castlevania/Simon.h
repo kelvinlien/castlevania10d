@@ -7,8 +7,8 @@
 
 
 // ON STAIR SPEED
-#define SIMON_ON_STAIR_SPEED_X		0.08f
-#define SIMON_ON_STAIR_SPEED_Y		0.08f
+#define SIMON_ON_STAIR_SPEED_X		0.035f
+#define SIMON_ON_STAIR_SPEED_Y		0.035f
 //
 #define SIMON_WALKING_SPEED		0.15f 
 #define SIMON_JUMP_SPEED_Y		0.5f
@@ -29,6 +29,7 @@
 #define SIMON_STATE_GO_UP_STAIR		1000
 #define SIMON_STATE_GO_DOWN_STAIR	2000
 #define SIMON_STATE_IDLE_ON_STAIR	3000
+#define SIMON_STATE_AUTOWALK_ON_STAIR	3100
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -49,8 +50,9 @@ class Simon : public CGameObject
 	int hearts = 5;
 	int stairNx = 1;
 	//to handle on stair
-	float prevX = 0.0;
-	float prevY = 0.0;
+	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
+	float simonAutoWalkDistanceY;
+	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
 
 
 	//Flag of Simon's state
@@ -62,7 +64,7 @@ class Simon : public CGameObject
 	bool isUsingSubWeapon = false;
 	bool canGoOnStair = false;
 	bool isOnStair = false;
-	bool isAutoWalk2D = false;
+	bool isAutoWalkOnStair = false;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -120,6 +122,7 @@ public:
 	void Stand();
 	void GoUp();
 	void GoDown();
+	void AutoWalkOnStair();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);

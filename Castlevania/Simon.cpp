@@ -91,17 +91,14 @@ void Simon::SetState(int state)
 			nx = 1;
 		GoDown();
 		break;
+	case SIMON_STATE_AUTOWALK_ON_STAIR:
+		if (isAutoWalkOnStair) return;
+		isAutoWalkOnStair = true;
+		break;
 	case SIMON_STATE_IDLE_ON_STAIR:
-		float remainDistanceX = abs(fmod((this->x - prevX), 1.60));
-		float remainDistanceY = abs(fmod((this->y - prevY), 1.60));
-		DebugOut(L"remainDistanceX is : %f \n", remainDistanceX);
-		DebugOut(L"remainDistanceY is : %f \n", remainDistanceY);
-
-		if (remainDistanceX >= 1.45 && remainDistanceY >= 1.45) {
-			vy = 0;
-			vx = 0;
-		}
-	
+		vy = 0;
+		vx = 0;
+		simonAutoWalkDistanceX = 0;
 		break;
 	}
 
@@ -216,8 +213,7 @@ void Simon::GoUp()
 	directionY = -1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
-	prevX = this->x; // to get position when simon start go up stair
-	prevY = this->y;
+	isAutoWalkOnStair = true;
 	isOnStair = true;
 	isSit = false;
 	isJump = false;
@@ -228,13 +224,24 @@ void Simon::GoDown()
 	directionY = 1;
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
-	prevX = this->x; // to get position when simon start go up stair
-	prevY = this->y;
 	isOnStair = true;
+	isAutoWalkOnStair = true;
 	isSit = false;
 	isJump = false;
 }
+void Simon::AutoWalkOnStair() {
+	simonAutoWalkDistanceX += abs(vx * dt);
 
+	x += dx;
+	y += dy;
+
+	if (simonAutoWalkDistanceX > autoWalkDistance)
+	{
+		isAutoWalkOnStair = false;
+		simonAutoWalkDistanceX = 0;
+		SetState(SIMON_STATE_IDLE_ON_STAIR);
+	}
+}
 void Simon::Sit()
 {
 	
@@ -337,6 +344,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	if(!isOnStair)
 	vy += SIMON_GRAVITY * dt;
 	
+	if (isOnStair && isAutoWalkOnStair) {
+		AutoWalkOnStair();
+	}
+
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
 			isUsingSubWeapon = false;	
@@ -384,7 +395,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0 && !isAutoWalk2D)
+	if (coEvents.size() == 0 && !isAutoWalkOnStair)
 	{
 			x += dx;
 			y += dy;

@@ -566,7 +566,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_GO_UP_STAIR);
 	}
 	else if (simon->IsOnStair()) 
-		simon->SetState(SIMON_STATE_IDLE_ON_STAIR);
+		simon->SetState(SIMON_STATE_AUTOWALK_ON_STAIR);
 	else
 		simon->SetState(SIMON_STATE_IDLE);
 }
