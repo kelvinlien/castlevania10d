@@ -95,8 +95,13 @@
 #
 [ANIMATION_SETS]
 #ENEMY
-6	600	601	610	611	612	613	614	615	620	621	622	623
+61	600	601	
+62	610	611	612	613	614	615	
+63	620	621	622	623
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 2 = Goomba
+# type: 2 = Ghost, 5 = Panther
+
+#	PANTHER
+10	1373.0	0.0	62

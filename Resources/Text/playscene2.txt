@@ -691,8 +691,9 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
+# type: 0 = Simon , 1 = Brick, 3 = Firepot
 
-# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle
+# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
@@ -728,8 +729,15 @@
 #4	3383	154	3	0
 #4	3511	314	3	0
 
+#BRICK GROUPS
+5	1376	311	2	3
+5	1504	247	2	10
+5	1856	311	2	6
+5	2784	247	2	9
+5	3072	247	2	8
+5	3328	311	2	3
 # SIMON
-0	50.0	0	1
+0	1000.0	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
