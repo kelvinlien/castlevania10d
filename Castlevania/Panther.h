@@ -6,6 +6,7 @@
 #define PANTHER_ANI_RUN_RIGHT	  5
 #define PANTHER_ANI_JUMP_LEFT	  2
 #define PANTHER_ANI_JUMP_RIGHT	  3
+#define PANTHER_ANI_DIE	6
 
 #define PANTHER_JUMP_SPEED_Y 0.4f
 #define PANTHER_RUN_SPEED_WHEN_JUMP 0.3f
@@ -17,6 +18,9 @@
 #define PANTHER_BBOX_WIDTH	64
 #define PANTHER_BBOX_HEIGHT	32
 
+#define PANTHER_STATE_DIE	3
+#define PANTHER_DIE_TIME	200
+
 class CPanther:public CEnemy 
 {
 	bool isJump;
@@ -26,7 +30,7 @@ class CPanther:public CEnemy
 	float xJumpLeft;
 	int jumpCount;
 
-	DWORD startJumpTime;
+	DWORD startJumpTime, dieTime;
 
 	int ani;
 
@@ -39,6 +43,6 @@ public:
 	void Jump();
 	void Run();
 	void SetAnimation();
-	
+	void SetState(int state);
 };
 
