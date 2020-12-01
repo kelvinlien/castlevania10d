@@ -39,12 +39,7 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 30;
 		start_x = x;
 		break;
-	case ITEM_WHIP_RED:
-		widthBBox = 32;
-		heightBBox = 32;
-		start_x = x;
-		break;
-	case ITEM_WHIP_BLUE:
+	case ITEM_WHIP:
 		widthBBox = 32;
 		heightBBox = 32;
 		start_x = x;
@@ -75,7 +70,7 @@ Item::Item(int x, int y, ItemType ani) {
 }
 void Item::Render() {
 	ani_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
