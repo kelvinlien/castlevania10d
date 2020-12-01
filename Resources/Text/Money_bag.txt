@@ -1,0 +1,5 @@
+White - 700
+Red - 100
+Blue - 400
+
+Item on ground, effect is as high as Simon hand, last for a sec.
