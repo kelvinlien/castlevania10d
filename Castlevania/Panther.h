@@ -23,8 +23,6 @@ class CPanther:public CEnemy
 	float xJumpLeft;
 	int jumpCount;
 
-	int ani;
-
 public:
 	CPanther(float x, float y,float xJumpRight,float xJumpLeft, int nx);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

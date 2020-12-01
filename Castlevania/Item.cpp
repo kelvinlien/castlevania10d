@@ -1,6 +1,8 @@
 #include "Item.h"
 #include "Simon.h"
 #include "Weapon.h"
+#include "Game.h"
+#include "BlinkEffect.h"
 
 
 Item::Item(int x, int y, ItemType ani) {
@@ -84,7 +86,10 @@ void Item::Render() {
 	}
 	else
 	{
-		ani_set->at(effect)->Render(x, y);
+		if (ani != ITEM_CROSS)
+		{
+			ani_set->at(effect)->Render(x, y);
+		}
 	}
 	RenderBoundingBox();
 }
@@ -142,6 +147,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					{
 						if (effectTime <= 0)
 						{
+							BlinkEffect::GetInstance()->SetIsActive(false);
 							this->isVanish = true;
 						}
 						effectTime -= dt;
@@ -204,6 +210,8 @@ void Item::BeingProcessed()
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 		break;
 	case ITEM_CROSS:
+		effectTime = 1000;
+		BlinkEffect::GetInstance()->SetIsActive(true);
 		break;
 	case ITEM_HOLY_WATER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
