@@ -115,7 +115,6 @@ void Simon::SetAnimation()
 			ani = IDLE_RIGHT;
 	
 		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
-
 }
 
 void Simon::Render()
@@ -131,9 +130,15 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
+
+	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
+		subWeapons->SetIsThrown(true);
+	}
+	
 	//render subweapon
-	if (subWeapons != NULL  && !subWeapons ->isVanish) 
+	if (subWeapons != NULL && !subWeapons->isVanish) {
 		subWeapons->Render();
+	}
 	RenderBoundingBox();
 
 	
@@ -196,15 +201,14 @@ void Simon::Attack()
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
-		hearts--;
-		subWeapons->SetPosition(x, y + 10);
-		subWeapons->nx = nx;
-	
-		isUsingSubWeapon = true;
-		subWeapons->isVanish = false;
-
-		isAttack = true;
-		attackTime = GetTickCount();
+			hearts--;
+			subWeapons->SetPosition(x - 15, y + 15);
+			subWeapons->nx = nx;
+			isAttack = true;
+			attackTime = GetTickCount();
+			isUsingSubWeapon = true;
+			subWeapons->isVanish = false;
+			DebugOut(L"[INFO] 3\n");
 	}
 	else 
 		isUsingSubWeapon = false;
