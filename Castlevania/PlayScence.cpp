@@ -482,7 +482,8 @@ void CPlayScene::Update(DWORD dt)
 
 				 ItemType type = Ghost->GetItemType();
 				 obj = new Item(Ghost->x, Ghost->y, type);
-         objects.push_back(obj);
+				 objects.push_back(obj);
+			 }
 			 else if (dynamic_cast<CCandle*>(objects[i])) {
 				 CGameObject *obj; //temp obj to create item
 

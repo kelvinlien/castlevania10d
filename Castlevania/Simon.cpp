@@ -39,6 +39,7 @@ void Simon::SetState(int state)
 		isFall = false;
 		y -= 30;
 		vy = 0;
+		break;
 	case SIMON_STATE_AUTO:
 		if (!flag)
 		{
@@ -302,16 +303,15 @@ void Simon::CalcPotentialCollisions(
 					}
 				}
 			}
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
 			
 		}
 		
-
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
-		if (e->t > 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
-		else
-			delete e;
 	}
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
