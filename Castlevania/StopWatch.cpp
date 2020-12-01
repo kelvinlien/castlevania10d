@@ -30,7 +30,7 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			}
 		}
 	}
-	if (GetTickCount() - stopTime > 10000)
+	if (GetTickCount() - stopTime > 3000)
 	{
 		for (int i = 0; i < coObjects->size(); i++)
 		{
