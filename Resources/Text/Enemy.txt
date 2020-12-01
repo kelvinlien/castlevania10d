@@ -112,7 +112,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 2 = Ghost, 10 = Panther
 #	GHOST
-2	500.0	0.0	61	1
+2	1000.0	0.0	61	1
 #	PANTHER
 #type	x	y	ani_set_id	jump_left	jump_right	direct
 10	1373.0	0.0	62	1370.0	1480.0	-1
