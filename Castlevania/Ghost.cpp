@@ -24,6 +24,8 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == GHOST_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
+	else if (state != GHOST_STATE_DIE)
+		vx = GHOST_WALKING_SPEED * this->nx;
 
 	CGameObject::Update(dt);
 	vy += GHOST_GRAVITY * dt;
