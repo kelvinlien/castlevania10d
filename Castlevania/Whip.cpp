@@ -1,6 +1,9 @@
 #include "Whip.h"
 #include"Simon.h"
+#include"Ghost.h"
 #include "Candle.h"
+#include "Panther.h"
+
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -27,42 +30,88 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	else if (nx < 0)
 		SetPosition((Simon::GetInstance()->x - 80), Simon::GetInstance()->y);
 
-	float l1, t1, r1, b1;
-	float l2, t2, r2, b2;
-	RECT rect1, rect2;
-	GetBoundingBox(l1, t1, r1, b1);
-	rect1.left = (int)l1;
-	rect1.top = (int)t1;
-	rect1.right = (int)r1;
-	rect1.bottom = (int)b1;
-	for (UINT i = 0; i < coObjects->size(); i++)
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObjects, coEvents);
+	if (coEvents.size() == 0)
 	{
-		if (dynamic_cast<CFirePot *>(coObjects->at(i)))
+		float l1, t1, r1, b1;
+		float l2, t2, r2, b2;
+		GetBoundingBox(l1, t1, r1, b1);
+		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			CFirePot *e = dynamic_cast<CFirePot *>(coObjects->at(i));
-			e->GetBoundingBox(l2, t2, r2, b2);
-			rect2.left = (int)l2;
-			rect2.top = (int)t2;
-			rect2.right = (int)r2;
-			rect2.bottom = (int)b2;
-			if (!(r1 < l2 || l1 > r2|| t1 > b2 || b1 < t2))
-				e->SetState(FIREPOT_STATE_BREAK);
+			if (dynamic_cast<CFirePot *>(coObjects->at(i)))
+			{
+				CFirePot *e = dynamic_cast<CFirePot *>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(FIREPOT_STATE_BREAK);
+			}
+			else if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			{
+				CEnemy *e = NULL;
+
+				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				{
+				case 1:
+					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				default:
+					break;
+				}
+				if (e != NULL) {
+					e->GetBoundingBox(l2, t2, r2, b2);
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+						e->SetState(ENEMY_STATE_DIE);
+				}
+			}
+			else if (dynamic_cast<CCandle *>(coObjects->at(i)))
+			{
+				CCandle *e = dynamic_cast<CCandle *>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(CANDLE_STATE_BREAK);
+			}
+
 		}
-		else if (dynamic_cast<CCandle *>(coObjects->at(i)))
-		{
-			CCandle *e = dynamic_cast<CCandle *>(coObjects->at(i));
-			e->GetBoundingBox(l2, t2, r2, b2);
-			rect2.left = (int)l2;
-			rect2.top = (int)t2;
-			rect2.right = (int)r2;
-			rect2.bottom = (int)b2;
-			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-				e->SetState(CANDLE_STATE_BREAK);
-		}
-		  
 	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
 
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			{
+				CEnemy *e=NULL;
+				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				{
+				case 1:
+					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				default:
+					break;
+				}
+				if (e != NULL) {
+					e->SetState(ENEMY_STATE_DIE);
+				}
+
+			}
+		}
+	}
 }
 //bool CWhip::isCollision(RECT r1, RECT r2)   
 //{

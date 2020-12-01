@@ -32,6 +32,14 @@ void Simon::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case SIMON_STATE_DIE:
+		isDead = true;
+		isUntouchable = false;
+		isSit = false;
+		isFall = false;
+		y -= 30;
+		vy = 0;
+		break;
 	case SIMON_STATE_AUTO:
 		if (!flag)
 		{
@@ -44,8 +52,8 @@ void Simon::SetState(int state)
 		Walk();
 		break;
 	case SIMON_STATE_IDLE:
-		 vx = 0;
-		 break;
+			vx = 0;
+			break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
@@ -73,33 +81,40 @@ void Simon::SetState(int state)
 	case SIMON_STATE_STAND:
 		Stand();
 		break;
+	case SIMON_STATE_HURT:
+		//On stair's logic here
+		StartUntouchable();
+		Hurt();
+		break;
+	case SIMON_STATE_SIT_AFTER_FALL:
+		SitAfterFall();
+		break;
 	}
-
+	
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE)
-		return;
-	/*if (isDead)
-		ani = DEATH_RIGHT;
-	else if (isHurt)
-		ani = HURT_RIGHT;*/
-	else if (isJump && isAttack)
-		ani = ATTACK_STAND_RIGHT;
-	else if (isJump)
-		ani = JUMP_DUCK_RIGHT;
-	else if (isAttack && isSit)
-		ani = ATTACK_DUCK_RIGHT;
-	else if (isAttack)
-		ani = ATTACK_STAND_RIGHT;
-	else if (isSit)
-		ani = JUMP_DUCK_RIGHT;
-	else if (vx != 0)
-		ani = WALK_RIGHT;
-	else
-		ani = IDLE_RIGHT;
-
-	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+//	if (state == SIMON_STATE_DIE) return;
+		if (isDead)
+			ani = DEATH_RIGHT;
+		else if (isHurt)
+			ani = HURT_RIGHT;
+		else if (isJump && isAttack) 
+			ani = ATTACK_STAND_RIGHT;
+		else if (isJump)
+			ani = JUMP_DUCK_RIGHT;
+		else if (isAttack && isSit)
+			ani = ATTACK_DUCK_RIGHT;
+		else if (isAttack)
+			ani = ATTACK_STAND_RIGHT;
+		else if (isSit)
+			ani = JUMP_DUCK_RIGHT;
+		else if (vx != 0)
+			ani = WALK_RIGHT;
+		else
+			ani = IDLE_RIGHT;
+	
+		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
 void Simon::Render()
@@ -108,7 +123,7 @@ void Simon::Render()
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-
+	else if (isUntouchable) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, 127);
 	if (isAttack && !isUsingSubWeapon)
 	{
 		CWhip::GetInstance()->Render();
@@ -150,6 +165,28 @@ void Simon::Stand(){
 		return;
 	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isSit = false;
+	isFall = false;
+	isJump = false;
+}
+
+void Simon::Hurt() {
+	startHurt = GetTickCount();
+	vx = -0.1*nx;
+	vy = -0.4f;
+	isHurt = true;
+	y -= 17;
+}
+void Simon::SitAfterFall() {
+	startSit = GetTickCount();
+	isSit = true; 
+	isFall = true;
+	y += 17;
+	vx = 0;
+	vy = 0;
+}
+void Simon::StartUntouchable() {
+	isUntouchable = true;
+	startUntouchable = GetTickCount();
 }
 void Simon::Attack()
 {
@@ -208,7 +245,7 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit || isAttack)
+	if (isJump || isSit || isAttack || isHurt)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
@@ -245,43 +282,40 @@ void Simon::CalcPotentialCollisions(
 	{
 		if (!dynamic_cast<CFirePot *>(coObjects->at(i)) && !dynamic_cast<CCandle *>(coObjects->at(i)))
 		{
+
 			//Check collision AABB of Simon & Item
 			if (dynamic_cast<Item *>(coObjects->at(i)))
 			{
 				Item *item = dynamic_cast<Item *>(coObjects->at(i));
-				float l1, t1, r1, b1;
-				float l2, t2, r2, b2;
-
-				GetBoundingBox(l1, t1, r1, b1);
-				item->GetBoundingBox(l2, t2, r2, b2);
-
-				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				if (item->isEaten)
 				{
-					item->isVanish = true;
-					if (item->GetType() == ITEM_WHIP) {
-						this->SetState(SIMON_STATE_LEVEL_UP);
-						CWhip::GetInstance()->LevelUp();
-					}
-					else {
-
-						if (item->GetType() == ITEM_DAGGER) {
-							subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-						}
-						else if (item->GetType() == ITEM_BIG_HEART) {
-							hearts += 5;
-						}
-					}
 					continue;
 				}
-			}
+				else
+				{
+					float l1, t1, r1, b1;
+					float l2, t2, r2, b2;
 
+					GetBoundingBox(l1, t1, r1, b1);
+					item->GetBoundingBox(l2, t2, r2, b2);
+
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					{
+						item->BeingProcessed();
+						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
+						continue;
+					}
+				}
+			}
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 			if (e->t > 0 && e->t <= 1.0f)
 				coEvents.push_back(e);
 			else
 				delete e;
+			
 		}
+		
 	}
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
@@ -324,15 +358,43 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
-	
+
+	//Update when Simon is hurt
+	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
+	{
+		startSit = 0;
+
+		if (health <= 0) {
+			SetState(SIMON_STATE_DIE);
+		}
+		else
+			SetState(SIMON_STATE_STAND);
+	}
+	if (isUntouchable && (GetTickCount() - startUntouchable > SIMON_UNTOUCHABLE_TIME))
+	{
+		startUntouchable = 0;
+		isUntouchable = false;
+
+	}
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+	vector<LPGAMEOBJECT> coObjectsWhenDie;
 
 	coEvents.clear();
 
 	// turn off collision when simon die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
+	else {
+		//to make sure when simon die he just can collide with Brick
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CBrick *>(coObjects->at(i)))
+				coObjectsWhenDie.push_back(coObjects->at(i));
+		}
+		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
+	}
 
 
 	// No collision occured, proceed normally
@@ -354,14 +416,15 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) {
-			if (state != SIMON_STATE_AUTO) {
+		if (!isHurt) {
+			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
 			}
+			if (ny != 0) {
+				vy = 0;
+			}
 		}
-		if (ny != 0) {
-			vy = 0;
-		}
+		
 
 		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
 		{
@@ -382,7 +445,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
 			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
 			{
 				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
@@ -405,39 +467,53 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
-				item->isVanish = true;
-				if (item->GetType() == ITEM_WHIP) {
-					this->SetState(SIMON_STATE_LEVEL_UP);
-					CWhip::GetInstance()->LevelUp();
+				item->BeingProcessed();
+
+			}
+			else if (dynamic_cast<CEnemy *>(e->obj))
+			{
+				if (!isUntouchable) {
+					health -= 2;
+					if (e->obj->nx == nx) {
+						this->nx = -e->obj->nx;
+					}
+					
+					SetState(SIMON_STATE_HURT);
 				}
 				else {
-
-					if (item->GetType() == ITEM_DAGGER) {
-						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
-					}
-					else if (item->GetType() == ITEM_BIG_HEART) {
-						hearts += 5;
-					}
+					if (e->nx != 0) x += dx;
+					if (e->ny != 0) y += dy;
 				}
-			}
-			else if (dynamic_cast<CPortal *>(e->obj))
-			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
 				if (e->ny < 0)
 				{
-					if (isJump == true)
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+					{
+
+							isHurt = false;
+							isJump = false;
+							//y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+							SetState(SIMON_STATE_SIT_AFTER_FALL);
+					}
+					if (isJump)
 					{
 						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 						isJump = false;
 					}
 				}
 			}
+		
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			
 		}
 	}
+
 
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
@@ -447,16 +523,27 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x+12;
+
+	left = x + 12;
 	top = y;
-	right = x + SIMON_BBOX_WIDTH-10;
+	right = x + SIMON_BBOX_WIDTH - 10;
 	bottom = y + SIMON_BBOX_HEIGHT;
+
+	if (isDead) {
+		left -= 12;
+		right += 12;
+		top += 40;
+		bottom += 2;
+	}
 	if (isJump)
 	{
-		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+		if (isHurt) return;
+			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
 	{
+		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
+	
 }

@@ -2,8 +2,10 @@
 #include "GameObject.h"
 #include "WeaponManager.h"
 #include "Whip.h"
-#include <map>
+#include "Enemy.h"
+#include <map> 
 #include "GameMap.h"
+#include "Utils.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
@@ -25,13 +27,21 @@
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
 #define SIMON_STATE_STAND			900
+#define SIMON_STATE_HURT			1000			
+#define SIMON_STATE_SIT_AFTER_FALL	1100
+#define SIMON_STATE_AFTER_HURT		1200	
+
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
 
+
 #define SIMON_TIME_LEVEL_UP_WHIP 700
+#define SIMON_HURT_TIME	 500
+#define SIMON_SIT_AFTER_FALL_TIME	 250
+#define SIMON_UNTOUCHABLE_TIME	 2000
 
 
 class Simon : public CGameObject
@@ -40,6 +50,14 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
+	int health = 16;
+
+	//time variables
+	DWORD startSit;
+	DWORD startHurt;
+	DWORD startUntouchable;
+	DWORD attackTime;
+
 
 	//Flag of Simon's state
 	bool isJump;
@@ -48,6 +66,11 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
+	bool isHurt = false;
+	bool isFall = false;
+	bool isUntouchable = false;
+	bool isDead = false;
+
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -55,7 +78,6 @@ class Simon : public CGameObject
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
-	DWORD attackTime;
 
 
 	enum animation
@@ -99,6 +121,9 @@ public:
 	void Sit();
 	void Jump();
 	void Stand();
+	void Hurt();
+	void SitAfterFall();
+	void StartUntouchable();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -113,7 +138,14 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsHurt() { return isHurt; }
+	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+
+	void SetHearts(int _hearts) {  hearts = _hearts; }
+	int GetHearts() { return hearts; }
+
+	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

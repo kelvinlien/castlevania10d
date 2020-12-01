@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "Simon.h"
+#include "Weapon.h"
 
 
 Item::Item(int x, int y, ItemType ani) {
@@ -9,6 +10,9 @@ Item::Item(int x, int y, ItemType ani) {
 	this->x = x;
 	this->y = y;
 	existingTime = 2000;
+	effectTime = 0;
+	isEaten = false;
+	effect = BURN_EFFECT;
 
 	this->ani = ani;
 	switch (this->ani)
@@ -17,7 +21,7 @@ Item::Item(int x, int y, ItemType ani) {
 		widthBBox = 16;
 		heightBBox = 16;
 		start_x = x;
-		vx = 0.09;
+		vx = 0.1;
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
@@ -69,8 +73,15 @@ Item::Item(int x, int y, ItemType ani) {
 	}
 }
 void Item::Render() {
-	ani_set->at(ani)->Render(x, y);
-	//RenderBoundingBox();
+	if (!isEaten)
+	{
+		ani_set->at(ani)->Render(x, y);
+	}
+	else
+	{
+		ani_set->at(effect)->Render(x, y);
+	}
+	RenderBoundingBox();
 }
 
 void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
@@ -82,6 +93,10 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		{
 			vx = -vx;
 		}
+	}
+	if (isEaten)
+	{
+		vy = 0;
 	}
 	CGameObject::Update(dt, coObjects);
 
@@ -109,11 +124,22 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						vx = 0;
 						vy = 0;
 						//counting time to vanish item
-						if (existingTime <= 0)
+						if (!isEaten)
+						{
+							if (existingTime <= 0)
+							{
+								this->isVanish = true;
+							}
+							existingTime -= dt;
+						}
+					}
+					if (isEaten)
+					{
+						if (effectTime <= 0)
 						{
 							this->isVanish = true;
 						}
-						existingTime -= dt;
+						effectTime -= dt;
 					}
 		}
 	}
@@ -123,4 +149,71 @@ void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 	t = y;
 	r = x + widthBBox;
 	b = y + heightBBox;
+}
+
+void Item::BeingProcessed()
+{
+	Simon *simon = Simon::GetInstance();
+	isEaten = true;
+	switch (ani)
+	{
+	case ITEM_SMALL_HEART:
+		simon->SetHearts(simon->GetHearts() + 1);
+		break;
+	case ITEM_BIG_HEART:
+		simon->SetHearts(simon->GetHearts() + 5);
+		break;
+	case ITEM_MONEY_BAG_RED:
+		effect = ONE_THOUSAND_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
+		widthBBox = 37;
+		heightBBox = 16;
+		break;
+	case ITEM_MONEY_BAG_WHITE:
+		effect = SEVEN_HUNDRED_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
+		widthBBox = 28;
+		heightBBox = 16;
+		break;
+	case ITEM_MONEY_BAG_BLUE:
+		effect = FOUR_HUNDRED_EFFECT;
+		this->y -= 20;
+		effectTime = 1000;
+		widthBBox = 29;
+		heightBBox = 16;
+		break;
+	case ITEM_WHIP_RED:
+		simon->SetState(SIMON_STATE_LEVEL_UP);
+		CWhip::GetInstance()->LevelUp();
+		break;
+	case ITEM_WHIP_BLUE:
+		simon->SetState(SIMON_STATE_LEVEL_UP);
+		CWhip::GetInstance()->LevelUp();
+		break;
+	case ITEM_DAGGER:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
+		break;
+	case ITEM_STOP_WATCH:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
+		break;
+	case ITEM_CROSS:
+		break;
+	case ITEM_HOLY_WATER:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
+		break;
+	default:
+		break;
+	}
+
+	if (effectTime == 0)
+	{
+		isVanish = true;
+	}
+	else
+	{
+		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+		ani_set = animation_sets->Get(EFFECT_ANI_SET_ID);
+	}
 }

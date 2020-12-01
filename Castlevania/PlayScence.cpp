@@ -8,6 +8,7 @@
 #include "Portal.h"
 #include "Camera.h"
 #include "GameMap.h"
+#include "Panther.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ using namespace std;
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPMATRIX 7
+#define SCENE_SECTION_OBJECT		11
 
 #define SCENE_SECTION_ANI_SET		8
 #define SCENE_SECTION_ITEM		9
@@ -32,9 +34,11 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_GHOST	2
+#define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_CANDLE	4
+#define OBJECT_TYPE_WHIP	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -169,7 +173,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
+	int amount;
+	if (object_type == 5) {
+		amount = atoi(tokens[4].c_str());
+	}
 
+	float jumpLeftX, jumpRightX;
+	int directX;
+	if (object_type == 10)
+	{
+		jumpLeftX = atoi(tokens[4].c_str());
+		jumpRightX = atoi(tokens[5].c_str());
+		directX = atoi(tokens[6].c_str());
+	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
@@ -187,13 +203,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
+	case OBJECT_TYPE_GHOST: {
+		if (ghost != NULL)
+		{
+			DebugOut(L"[ERROR] GHOST object was created before!\n");
+			return;
+		}
+		int itemType = atof(tokens[4].c_str());
+		obj = new CGhost(x, y, -1, itemType);
+		ghost = (CGhost*)obj;
+	}
+	break;
+	case OBJECT_TYPE_PANTHER: 
+		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		break;
 	case OBJECT_TYPE_BRICK: {
+		int amountOfBrick;
 		//to assign mapWidth
 		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+		if (currentMapID == 1)
+			amountOfBrick = mapWidth / BRICK_WIDTH;
+		else
+			amountOfBrick = mapWidth / (BRICK_WIDTH * 2);
 
-		int amountOfBrick = mapWidth / BRICK_WIDTH; 
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -203,26 +236,48 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
+			if (currentMapID == 1)
+				obj->SetPosition(x + BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	case OBJECT_TYPE_BRICKS_GROUP: {
+		int amountOfBrick = amount;
+		
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < amountOfBrick; i++) {
+			obj = new CBrick();
+			
 			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
 		break;
 	}
-		
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_FIREPOT: {
+  case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
 		break;
 	}
 
-	case OBJECT_TYPE_CANDLE: {
+	/*case OBJECT_TYPE_CANDLE: {
 		int type = atof(tokens[4].c_str());
 		obj = new CCandle(type);
 		break;
-	}
+	}*/
 	
 	case OBJECT_TYPE_PORTAL:
 		{	
@@ -402,6 +457,15 @@ void CPlayScene::Load()
 		if (line == "[ITEM]" || line == "[WHIP]") 
 		{
 			section = SCENE_SECTION_ANI_SET; continue;		}
+		if (line == "[ANIMATIONS]") { 
+			section = SCENE_SECTION_ANIMATIONS; continue; }
+		if (line == "[ANIMATION_SETS]") { 
+			section = SCENE_SECTION_ANIMATION_SETS; continue; }
+		if (line == "[OBJECTS]") { 
+			section = SCENE_SECTION_OBJECTS; continue; }
+		if (line == "[ENEMY]") {
+			section = SCENE_SECTION_OBJECT; continue;
+		}
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
@@ -436,7 +500,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
@@ -454,6 +518,15 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(firePot->x, firePot->y, type);
 				 objects.push_back(obj);
 			 }
+			 else if (dynamic_cast<CGhost*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CGhost *Ghost = dynamic_cast<CGhost*>(objects[i]);
+
+				 ItemType type = Ghost->GetItemType();
+				 obj = new Item(Ghost->x, Ghost->y, type);
+				 objects.push_back(obj);
+			 }
 			 else if (dynamic_cast<CCandle*>(objects[i])) {
 				 CGameObject *obj; //temp obj to create item
 
@@ -463,6 +536,7 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
+
 			objects.erase(objects.begin() + i);
 		 }
 		else 
@@ -482,12 +556,25 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CGame *game = CGame::GetInstance();
+	 
+
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+
+	if (ghost != NULL)
+	{
+		float gx, gy;
+		ghost->GetPosition(gx, gy);
+
+		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
+		{
+			ghost->SetDirect(-(ghost->GetDirect()));
+		}
+	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
-	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
+	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
@@ -523,6 +610,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
@@ -556,6 +644,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
+	// disable control key when Simon die 
+	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
@@ -568,7 +658,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
 	else
@@ -577,6 +667,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
@@ -584,7 +675,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (simon->IsLevelUp()) break;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
 	}

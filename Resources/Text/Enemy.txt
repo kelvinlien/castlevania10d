@@ -3,6 +3,8 @@
 60	..\Resources\Texture\ghost.png	255	0	255
 61	..\Resources\Texture\panther.png	255	0	255
 62	..\Resources\Texture\fishman.png	255	0	255
+31	..\Resources\Texture\hit-effect.png	255	0	255
+32	..\Resources\Texture\burn.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -52,6 +54,10 @@
 62011	148	0	180	64	62
 62012	184	0	216	64	62
 
+#effect
+30011	0	0	16	20	31
+30012	43	0	85	44	32
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== ENEMY  =========
@@ -90,13 +96,25 @@
 #moving right
 623	62010	100	62011	100	62012	100
 
+#break
+303	30011	100	30012	100
+
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 #ENEMY
-6	600	601	610	611	612	613	614	615	620	621	622	623
+61	600	601	303
+62	610	611	612	613	614	615	303
+63	620	621	622	623
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 2 = Goomba
+# type: 2 = Ghost, 10 = Panther
+#	GHOST
+2	500.0	0.0	61	1
+#	PANTHER
+#type	x	y	ani_set_id	jump_left	jump_right	direct
+10	1373.0	0.0	62	1370.0	1480.0	-1
+10	1757.0	0.0	62	1500.0	1800.0	-1
+10	1885.0	0.0	62	1850.0	2050.0	-1
