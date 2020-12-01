@@ -273,12 +273,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
-	case OBJECT_TYPE_CANDLE: {
+	/*case OBJECT_TYPE_CANDLE: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CCandle(type);
 		break;
-	}
+	}*/
 	
 	case OBJECT_TYPE_PORTAL:
 		{	

@@ -15,16 +15,16 @@ void CGhost::SetState(int state)
 {
 	this->state = state;
 
-	if (state == GHOST_STATE_DIE) {
+	if (state == ENEMY_STATE_DIE) {
 		die_time = GetTickCount();
 		vx = 0;
 	}
 }
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	if (state == GHOST_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
+	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
-	else if (state != GHOST_STATE_DIE)
+	else if (state != ENEMY_STATE_DIE)
 		vx = GHOST_WALKING_SPEED * this->nx;
 
 	CGameObject::Update(dt);
@@ -85,9 +85,9 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGhost::Render() {
 	
 	ani = GHOST_ANI_RIGHT;
-	if (this->nx < 0 && state != GHOST_STATE_DIE)
+	if (this->nx < 0 && state != ENEMY_STATE_DIE)
 		ani = GHOST_ANI_LEFT;
-	else if (state == GHOST_STATE_DIE)
+	else if (state == ENEMY_STATE_DIE)
 		ani = GHOST_ANI_DIE;
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);

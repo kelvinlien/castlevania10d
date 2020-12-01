@@ -37,7 +37,10 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		isVanish = true;
 	
 	CGameObject::Update(dt);
-	vy += PANTHER_GRAVITY * dt;
+	if (!isDead)
+	{
+		vy += PANTHER_GRAVITY * dt;
+	}
 
 	float distance;
 	distance = PANTHER_DISTANCE;
@@ -172,6 +175,7 @@ void CPanther::Render() {
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (isJump && y < 350) return;
+	if (isDead) return;
 	left = x;
 	top = y;
 	right = x + PANTHER_BBOX_WIDTH;
@@ -182,5 +186,10 @@ void CPanther::SetState(int state)
 {
 	this->state = state;
 	if (state == PANTHER_STATE_DIE)
+	{
+		isDead = true;
+		vx = 0;
+		vy = 0;
 		dieTime = GetTickCount();
+	}
 }
