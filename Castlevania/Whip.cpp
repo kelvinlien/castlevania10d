@@ -2,6 +2,7 @@
 #include"Simon.h"
 #include"Ghost.h"
 #include "Candle.h"
+
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -52,6 +53,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CEnemy*>(coObjects->at(i)))
 			{
 				CEnemy *e = NULL;
+
 				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
 				{
 				case 1:
@@ -73,8 +75,8 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					e->SetState(CANDLE_STATE_BREAK);
 			}
+
 		}
-		  
 	}
 	else
 	{

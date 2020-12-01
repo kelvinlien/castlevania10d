@@ -493,6 +493,7 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
+
 			objects.erase(objects.begin() + i);
 		 }
 		else 

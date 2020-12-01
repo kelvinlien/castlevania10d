@@ -8,20 +8,23 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	this->y = y;
 	this->type = 1; // 1 là ghost nên thay bằng enum
 	isActive=true;
+	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
 void CGhost::SetState(int state)
 {
 	this->state = state;
-	if (state == GHOST_STATE_DIE)
+
+	if (state == GHOST_STATE_DIE) {
 		die_time = GetTickCount();
+		vx = 0;
+	}
 }
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == GHOST_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
 
-	vx = GHOST_WALKING_SPEED * this->nx;
 	CGameObject::Update(dt);
 	vy += GHOST_GRAVITY * dt;
 	vector<LPGAMEOBJECT> coObjectsGhost;
