@@ -110,7 +110,7 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Ghost , 1 = Panther, 2 = Fishman
+# type: 2 = Ghost
 
 #	GHOST
-2	500.0	0.0	61	1
+2	800.0	0.0	61	1
