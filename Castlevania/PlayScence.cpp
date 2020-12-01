@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Entity.h"
 
 using namespace std;
 
@@ -189,6 +190,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
+
+	CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
+
+	Entity* panther = new Entity(panTest, 160);
+	DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
+
+	CCandle *canTest = new CCandle(1);
+	canTest->SetPosition(600, 100);
+
+	Entity* candle = new Entity(canTest, 0);
+	RECT triggerZone = candle->GetTriggerZone();
+	DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
 
 	switch (object_type)
 	{
