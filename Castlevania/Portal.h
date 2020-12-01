@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "Simon.h"
 
 /*
 	Object that triggers scene switching
@@ -8,7 +9,7 @@
 class CPortal : public CGameObject
 {
 	int scene_id;	// target scene to switch to 
-
+	
 	int width;
 	int height; 
 public:

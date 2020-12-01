@@ -27,4 +27,4 @@
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = FirePot
 # BRICK 
 # --- platform ---
-1	0	289	2
+1	0	441	2

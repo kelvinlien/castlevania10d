@@ -49,7 +49,7 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 			case 1:
 				idTile = n + 1000;
 				break;
-			case 2: 
+			case 2:
 				idTile = n + 2000;
 				break;
 			case 3:
@@ -58,7 +58,7 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 			default:
 				break;
 			}
-			 
+
 			mapSprites.push_back(sprites->Get(idTile));
 		}
 		titles.push_back(mapSprites);
@@ -83,7 +83,7 @@ void CMap::Draw(D3DXVECTOR3 camPosition, int alpha) {
 		offSet = 120;
 
 	int numOfRow = titles.size();
-	for (int i = 0; i < numOfRow ; i++)
+	for (int i = 0; i < numOfRow; i++)
 	{
 		for (int j = startCol; j <= endCol; j++)
 		{
