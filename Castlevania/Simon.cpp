@@ -168,6 +168,7 @@ void Simon::Render()
 
 	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
 		subWeapons->SetIsThrown(true);
+
 	}
 
 	//render subweapon
@@ -221,9 +222,9 @@ void Simon::Attack()
 			break;
 		case HOLYWATER:
 			if (nx == 1)
-				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 10 - 4, y + 20);
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
 			else if (nx == -1)
-				subWeapons->SetPosition(x + 12 - 16 + 4, y + 20);
+				subWeapons->SetPosition(x, y + 20);
 			break;
 		case STOPWATCH:
 			break;

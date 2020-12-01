@@ -6,7 +6,6 @@ HolyWater::HolyWater()
 	isVanish = true;
 	isBreak = false;
 	SetState(STATE_HOLY_WATER_THROW);
-	//this->vy = -HOLY_WATER_VY;
 }
 
 void HolyWater::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
@@ -27,6 +26,9 @@ void HolyWater::SetState(int state)
 	{
 	case STATE_HOLY_WATER_THROW:
 		/*CWeapon::animation_set->at(ANI_HOLY_WATER_USING)->ResetFrame();*/
+		isBreak = false;
+		this->vy = -HOLY_WATER_VY;
+
 		break;
 	case STATE_HOLY_WATER_BREAK:
 		if (isBreak) return;
@@ -37,12 +39,15 @@ void HolyWater::SetState(int state)
 }
 
 void HolyWater::SetAnimation() {
-	if (this->nx > 0)
-		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_RIGHT);
-	else
-		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_LEFT);
+
 	if (isBreak)
-		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_USING);
+		ani = CWeapon::animation_set->at(ANI_HOLY_WATER_USING); 
+	else {
+		if (this->nx > 0)
+			ani = CWeapon::animation_set->at(ANI_HOLY_WATER_RIGHT);
+		else
+			ani = CWeapon::animation_set->at(ANI_HOLY_WATER_LEFT);
+	}
 	/*else
 		CWeapon::animation_set->at(ANI_HOLY_WATER_USING)->ResetFrame();*/
 }
@@ -79,7 +84,7 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	{
 		this->isBreak = false;
 		this->isVanish = true;
-		//SetState(STATE_HOLY_WATER_THROW);
+		SetState(STATE_HOLY_WATER_THROW);
 	}
 	coEvents.clear();
 
