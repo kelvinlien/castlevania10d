@@ -294,7 +294,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-  case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
