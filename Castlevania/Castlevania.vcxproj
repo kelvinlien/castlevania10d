@@ -144,6 +144,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

@@ -13,6 +13,7 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "SmallBrick.h"
 
 class CPlayScene: public CScene
 {
