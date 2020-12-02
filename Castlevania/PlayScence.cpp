@@ -487,7 +487,9 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	// init camera areaID
+	// area 1
+	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -546,12 +548,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	// check if current player pos is in map range and update cam pos accordingly
-
-	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
-	{
-		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	}
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy);
 }
 
 void CPlayScene::Render()
