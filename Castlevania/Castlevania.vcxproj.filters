@@ -34,6 +34,7 @@
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
+    <ClCompile Include="Bat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -70,5 +71,6 @@
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="SmallBrick.h" />
+    <ClInclude Include="Bat.h" />
   </ItemGroup>
 </Project>
