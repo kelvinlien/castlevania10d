@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Entity.h"
 #include "Define.h"
+#include "Camera.h"
 
 
 #define MIN_OBJECT_NUMBER_TO_SPLIT 1
@@ -15,6 +16,7 @@ class Quadtree
 	Quadtree**     m_nodes;
 
 	bool           IsContain(Entity* entity);
+	bool	IsInsideCamera();
 	void           Split();
 public:
 	Quadtree();
@@ -23,7 +25,8 @@ public:
 
 	void           Clear();
 	void           Insert(Entity* entity);
-	void          Retrieve(vector<Entity*>* return_objects_list, Entity* entity);
+	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);
+	void          RetrieveFromCamera(vector<Entity*>* return_entities_list);
 
 	static Quadtree* GetInstance();
 };

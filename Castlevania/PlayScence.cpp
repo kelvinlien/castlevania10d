@@ -579,7 +579,7 @@ void CPlayScene::Update(DWORD dt)
 		float gx, gy;
 		ghost->GetPosition(gx, gy);
 
-		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
+		if (gx <= Camera::GetInstance()->GetCamX() || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
 		{
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}

@@ -11,6 +11,19 @@ bool Quadtree::IsContain(Entity * entity)
 		l > m_region->right ||
 		t > m_region->bottom);
 }
+bool Quadtree::IsInsideCamera()
+{
+	Camera* cam = Camera::GetInstance();
+	float l, t, r, b;
+	l = cam->GetCamX();
+	t = cam->GetCamY();
+	r = l + 800;
+	b = t + 508;
+	return !(r < m_region->left ||
+		b < m_region->top ||
+		l > m_region->right ||
+		t > m_region->bottom);
+}
 void Quadtree::Split()
 {
 	m_nodes = new Quadtree*[4];
@@ -128,18 +141,18 @@ void Quadtree::Insert(Entity* entity)
 	}
 }
 
-void Quadtree::Retrieve(vector<Entity*>* return_objects_list, Entity* entity)
+void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
 {
 	if (m_nodes)
 	{
 		if (m_nodes[0]->IsContain(entity))
-			m_nodes[0]->Retrieve(return_objects_list, entity);
+			m_nodes[0]->Retrieve(return_entities_list, entity);
 		if (m_nodes[1]->IsContain(entity))
-			m_nodes[1]->Retrieve(return_objects_list, entity);
+			m_nodes[1]->Retrieve(return_entities_list, entity);
 		if (m_nodes[2]->IsContain(entity))
-			m_nodes[2]->Retrieve(return_objects_list, entity);
+			m_nodes[2]->Retrieve(return_entities_list, entity);
 		if (m_nodes[3]->IsContain(entity))
-			m_nodes[3]->Retrieve(return_objects_list, entity);
+			m_nodes[3]->Retrieve(return_entities_list, entity);
 
 		return; // Return here to ignore rest.
 	}
@@ -151,7 +164,34 @@ void Quadtree::Retrieve(vector<Entity*>* return_objects_list, Entity* entity)
 		{
 			// might as well check this if the pointer is right
 			if (entity != *i)
-				return_objects_list->push_back(*i);
+				return_entities_list->push_back(*i);
+		}
+	}
+}
+
+void Quadtree::RetrieveFromCamera(vector<Entity*>* return_entities_list)
+{
+	Camera* cam = Camera::GetInstance();
+	if (m_nodes)
+	{
+		if (m_nodes[0]->IsInsideCamera())
+			m_nodes[0]->RetrieveFromCamera(return_entities_list);
+		if (m_nodes[1]->IsInsideCamera())
+			m_nodes[1]->RetrieveFromCamera(return_entities_list);
+		if (m_nodes[2]->IsInsideCamera())
+			m_nodes[2]->RetrieveFromCamera(return_entities_list);
+		if (m_nodes[3]->IsInsideCamera())
+			m_nodes[3]->RetrieveFromCamera(return_entities_list);
+
+		return; // Return here to ignore rest.
+	}
+
+	// Add all entities in current region into return_entities_list
+	if (this->IsInsideCamera())
+	{
+		for (auto i = entities_list->begin(); i != entities_list->end(); i++)
+		{
+			return_entities_list->push_back(*i);
 		}
 	}
 }
