@@ -13,6 +13,7 @@
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
+75	..\Resources\Texture\broken_brick.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -205,6 +206,9 @@
 #FLOOR
 20001	0	0	33	29	20
 
+#SMALL BRICK
+20002	0	160	16	176	200
+
 #HOLDERS
 #FIREPOT
 30001	0	0	32	64	30
@@ -241,7 +245,8 @@
 #Holy water item
 40019	30	32	62	64	40
 
-
+#chicken thigh
+40020	62	32	94	58	40
 
 #WEAPON
 #whip
@@ -305,6 +310,9 @@
 
 #hit effect
 70040	0	0	16	20	74
+
+#broken_brick
+70050	0	0	36	23	75
 
 #Board element
 #Character
@@ -467,6 +475,9 @@
 # ==== FLOOR =========
 201	20001	100
 
+# ==== SMALL BRICK ====
+202	20002	100
+
 # ==== HOLDER =========
 #fire pot
 301	30001	100	30002	100
@@ -497,6 +508,8 @@
 417	40018	100
 #Holy water
 418	40019	100
+#Chicken thigh
+419	40020	100
 
 # ==== WEAPON =========
 #whip
@@ -535,6 +548,9 @@
 
 #hit effect
 704	70040	100
+
+#broken_brick
+705	70050	100
 
 # ==== BOARD ELEMENT =========
 #Character
@@ -663,8 +679,6 @@
 #Opened
 902	90002	100
 
-
-
 #
 # id	ani1	ani2	ani3
 #
@@ -676,19 +690,23 @@
 # HOLDER
 3	301	302	303
 # ITEMS
-4	401	402	406	407	408	411	412	416	417	418
+4	401	402	406	407	408	411	412	416	417	418	419
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506
 #EFFECT
-7	700	701	702	703	704
+7	700	701	702	703	704	705
 #BOARD
 8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
 #DOOR
 9	900	901	902
+# SMALL BRICK
+10	202
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 2 = Ghost, 3 = Firepot, 4 = Candle
+# type: 0 = Simon , 1 = Brick, 3 = Firepot
+
+# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
@@ -725,15 +743,31 @@
 #4	3511	314	3	0
 
 #BRICK GROUPS
-5	1376	311	2	3
-5	1504	247	2	10
-5	1856	311	2	6
-5	2784	247	2	9
-5	3072	247	2	8
-5	3328	311	2	3
+5	1376	312	2	3
+5	1504	248	2	10
+5	1856	312	2	6
+5	2784	248	2	17
+5	3328	312	2	3
+5	3712	280	2	2
+5	3776	312	2	3
+5	3904	248	2	6
+5	4032	120	2	2
+
+#SMALL BRICK GROUP
+9	3056	120	10	2	1
+9	3056	280	10	10	1
+9	3072	120	10	2	1
+9	3072	280	10	10	1
+9	3584	280	10	6	1
+9	3584	457	10	8	0
+9	3584	441	10	8	0
+9	3600	280	10	7	0
+9	3616	376	10	4	1
+9	3696	312	10	8	1
+9	4080	280	10	10	1
 
 # SIMON
-0	1000.0	0	1
+0	3500.0	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
