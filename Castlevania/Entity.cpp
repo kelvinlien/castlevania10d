@@ -51,6 +51,14 @@ void Entity::SetTriggerZone(RECT zone)
 	triggerZone = zone;
 }
 
+void Entity::GetTriggerZone(float & l, float & t, float & r, float & b)
+{
+	l = triggerZone.left;
+	t = triggerZone.top;
+	r = triggerZone.right;
+	b = triggerZone.bottom;
+}
+
 float Entity::GetStartX()
 {
 	return start_x;
@@ -69,5 +77,15 @@ float Entity::GetObjectWidth()
 float Entity::GetObjectHeight()
 {
 	return height;
+}
+
+void Entity::SetGameObject(CGameObject * _gameObj)
+{
+	gameObj = _gameObj;
+}
+
+CGameObject * Entity::GetGameObject()
+{
+	return gameObj;
 }
 

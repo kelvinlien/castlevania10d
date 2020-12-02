@@ -1,10 +1,10 @@
 #include "Quadtree.h"
 
 Quadtree* Quadtree::__instance = NULL;
-bool Quadtree::IsContain(CGameObject * object)
+bool Quadtree::IsContain(Entity * entity)
 {
 	float l, t, r, b;
-	object->GetBoundingBox(l,t,r,b);
+	entity->GetTriggerZone(l,t,r,b);
 
 	return !(r < m_region->left ||
 		b < m_region->top ||
@@ -51,7 +51,7 @@ Quadtree::Quadtree()
 	m_region->left = 0;
 	m_region->bottom = 600;
 	m_region->right = 800;
-	m_objects_list = NULL;
+	entities_list = NULL;
 	m_nodes = NULL;
 }
 Quadtree::Quadtree(int level, RECT region)
@@ -79,13 +79,13 @@ void Quadtree::Clear()
 	}
 
 	// Clear current Quadtree
-	m_objects_list->clear();
+	entities_list->clear();
 
-	delete m_objects_list;
+	delete entities_list;
 	delete m_region;
 }
 
-void Quadtree::Insert(CGameObject* entity)
+void Quadtree::Insert(Entity* entity)
 {
 	// Insert entity into corresponding nodes
 	if (m_nodes)
@@ -104,31 +104,31 @@ void Quadtree::Insert(CGameObject* entity)
 
 	// Insert entity into current quadtree
 	if (this->IsContain(entity))
-		m_objects_list->push_back(entity);
+		entities_list->push_back(entity);
 
 	// Split and move all objects in list into itfs corresponding nodes
 	// Condition: current node region is little bigger than viewport and there's at least two objects in that node
-	if (m_objects_list->size() > MIN_OBJECT_NUMBER_TO_SPLIT && (m_region->right - m_region->left) > SCREEN_WIDTH && (m_region->bottom - m_region->top) > SCREEN_HEIGHT)
+	if (entities_list->size() > MIN_OBJECT_NUMBER_TO_SPLIT && (m_region->right - m_region->left) > SCREEN_WIDTH && (m_region->bottom - m_region->top) > SCREEN_HEIGHT)
 	{
 		Split();
 
-		while (!m_objects_list->empty())
+		while (!entities_list->empty())
 		{
-			if (m_nodes[0]->IsContain(m_objects_list->back()))
-				m_nodes[0]->Insert(m_objects_list->back());
-			if (m_nodes[1]->IsContain(m_objects_list->back()))
-				m_nodes[1]->Insert(m_objects_list->back());
-			if (m_nodes[2]->IsContain(m_objects_list->back()))
-				m_nodes[2]->Insert(m_objects_list->back());
-			if (m_nodes[3]->IsContain(m_objects_list->back()))
-				m_nodes[3]->Insert(m_objects_list->back());
+			if (m_nodes[0]->IsContain(entities_list->back()))
+				m_nodes[0]->Insert(entities_list->back());
+			if (m_nodes[1]->IsContain(entities_list->back()))
+				m_nodes[1]->Insert(entities_list->back());
+			if (m_nodes[2]->IsContain(entities_list->back()))
+				m_nodes[2]->Insert(entities_list->back());
+			if (m_nodes[3]->IsContain(entities_list->back()))
+				m_nodes[3]->Insert(entities_list->back());
 
-			m_objects_list->pop_back();
+			entities_list->pop_back();
 		}
 	}
 }
 
-void Quadtree::Retrieve(vector<CGameObject*>* return_objects_list, CGameObject* entity)
+void Quadtree::Retrieve(vector<Entity*>* return_objects_list, Entity* entity)
 {
 	if (m_nodes)
 	{
@@ -147,7 +147,7 @@ void Quadtree::Retrieve(vector<CGameObject*>* return_objects_list, CGameObject* 
 	// Add all entities in current region into return_objects_list
 	if (this->IsContain(entity))
 	{
-		for (auto i = m_objects_list->begin(); i != m_objects_list->end(); i++)
+		for (auto i = entities_list->begin(); i != entities_list->end(); i++)
 		{
 			// might as well check this if the pointer is right
 			if (entity != *i)

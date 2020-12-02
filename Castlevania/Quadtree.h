@@ -1,5 +1,6 @@
 #include <list>
 #include "GameObject.h"
+#include "Entity.h"
 #include "Define.h"
 
 
@@ -10,10 +11,10 @@ class Quadtree
 	static Quadtree* __instance;
 	int            m_level;
 	RECT*          m_region;
-	vector<CGameObject*>*         m_objects_list;
+	vector<Entity*>*         entities_list;
 	Quadtree**     m_nodes;
 
-	bool           IsContain(CGameObject* object);
+	bool           IsContain(Entity* entity);
 	void           Split();
 public:
 	Quadtree();
@@ -21,8 +22,8 @@ public:
 	~Quadtree();
 
 	void           Clear();
-	void           Insert(CGameObject* entity);
-	void          Retrieve(vector<CGameObject*>* return_objects_list, CGameObject* entity);
+	void           Insert(Entity* entity);
+	void          Retrieve(vector<Entity*>* return_objects_list, Entity* entity);
 
 	static Quadtree* GetInstance();
 };
