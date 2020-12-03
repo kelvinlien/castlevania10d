@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Define.h"
+#include "Utils.h"
 Camera * Camera::__instance = NULL;
 Camera::Camera()
 {
@@ -42,6 +43,7 @@ D3DXVECTOR3 Camera::CreatePositionVector(float _x, float _y)
 
 D3DXVECTOR3 Camera::GetPositionVector()
 {
+	DebugOut(L"camera 's x is : %f \n", x);
 	return D3DXVECTOR3(x,y,0);
 }
 
@@ -55,6 +57,10 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		{
 			x = playerX;
 			y = 0.0f;
+		}
+		else
+		{
+			x = 2285;
 		}
 		break;
 	default:

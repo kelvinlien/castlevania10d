@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Door.h"
 
 using namespace std;
 
@@ -35,8 +36,9 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 
 #define OBJECT_TYPE_PORTAL	50
@@ -283,7 +285,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
+	case OBJECT_TYPE_DOOR:
+	{
+		obj = new CDoor(x, y);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 		{	
 
