@@ -13,6 +13,7 @@ class Camera
 	// eg: scene 2, area 2 ==> areaID = 22
 	int areaID = 11;
 	bool isAuto;
+	bool moveCamera = true;
 public:
 	Camera();
 	~Camera();

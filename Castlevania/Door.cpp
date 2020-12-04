@@ -36,7 +36,7 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		turnOffBb = true;
 		Time = 0;
 	}
-	else if (isOpened && !Simon::GetInstance()->IsAutoWalking())
+	else if (isOpened && Simon::GetInstance()->x> 3180)
 	{
 		ani = DOOR_ANI_CLOSING;
 		isOpened = false;
@@ -51,6 +51,7 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		turnOffBb = false;
 		Time = 0;
 		isActive = false;
+		Camera::GetInstance()->SetIsAuto(true);
 	}
 }
 

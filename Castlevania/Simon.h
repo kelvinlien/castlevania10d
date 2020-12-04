@@ -116,6 +116,7 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
+	void SetAutoWalking(bool a) { isAutoWalking = a; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

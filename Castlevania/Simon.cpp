@@ -327,11 +327,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//auto move simon and camera when simon hit the door in playscene 2  
 	if (isAutoWalking) {
-		if( CDoor::GetInstance()->IsOpened())
+		if( CDoor::GetInstance()->IsOpened() && this->x<3180)
 			Walk();
-		if(this->x > 3100)
+		if(this->x > 3180)
 		{
-			isAutoWalking = false;
+			/*isAutoWalking = false;*/
 			SetState(SIMON_STATE_IDLE);
 		}
 	}

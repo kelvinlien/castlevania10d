@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"
+#include "Simon.h"
 Camera * Camera::__instance = NULL;
 Camera::Camera()
 {
@@ -50,12 +51,23 @@ D3DXVECTOR3 Camera::GetPositionVector()
 
 void Camera::Move(float mapWidth, float screenWidth, float playerX, float playerY,DWORD dt)
 {
+	if (Simon::GetInstance()->x > 3480)
+		moveCamera = true;
+	else if (Simon::GetInstance()->x < 3465)
+		moveCamera = false;
+	
 	// check if current player pos is in map range and update cam pos accordingly
 	if (isAuto)
 	{
 		x += movingSpeed * dt;
-		if (x > playerX)
+		if (x > playerX &&  Simon::GetInstance()->x < 3180)
 			isAuto = false;
+		else if (x > playerX + 285)
+		{
+			Simon::GetInstance()->SetAutoWalking(false);
+			isAuto = false;
+			moveCamera = false;
+		}
 	}
 	else if (areaID == 21 && x<2300)
 	{
@@ -69,9 +81,11 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 			x = 2285;
 		}
 	}
-	else{
-		if (playerX > 0 && playerX < (mapWidth - screenWidth - TILE_SIZE / 2)) //to make sure it won't be out of range
+	else
+	{
+		if (playerX > 0 && playerX < (mapWidth - screenWidth - TILE_SIZE / 2) && moveCamera) //to make sure it won't be out of range  
 		{
+			//cx -= game->GetScreenWidth() / 2;
 			x = playerX;
 			y = 0.0f;
 		}
