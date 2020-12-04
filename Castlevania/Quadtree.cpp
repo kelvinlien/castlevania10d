@@ -169,7 +169,7 @@ void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
 	}
 }
 
-void Quadtree::RetrieveFromCamera(vector<Entity*>* return_entities_list)
+void Quadtree::RetrieveFromCamera(vector<Entity*> return_entities_list)
 {
 	Camera* cam = Camera::GetInstance();
 	if (m_nodes)
@@ -191,7 +191,7 @@ void Quadtree::RetrieveFromCamera(vector<Entity*>* return_entities_list)
 	{
 		for (auto i = entities_list->begin(); i != entities_list->end(); i++)
 		{
-			return_entities_list->push_back(*i);
+			return_entities_list.push_back(*i);
 		}
 	}
 }

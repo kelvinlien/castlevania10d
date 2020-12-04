@@ -10,6 +10,7 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include "Entity.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -504,7 +505,7 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	qtree = new Quadtree();
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -512,29 +513,53 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	vector<LPGAMEOBJECT> coObjects;
+	qtree->Clear();
+
+	//vector<LPGAMEOBJECT> coObjects;
+	//for (size_t i = 0; i < objects.size(); i++)
+	//{
+	//	coObjects.push_back(objects[i]);
+	//}
+	
+	// check delObjects
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (std::find(delObjects.begin(), delObjects.end(), objects[i]) != delObjects.end())
+		{
+			objects.erase(objects.begin() + i);
+		}
+		else
+		{
+			Entity *entity = new Entity(objects[i], 0);
+			qtree->Insert(entity);
+		}
 	}
 
-	for (size_t i = 0; i < objects.size(); i++)
+	qtree->RetrieveFromCamera(activeEntities);
+	vector<LPGAMEOBJECT> coObjects;
+	for (size_t i = 0; i < activeEntities.size(); i++)
 	{
-		 if (objects[i]->isVanish == true)
+		coObjects.push_back(activeEntities[i]->GetGameObject());
+	}
+	for (size_t i = 0; i < activeEntities.size(); i++)
+	{
+		CGameObject *current = activeEntities[i]->GetGameObject();
+		 if (current->isVanish == true)
 		 {
-			 if (dynamic_cast<CFirePot*>(objects[i])) {
+			 if (dynamic_cast<CFirePot*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
+				 CFirePot *firePot = dynamic_cast<CFirePot*>(current);
 				
 				 ItemType type = firePot->GetItemType();
 				 obj = new Item(firePot->x, firePot->y, type);
 				 objects.push_back(obj);
 			 }
-			 else if (dynamic_cast<CGhost*>(objects[i])) {
+			 else if (dynamic_cast<CGhost*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CGhost *Ghost = dynamic_cast<CGhost*>(objects[i]);
+				 CGhost *Ghost = dynamic_cast<CGhost*>(current);
 
 				 ItemType type = Ghost->GetItemType();
 				 obj = new Item(Ghost->x, Ghost->y, type);
@@ -543,17 +568,17 @@ void CPlayScene::Update(DWORD dt)
 			 else if (dynamic_cast<CCandle*>(objects[i])) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CCandle *candle = dynamic_cast<CCandle*>(objects[i]);
+				 CCandle *candle = dynamic_cast<CCandle*>(current);
 
 				 ItemType type = candle->GetItemType();
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
-
-			objects.erase(objects.begin() + i);
+			 delObjects.push_back(current);
+			
 		 }
 		else 
-			objects[i]->Update(dt, &coObjects);
+			current->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -599,8 +624,8 @@ void CPlayScene::Render()
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (int i = 0; i < activeEntities.size(); i++)
+		activeEntities[i]->GetGameObject()->Render();
 
 }
 

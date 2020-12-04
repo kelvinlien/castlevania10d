@@ -26,7 +26,7 @@ public:
 	void           Clear();
 	void           Insert(Entity* entity);
 	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);
-	void          RetrieveFromCamera(vector<Entity*>* return_entities_list);
+	void          RetrieveFromCamera(vector<Entity*> return_entities_list);
 
 	static Quadtree* GetInstance();
 };
