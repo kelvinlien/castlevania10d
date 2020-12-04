@@ -287,7 +287,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_DOOR:
 	{
-		obj = new CDoor(x, y);
+		obj = CDoor::GetInstance();
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:
@@ -554,7 +554,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy,dt);
 }
 
 void CPlayScene::Render()
@@ -589,7 +589,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() )return;
 
 	switch (KeyCode)
 	{
@@ -621,7 +621,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -643,7 +643,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode)
 	{

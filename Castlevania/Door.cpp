@@ -1,11 +1,18 @@
 #include "Door.h"
 #include "Simon.h"
 #include"Camera.h"
-CDoor::CDoor(float x, float y)
+CDoor* CDoor::__instance = NULL;
+
+CDoor* CDoor::GetInstance()
 {
-	this->x = x;
-	this->y = y;
+	if (__instance == NULL)
+		__instance = new CDoor();
+	return __instance;
+}
+CDoor::CDoor() : CGameObject()
+{
 	ani = DOOR_ANI_CLOSED;
+	isClosed = true;
 	turnOffBb = false;
 	isActive = false;
 }
@@ -14,29 +21,30 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 {
 	if (!isActive)
 		return;
-
-	if (ani == DOOR_ANI_CLOSED && Camera::GetInstance()->GetCamX() >= 56)
+	if (isClosed && !Camera::GetInstance()->GetIsAuto())
 	{
+		turnOffBb = true;
 		ani = DOOR_ANI_OPENING;
 		isClosed = false;
-		Time = GetTickCount();
-		turnOffBb = true;
+		if(Time==0)
+		 Time = GetTickCount();
 	}
-	else if (GetTickCount() - Time >= 500 && ani == DOOR_ANI_OPENING)
+	else if (GetTickCount() - Time > 400 && ani == DOOR_ANI_OPENING)
 	{
 		ani = DOOR_ANI_OPENED;
 		isOpened = true;
 		turnOffBb = true;
 		Time = 0;
 	}
-	else if (ani = DOOR_ANI_OPENED && Camera::GetInstance()->GetCamX() >= 100)
+	else if (isOpened && !Simon::GetInstance()->IsAutoWalking())
 	{
 		ani = DOOR_ANI_CLOSING;
 		isOpened = false;
-		Time = GetTickCount();
+		if (Time == 0)
+			Time = GetTickCount();
 		turnOffBb = true;
 	}
-	else if (GetTickCount() - Time >= 500 && ani == DOOR_ANI_CLOSING)
+	else if(GetTickCount() - Time > 400 && ani == DOOR_ANI_CLOSING)
 	{
 		ani = DOOR_ANI_CLOSED;
 		isClosed = true;
@@ -48,14 +56,15 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 
 void CDoor::Render()
 {
-	if (turnOffBb)
-		return;
+	
 	animation_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
 
 void CDoor::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (turnOffBb)
+		return;
 	left = x;
 	top = y;
 	right = x + DOOR_BBOX_WIDTH;

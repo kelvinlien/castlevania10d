@@ -48,6 +48,7 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
+	bool isAutoWalking = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -114,6 +115,7 @@ public:
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsFlagOn() { return flag; }
+	bool IsAutoWalking() { return isAutoWalking; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

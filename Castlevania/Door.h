@@ -12,7 +12,9 @@
 
 class CDoor : public CGameObject
 {
-	DWORD Time;
+	static CDoor *__instance;
+
+	DWORD Time=0;
 	int ani;
 	//int openTime;
 	bool isActive;
@@ -20,15 +22,17 @@ class CDoor : public CGameObject
 	bool isClosed;
 	bool isOpened;
 public:
-	CDoor(float x, float y);
+	CDoor();
 	void SetActive(bool active) { isActive = active; }
 	//void SetOpenTime(int i) { openTime = i; }
-	bool GetActive() { return isActive; }
-	bool GetIsClosed() { return isClosed; }
-	bool GetIsOpened() { return isOpened; }
+	bool IsActive() { return isActive; }
+	bool IsClosed() { return isClosed; }
+	bool IsOpened() { return isOpened; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+
+	static CDoor * GetInstance();
 
 };
 
