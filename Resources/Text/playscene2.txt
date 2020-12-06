@@ -6,6 +6,8 @@
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 20	..\Resources\Texture\floor_2.png	255	255	255
+22	..\Resources\Texture\4_small_bricks.png	255	255	255
+23	..\Resources\Texture\3_small_bricks.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
 40	..\Resources\Texture\item.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
@@ -211,6 +213,12 @@
 
 #SMALL BRICK
 20002	0	160	16	176	200
+
+#4 SMALL BRICKS
+20003	0	0	32	32	22
+
+#3 SMALL BRICKS
+20004	0	0	32	32	23
 
 #HOLDERS
 #FIREPOT
@@ -481,6 +489,12 @@
 # ==== SMALL BRICK ====
 202	20002	100
 
+# ==== 4 SMALL BRICKS ====
+203	20003	100
+
+# ==== 3 SMALL BRICKS ====
+204	20004	100
+
 # ==== HOLDER =========
 #fire pot
 301	30001	100	30002	100
@@ -704,6 +718,8 @@
 9	900	901	902
 # SMALL BRICK
 10	202
+# BROKEN BRICK
+11	201	203	204
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -748,7 +764,7 @@
 #BRICK GROUPS
 5	1376	312	2	3
 5	1504	248	2	10
-5	1856	312	2	6
+5	1856	312	2	5
 5	2784	248	2	17
 5	3328	312	2	3
 5	3712	280	2	2
@@ -769,8 +785,13 @@
 9	3696	312	10	8	1
 9	4080	280	10	10	1
 
+#BROKEN_BRICK
+8	3584	376	11	1	-1
+8	3584	408	11	2	10
+8	2016	312	11	0	4
+
 # SIMON
-0	2000.0	0	1
+0	3500.0	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
