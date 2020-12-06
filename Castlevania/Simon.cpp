@@ -589,10 +589,16 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 			{
 				if (triggerStairs->Get(i)->GetType() == 0)
 				{
+					//for sure Simon only stand at 1 point before going up
+					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 38)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 50;
 					GoUp();
 				}
 				else
 				{
+					//for sure Simon only stand at 1 point before going down
+					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 45)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 57;
 					GoDown();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
@@ -607,10 +613,14 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 			{
 				if (triggerStairs->Get(i)->GetType() == 0)
 				{
+					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 38)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 50;
 					GoUp();
 				}
 				else
 				{
+					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 45)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 57;
 					GoDown();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
@@ -627,10 +637,14 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 			{
 				if (triggerStairs->Get(i)->GetType() == 0)
 				{
+					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 36)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 14;
 					GoUp();
 				}
 				else
 				{
+					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 44)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 6;
 					GoDown();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
@@ -644,10 +658,14 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 			{
 				if (triggerStairs->Get(i)->GetType() == 0)
 				{
+					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 36)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 14;
 					GoUp();
 				}
 				else
 				{
+					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 44)
+						x = triggerStairs->Get(i)->GetStandingPoint() - 6;
 					GoDown();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
