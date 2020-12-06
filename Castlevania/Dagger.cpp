@@ -71,6 +71,14 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			{
 				x += dx;
 			}
+			if (dynamic_cast<CEnemy*>(e->obj))
+			{
+				x += dx;
+			}
+			if (dynamic_cast<Simon*>(e->obj))
+			{
+				x += dx;
+			}
 		}
 
 		// clean up collision events
