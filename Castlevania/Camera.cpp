@@ -51,12 +51,14 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 	switch (areaID)
 	{
 	case 21:
-		if (playerX > 0 && playerX < 2285) //cap at door - scene 2 area 1
-		{
-			x = playerX;
-			y = 0.0f;
-		}
-		break;
+		//if (playerX > 0 && playerX < 2285) //cap at door - scene 2 area 1
+		//{
+		//	x = playerX;
+		//	y = 0.0f;
+		//}
+		//else
+		//	x = 2285;
+		//break;
 	default:
 		if (playerX > 0 && playerX < (mapWidth - screenWidth - TILE_SIZE / 2)) //to make sure it won't be out of range
 		{
