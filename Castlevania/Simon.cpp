@@ -325,14 +325,16 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
-	//auto move simon and camera when simon hit the door in playscene 2  
-	if (isAutoWalking) {
-		if( CDoor::GetInstance()->IsOpened() && this->x<3180)
-			Walk();
-		if(this->x > 3180)
-		{
-			/*isAutoWalking = false;*/
-			SetState(SIMON_STATE_IDLE);
+	//auto move simon and camera when simon hit the door in playscene 2 
+	for (int i = 0; i < coObjects->size(); i++) {
+		if (dynamic_cast<CDoor*>(coObjects->at(i))) {
+			CDoor *door = dynamic_cast<CDoor *>(coObjects->at(i));
+			if (door->GetId()==doorId && isAutoWalking) {
+				if (door->IsOpened() && this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+					Walk();
+				else
+					SetState(SIMON_STATE_IDLE);
+			}
 		}
 	}
 
@@ -466,11 +468,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CDoor *>(e->obj))
 			{
 				CDoor *door = dynamic_cast<CDoor *>(e->obj);
-				if (!CDoor::GetInstance()->IsActive() && this->x-CDoor::GetInstance()->x<0)
+				if (!door->IsActive() && this->x-door->GetPostionX()<0)
 				{
+					doorId = door->GetId();
 					SetState(SIMON_STATE_IDLE);
 					isAutoWalking = true;
-					CDoor::GetInstance()->SetActive(true);
+					door->SetActive(true);
 					Camera::GetInstance()->SetIsAuto(true);
 				}
 			}

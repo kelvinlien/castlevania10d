@@ -287,7 +287,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_DOOR:
 	{
-		obj = CDoor::GetInstance();
+		int id = atof(tokens[4].c_str());
+		obj = new CDoor(x, y, id);
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:

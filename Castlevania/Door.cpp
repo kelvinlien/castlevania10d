@@ -1,16 +1,12 @@
 #include "Door.h"
 #include "Simon.h"
 #include"Camera.h"
-CDoor* CDoor::__instance = NULL;
 
-CDoor* CDoor::GetInstance()
+CDoor::CDoor(float x, float y,int id) : CGameObject()
 {
-	if (__instance == NULL)
-		__instance = new CDoor();
-	return __instance;
-}
-CDoor::CDoor() : CGameObject()
-{
+	this->x = x;
+	this->y = y;
+	this->id = id;
 	ani = DOOR_ANI_CLOSED;
 	isClosed = true;
 	turnOffBb = false;
@@ -36,7 +32,7 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		turnOffBb = true;
 		Time = 0;
 	}
-	else if (isOpened && Simon::GetInstance()->x> 3180)
+	else if (isOpened && Simon::GetInstance()->x> SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
 	{
 		ani = DOOR_ANI_CLOSING;
 		isOpened = false;
