@@ -299,7 +299,7 @@ void Simon::CalcPotentialCollisions(
 					GetBoundingBox(l1, t1, r1, b1);
 					item->GetBoundingBox(l2, t2, r2, b2);
 
-					if (!(r1 < l2 || l1 > r2 || t1 > b2 + 1 || b1 < t2))
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					{
 						item->BeingProcessed();
 						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
@@ -308,7 +308,10 @@ void Simon::CalcPotentialCollisions(
 				}
 			}
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-			coEvents.push_back(e);
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
 			
 		}
 		
