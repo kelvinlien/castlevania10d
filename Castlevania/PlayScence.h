@@ -13,8 +13,7 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
-
-#include"Ghost.h"
+#include "Ghost.h"
 
 class CPlayScene: public CScene
 {
