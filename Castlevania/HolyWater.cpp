@@ -1,5 +1,7 @@
 #include "HolyWater.h"
-
+#include "Candle.h"
+#include "Ghost.h"
+#include "Panther.h"
 
 HolyWater::HolyWater()
 {
@@ -16,6 +18,7 @@ void HolyWater::GetBoundingBox(float &left, float &top, float &right, float &bot
 	if (isBreak)
 	{
 		right = x + HOLY_WATER_BBOX_WIDTH * 2;
+		//bottom = y + HOLY_WATER_BBOX_HEIGHT;
 	}
 }
 
@@ -92,8 +95,37 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 
 	if (coEvents.size() == 0)
 	{
-		x += dx;
-		y += dy;	
+		if (!isBreak)
+		{
+			x += dx;
+			y += dy;
+		}
+		float l1, t1, r1, b1;
+		float l2, t2, r2, b2;
+		GetBoundingBox(l1, t1, r1, b1);
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			{
+				CEnemy *e = NULL;
+				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				{
+				case 1:
+					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				default:
+					break;
+				}
+				if (e != NULL) {
+					e->GetBoundingBox(l2, t2, r2, b2);
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+						e->isVanish = true;
+				}
+			}
+		}
 	}
 	else
 	{
@@ -109,12 +141,21 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
 				e->obj->isVanish = true;
-				x += dx;
-				y += dy;
+				if (!isBreak)
+				{
+					x += dx;
+					y += dy;
+				}
 			}
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
 				SetState(STATE_HOLY_WATER_BREAK);
+			}
+			if (dynamic_cast<CCandle*>(e->obj))
+			{
+				e->obj->SetState(CANDLE_STATE_BREAK);
+				x += dx;
+				y += dy;
 			}
 		}
 
