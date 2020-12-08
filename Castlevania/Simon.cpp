@@ -60,12 +60,12 @@ void Simon::SetState(int state)
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = -1;
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = 1;
 		Walk();
 		break;
@@ -131,6 +131,12 @@ void Simon::Render()
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
+
+	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
+		subWeapons->SetIsThrown(true);
+
+	}
+
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
@@ -197,7 +203,20 @@ void Simon::Attack()
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
 		hearts--;
-		subWeapons->SetPosition(x, y + 10);
+		switch (WeaponManager::GetInstance()->GetAvailable())
+		{
+		case DAGGER:
+			subWeapons->SetPosition(x, y + 10);
+			break;
+		case HOLYWATER:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
+		case STOPWATCH:
+			break;
+		}
 		subWeapons->nx = nx;
 	
 		isUsingSubWeapon = true;
