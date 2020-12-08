@@ -11,7 +11,7 @@ class Quadtree
 {
 	static Quadtree* __instance;
 	int            m_level;
-	RECT*          m_region;
+	RECT          m_region;
 	vector<Entity*>*         entities_list;
 	Quadtree**     m_nodes;
 
@@ -27,6 +27,7 @@ public:
 	void           Insert(Entity* entity);
 	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);
 	void          RetrieveFromCamera(vector<Entity*> return_entities_list);
+	Quadtree** GetNodes() { return m_nodes; }
 
 	static Quadtree* GetInstance();
 };

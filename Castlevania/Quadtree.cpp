@@ -6,10 +6,10 @@ bool Quadtree::IsContain(Entity * entity)
 	float l, t, r, b;
 	entity->GetTriggerZone(l,t,r,b);
 
-	return !(r < m_region->left ||
-		b < m_region->top ||
-		l > m_region->right ||
-		t > m_region->bottom);
+	return !(r < m_region.left ||
+		b < m_region.top ||
+		l > m_region.right ||
+		t > m_region.bottom);
 }
 bool Quadtree::IsInsideCamera()
 {
@@ -19,61 +19,63 @@ bool Quadtree::IsInsideCamera()
 	t = cam->GetCamY();
 	r = l + 800;
 	b = t + 508;
-	return !(r < m_region->left ||
-		b < m_region->top ||
-		l > m_region->right ||
-		t > m_region->bottom);
+	return !(r < m_region.left ||
+		b < m_region.top ||
+		l > m_region.right ||
+		t > m_region.bottom);
 }
 void Quadtree::Split()
 {
 	m_nodes = new Quadtree*[4];
 
-	long regionWidth = m_region->right - m_region->left;
-	long regionHeight = m_region->bottom - m_region->top;
+	long regionWidth = m_region.right - m_region.left;
+	long regionHeight = m_region.bottom - m_region.top;
 
 	RECT tl, tr, bl, br;
-	tl.left = m_region->left;
-	tl.top = m_region->top;
-	tl.right = m_region->left + regionWidth / 2;
-	tl.bottom = m_region->top + regionHeight / 2;
+	tl.left = m_region.left;
+	tl.top = m_region.top;
+	tl.right = m_region.left + regionWidth / 2;
+	tl.bottom = m_region.top + regionHeight / 2;
 	m_nodes[0] = new Quadtree(m_level + 1,
 		tl);
-	tr.left = m_region->left + regionWidth / 2;
-	tr.top = m_region->top;
-	tr.right = m_region->right;
-	tr.bottom = m_region->top + regionHeight / 2;
+	tr.left = m_region.left + regionWidth / 2;
+	tr.top = m_region.top;
+	tr.right = m_region.right;
+	tr.bottom = m_region.top + regionHeight / 2;
 	m_nodes[1] = new Quadtree(m_level + 1,
 		tr);
-	bl.left = m_region->left;
-	bl.top = m_region->top + regionHeight / 2;
-	bl.right = m_region->left + regionWidth / 2;
-	bl.bottom = m_region->bottom;
+	bl.left = m_region.left;
+	bl.top = m_region.top + regionHeight / 2;
+	bl.right = m_region.left + regionWidth / 2;
+	bl.bottom = m_region.bottom;
 	m_nodes[2] = new Quadtree(m_level + 1,
 		bl);
-	br.left = m_region->left + regionWidth / 2;
-	br.top = m_region->top + regionHeight / 2;
-	br.right = m_region->right;
-	br.bottom = m_region->bottom;
+	br.left = m_region.left + regionWidth / 2;
+	br.top = m_region.top + regionHeight / 2;
+	br.right = m_region.right;
+	br.bottom = m_region.bottom;
 	m_nodes[3] = new Quadtree(m_level + 1,
 		br);
 }
 Quadtree::Quadtree()
 {
 	m_level = 1;
-	m_region->top = 0;
-	m_region->left = 0;
-	m_region->bottom = 600;
-	m_region->right = 800;
-	entities_list = NULL;
-	m_nodes = NULL;
+	m_region.top = 0;
+	m_region.left = 0;
+	m_region.bottom = 600;
+	m_region.right = 800;
+	entities_list = new vector<Entity*>[100];
+	m_nodes = new Quadtree*[4];
 }
 Quadtree::Quadtree(int level, RECT region)
 {
 	m_level = level;
-	m_region->bottom = region.bottom;
-	m_region->top = region.top;
-	m_region->left = region.left;
-	m_region->right = region.right;
+	m_region.bottom = region.bottom;
+	m_region.top = region.top;
+	m_region.left = region.left;
+	m_region.right = region.right;
+	entities_list = new vector<Entity*>[100];
+	m_nodes = new Quadtree*[4];
 }
 Quadtree::~Quadtree()
 {
@@ -95,7 +97,7 @@ void Quadtree::Clear()
 	entities_list->clear();
 
 	delete entities_list;
-	delete m_region;
+	//delete m_region;
 }
 
 void Quadtree::Insert(Entity* entity)
@@ -121,7 +123,7 @@ void Quadtree::Insert(Entity* entity)
 
 	// Split and move all objects in list into itfs corresponding nodes
 	// Condition: current node region is little bigger than viewport and there's at least two objects in that node
-	if (entities_list->size() > MIN_OBJECT_NUMBER_TO_SPLIT && (m_region->right - m_region->left) > SCREEN_WIDTH && (m_region->bottom - m_region->top) > SCREEN_HEIGHT)
+	if (entities_list->size() > MIN_OBJECT_NUMBER_TO_SPLIT && (m_region.right - m_region.left) > SCREEN_WIDTH && (m_region.bottom - m_region.top) > SCREEN_HEIGHT)
 	{
 		Split();
 

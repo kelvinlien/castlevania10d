@@ -25,7 +25,7 @@ protected:
 
 	CGhost *ghost;					// Beta ghost for testing purpose
 
-	Quadtree *qtree;
+	Quadtree *qtree = Quadtree::GetInstance();
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;

@@ -505,7 +505,7 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	qtree = new Quadtree();
+	//qtree = new Quadtree();
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -513,7 +513,10 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	qtree->Clear();
+	if (qtree->GetNodes() != NULL)
+	{
+		qtree->Clear();
+	}
 
 	//vector<LPGAMEOBJECT> coObjects;
 	//for (size_t i = 0; i < objects.size(); i++)
@@ -525,9 +528,17 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (std::find(delObjects.begin(), delObjects.end(), objects[i]) != delObjects.end())
+		if (delObjects.size() > 0)
 		{
-			objects.erase(objects.begin() + i);
+			if (std::find(delObjects.begin(), delObjects.end(), objects[i]) != delObjects.end())
+			{
+				objects.erase(objects.begin() + i);
+			}
+			else
+			{
+				Entity *entity = new Entity(objects[i], 0);
+				qtree->Insert(entity);
+			}
 		}
 		else
 		{
