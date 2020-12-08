@@ -43,12 +43,40 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
+enum animation
+{
+	IDLE_LEFT,
+	IDLE_RIGHT,
+	WALK_LEFT,
+	WALK_RIGHT,
+	JUMP_DUCK_LEFT,
+	JUMP_DUCK_RIGHT,
+	HURT_LEFT,
+	HURT_RIGHT,
+	DEATH_LEFT,
+	DEATH_RIGHT,
+	STAIR_UP_LEFT,
+	STAIR_UP_RIGHT,
+	STAIR_DOWN_LEFT,
+	STAIR_DOWN_RIGHT,
+	ATTACK_STAND_LEFT,
+	ATTACK_STAND_RIGHT,
+	ATTACK_DUCK_LEFT,
+	ATTACK_DUCK_RIGHT,
+	//go up and attack on stair
+	ATTACK_UP_LEFT,
+	ATTACK_UP_RIGHT,
+	//go down and attack on stair
+	ATTACK_DOWN_LEFT,
+	ATTACK_DOWN_RIGHT
+};
 
 class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
+	animation ani;
 	int hearts = 5;
 	int health = 16;
 
@@ -80,33 +108,33 @@ class Simon : public CGameObject
 
 
 
-	enum animation
-	{
-		IDLE_LEFT,
-		IDLE_RIGHT,
-		WALK_LEFT,
-		WALK_RIGHT,
-		JUMP_DUCK_LEFT,
-		JUMP_DUCK_RIGHT,
-		HURT_LEFT,
-		HURT_RIGHT,
-		DEATH_LEFT,
-		DEATH_RIGHT,
-		STAIR_UP_LEFT,
-		STAIR_UP_RIGHT,
-		STAIR_DOWN_LEFT,
-		STAIR_DOWN_RIGHT,
-		ATTACK_STAND_LEFT,
-		ATTACK_STAND_RIGHT,
-		ATTACK_DUCK_LEFT,
-		ATTACK_DUCK_RIGHT,
-		//go up and attack on stair
-		ATTACK_UP_LEFT,
-		ATTACK_UP_RIGHT,
-		//go down and attack on stair
-		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
-	}ani;
+	//enum animation
+	//{
+	//	IDLE_LEFT,
+	//	IDLE_RIGHT,
+	//	WALK_LEFT,
+	//	WALK_RIGHT,
+	//	JUMP_DUCK_LEFT,
+	//	JUMP_DUCK_RIGHT,
+	//	HURT_LEFT,
+	//	HURT_RIGHT,
+	//	DEATH_LEFT,
+	//	DEATH_RIGHT,
+	//	STAIR_UP_LEFT,
+	//	STAIR_UP_RIGHT,
+	//	STAIR_DOWN_LEFT,
+	//	STAIR_DOWN_RIGHT,
+	//	ATTACK_STAND_LEFT,
+	//	ATTACK_STAND_RIGHT,
+	//	ATTACK_DUCK_LEFT,
+	//	ATTACK_DUCK_RIGHT,
+	//	//go up and attack on stair
+	//	ATTACK_UP_LEFT,
+	//	ATTACK_UP_RIGHT,
+	//	//go down and attack on stair
+	//	ATTACK_DOWN_LEFT,
+	//	ATTACK_DOWN_RIGHT
+	//}ani;
 
 public:
 

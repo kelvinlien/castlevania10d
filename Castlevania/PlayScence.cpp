@@ -10,6 +10,7 @@
 #include "GameMap.h"
 #include "Panther.h"
 
+#include "BlinkEffect.h"
 using namespace std;
 
 
@@ -503,6 +504,16 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
+		if (dynamic_cast<CEnemy*>(objects[i])) {
+		if (BlinkEffect::GetInstance()->GetIsActive())
+		{
+			CGameObject *obj; //temp obj to create item
+
+			CEnemy *enemy = dynamic_cast<CEnemy*>(objects[i]);
+			// Conventional state for enemy: death is 30
+			enemy->SetState(30);
+		}
+		 }
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
@@ -588,7 +599,11 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-
+	if (BlinkEffect::GetInstance()->GetIsActive())
+	{
+		int alpha = 120 + rand() % 70;
+		BlinkEffect::GetInstance()->Draw(alpha);
+	}
 }
 
 /*
@@ -615,25 +630,23 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
-	switch (KeyCode)
-	{
+	switch (KeyCode) {
 	case DIK_SPACE:
 		if (!simon->IsJump()) {
 			if (simon->IsLevelUp()) return;
 			simon->SetState(SIMON_STATE_JUMP);
 		}
 		break;
-	case DIK_A:
-	{
+	case DIK_A: {
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
-	case DIK_DOWN:
+	case DIK_DOWN: {
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
+		}
 	}
 }
 

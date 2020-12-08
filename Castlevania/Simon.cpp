@@ -60,12 +60,12 @@ void Simon::SetState(int state)
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = -1;
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = 1;
 		Walk();
 		break;
@@ -201,14 +201,28 @@ void Simon::Attack()
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
-			hearts--;
-			subWeapons->SetPosition(x - 15, y + 15);
-			subWeapons->nx = nx;
-			isAttack = true;
-			attackTime = GetTickCount();
-			isUsingSubWeapon = true;
-			subWeapons->isVanish = false;
-			DebugOut(L"[INFO] 3\n");
+		hearts--;
+		switch (WeaponManager::GetInstance()->GetAvailable())
+		{
+		case DAGGER:
+			subWeapons->SetPosition(x, y + 10);
+			break;
+		case HOLYWATER:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
+		case STOPWATCH:
+			break;
+		}
+		subWeapons->nx = nx;
+	
+		isUsingSubWeapon = true;
+		subWeapons->isVanish = false;
+
+		isAttack = true;
+		attackTime = GetTickCount();
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -313,7 +327,6 @@ void Simon::CalcPotentialCollisions(
 				coEvents.push_back(e);
 			else
 				delete e;
-			
 		}
 		
 	}

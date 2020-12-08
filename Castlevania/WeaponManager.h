@@ -20,7 +20,8 @@ class WeaponManager {
 	int amount;
 public:
 
-	//getter & setter 
+	//getter & setter
+	Available GetAvailable() { return available; }
 	int getAmount() { return this->amount; };
 	CWeapon *createWeapon(Available available);
 	static WeaponManager * GetInstance();
