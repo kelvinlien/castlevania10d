@@ -4,12 +4,8 @@ CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 {
 	SetItem(itemType);
 	this->nx = nx;
-	this->x = x;
-	this->y = y;
 	this->type = 30; // 30 là fishman nên thay bằng enum
 	isActive = true;
-	//vx = FISH_MAN_WALKING_SPEED * this->nx;
-	//WaitToShoot();
 	SetState(FISH_MAN_STATE_JUMP);
 }
 void CFishman::SetState(int state)
