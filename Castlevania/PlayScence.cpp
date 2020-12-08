@@ -222,6 +222,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_FISHMAN: {
 		int itemType = atof(tokens[4].c_str());
 		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
+
+		float randomDistance = rand() % (BRICK_WIDTH * 2 * 16) + 1;
+		DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
+		obj->SetPosition(x + randomDistance, y);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
 	}
 	break;
 
@@ -302,11 +309,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}

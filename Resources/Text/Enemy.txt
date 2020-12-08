@@ -85,9 +85,9 @@
 
 
 #fishman
-#idle left
+#shoot left
 620	62002	100
-#idle right
+#shoot right
 621	62012	100
 
 #moving left
@@ -98,6 +98,10 @@
 
 #break
 303	30011	100	30012	100
+#idle left
+624	62000	100
+#idle right
+625	62010	100
 
 #
 # id	ani1	ani2	ani3
@@ -106,7 +110,7 @@
 #ENEMY
 61	600	601	303
 62	610	611	612	613	614	615	303
-63	620	621	622	623	303
+63	620	621	622	623	624	625	303
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -119,4 +123,4 @@
 10	1757.0	0.0	62	1500.0	1800.0	-1
 10	1885.0	0.0	62	1850.0	2050.0	-1
 #	FISHMAN
-30	1373.0	0.0	63	1
+30	1200.0	412	63	1

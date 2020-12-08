@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Enemy.h"
 #include "Weapon.h"
+#include "Camera.h"
 
 // Zombie
 #define FISH_MAN_BBOX_WIDTH			28
@@ -8,11 +9,10 @@
 
 #define FISH_MAN_WALKING_SPEED		0.1f
 #define FISH_MAN_GRAVITY				0.0015f
-#define FISH_MAN_JUMPING_SPEED		0.5f
+#define FISH_MAN_JUMPING_SPEED		-0.5f
 
 #define FISH_MAN_WAIT_TO_SHOOT_TIME		3000
 #define FISH_MAN_SHOOTING_TIME			700
-#define FISH_MAN_JUMPING_TIME			500
 #define FISH_MAN_DIE_TIME				200
 
 
@@ -25,12 +25,12 @@
 class CFishman : public CEnemy
 {	
 	//time variables
-	DWORD startJumpTime;
 	DWORD shootingTimePeriod;
 	DWORD startShootTime;
 	DWORD startWaitToShoot;
 	DWORD dieTime;
 	
+	float randomPosX;
 	//flag
 	bool isDead = false;
 	bool isShoot = false;
@@ -42,11 +42,14 @@ class CFishman : public CEnemy
 
 	enum animation
 	{
-		FISH_MAN_IDLE_LEFT,
-		FISH_MAN_IDLE_RIGHT,
+		FISH_MAN_SHOOT_LEFT,
+		FISH_MAN_SHOOT_RIGHT,
 		FISH_MAN_WALK_LEFT,
 		FISH_MAN_WALK_RIGHT,
+		FISH_MAN_IDLE_LEFT,
+		FISH_MAN_IDLE_RIGHT,
 		FISH_MAN_DIE,
+
 	}ani;
 public:
 
