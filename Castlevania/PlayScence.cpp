@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Fishman.h"
 #include "WaterSurface.h"
 
 using namespace std;
@@ -36,6 +37,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
@@ -175,13 +177,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	
 	int ani_set_id = atoi(tokens[3].c_str());
 	int amount;
-	if (object_type == 5) {
+	if (object_type == OBJECT_TYPE_BRICKS_GROUP) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
@@ -218,6 +220,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		break;
+	case OBJECT_TYPE_FISHMAN: {
+		int itemType = atof(tokens[4].c_str());
+		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
+	}
+	break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth

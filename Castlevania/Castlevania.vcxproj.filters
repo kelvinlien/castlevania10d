@@ -33,6 +33,7 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="WaterSurface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,7 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="Fishman.h" />
     <ClInclude Include="WaterSurface.h" />
   </ItemGroup>
 </Project>
