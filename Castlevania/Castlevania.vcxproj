@@ -135,6 +135,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FirePot.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Holder.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="FirePot.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Fishman.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
