@@ -507,6 +507,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CWaterSurface *>(e->obj))
 			{
+				//effect
 				x += dx;
 				y += dy;
 				health = 0;

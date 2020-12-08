@@ -1,5 +1,7 @@
 ﻿#include "Fishman.h"
 #include "Simon.h"
+#include "WaterSurface.h"
+
 CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 {
 	SetItem(itemType);
@@ -68,6 +70,8 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (dynamic_cast<CBrick *>(coObjects->at(i)))
 
 			coObjectsFishman.push_back(coObjects->at(i));
+		else if (dynamic_cast<CWaterSurface *>(coObjects->at(i)))
+			coObjectsFishman.push_back(coObjects->at(i));
 	}
 
 	coEvents.clear();
@@ -99,14 +103,22 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		//Collision logic with other objects
 
-		//for (UINT i = 0; i < coEventsResult.size(); i++)
-		//{
-		//	LPCOLLISIONEVENT e = coEventsResult[i];
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
-		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
-		//	{
-		//	}
-		//}
+			if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
+			{
+			}
+			else if(dynamic_cast<CWaterSurface *>(e->obj))
+			{
+				//effect
+				x += dx;
+				y += dy;
+				if(!isJump)
+					this->isVanish = true;
+			}
+		}
 	}
 
 	// clean up collision events
