@@ -17,8 +17,8 @@ void HolyWater::GetBoundingBox(float &left, float &top, float &right, float &bot
 	bottom = y + HOLY_WATER_BBOX_HEIGHT;
 	if (isBreak)
 	{
-		right = x + HOLY_WATER_BBOX_WIDTH * 2;
-		//bottom = y + HOLY_WATER_BBOX_HEIGHT;
+		right = x + BROKEN_HOLY_WATER_BBOX_WIDTH;
+		bottom = y + BROKEN_HOLY_WATER_BBOX_HEIGHT;
 	}
 }
 
@@ -35,6 +35,7 @@ void HolyWater::SetState(int state)
 		break;
 	case STATE_HOLY_WATER_BREAK:
 		if (isBreak) return;
+		y -= 6;
 		isBreak = true;
 		startBurnTime = GetTickCount();
 		break;
