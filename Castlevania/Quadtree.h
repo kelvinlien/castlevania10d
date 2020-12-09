@@ -9,7 +9,9 @@
 
 class Quadtree
 {
-	static Quadtree* __instance;
+	//static Quadtree* __instance;
+	int MAX_OBJECTS = 10;
+	int MAX_LEVELS = 5;
 	int            level = 0;
 	RECT*          region;
 	vector<Entity*>*         entities_list;
@@ -19,16 +21,17 @@ class Quadtree
 	bool	IsInsideCamera();
 	void           Split();
 public:
-	Quadtree();
+	//Quadtree();
 	Quadtree(int pLevel, RECT *pBounds);
 	~Quadtree();
 
+	int getIndex(RECT *pRect);
 	void           Clear();
 	void           Insert(Entity* entity);
 	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);
 	void          RetrieveFromCamera(vector<Entity*> return_entities_list);
-	Quadtree** GetNodes() { return nodes; }
+	vector<Quadtree*>* GetNodes() { return nodes; }
 
-	static Quadtree* GetInstance();
+	//static Quadtree* GetInstance();
 };
 

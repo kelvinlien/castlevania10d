@@ -504,8 +504,14 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	//qtree = new Quadtree();
+	RECT screen;
+	screen.left = 0;
+	screen.top = 0;
+	screen.right = screen.left + mapWidth;
+	screen.bottom = screen.top + mapHeight;
+	qtree = new Quadtree(0, &screen);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -513,7 +519,7 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	if (qtree->GetNodes() != NULL)
+	if (qtree->GetNodes() != nullptr)
 	{
 		qtree->Clear();
 	}
