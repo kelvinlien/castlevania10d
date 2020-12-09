@@ -37,7 +37,6 @@ using namespace std;
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-<<<<<<<<< Temporary merge branch 1
 #define OBJECT_TYPE_WHIP	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
@@ -278,15 +277,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
 		int amountOfSmallBrick = amount;
-
-		//first small brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj = new CSmallBrick();
-		obj->SetPosition(x, y);
-		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
 
-		for (int i = 1; i <= amountOfSmallBrick; i++)
+		for (int i = 0; i <= amountOfSmallBrick; i++)
 		{
 			obj = new CSmallBrick();
 			if (axis == 0)

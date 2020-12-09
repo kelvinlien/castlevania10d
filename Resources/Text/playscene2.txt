@@ -3,6 +3,7 @@
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 20	..\Resources\Texture\floor_2.png	255	255	255
+21	..\Resources\Texture\small_brick.png	255	255	255
 22	..\Resources\Texture\4_small_bricks.png	255	255	255
 23	..\Resources\Texture\3_small_bricks.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
@@ -209,7 +210,7 @@
 20001	0	0	33	29	20
 
 #SMALL BRICK
-20002	0	160	16	176	200
+20002	0	0	16	16	21
 
 #4 SMALL BRICKS
 20003	0	0	32	32	22
@@ -720,10 +721,6 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-<<<<<<<<< Temporary merge branch 1
-# type: 0 = Simon , 1 = Brick, 2 = Ghost, 3 = Panther
-=========
-
 # type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
 
 # BRICK 
