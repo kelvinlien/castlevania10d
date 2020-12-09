@@ -6,7 +6,7 @@ Fragment::Fragment(float x, float y, float nx, int type)
 	this->y = y;
 	vx = nx * FRAGMENT_SPEED_X;
 	vy = -FRAGMENT_SPEED_Y;
-	animation_set=CAnimationSets::GetInstance()->Get()
+	animation_set = CAnimationSets::GetInstance()->Get(7);
 	switch (type)
 	{
 	case 0:
@@ -14,6 +14,7 @@ Fragment::Fragment(float x, float y, float nx, int type)
 		break;
 	case 1:
 		this->fragmentType = RUBBLE_FRAGMENT;
+		ani = 5; 
 		break;
 	default:
 		this->fragmentType = WATER_FRAGMENT;
@@ -32,5 +33,5 @@ void Fragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void Fragment::Render()
 {
-	
+	animation_set->at(ani)->Render(x,y);
 }
