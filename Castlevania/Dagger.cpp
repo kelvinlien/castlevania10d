@@ -32,13 +32,19 @@ void Dagger::Render() {
 void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	
 	CGameObject::Update(dt, coObjects);
+	vector<LPGAMEOBJECT> coObjectsDagger;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<Simon*> (coObjects->at(i)))
+			coObjectsDagger.push_back(coObjects->at(i));
+	}
 	if (!GetIsThrown()) return;
 	vx = nx * DAGGER_VX;
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+	CalcPotentialCollisions(&coObjectsDagger, coEvents);
 
 	if (coEvents.size() == 0)
 	{
@@ -75,10 +81,6 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			{
 				this->isVanish = true;
 				e->obj->isVanish = true;
-			}
-			if (dynamic_cast<Simon*>(e->obj))
-			{
-				x += dx;
 			}
 		}
 
