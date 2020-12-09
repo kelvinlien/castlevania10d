@@ -691,10 +691,12 @@
 # ==== DOOR =========
 #Closed
 900	90000	100
-#Opening
-901	90001	100
 #Opened
-902	90002	100
+901	90002	200
+#Ani Opening
+902	90000	100	90001	200	90002	200
+#Ani Closing
+903	90002	100	90001	200	90000	200
 
 #
 # id	ani1	ani2	ani3
@@ -715,7 +717,7 @@
 #BOARD
 8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
 #DOOR
-9	900	901	902
+9	900	901	902	903
 # SMALL BRICK
 10	202
 # BROKEN BRICK
@@ -725,7 +727,7 @@
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Simon , 1 = Brick, 3 = Firepot
 
-# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
+# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup, 6=Door
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
@@ -785,13 +787,15 @@
 9	3696	312	10	8	1
 9	4080	280	10	10	1
 
+#DOOR
+6	3056	152	9	1
+# SIMON
+0	3000.0	150	1
 #BROKEN_BRICK
 8	3584	376	11	1	-1
 8	3584	408	11	2	10
 8	2016	312	11	0	4
 
-# SIMON
-0	3500.0	0	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

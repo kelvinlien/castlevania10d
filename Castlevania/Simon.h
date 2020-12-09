@@ -7,6 +7,7 @@
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
+#define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3180
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -40,6 +41,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
+	int doorId;
 
 	//Flag of Simon's state
 	bool isJump;
@@ -48,6 +50,7 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
+	bool isAutoWalking = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -114,6 +117,8 @@ public:
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsFlagOn() { return flag; }
+	bool IsAutoWalking() { return isAutoWalking; }
+	void SetAutoWalking(bool a) { isAutoWalking = a; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

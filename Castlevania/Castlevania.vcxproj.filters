@@ -32,6 +32,7 @@
     <ClCompile Include="WeaponManager.cpp" />
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +68,7 @@
     <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="Whip.h" />
     <ClInclude Include="SmallBrick.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="BrokenBrick.h" />
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Door.h"
 
 using namespace std;
 
@@ -35,8 +36,9 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
 
@@ -288,7 +290,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
+	case OBJECT_TYPE_DOOR:
+	{
+		int id = atof(tokens[4].c_str());
+		obj = new CDoor(x, y, id);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -565,7 +572,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy,dt);
 }
 
 void CPlayScene::Render()
@@ -600,7 +607,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() )return;
 
 	switch (KeyCode)
 	{
@@ -632,7 +639,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -654,7 +661,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode)
 	{
