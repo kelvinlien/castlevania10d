@@ -31,6 +31,12 @@ void CCandle::SetItem(int itemType) {
 	case 9:
 		type = ITEM_HOLY_WATER;
 		break;
+	case 11:
+		type = ITEM_VASE;
+		break;
+	case 12:
+		type = ITEM_AXE;
+		break;
 	default:
 		type = ITEM_SMALL_HEART;
 		break;

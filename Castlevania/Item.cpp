@@ -68,6 +68,21 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 32;
 		start_x = x;
 		break;
+	case ITEM_CHICKEN_THIGH:
+		widthBBox = 32;
+		heightBBox = 26;
+		start_x = x;
+		break;
+	case ITEM_VASE:
+		widthBBox = 26;
+		heightBBox = 32;
+		start_x = x;
+		break;
+	case ITEM_AXE:
+		widthBBox = 30;
+		heightBBox = 28;
+		start_x = x;
+		break;
 	default:
 		break;
 	}
@@ -198,6 +213,8 @@ void Item::BeingProcessed()
 		break;
 	case ITEM_HOLY_WATER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
+		break;
+	case ITEM_AXE:
 		break;
 	default:
 		break;
