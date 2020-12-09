@@ -3,12 +3,11 @@
 60	..\Resources\Texture\ghost.png	255	0	255
 61	..\Resources\Texture\panther.png	255	0	255
 62	..\Resources\Texture\fishman.png	255	0	255
-<<<<<<< HEAD
+63	..\Resources\Texture\bat.png	255	0	255
 31	..\Resources\Texture\hit-effect.png	255	0	255
 32	..\Resources\Texture\burn.png	255	0	255
-=======
-63	..\Resources\Texture\bat.png	255	0	255
->>>>>>> L2-8c
+33	..\Resources\Texture\enemy_bullet.png	255	0	255
+
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -58,11 +57,10 @@
 62011	148	0	180	64	62
 62012	184	0	216	64	62
 
-<<<<<<< HEAD
 #effect
 30011	0	0	16	20	31
 30012	43	0	85	44	32
-=======
+
 #Bat
 #left
 63000	32	0	64	32	63
@@ -72,7 +70,9 @@
 63010	192	0	224	32	63
 63011	160	0	192	32	63
 63012	128	0	160	32	63
->>>>>>> L2-8c
+
+#enemy_bullet
+30013	0	0	10	12	33
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -112,16 +112,17 @@
 #moving right
 623	62010	100	62011	100	62012	100
 
-<<<<<<< HEAD
 #break
 303	30011	100	30012	100
-=======
+
 #bat
 #left
 630	63000	100	63001	100	63002	100
 #right
 631	63010	100	63011	100	63012	100
->>>>>>> L2-8c
+
+#enemy_bullet
+313	30013	100
 
 #
 # id	ani1	ani2	ani3
@@ -129,7 +130,7 @@
 [ANIMATION_SETS]
 #ENEMY
 61	600	601	303
-62	610	611	612	613	614	615	303
+62	610	611	612	613	614	615	303	313
 63	620	621	622	623
 64	630	631
 
@@ -139,11 +140,11 @@
 #	GHOST
 2	1000.0	0.0	61	1
 #	PANTHER
-<<<<<<< HEAD
+
 #type	x	y	ani_set_id	jump_left	jump_right	direct
 10	1373.0	0.0	62	1370.0	1480.0	-1
 10	1757.0	0.0	62	1500.0	1800.0	-1
 10	1885.0	0.0	62	1850.0	2050.0	-1
 =======
 10	1373.0	0.0	62
->>>>>>> L2-8c
+

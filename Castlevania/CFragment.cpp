@@ -11,6 +11,7 @@ Fragment::Fragment(float x, float y, float nx, int type)
 	{
 	case 0:
 		this->fragmentType = WATER_FRAGMENT;
+		ani = 5;
 		break;
 	case 1:
 		this->fragmentType = RUBBLE_FRAGMENT;
@@ -33,5 +34,13 @@ void Fragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void Fragment::Render()
 {
+	if (existTime == 0)
+		existTime = GetTickCount();
+	if (GetTickCount() - existTime > 1000)
+		return;
 	animation_set->at(ani)->Render(x,y);
+}
+Fragment::~Fragment()
+{
+	
 }
