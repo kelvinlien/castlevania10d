@@ -38,6 +38,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_BROKEN_BRICK	8
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -166,15 +167,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount, axis;
+	int amount, axis, brickType, itemType;
 	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
+	}
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
 	}
 	if (object_type == 9)
 	{
@@ -264,13 +268,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
 			else
 				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
-			//DebugOut(L"[CHECK] top: %f\n", y + SMALL_BRICK_HEIGHT * i);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+	case OBJECT_TYPE_BROKEN_BRICK:
+		obj = new CBrokenBrick(brickType, itemType);
+		break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -524,6 +529,18 @@ void CPlayScene::Update(DWORD dt)
 				 ItemType type = candle->GetItemType();
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
+			 }
+			 else if (dynamic_cast<CBrokenBrick*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(objects[i]);
+
+				 if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
+				 {
+					 ItemType type = brokenBrick->GetItemType();
+					 obj = new Item(brokenBrick->x, brokenBrick->y, type);
+					 objects.push_back(obj);
+				 }
 			 }
 			objects.erase(objects.begin() + i);
 		 }
