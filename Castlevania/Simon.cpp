@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "SmallBrick.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -511,6 +512,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
 		}
 	}
 

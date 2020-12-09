@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -163,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="Enemy.h" />
@@ -181,6 +184,7 @@
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
