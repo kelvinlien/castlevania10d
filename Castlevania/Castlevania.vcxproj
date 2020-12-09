@@ -130,6 +130,7 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Candle.cpp" />
+    <ClCompile Include="CFragment.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Animations.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Candle.h" />
+    <ClInclude Include="CFragment.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
