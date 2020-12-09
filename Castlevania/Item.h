@@ -18,7 +18,8 @@ enum ItemType
 	ITEM_STOP_WATCH,
 	ITEM_DAGGER,
 	ITEM_CROSS,
-	ITEM_HOLY_WATER
+	ITEM_HOLY_WATER,
+	ITEM_CHICKEN_THIGH
 };
 
 class Item :public CGameObject {
