@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#define VERTICAL_TRIGGER_DISTANCE 500
+#define VERTICAL_TRIGGER_DISTANCE 100
 class Entity
 {
 	RECT triggerZone;

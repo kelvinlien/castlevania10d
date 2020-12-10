@@ -1,29 +1,5 @@
 #include "Quadtree.h"
 
-//Quadtree* Quadtree::__instance = NULL;
-bool Quadtree::IsContain(Entity * entity)
-{
-	float l, t, r, b;
-	entity->GetTriggerZone(l,t,r,b);
-
-	return !(r < region->left ||
-		b < region->top ||
-		l > region->right ||
-		t > region->bottom);
-}
-bool Quadtree::IsInsideCamera()
-{
-	Camera* cam = Camera::GetInstance();
-	float l, t, r, b;
-	l = cam->GetCamX();
-	t = cam->GetCamY();
-	r = l + 800;
-	b = t + 508;
-	return !(r < region->left ||
-		b < region->top ||
-		l > region->right ||
-		t > region->bottom);
-}
 void Quadtree::Split()
 {
 	nodes = new vector<Quadtree*>(4);
@@ -67,6 +43,8 @@ Quadtree::Quadtree(int pLevel, RECT *pBounds)
 Quadtree::~Quadtree()
 {
 	delete region;
+	delete entities_list;
+	delete nodes;
 }
 int Quadtree::getIndex(RECT * pRect)
 {
@@ -125,6 +103,8 @@ void Quadtree::Clear()
 	}
 }
 
+// check current node, find the correct index and add to the entities_list of node[index]
+// Split
 void Quadtree::Insert(Entity* entity)
 {
 	RECT *pRect = &entity->GetTriggerZone();
@@ -178,7 +158,7 @@ void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
 	return_entities_list->insert(return_entities_list->end(), entities_list->begin(), entities_list->end());
 }
 
-void Quadtree::RetrieveFromCamera(vector<Entity*> return_entities_list)
+void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 {
 	Camera* cam = Camera::GetInstance();
 	float l, t, r, b;
@@ -199,39 +179,3 @@ void Quadtree::RetrieveFromCamera(vector<Entity*> return_entities_list)
 
 	return_entities_list.insert(return_entities_list.end(), entities_list->begin(), entities_list->end());
 }
-
-//void Quadtree::RetrieveFromCamera(vector<Entity*> return_entities_list)
-//{
-//	Camera* cam = Camera::GetInstance();
-//	if (nodes)
-//	{
-//		if (nodes[0]->IsInsideCamera())
-//			nodes[0]->RetrieveFromCamera(return_entities_list);
-//		if (nodes[1]->IsInsideCamera())
-//			nodes[1]->RetrieveFromCamera(return_entities_list);
-//		if (nodes[2]->IsInsideCamera())
-//			nodes[2]->RetrieveFromCamera(return_entities_list);
-//		if (nodes[3]->IsInsideCamera())
-//			nodes[3]->RetrieveFromCamera(return_entities_list);
-//
-//		return; // Return here to ignore rest.
-//	}
-//
-//	// Add all entities in current region into return_entities_list
-//	if (this->IsInsideCamera())
-//	{
-//		for (auto i = entities_list->begin(); i != entities_list->end(); i++)
-//		{
-//			return_entities_list.push_back(*i);
-//		}
-//	}
-//}
-
-//Quadtree * Quadtree::GetInstance()
-//{
-//	if (__instance == NULL)
-//	{
-//		__instance = new Quadtree();
-//	}
-//	return __instance;
-//}

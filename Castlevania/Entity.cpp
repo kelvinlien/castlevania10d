@@ -19,7 +19,7 @@ Entity::Entity(CGameObject * _gameObj, float xTriggerDistance)
 	start_x = gameObj->start_x;
 	start_y = gameObj->start_y;
 	float l, t, r, b;
-	gameObj->GetBoundingBox(l, t, r, b);
+	_gameObj->GetBoundingBox(l, t, r, b);
 	width = r - l;
 	height = b  - t;
 	if (xTriggerDistance < width / 2)
@@ -32,7 +32,6 @@ Entity::Entity(CGameObject * _gameObj, float xTriggerDistance)
 	triggerZone.bottom = yCentralPoint + VERTICAL_TRIGGER_DISTANCE;
 	triggerZone.left = xCentralPoint - xTriggerDistance;
 	triggerZone.right = xCentralPoint + xTriggerDistance;
-	gameObj = _gameObj;
 }
 
 
