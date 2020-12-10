@@ -223,6 +223,7 @@ void Item::BeingProcessed()
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
 		break;
 	case ITEM_AXE:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(AXE));
 		break;
 	default:
 		break;

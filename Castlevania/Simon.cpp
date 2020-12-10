@@ -215,6 +215,12 @@ void Simon::Attack()
 			break;
 		case STOPWATCH:
 			break;
+		case AXE:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
 		}
 		subWeapons->nx = nx;
 	
