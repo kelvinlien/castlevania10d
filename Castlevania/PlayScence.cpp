@@ -497,7 +497,7 @@ void CPlayScene::Load()
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
-	TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
+	/*TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
 	TriggerStair *s1 = new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT);
 	TriggerStair *s2 = new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT);
 	TriggerStair *s3 = new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT);
@@ -506,8 +506,18 @@ void CPlayScene::LoadTriggerStair() {
 	TriggerStair *s6 = new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT);
 	TriggerStair *s7 = new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT);
 	TriggerStair *s8 = new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT);
-	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);
-	triggerStairs->Add(s0);
+	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);*/
+	TriggerStair *s10 = new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s11 = new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s12 = new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s13 = new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s14 = new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s15 = new TriggerStair(4368, 249, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s16 = new TriggerStair(4688, 249, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s17 = new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s18 = new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s19 = new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT);
+	/*triggerStairs->Add(s0);
 	triggerStairs->Add(s1);
 	triggerStairs->Add(s2);
 	triggerStairs->Add(s3);
@@ -516,7 +526,17 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(s6);
 	triggerStairs->Add(s7);
 	triggerStairs->Add(s8);
-	triggerStairs->Add(s9);
+	triggerStairs->Add(s9);*/
+	triggerStairs->Add(s10);
+	triggerStairs->Add(s11);
+	triggerStairs->Add(s12);
+	triggerStairs->Add(s13);
+	triggerStairs->Add(s14);
+	triggerStairs->Add(s15);
+	triggerStairs->Add(s16);
+	triggerStairs->Add(s17);
+	triggerStairs->Add(s18);
+	triggerStairs->Add(s19);
 
 }
 void CPlayScene::Update(DWORD dt)
