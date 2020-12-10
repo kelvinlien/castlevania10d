@@ -41,6 +41,7 @@ class TriggerStairs
 	vector<LTRIGGER_STAIR> triggerStairs; // manage every trigger stair
 
 public:
+	vector<LTRIGGER_STAIR> GetTriggerStairs() { return triggerStairs; }
 	void Add(LTRIGGER_STAIR triggerStair);
 	LTRIGGER_STAIR Get(int ID) { return triggerStairs.at(ID); }
 
