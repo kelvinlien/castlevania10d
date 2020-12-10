@@ -208,7 +208,6 @@ void Simon::Attack()
 			attackTime = GetTickCount();
 			isUsingSubWeapon = true;
 			subWeapons->isVanish = false;
-			DebugOut(L"[INFO] 3\n");
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -325,6 +324,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
