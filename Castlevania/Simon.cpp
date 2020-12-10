@@ -10,6 +10,9 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "SmallBrick.h"
+#include "Door.h"
+#include "Camera.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -255,7 +258,7 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	if (flag)
+	if (flag || isAutoWalking)
 		vx = nx * SIMON_WALKING_SPEED / 2;
 	else 	
 		vx = nx * SIMON_WALKING_SPEED;
@@ -355,6 +358,21 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				isSit = false;
 		}
 	}
+
+	//auto move simon and camera when simon hit the door in playscene 2 
+	for (int i = 0; i < coObjects->size(); i++) {
+		if (dynamic_cast<CDoor*>(coObjects->at(i))) {
+			CDoor *door = dynamic_cast<CDoor *>(coObjects->at(i));
+			if (door->GetId()==doorId && isAutoWalking) {
+				if (door->IsOpened() && this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+					Walk();
+				else
+					SetState(SIMON_STATE_IDLE);
+			}
+		}
+	}
+
+
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
@@ -511,6 +529,29 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CDoor *>(e->obj))
+			{
+				CDoor *door = dynamic_cast<CDoor *>(e->obj);
+				if (!door->IsActive() && this->x-door->GetPostionX()<0)
+				{
+					doorId = door->GetId();
+					SetState(SIMON_STATE_IDLE);
+					isAutoWalking = true;
+					door->SetActive(true);
+					Camera::GetInstance()->SetIsAuto(true);
+				}
+			}
 		}
 	}
 

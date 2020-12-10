@@ -14,6 +14,8 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include  "Area.h"
+#include "SmallBrick.h"
+#include "BrokenBrick.h"
 
 #include"Ghost.h"
 
