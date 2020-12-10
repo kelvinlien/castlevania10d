@@ -17,22 +17,25 @@ void CCandle::SetItem(int itemType) {
 		type = ITEM_MONEY_BAG_BLUE;
 		break;
 	case 5:
-		type = ITEM_WHIP_RED;
+		type = ITEM_WHIP;
 		break;
 	case 6:
-		type = ITEM_WHIP_BLUE;
+		type = ITEM_STOP_WATCH;
 		break;
 	case 7:
 		type = ITEM_DAGGER;
 		break;
 	case 8:
-		type = ITEM_STOP_WATCH;
-		break;
-	case 9:
 		type = ITEM_CROSS;
 		break;
-	case 10:
+	case 9:
 		type = ITEM_HOLY_WATER;
+		break;
+	case 11:
+		type = ITEM_VASE;
+		break;
+	case 12:
+		type = ITEM_AXE;
 		break;
 	default:
 		type = ITEM_SMALL_HEART;
