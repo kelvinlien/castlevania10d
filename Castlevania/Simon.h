@@ -1,4 +1,5 @@
 #pragma once
+
 #include "GameObject.h"
 #include "WeaponManager.h"
 #include "Whip.h"
@@ -6,6 +7,7 @@
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
+
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350

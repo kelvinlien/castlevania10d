@@ -1,6 +1,6 @@
-#include "CFragment.h"
+#include"Fragment.h"
 
-Fragment::Fragment(float x, float y, float nx, int type)
+CFragment::CFragment(float x, float y, float nx, int type)
 {
 	this->x = x;
 	this->y = y;
@@ -11,36 +11,40 @@ Fragment::Fragment(float x, float y, float nx, int type)
 	{
 	case 0:
 		this->fragmentType = WATER_FRAGMENT;
-		ani = 5;
+		ani = 6;
 		break;
 	case 1:
 		this->fragmentType = RUBBLE_FRAGMENT;
-		ani = 5; 
+		ani = 5;
 		break;
 	default:
 		this->fragmentType = WATER_FRAGMENT;
+		ani = 6;
 		break;
 	}
 }
 
-void Fragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	CGameObject::Update(dt,coObjects);
+	if (GetTickCount() - existTime > 1100)
+		return;
+
+	CGameObject::Update(dt, coObjects);
 	vy += FRAGMENT_GRAVITY;
 
 	x += dx;
 	y += dy;
 }
 
-void Fragment::Render()
+void CFragment::Render()
 {
 	if (existTime == 0)
 		existTime = GetTickCount();
-	if (GetTickCount() - existTime > 1000)
+	if (GetTickCount() - existTime > 1100)
 		return;
-	animation_set->at(ani)->Render(x,y);
+	animation_set->at(ani)->Render(x, y);
 }
-Fragment::~Fragment()
+CFragment::~CFragment()
 {
-	
+
 }

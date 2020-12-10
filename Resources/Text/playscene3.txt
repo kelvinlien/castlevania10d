@@ -13,7 +13,8 @@
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
-75	..\Resources\Texture\steam.png	255	0	255
+75	..\Resources\Texture\broken_brick.png	255	0	255
+76	..\Resources\Texture\steam.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -224,8 +225,11 @@
 #hit effect
 70040	0	0	16	20	74
 
+#broken_brick
+70050	0	0	36	23	75
+
 #steam
-70050	0	0	14	28	75
+70060	0	0	14	28	76
 
 #Board element
 #Character
@@ -443,8 +447,11 @@
 #hit effect
 704	70040	100
 
-#steam
+#broken_brick
 705	70050	100
+
+#steam
+706	70060	100
 
 # ==== BOARD ELEMENT =========
 #Character
@@ -578,7 +585,7 @@
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506
 #EFFECT
-7	700	701	702	703	704	705
+7	700	701	702	703	704	705	706
 #BOARD
 8	800	801	802	803	804	805	806	807
 
