@@ -58,8 +58,6 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -192,17 +190,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+	case OBJECT_TYPE_MARIO: {
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
+
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetPosition(Area::GetInstance()->GetSpawnPos(), y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
 
 		DebugOut(L"[INFO] Player object created!\n");
-		break;
+	}
+	break;
 	case OBJECT_TYPE_GHOST: {
 		if (ghost != NULL)
 		{
@@ -294,7 +298,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<Simon*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
@@ -490,6 +494,22 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+	switch (currentMapID) {
+	case 1:
+		Area::GetInstance()->SetAreaID(11);
+		break;
+	case 2:
+		Area::GetInstance()->SetAreaID(21);
+		break;
+	case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;
+	default: 
+		break;
+	}
+	Area::GetInstance()->SetLimitRightCam(mapWidth);
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
 }
