@@ -59,7 +59,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
 
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -421,6 +420,9 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	if (id == 2)
+		LoadTriggerStair();
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -493,7 +495,30 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
 }
+void CPlayScene::LoadTriggerStair() {
+	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
+	TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s1 = new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s2 = new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s3 = new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s4 = new TriggerStair(1808, 183, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s5 = new TriggerStair(1872, 247, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s6 = new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s7 = new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s8 = new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);
+	triggerStairs->Add(s0);
+	triggerStairs->Add(s1);
+	triggerStairs->Add(s2);
+	triggerStairs->Add(s3);
+	triggerStairs->Add(s4);
+	triggerStairs->Add(s5);
+	triggerStairs->Add(s6);
+	triggerStairs->Add(s7);
+	triggerStairs->Add(s8);
+	triggerStairs->Add(s9);
 
+}
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -578,6 +603,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
+
 }
 
 void CPlayScene::Render()
@@ -589,6 +615,11 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	// Bbox 2 dau cau thang
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+	for (int i = 0; i < 10; i++) {
+		TriggerStairs::GetInstance()->Get(i)->Render();
+	}
 }
 
 /*
@@ -612,8 +643,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{
@@ -630,10 +660,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	}
 	case DIK_DOWN:
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
 	}
 }
 
@@ -646,8 +678,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -658,6 +689,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
@@ -668,9 +702,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{

@@ -6,6 +6,7 @@
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
+#include "TriggerStair.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
@@ -30,6 +31,9 @@
 #define SIMON_STATE_HURT			1000			
 #define SIMON_STATE_SIT_AFTER_FALL	1100
 #define SIMON_STATE_AFTER_HURT		1200	
+#define SIMON_STATE_GO_UP_STAIR	1000
+#define SIMON_STATE_GO_DOWN_STAIR	1100
+#define SIMON_STATE_IDLE_ON_STAIR	1200
 
 
 #define SIMON_BBOX_WIDTH  60
@@ -43,7 +47,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
-
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
@@ -70,15 +74,25 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
+	
+	//Flag of trigger stair
+	bool readyToUpStair;
+	bool readyToDownStair;
+	bool canGoUpStair;
+	bool canGoDownStair;
+	bool onStair;
 
+	int directionY;
+	int stairNx;
+	DWORD time;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
 
-
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 
+	TriggerStairs *triggerStairs;
 
 	enum animation
 	{
@@ -105,11 +119,14 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		IDLE_STAIR_UP_LEFT,
+		IDLE_STAIR_UP_RIGHT,
+		IDLE_STAIR_DOWN_LEFT,
+		IDLE_STAIR_DOWN_RIGHT
 	}ani;
 
 public:
-
 	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
@@ -124,6 +141,8 @@ public:
 	void Hurt();
 	void SitAfterFall();
 	void StartUntouchable();
+	void GoUp();
+	void GoDown();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -141,6 +160,13 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	bool IsReadyToUpStair() { return readyToUpStair; }
+	bool IsReadyToDownStair() { return readyToDownStair; }
+	bool IsCanGoUpStair() { return canGoUpStair; }
+	bool IsCanGoDownStair() { return canGoDownStair; }
+	bool IsOnStair() { return onStair; }
+	void SetReadyToGoStair(int i);
+	void SetSimonAutoActionToGoStair(int i);
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }

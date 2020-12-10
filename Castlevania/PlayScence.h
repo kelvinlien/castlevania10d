@@ -12,6 +12,7 @@
 #include "Candle.h"
 #include "Item.h"
 #include "GameMap.h"
+#include "TriggerStair.h"
 #include "Panther.h"
 
 #include"Ghost.h"
@@ -42,9 +43,9 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	virtual void LoadTriggerStair();
 
 	Simon * GetPlayer() { return player; } 
-
 	//friend class CPlayScenceKeyHandler;
 };
 
