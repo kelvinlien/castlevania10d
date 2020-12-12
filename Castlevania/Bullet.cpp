@@ -3,32 +3,34 @@
 #include "Simon.h"
 
 
-Bullet::Bullet(int nx) 
+Bullet::Bullet(int x, int y, int nx) 
 {
 	this->nx = nx;
-	vx = BULLET_SPEED;
-	isVanish = true;
+	this->x = x;
+	this->y = y;
+	vx = BULLET_SPEED * nx;
+	isVanish = false;
 }
 
 void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
-	if (!isFlying) return;
+	if (isVanish) return;
 
 	CGameObject::Update(dt, coObject);
 	x += dx;
-	if (x > Camera::GetInstance()->GetCamX + SCREEN_WIDTH || x < Camera::GetInstance()->GetCamX())
+	if (x > Camera::GetInstance()->GetCamX() + SCREEN_WIDTH || x < Camera::GetInstance()->GetCamX())
 	{
-		isFlying = false;
+		isVanish = true;
 	}
 }
 
 void Bullet::Render()
 {
-	int ani;
-	if (!isFlying) return;
+	if (isVanish) return;
+	int ani = 0;
+	animation_set->at(ani)->Render(x, y);
 
-	ani[BULLET_ANI]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void Bullet::GetBoundingBox(float & left, float & top, float & right, float & bottom)
