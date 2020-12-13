@@ -27,6 +27,9 @@ CFragment::CFragment(float x, float y, float nx, int type)
 void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (GetTickCount() - existTime > 1100)
+		isVanish = true;
+
+	if(isVanish == true)
 		return;
 
 	CGameObject::Update(dt, coObjects);
@@ -40,8 +43,10 @@ void CFragment::Render()
 {
 	if (existTime == 0)
 		existTime = GetTickCount();
-	if (GetTickCount() - existTime > 1100)
+	
+	if (isVanish == true)
 		return;
+
 	animation_set->at(ani)->Render(x, y);
 }
 CFragment::~CFragment()

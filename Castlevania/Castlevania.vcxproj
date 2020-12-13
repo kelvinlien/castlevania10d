@@ -144,6 +144,7 @@
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="RepeatableEffect.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="StopWatch.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="RepeatableEffect.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="StopWatch.h" />
