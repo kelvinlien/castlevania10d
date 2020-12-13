@@ -61,8 +61,7 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
+	
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -196,13 +195,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -216,8 +215,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGhost(x, y, -1, itemType);
 		ghost = (CGhost*)obj;
 	}
-	break;
-	case OBJECT_TYPE_PANTHER: 
+							break;
+	case OBJECT_TYPE_PANTHER:
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		break;
 	case OBJECT_TYPE_BRICK: {
@@ -251,7 +250,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BRICKS_GROUP: {
 		int amountOfBrick = amount;
-		
+
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -261,14 +260,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			
+
 			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+								   //case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
@@ -494,7 +493,7 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	a = new CRepeatableEffect(3600.0, 20.0, RUBBLE_FRAGMENT);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -546,6 +545,8 @@ void CPlayScene::Update(DWORD dt)
 			objects[i]->Update(dt, &coObjects);
 	}
 
+	a->Update(dt, &coObjects);    //effect
+
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
@@ -591,7 +592,7 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-
+	a->Render();
 }
 
 /*

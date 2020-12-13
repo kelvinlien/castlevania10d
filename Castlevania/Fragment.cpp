@@ -1,6 +1,6 @@
 #include"Fragment.h"
 
-CFragment::CFragment(float x, float y, float nx, int type)
+CFragment::CFragment(float x, float y, float nx, int type):CGameObject()
 {
 	this->x = x;
 	this->y = y;
@@ -26,11 +26,12 @@ CFragment::CFragment(float x, float y, float nx, int type)
 
 void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	if (GetTickCount() - existTime > 1100)
-		isVanish = true;
-
+	
 	if(isVanish == true)
 		return;
+
+	if (GetTickCount() - existTime > 1100 && existTime!=0)
+		isVanish = true;
 
 	CGameObject::Update(dt, coObjects);
 	vy += FRAGMENT_GRAVITY;
@@ -43,7 +44,7 @@ void CFragment::Render()
 {
 	if (existTime == 0)
 		existTime = GetTickCount();
-	
+
 	if (isVanish == true)
 		return;
 

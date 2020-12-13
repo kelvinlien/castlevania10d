@@ -1,8 +1,8 @@
 #include "RepeatableEffect.h"
 
-CRepeatableEffect::CRepeatableEffect(float x, float y,type FragmentType)
+CRepeatableEffect::CRepeatableEffect(float x, float y,type FragmentType):CGameObject()
 {
-	
+	SetType(x, y, FragmentType);
 }
 void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 {
