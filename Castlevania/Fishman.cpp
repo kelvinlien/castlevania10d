@@ -34,6 +34,13 @@ void CFishman::SetState(int state)
 		isShoot = true;
 		startShootTime = GetTickCount();
 		shootingTimePeriod = rand() % 2500 + 500;
+		bullet->SetIsThrown(true);
+		if (nx == -1)
+			bullet->SetPosition(x, y + 10);
+		else
+			bullet->SetPosition(x + 15, y + 10);
+		bullet->nx = nx;
+		bullet->isVanish = false;
 		break;
 	}
 }
