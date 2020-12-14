@@ -16,9 +16,9 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 		break;
 	case RUBBLE_FRAGMENT:
 		fragments.push_back(new CFragment(x - 10, y + 5, -1, RUBBLE_FRAGMENT));
-		fragments.push_back(new CFragment(x, y + 8, 0, RUBBLE_FRAGMENT));
-		fragments.push_back(new CFragment(x + 5, y + 2, 1, RUBBLE_FRAGMENT));
-		fragments.push_back(new CFragment(x + 8, y + 3, 1, RUBBLE_FRAGMENT));
+		fragments.push_back(new CFragment(x+4, y + 8, 0, RUBBLE_FRAGMENT));
+		fragments.push_back(new CFragment(x, y + 1, 1, RUBBLE_FRAGMENT));
+		fragments.push_back(new CFragment(x + 15, y + 3, 1, RUBBLE_FRAGMENT));
 		break;
 	default:
 		break;
