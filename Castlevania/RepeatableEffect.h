@@ -14,3 +14,5 @@ public:
 	~CRepeatableEffect();
 };
 
+typedef CRepeatableEffect * LPREPEATEFFECT;
+

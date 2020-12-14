@@ -423,6 +423,8 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	effects= CRepeatableEffects::GetInstance();		// create instance of effects
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -493,7 +495,7 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	a = new CRepeatableEffect(3600.0, 20.0, RUBBLE_FRAGMENT);   //create effect
+
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -545,7 +547,7 @@ void CPlayScene::Update(DWORD dt)
 			objects[i]->Update(dt, &coObjects);
 	}
 
-	a->Update(dt, &coObjects);    //update effect
+	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
@@ -592,7 +594,7 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-	a->Render(); //render effect
+	CRepeatableEffects::GetInstance()->Render();
 }
 
 /*
