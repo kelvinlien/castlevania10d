@@ -511,7 +511,7 @@ void CPlayScene::Load()
 	screen.top = 0;
 	screen.right = screen.left + mapWidth;
 	screen.bottom = screen.top + mapHeight;
-	qtree = new Quadtree(0, &screen);
+	qtree = new Quadtree(0, screen);
 }
 
 void CPlayScene::Update(DWORD dt)

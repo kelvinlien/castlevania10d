@@ -22,7 +22,7 @@ class Quadtree
 	void           Split();
 public:
 	//Quadtree();
-	Quadtree(int pLevel, RECT *pBounds);
+	Quadtree(int pLevel, RECT pBounds);
 	~Quadtree();
 
 	int getIndex(RECT *pRect);
