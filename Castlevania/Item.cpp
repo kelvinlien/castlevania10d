@@ -134,10 +134,10 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
-					if (nx != 0) vx = 0;
-					if (ny != 0) {
-						vx = 0;
-						vy = 0;
+		if (nx != 0) vx = 0;
+		if (ny != 0) {
+			vx = 0;
+			vy = 0;
 						//counting time to vanish item
 						if (!isEaten)
 						{
@@ -158,6 +158,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					}
 		}
 	}
+}
 
 void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 	l = x;
