@@ -702,7 +702,7 @@
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	441	2
+1	0	440	2
 
 # ---- Candle ----
 #4	55	378	3	4
