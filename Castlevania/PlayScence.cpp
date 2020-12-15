@@ -37,8 +37,6 @@ using namespace std;
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-<<<<<<<<< Temporary merge branch 1
-#define OBJECT_TYPE_WHIP	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9

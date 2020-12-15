@@ -147,7 +147,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 							}
 							existingTime -= dt;
 						}
-					}
+					
 					if (isEaten)
 					{
 						if (effectTime <= 0)
