@@ -2,64 +2,64 @@
 
 void Quadtree::Split()
 {
-	this->level, this->region;
-	long regionWidth = this->region->right - this->region->left;
-	long regionHeight = this->region->bottom - this->region->top;
+	level, region;
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
 
 	RECT tl, tr, bl, br;
-	tl.left = this->region->left;
-	tl.top = this->region->top;
-	tl.right = this->region->left + regionWidth / 2;
-	tl.bottom = this->region->top + regionHeight / 2;
+	tl.left = region.left;
+	tl.top = region.top;
+	tl.right = region.left + regionWidth / 2;
+	tl.bottom = region.top + regionHeight / 2;
 
-	tr.left = this->region->left + regionWidth / 2;
-	tr.top = this->region->top;
-	tr.right = this->region->right;
-	tr.bottom = this->region->top + regionHeight / 2;
+	tr.left = region.left + regionWidth / 2;
+	tr.top = region.top;
+	tr.right = region.right;
+	tr.bottom = region.top + regionHeight / 2;
 
-	bl.left = this->region->left;
-	bl.top = this->region->top + regionHeight / 2;
-	bl.right = this->region->left + regionWidth / 2;
-	bl.bottom = this->region->bottom;
+	bl.left = region.left;
+	bl.top = region.top + regionHeight / 2;
+	bl.right = region.left + regionWidth / 2;
+	bl.bottom = region.bottom;
 
-	br.left = this->region->left + regionWidth / 2;
-	br.top = this->region->top + regionHeight / 2;
-	br.right = this->region->right;
-	br.bottom = this->region->bottom;
+	br.left = region.left + regionWidth / 2;
+	br.top = region.top + regionHeight / 2;
+	br.right = region.right;
+	br.bottom = region.bottom;
 
-	if (this->nodes == nullptr)
+	if (nodes.empty())
 	{
-		this->nodes = new vector<Quadtree*>(4);
+		nodes = vector<Quadtree*>(4);
 	}
-	this->nodes->at(0) = new Quadtree(this->level + 1,
+	nodes.at(0) = new Quadtree(level + 1,
 		tl);
-	this->nodes->at(1) = new Quadtree(this->level + 1,
+	nodes.at(1) = new Quadtree(level + 1,
 		tr);
-	this->nodes->at(2) = new Quadtree(this->level + 1,
+	nodes.at(2) = new Quadtree(level + 1,
 		bl);
-	this->nodes->at(3) = new Quadtree(this->level + 1,
+	nodes.at(3) = new Quadtree(level + 1,
 		br);
 }
 Quadtree::Quadtree(int pLevel, RECT pBounds)
 {
-	this->level = pLevel;
-	this->entities_list = new vector<Entity*>();
-	this->region = &pBounds;
-	this->nodes = new vector<Quadtree*>(4);
+	level = pLevel;
+	entities_list = vector<Entity*>();
+	region = pBounds;
+	nodes = vector<Quadtree*>(4);
 }
 Quadtree::~Quadtree()
 {
-	delete this->region;
-	delete this->entities_list;
-	delete this->nodes;
+	//delete region;
+	//delete entities_list;
+	//delete nodes;
 }
 int Quadtree::getIndex(RECT * pRect)
 {
 	int index = -1;
-	long regionWidth = this->region->right - this->region->left;
-	long regionHeight = this->region->bottom - this->region->top;
-	double verticalMidpoint = this->region->left + (regionWidth / 2);
-	double horizontalMidpoint = this->region->top + (regionHeight / 2);
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
+	double verticalMidpoint = region.left + (regionWidth / 2);
+	double horizontalMidpoint = region.top + (regionHeight / 2);
 
 	long pRectWidth = pRect->right - pRect->left;
 	long pRectHeight = pRect->bottom - pRect->top;
@@ -97,53 +97,53 @@ int Quadtree::getIndex(RECT * pRect)
 }
 void Quadtree::Clear()
 {
-	this->entities_list->clear();
+	entities_list.clear();
 
-	for (int i = 0; i < this->nodes->size(); i++)
+	for (int i = 0; i < nodes.size(); i++)
 	{
 		// replace nullptr with empty vector with same type
-		if (this->nodes->at(i) != nullptr)
+		if (nodes.at(i) != nullptr)
 		{
-			this->nodes->at(i)->Clear();
-			this->nodes->at(i) = nullptr;
+			nodes.at(i)->Clear();
+			nodes.at(i) = nullptr;
 		}
 	}
 }
 
-// check current node, find the correct index and add to the this->entities_list of node[index]
+// check current node, find the correct index and add to the entities_list of node[index]
 // Split
 void Quadtree::Insert(Entity* entity)
 {
 	RECT *pRect = &entity->GetTriggerZone();
-	if (this->nodes->at(0) != nullptr)
+	if (nodes.at(0) != nullptr)
 	{
 		int index = getIndex(pRect);
 
 		if (index != -1)
 		{
-			this->nodes->at(index)->Insert(entity);
+			nodes.at(index)->Insert(entity);
 
 			return;
 		}
 	}
 
-	this->entities_list->push_back(entity);
+	entities_list.push_back(entity);
 
-	if (this->entities_list->size() > MAX_OBJECTS && this->level < MAX_LEVELS)
+	if (entities_list.size() > MAX_OBJECTS && level < MAX_LEVELS)
 	{
-		if (this->nodes->at(0) == nullptr)
+		if (nodes.at(0) == nullptr)
 		{
 			Split();
 		}
 
 		int i = 0;
-		while (i < this->entities_list->size())
+		while (i < entities_list.size())
 		{
-			int index = getIndex(&this->entities_list->at(i)->GetTriggerZone());
+			int index = getIndex(&entities_list.at(i)->GetTriggerZone());
 			if (index != -1)
 			{
-				this->nodes->at(index)->Insert(this->entities_list->at(i));
-				this->entities_list->erase(this->entities_list->begin() + i);
+				nodes.at(index)->Insert(entities_list.at(i));
+				entities_list.erase(entities_list.begin() + i);
 			}
 			else
 			{
@@ -157,12 +157,12 @@ void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
 {
 	RECT* pRect = &entity->GetTriggerZone();
 	int index = getIndex(pRect);
-	if (index != -1 && this->nodes->at(0) != nullptr)
+	if (index != -1 && nodes.at(0) != nullptr)
 	{
-		this->nodes->at(index)->Retrieve(return_entities_list, entity);
+		nodes.at(index)->Retrieve(return_entities_list, entity);
 	}
 
-	return_entities_list->insert(return_entities_list->end(), this->entities_list->begin(), this->entities_list->end());
+	return_entities_list->insert(return_entities_list->end(), entities_list.begin(), entities_list.end());
 }
 
 void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
@@ -179,10 +179,10 @@ void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 	pRect.right = r;
 	pRect.bottom = b;
 	int index = getIndex(&pRect);
-	if (index != -1 && this->nodes->at(0) != nullptr)
+	if (index != -1 && nodes.at(0) != nullptr)
 	{
-		this->nodes->at(index)->RetrieveFromCamera(return_entities_list);
+		nodes.at(index)->RetrieveFromCamera(return_entities_list);
 	}
 
-	return_entities_list.insert(return_entities_list.end(), this->entities_list->begin(), this->entities_list->end());
+	return_entities_list.insert(return_entities_list.end(), entities_list.begin(), entities_list.end());
 }

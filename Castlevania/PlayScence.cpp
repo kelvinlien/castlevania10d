@@ -509,8 +509,9 @@ void CPlayScene::Load()
 	RECT screen;
 	screen.left = 0;
 	screen.top = 0;
-	screen.right = screen.left + mapWidth;
-	screen.bottom = screen.top + mapHeight;
+	int offset = mapWidth > mapHeight ? mapWidth : mapHeight;
+	screen.right = screen.left + offset;
+	screen.bottom = screen.top + offset;
 	qtree = new Quadtree(0, screen);
 }
 
@@ -519,7 +520,7 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	if (qtree->GetNodes() != nullptr)
+	if (!qtree->GetNodes().empty())
 	{
 		qtree->Clear();
 	}
