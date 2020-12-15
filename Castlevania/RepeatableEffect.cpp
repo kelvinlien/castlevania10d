@@ -27,12 +27,24 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 
 void CRepeatableEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects )
 {
+	if (isVanish == true)
+		return;
+
+	if (GetTickCount() - existTime > 1300 && existTime != 0)
+		isVanish = true;
+
 	for (int i = 0; i < fragments.size(); i++)
 		fragments.at(i)->Update(dt, coObjects);
 }
 
 void CRepeatableEffect::Render()
 {
+	if (existTime == 0)
+		existTime = GetTickCount();
+
+	if (isVanish == true)
+		return;
+
 	for (int i = 0; i < fragments.size(); i++)
 		fragments.at(i)->Render();
 }

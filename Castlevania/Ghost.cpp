@@ -1,5 +1,7 @@
 ﻿#include "Ghost.h"
 #include "Simon.h"
+#include"RepeatableEffects.h"
+#include"RepeatableEffect.h"
 CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 {
 	SetItem(itemType);
@@ -16,14 +18,17 @@ void CGhost::SetState(int state)
 	this->state = state;
 
 	if (state == ENEMY_STATE_DIE) {
-		die_time = GetTickCount();
+		/*die_time = GetTickCount();*/
 		vx = 0;
 	}
 }
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
+	if (state == ENEMY_STATE_DIE /*&& ((GetTickCount() - die_time) > GHOST_DIE_TIME)*/)
+	{
 		isVanish = true;
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(x, y, RUBBLE_FRAGMENT));
+	}
 	else if (state != ENEMY_STATE_DIE)
 		vx = GHOST_WALKING_SPEED * this->nx;
 
