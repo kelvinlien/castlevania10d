@@ -37,8 +37,11 @@ using namespace std;
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_CANDLE	4
+#define OBJECT_TYPE_WHIP	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_CANDLE	4
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_BROKEN_BRICK	8
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -167,14 +170,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
-	if (object_type == 5) {
+	int amount, axis, brickType, itemType;
+	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
 	}
 
@@ -185,6 +186,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -265,6 +275,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+		for (int i = 0; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	case OBJECT_TYPE_BROKEN_BRICK:
+		obj = new CBrokenBrick(brickType, itemType);
+		break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -490,7 +519,9 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	// init camera areaID
+	// area 1
+	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -535,7 +566,6 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
-
 			objects.erase(objects.begin() + i);
 		 }
 		else 
@@ -559,6 +589,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy);
 
 	if (ghost != NULL)
 	{

@@ -68,6 +68,12 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 32;
 		start_x = x;
 		break;
+	case ITEM_CHICKEN_THIGH:
+		widthBBox = 32;
+		heightBBox = 26;
+		start_x = x;
+		start_y = y + 32;
+		break;
 	default:
 		break;
 	}
@@ -108,6 +114,12 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
 
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
 
@@ -119,30 +131,30 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
-					if (nx != 0) vx = 0;
-					if (ny != 0) {
-						vx = 0;
-						vy = 0;
-						//counting time to vanish item
-						if (!isEaten)
-						{
-							if (existingTime <= 0)
-							{
-								this->isVanish = true;
-							}
-							existingTime -= dt;
-						}
-					}
-					if (isEaten)
-					{
-						if (effectTime <= 0)
-						{
-							this->isVanish = true;
-						}
-						effectTime -= dt;
-					}
+		if (nx != 0) vx = 0;
+		if (ny != 0) {
+			vx = 0;
+			vy = 0;
+		}
+		//counting time to vanish item
+		if (!isEaten)
+		{
+			if (existingTime <= 0)
+			{
+				this->isVanish = true;
+			}
+			existingTime -= dt;
+		}
+		if (isEaten)
+		{
+			if (effectTime <= 0)
+			{
+				this->isVanish = true;
+			}
+			effectTime -= dt;
 		}
 	}
+}
 
 void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 	l = x;
