@@ -75,6 +75,16 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 32;
 		start_x = x;
 		break;
+	case ITEM_ORD:
+		widthBBox = 32;
+		heightBBox = 32;
+		start_x = x;
+		break; 
+	case ITEM_DOUBLE_SHOT:
+		widthBBox = 32;
+		heightBBox = 32;
+		start_x = x;
+		break;
 	default:
 		break;
 	}
@@ -173,6 +183,12 @@ void Item::BeingProcessed()
 		break;
 	case ITEM_BIG_HEART:
 		simon->SetHearts(simon->GetHearts() + 5);
+		break;
+	case ITEM_ORD:
+		simon->SetHealth(SIMON_MAX_HEALTH); 
+		break;
+	case ITEM_DOUBLE_SHOT:
+		simon->SetisBuff();
 		break;
 	case ITEM_MONEY_BAG_RED:
 		effect = ONE_THOUSAND_EFFECT;
