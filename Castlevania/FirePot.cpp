@@ -1,5 +1,5 @@
 #include "FirePot.h"
-
+#include"Brick.h"
 void CFirePot:: SetItem(int itemType) {
 	ItemType type;
 	switch (itemType)
@@ -68,12 +68,11 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt, coObjects);
 	vy += FIREPOT_GRAVITY * dt;
 
-	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-
+   
 	CalcPotentialCollisions(coObjects, coEvents);
 	
 	// No collision occured, proceed normally
