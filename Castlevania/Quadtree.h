@@ -25,7 +25,8 @@ public:
 	Quadtree(int pLevel, RECT pBounds);
 	~Quadtree();
 
-	int getIndex(RECT *pRect);
+	vector<int> getIndexesForCamera(RECT *pRect);
+	int getIndex(RECT* pRect);
 	void           Clear();
 	void           Insert(Entity* entity);
 	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);

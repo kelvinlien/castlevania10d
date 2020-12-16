@@ -53,6 +53,54 @@ Quadtree::~Quadtree()
 	//delete entities_list;
 	//delete nodes;
 }
+
+//OUTPUT: an array of quadrant indexes
+vector<int> Quadtree::getIndexesForCamera(RECT * pRect)
+{
+	vector<int> indexes = vector<int>();
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
+	double verticalMidpoint = region.left + (regionWidth / 2);
+	double horizontalMidpoint = region.top + (regionHeight / 2);
+
+	long pRectWidth = pRect->right - pRect->left;
+	long pRectHeight = pRect->bottom - pRect->top;
+
+	// Object can completely fit within the top quadrants
+	//bool topQuadrant = (pRect->top < horizontalMidpoint && pRect->top + pRectHeight < horizontalMidpoint);
+	bool topHalf = ((pRect->top >= region.top && pRect->top <= horizontalMidpoint) || (pRect->bottom >= region.top && pRect->bottom <= horizontalMidpoint));
+	// Object can completely fit within the bottom quadrants
+	//bool bottomQuadrant = (pRect->top > horizontalMidpoint);
+	bool bottomHalf = ((pRect->top >= horizontalMidpoint && pRect->top <= region.bottom) || (pRect->bottom >= horizontalMidpoint && pRect->bottom <= region.bottom));
+	bool leftHalf = ((pRect->left >= region.left && pRect->left <= verticalMidpoint) || (pRect->right >= region.left && pRect->right <= verticalMidpoint));
+	bool rightHalf = ((pRect->left <= region.right && pRect->left >= verticalMidpoint) || (pRect->right <= region.right && pRect->right >= verticalMidpoint));
+
+	// Object can completely fit within the left quadrants
+	if (leftHalf)
+	{
+		if (topHalf)
+		{
+			indexes.push_back(0);
+		}
+		if (bottomHalf)
+		{
+			indexes.push_back(2);
+		}
+	}
+	// Object can completely fit within the right quadrants
+	if (rightHalf)
+	{
+		if (topHalf)
+		{
+			indexes.push_back(1);
+		}
+		if (bottomHalf)
+		{
+			indexes.push_back(3);
+		}
+	}
+	return indexes;
+}
 int Quadtree::getIndex(RECT * pRect)
 {
 	int index = -1;
@@ -153,17 +201,21 @@ void Quadtree::Insert(Entity* entity)
 	}
 }
 
-void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
-{
-	RECT* pRect = &entity->GetTriggerZone();
-	int index = getIndex(pRect);
-	if (index != -1 && nodes.at(0) != nullptr)
-	{
-		nodes.at(index)->Retrieve(return_entities_list, entity);
-	}
-
-	return_entities_list->insert(return_entities_list->end(), entities_list.begin(), entities_list.end());
-}
+//void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
+//{
+//	RECT* pRect = &entity->GetTriggerZone();
+//	vector<int> indexes = getIndex(pRect);
+//	if (!indexes.empty() && nodes.at(0) != nullptr)
+//	{
+//		for (int i = 0; i < indexes.size(); i++)
+//		{
+//			int index = indexes[i];
+//			nodes.at(index)->Retrieve(return_entities_list, entity);
+//		}
+//	}
+//
+//	return_entities_list->insert(return_entities_list->end(), entities_list.begin(), entities_list.end());
+//}
 
 void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 {
@@ -178,10 +230,14 @@ void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 	pRect.top = t;
 	pRect.right = r;
 	pRect.bottom = b;
-	int index = getIndex(&pRect);
-	if (index != -1 && nodes.at(0) != nullptr)
+	vector<int> indexes = getIndexesForCamera(&pRect);
+	if (!indexes.empty() && nodes.at(0) != nullptr)
 	{
-		nodes.at(index)->RetrieveFromCamera(return_entities_list);
+		for (int i = 0; i < indexes.size(); i++)
+		{
+			int index = indexes[i];
+			nodes.at(index)->RetrieveFromCamera(return_entities_list);
+		}
 	}
 
 	return_entities_list.insert(return_entities_list.end(), entities_list.begin(), entities_list.end());
