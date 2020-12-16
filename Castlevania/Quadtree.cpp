@@ -68,36 +68,30 @@ vector<int> Quadtree::getIndexesForCamera(RECT * pRect)
 
 	// Object can completely fit within the top quadrants
 	//bool topQuadrant = (pRect->top < horizontalMidpoint && pRect->top + pRectHeight < horizontalMidpoint);
-	bool topHalf = ((pRect->top >= region.top && pRect->top <= horizontalMidpoint) || (pRect->bottom >= region.top && pRect->bottom <= horizontalMidpoint));
+	bool topHalf = ((pRect->top <= region.top && pRect->bottom >= region.top) || (pRect->top >= region.top && pRect->top <= horizontalMidpoint));
 	// Object can completely fit within the bottom quadrants
 	//bool bottomQuadrant = (pRect->top > horizontalMidpoint);
-	bool bottomHalf = ((pRect->top >= horizontalMidpoint && pRect->top <= region.bottom) || (pRect->bottom >= horizontalMidpoint && pRect->bottom <= region.bottom));
-	bool leftHalf = ((pRect->left >= region.left && pRect->left <= verticalMidpoint) || (pRect->right >= region.left && pRect->right <= verticalMidpoint));
-	bool rightHalf = ((pRect->left <= region.right && pRect->left >= verticalMidpoint) || (pRect->right <= region.right && pRect->right >= verticalMidpoint));
+	bool bottomHalf = ((pRect->bottom >= region.bottom && pRect->top <= region.bottom) || (pRect->bottom <= region.bottom && pRect->bottom >= horizontalMidpoint));
+	bool leftHalf = ((pRect->left <= region.left && pRect->right >= region.left) || (pRect->left >= region.left && pRect->left <= verticalMidpoint));
+	bool rightHalf = ((pRect->right >= region.right && pRect->left <= region.right) || (pRect->right <= region.right && pRect->right >= horizontalMidpoint));
 
 	// Object can completely fit within the left quadrants
-	if (leftHalf)
+	if (leftHalf && topHalf)
 	{
-		if (topHalf)
-		{
-			indexes.push_back(0);
-		}
-		if (bottomHalf)
-		{
-			indexes.push_back(2);
-		}
+		indexes.push_back(0);
+	}
+	if (leftHalf && bottomHalf)
+	{
+		indexes.push_back(2);
 	}
 	// Object can completely fit within the right quadrants
-	if (rightHalf)
+	if (rightHalf && topHalf)
 	{
-		if (topHalf)
-		{
-			indexes.push_back(1);
-		}
-		if (bottomHalf)
-		{
-			indexes.push_back(3);
-		}
+		indexes.push_back(1);
+	}
+	if (rightHalf && bottomHalf)
+	{
+		indexes.push_back(3);
 	}
 	return indexes;
 }
