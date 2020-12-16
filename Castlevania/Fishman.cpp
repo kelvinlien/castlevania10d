@@ -41,6 +41,7 @@ void CFishman::SetState(int state)
 			bullet->SetPosition(x + 15, y + 10);
 		bullet->nx = nx;
 		bullet->isVanish = false;
+		isShootyet = true;
 		break;
 	}
 }
@@ -126,6 +127,9 @@ void CFishman::Render() {
 	if (isShoot)
 	{
 		ani = FISH_MAN_SHOOT_RIGHT;
+	}
+	if (isShoot || isShootyet)
+	{
 		bullet->Render();
 	}
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
