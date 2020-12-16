@@ -76,5 +76,11 @@
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Fishman.h" />
     <ClInclude Include="WaterSurface.h" />
+    <ClCompile Include="TriggerStair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
+    <ClInclude Include="TriggerStair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
 </Project>
