@@ -74,7 +74,7 @@ int Quadtree::getIndex(RECT * pRect)
 	{
 		if (topQuadrant)
 		{
-			index = 1;
+			index = 0;
 		}
 		else if (bottomQuadrant)
 		{
@@ -86,7 +86,7 @@ int Quadtree::getIndex(RECT * pRect)
 	{
 		if (topQuadrant)
 		{
-			index = 0;
+			index = 1;
 		}
 		else if (bottomQuadrant)
 		{
