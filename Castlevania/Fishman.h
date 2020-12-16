@@ -38,6 +38,7 @@ class CFishman : public CEnemy
 	bool isWalk = false;
 	bool isWaitToShoot = false;
 	bool canShoot = false;
+	bool isShootyet = false;
 	CWeapon* bullet = new Bullet();
 
 	enum animation
