@@ -9,9 +9,10 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Fishman.h"
+#include "WaterSurface.h"
 
 using namespace std;
-
 
 /*
 	Load scene resources from scene file (textures, sprites, animations and objects)
@@ -36,12 +37,14 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_WHIP	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
+#define OBJECT_TYPE_WATER_SURFACE	12
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -181,7 +184,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
@@ -227,6 +230,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		break;
+	case OBJECT_TYPE_FISHMAN: {
+		int itemType = atof(tokens[4].c_str());
+		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
+	}
+	break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -306,7 +315,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
+	case OBJECT_TYPE_WATER_SURFACE:
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		obj = new CWaterSurface(x, y, r, b);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 		{	
 

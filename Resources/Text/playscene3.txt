@@ -628,6 +628,9 @@
 # SIMON
 0	50	0	1
 
+# WATER SURFACE
+12	0	410	0	1024	412
+
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
 #50	300	98	0	316	150	2

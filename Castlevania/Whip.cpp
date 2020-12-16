@@ -4,6 +4,7 @@
 #include "Candle.h"
 #include "Panther.h"
 #include "BrokenBrick.h"
+#include "Fishman.h"
 
 CWhip* CWhip::__instance = NULL;
 
@@ -59,7 +60,26 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		{
 			CEnemy *e = NULL;
 
-			switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				{
+				case 1:
+					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case 30:
+					e = dynamic_cast<CFishman *>(coObjects->at(i));
+				default:
+					break;
+				}
+				if (e != NULL) {
+					e->GetBoundingBox(l2, t2, r2, b2);
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+						e->SetState(ENEMY_STATE_DIE);
+				}
+			}
+			else if (dynamic_cast<CCandle *>(coObjects->at(i)))
 			{
 			case 1:
 				e = dynamic_cast<CGhost *>(coObjects->at(i));
