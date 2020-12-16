@@ -1,17 +1,17 @@
-﻿
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
 #include "Goomba.h"
 #include "Brick.h"
 #include "Portal.h"
-#include"Game.h"
+#include "Game.h"
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
 #include "SmallBrick.h"
 #include "BrokenBrick.h"
+#include "WaterSurface.h"
 
 Simon* Simon::__instance = NULL;
 
@@ -507,6 +507,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CWaterSurface *>(e->obj))
+			{
+				//effect
+				x += dx;
+				y += dy;
+				health = 0;
+			}
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			
 			else if (dynamic_cast<CSmallBrick *>(e->obj))
 			{
 				if (e->ny < 0)

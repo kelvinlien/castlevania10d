@@ -123,6 +123,12 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
 
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
 
@@ -156,6 +162,23 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						}
 						effectTime -= dt;
 					}
+		}
+		//counting time to vanish item
+		if (!isEaten)
+		{
+			if (existingTime <= 0)
+			{
+				this->isVanish = true;
+			}
+			existingTime -= dt;
+		}
+		if (isEaten)
+		{
+			if (effectTime <= 0)
+			{
+				this->isVanish = true;
+			}
+			effectTime -= dt;
 		}
 	}
 }
