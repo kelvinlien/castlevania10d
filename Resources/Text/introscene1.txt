@@ -1,0 +1,31 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+0	..\Resources\Texture\IntroBatMenu.png	255	0	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#intro bat menu
+0	0	0	158	123	0
+1	158	0	316	123	0
+2	316	0	474	123	0
+3	474	0	632	123	0
+4	632	0	790	123	0
+5	0	123	158	246	0
+6	158	123	316	246	0
+7	316	123	474	246	0
+8	474	123	632	246	0
+9	632	123	790	246	0
+1o	0	246	158	369	0
+11	158	246	316	369	0
+12	316	246	474	369	0
+13	474	246	632	369	0
+14	632	246	790	369	0
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#intro bat menu
+0	0	100	1	100	2	100	3	100	4	100	5	100	6	100	7	100	8	100	9	100	10	100	11	100	12	100	13	100	14	100
+
+# id	ani1	ani2	ani3
+[ANIMATION_SETS]
+0	0
