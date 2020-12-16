@@ -521,6 +521,26 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
 }
+void Simon::ResetSimon()
+{
+	switch (area->GetInstance()->GetAreaID())
+	{
+	case 21:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(0, 0);
+		break;
+	case 22:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(100, 0);
+		break;
+	case 23:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(200, 0);
+		break;
+	default:
+		break;
+	}
+}
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 

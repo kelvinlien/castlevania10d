@@ -6,7 +6,7 @@
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
-
+#include "Area.h"
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
@@ -48,7 +48,8 @@ class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
-
+	Area *area;
+	CGame *game;
 	int hearts = 5;
 	int health = 16;
 
@@ -146,7 +147,7 @@ public:
 	int GetHearts() { return hearts; }
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
-
+	void ResetSimon();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
 };
