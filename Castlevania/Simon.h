@@ -86,6 +86,7 @@ class Simon : public CGameObject
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
+	DWORD buffTime;
 
 
 	//Flag of Simon's state
