@@ -1,6 +1,7 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\IntroBatMenu.png	255	0	255
+1	..\Resources\Texture\font PUSH START KEY.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -20,12 +21,19 @@
 12	316	246	474	369	0
 13	474	246	632	369	0
 14	632	246	790	369	0
+#font PUSH START KEY
+15	0	0	350	25	1
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #intro bat menu
 0	0	100	1	100	2	100	3	100	4	100	5	100	6	100	7	100	8	100	9	100	10	100	11	100	12	100	13	100	14	100
+#font PUSH START KEY
+1	15	100
 
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
+#intro bat menu
 0	0
+#font PUSH START KEY
+1	1
