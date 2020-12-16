@@ -42,7 +42,7 @@ void Simon::SetState(int state)
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = -1;
 		if (isOnStair) {
 			if (stairNx > 0)             //check the direct of stair
@@ -54,7 +54,7 @@ void Simon::SetState(int state)
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = 1;
 		if (isOnStair){
 			if (stairNx > 0)
@@ -163,7 +163,7 @@ void Simon::Render()
 	//render subweapon
 	if (subWeapons != NULL  && !subWeapons ->isVanish) 
 		subWeapons->Render();
-	RenderBoundingBox();	
+	RenderBoundingBox();
 }
 void Simon::Stand(){
 	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
@@ -265,7 +265,7 @@ void Simon::Jump()
 {
 	if (isJump || isSit || isAttack || isOnStair)
 		return;
-	vy = -SIMON_JUMP_SPEED_Y;
+	vy = -SIMON_JUMP_SPEED_Y * 1.5;
 	isJump = true;
 }
 
@@ -419,6 +419,43 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			vy = 0;
 		}
 
+		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
+		{
+			//trigger cau thang duoi
+			if ((x + SIMON_BBOX_WIDTH - 10 >= 1232 && x + 12 < 1264 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2576 && x + 12 < 2608 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1424 && x + 12 < 1456 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1872 && x + 12 < 1904 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3536 && x + 12 < 3568 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441))
+			{
+				up = true;
+				if (CGame::GetInstance()->IsKeyDown(DIK_UP))
+				{
+					state = SIMON_STATE_GO_UP_STAIR;
+				}
+			}
+			else
+			{
+				up = false;
+			}
+			//trigger cau thang tren
+			if ((x + SIMON_BBOX_WIDTH - 10 >= 1360 && x + 12 < 1392 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1488 && x + 12 < 1520 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1808 && x + 12 < 1840 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2768 && x + 12 < 2800 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3408 && x + 12 < 3440 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311))
+			{
+				down = true;
+				if (CGame::GetInstance()->IsKeyDown(DIK_DOWN))
+				{
+					state = SIMON_STATE_GO_DOWN_STAIR;
+				}
+			}
+			else
+			{
+				down = false;
+			}
+		}
 
 		//
 		// Collision logic with other objects

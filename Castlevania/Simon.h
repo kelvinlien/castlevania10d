@@ -65,6 +65,9 @@ class Simon : public CGameObject
 	bool canGoOnStair = false;
 	bool isOnStair = false;
 	bool isAutoWalkOnStair = false;
+	bool up;
+	bool down;
+
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
@@ -140,6 +143,8 @@ public:
 	bool IsOnStair() { return isOnStair; }
 	bool CanGoOnStair() { return canGoOnStair; }
 	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
+	bool IsUp() { return up; }
+	bool IsDown() { return down; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
