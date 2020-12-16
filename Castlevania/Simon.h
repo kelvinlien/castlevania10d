@@ -125,6 +125,8 @@ public:
 	void Hurt();
 	void SitAfterFall();
 	void StartUntouchable();
+	void ResetSimon();
+
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -147,7 +149,6 @@ public:
 	int GetHearts() { return hearts; }
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
-	void ResetSimon();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
 };
