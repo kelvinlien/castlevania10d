@@ -9,7 +9,7 @@ void CBrick::Render()
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
-	if (!Simon::GetInstance()->IsOnStair())
+	//if (!Simon::GetInstance()->IsOnStair())
 	{
 		l = x;
 		t = y;

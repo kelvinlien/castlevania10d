@@ -337,7 +337,7 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
-	if(!canGoUpStair && !canGoDownStair)
+	//if(!canGoUpStair && !canGoDownStair)
 		vy += SIMON_GRAVITY * dt;
 	
 	if (subWeapons != NULL ) {
@@ -409,6 +409,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
 	}
 
+	/*if (CGame::GetInstance()->GetCurrentSceneID() == 3 && y < 120)
+		CGame::GetInstance()->SwitchScene(2);*/
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -417,12 +419,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += dx;
 		y += dy;
 
-		if (nx != 0 && /*(state == SIMON_STATE_GO_UP_STAIR || state == SIMON_STATE_GO_DOWN_STAIR)*/onStair && GetTickCount() - time >= 150)
-		{
-			vx = 0;
-			vy = 0;
-			SetState(SIMON_STATE_IDLE_ON_STAIR);
-		}
+		//if (nx != 0 && /*(state == SIMON_STATE_GO_UP_STAIR || state == SIMON_STATE_GO_DOWN_STAIR)onStair &&*/ GetTickCount() - time >= 150)
+		//{
+		//	vx = 0;
+		//	vy = 0;
+		//	//SetState(SIMON_STATE_IDLE_ON_STAIR);
+		//}
 
 	}
 	else
