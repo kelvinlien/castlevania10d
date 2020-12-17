@@ -55,7 +55,7 @@ class Simon : public CGameObject
 	bool readyToDownStair;
 	bool canGoUpStair;
 	bool canGoDownStair;
-	bool onStair;
+	bool isOnStair;
 
 	int directionY;
 	int stairNx;
@@ -131,7 +131,7 @@ public:
 	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsCanGoUpStair() { return canGoUpStair; }
 	bool IsCanGoDownStair() { return canGoDownStair; }
-	bool IsOnStair() { return onStair; }
+	bool IsOnStair() { return isOnStair; }
 	void SetReadyToGoStair(int i);
 	void SetSimonAutoActionToGoStair(int i);
 
