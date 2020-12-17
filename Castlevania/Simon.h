@@ -47,9 +47,7 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
-	int directionY;
 	int hearts = 5;
-	int stairNx = 1;
 	//to handle on stair
 	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
 	float simonAutoWalkDistanceY;
@@ -65,8 +63,6 @@ class Simon : public CGameObject
 	bool isUsingSubWeapon = false;
 	bool readyToUpStair;
 	bool readyToDownStair;
-	bool canGoUpStair;
-	bool canGoDownStair;
 	bool isOnStair;
 	bool isAutoWalkOnStair = false;
 
@@ -147,8 +143,6 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
-	bool IsCanGoUpStair() { return canGoUpStair; }
-	bool IsCanGoDownStair() { return canGoDownStair; }
 	bool IsOnStair() { return isOnStair; }
 	void SetReadyToGoStair(int i);
 	void SetSimonAutoActionToGoStair(int i);

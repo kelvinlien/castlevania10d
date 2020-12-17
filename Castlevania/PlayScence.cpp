@@ -609,10 +609,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	case DIK_DOWN:
 		for (int i = 0; i < 10; i++)
-			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
 				return;
 		if (simon->IsLevelUp()) return;
-		if (simon->CanGoOnStair())
+		if (simon->IsOnStair())
 			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
 		else
 			simon->SetState(SIMON_STATE_SIT);
@@ -644,7 +644,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 				return;
 		if (simon->IsLevelUp()) return;
 
-		if (simon->CanGoOnStair())
+		if (simon->IsOnStair())
 			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
 		else 
 			simon->SetState(SIMON_STATE_SIT);
@@ -667,7 +667,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 
 		if (simon->IsLevelUp()) break;
-		if (simon->IsAutoWalkOnStair())
+		if (simon->IsAutoWalkOnStair() )
 			simon->SetState(SIMON_STATE_AUTOWALK_ON_STAIR);
 		else 
 			simon->SetState(SIMON_STATE_STAND);

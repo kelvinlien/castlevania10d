@@ -26,7 +26,6 @@ Simon::Simon() : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
-	canGoOnStair = true;
 	CWhip::GetInstance();
 }
 
@@ -81,14 +80,14 @@ void Simon::SetState(int state)
 		Stand();
 		break;
 	case SIMON_STATE_GO_UP_STAIR:
-		if (!canGoOnStair) return;
+		if (!isOnStair) return;
 		nx = 1;
 		if (stairNx < 0)
 			nx = -1;
 		GoUp();
 		break;
 	case SIMON_STATE_GO_DOWN_STAIR:
-		if (!canGoOnStair) return;
+		if (!isOnStair) return;
 		nx = -1;
 		if (stairNx < 0)
 			nx = 1;
@@ -101,6 +100,8 @@ void Simon::SetState(int state)
 		vy = 0;
 		vx = 0;
 		isAutoWalkOnStair = false;
+		readyToDownStair = false;
+		readyToUpStair = false;
 		break;
 	}
 
@@ -169,7 +170,7 @@ void Simon::Render()
 	RenderBoundingBox();
 }
 void Simon::Stand(){
-	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
+	if (isAttack || isJump || isOnStair)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
 		return;
 	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isSit = false;
@@ -405,8 +406,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (nx != 0 && isOnStair && GetTickCount() - time >= 150)
 		{
-			vx = 0;
-			vy = 0;
+
 			SetState(SIMON_STATE_IDLE_ON_STAIR);
 		}
 
@@ -531,11 +531,13 @@ void Simon::SetReadyToGoStair(int i)
 {
 	if (triggerStairs->Get(i)->GetType() == TYPE_BELOW && CGame::GetInstance()->IsKeyDown(DIK_UP))
 	{
+		if (isOnStair) return;
 		readyToUpStair = true;
 		readyToDownStair = false;
 	}
 	else if (triggerStairs->Get(i)->GetType() == TYPE_ABOVE && CGame::GetInstance()->IsKeyDown(DIK_DOWN))
 	{
+		if (isOnStair) return;
 		readyToDownStair = true;
 		readyToUpStair = false;
 	}
@@ -556,14 +558,14 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 					//for sure Simon only stand at 1 point before going up
 					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 38)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 50;
-					GoUp();
+					GoUp1Step();
 				}
 				else
 				{
 					//for sure Simon only stand at 1 point before going down
 					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 45)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 57;
-					GoDown();
+					GoDown1Step();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
@@ -579,13 +581,13 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 				{
 					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 38)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 50;
-					GoUp();
+					GoUp1Step();
 				}
 				else
 				{
 					if (x + 12 != triggerStairs->Get(i)->GetStandingPoint() - 45)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 57;
-					GoDown();
+					GoDown1Step();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
@@ -603,13 +605,13 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 				{
 					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 36)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 14;
-					GoUp();
+					GoUp1Step();
 				}
 				else
 				{
 					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 44)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 6;
-					GoDown();
+					GoDown1Step();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
@@ -624,13 +626,13 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 				{
 					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 36)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 14;
-					GoUp();
+					GoUp1Step();
 				}
 				else
 				{
 					if (x + SIMON_BBOX_WIDTH - 10 != triggerStairs->Get(i)->GetStandingPoint() + 44)
 						x = triggerStairs->Get(i)->GetStandingPoint() - 6;
-					GoDown();
+					GoDown1Step();
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
@@ -639,30 +641,26 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 	time = GetTickCount();
 }
 
-void Simon::GoUp()
+void Simon::GoUp1Step()
 {
 	isOnStair = true;
-	canGoUpStair = true;
-	canGoDownStair = false;
 	SetState(SIMON_STATE_GO_UP_STAIR);
-	vy = -0.1;
+	vy = -SIMON_ON_STAIR_SPEED_X;
 	directionY = -1;
 	if (nx == 1)
-		vx = 0.1;
+		vx = SIMON_ON_STAIR_SPEED_X;
 	else
-		vx = -0.1;
+		vx = -SIMON_ON_STAIR_SPEED_X;
 }
 
-void Simon::GoDown()
+void Simon::GoDown1Step()
 {
 	isOnStair = true;
-	canGoDownStair = true;
-	canGoUpStair = false;
 	SetState(SIMON_STATE_GO_DOWN_STAIR);
-	vy = 0.1;
+	vy = SIMON_ON_STAIR_SPEED_Y;
 	directionY = 1;
 	if (nx == 1)
-		vx = 0.1;
+		vx = SIMON_ON_STAIR_SPEED_X;
 	else
-		vx = -0.1;
+		vx = -SIMON_ON_STAIR_SPEED_X;
 }
