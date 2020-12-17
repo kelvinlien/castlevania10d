@@ -497,7 +497,10 @@ void CPlayScene::Render()
 void CPlayScene::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i] = NULL;
 		delete objects[i];
+	}
 
 	objects.clear();
 	player = NULL;
