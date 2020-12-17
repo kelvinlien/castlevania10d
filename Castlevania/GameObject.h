@@ -55,6 +55,9 @@ public:
 	float vx;
 	float vy;
 
+	float start_x;
+	float start_y;
+
 	int nx;	 
 
 	int state;
@@ -71,6 +74,8 @@ public:
 	float GetPostionY() { return y; }
 	float GetPostionX() { return x; }
 
+	int GetDirect() { return nx; }
+	void SetDirect(int nx) { this->nx = nx; }
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();
@@ -78,7 +83,7 @@ public:
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
-	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 	void FilterCollision(
 		vector<LPCOLLISIONEVENT> &coEvents, 
 		vector<LPCOLLISIONEVENT> &coEventsResult, 

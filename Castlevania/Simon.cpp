@@ -1,4 +1,5 @@
-﻿#include <algorithm>
+﻿
+#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
@@ -7,42 +8,55 @@
 #include "Portal.h"
 #include"Game.h"
 #include "Item.h"
-Simon::Simon(float x, float y) : CGameObject()
+#include "Whip.h"
+Simon* Simon::__instance = NULL;
+
+Simon* Simon::GetInstance()
+{
+	if (__instance == NULL) __instance = new Simon();
+	return __instance;
+}
+Simon::Simon() : CGameObject()
 {
 	SetState(SIMON_STATE_IDLE);
 	start_x = x;
 	start_y = y;
 	this->x = x;
 	this->y = y;
-
-	weapons.insert(pair<int, int>(TYPE_ITEM_DAGGER, 0));
+	CWhip::GetInstance();
 }
+
 void Simon::SetState(int state)
 {
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	/*case SIMON_STATE_AUTO:
-		if (isJump)
+	case SIMON_STATE_AUTO:
+		if (!flag)
+		{
 			nx = -1;
+		}
 		else
+		{
 			nx = 1;
+		}
 		Walk();
-		break;*/
+		break;
 	case SIMON_STATE_IDLE:
 		vx = 0;
 		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
-		//Để cây roi level up ở đây
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
+		if (isAttack) break;
 		nx = -1;
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
+		if (isAttack) break;
 		nx = 1;
 		Walk();
 		break;
@@ -56,8 +70,7 @@ void Simon::SetState(int state)
 		Sit();
 		break;
 	case SIMON_STATE_STAND:
-		y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-		isSit = false;
+		Stand();
 		break;
 	}
 
@@ -150,26 +163,97 @@ void Simon::SetAnimation()
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable
-	
+
+
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 
-	animation_set->at(ani)->Render(x, y, color);
-	RenderBoundingBox();	
-}
+	if (isAttack && !isUsingSubWeapon)
+	{
+		CWhip::GetInstance()->Render();
+	}
 
-void Simon::Attack ()
+	animation_set->at(ani)->Render(x, y, color);
+	//render subweapon
+	if (subWeapons != NULL  && !subWeapons ->isVanish) 
+		subWeapons->Render();
+	RenderBoundingBox();
+
+	
+	if (flag)
+	{
+		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
+		int endCol = startCol + SCREEN_WIDTH / 32;
+		int numOfRow = CMaps::GetInstance()->Get(1)->GetTitles().size();
+		for (int i = 0; i < numOfRow; i++)
+		{
+			for (int j = startCol; j <= endCol; j++)
+			{
+				float x = TILE_SIZE * (j - startCol) + Camera::GetInstance()->GetCamX() - (int)Camera::GetInstance()->GetCamX() % 32;
+				float y = TILE_SIZE * i;
+				//draw back part of the castle
+				if (j >= 44)
+					CMaps::GetInstance()->Get(1)->GetTitles()[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+			}
+		}
+	}
+}
+void Simon::Stand(){
+	if (isAttack || isJump)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
+		return;
+	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	isSit = false;
+}
+void Simon::Attack()
 {
+	// normal attack
 	if (isAttack)
 		return;
-	vx = 0;
-	isAttack = true;
-	attackTime = GetTickCount();
+	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP))) {
+		vx = 0;
+		isAttack = true;
+		attackTime = GetTickCount();
+	}
+	// when using sub weapon
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
+	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
+		hearts--;
+		subWeapons->SetPosition(x, y + 10);
+		subWeapons->nx = nx;
+	
+		isUsingSubWeapon = true;
+		subWeapons->isVanish = false;
+
+		isAttack = true;
+		attackTime = GetTickCount();
+	}
+	else 
+		isUsingSubWeapon = false;
+		
+	// set animation for whip
+	if (nx > 0) {
+		animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
+	}
+	else {
+		animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
+	}
+
 }
 
 void Simon::Sit()
 {
-	if (isSit) return;
+	
+	if (isJump || isSit || isAttack) return;
+	if (nx > 0) {
+		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
+	}
+	else {
+		animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
+		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() - 1)->ResetFrame();
+	}
 	vx = 0;
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isJump = false;
@@ -178,7 +262,7 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit)
+	if (isJump || isSit || isAttack)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
@@ -192,8 +276,6 @@ void Simon::Walk()
 	isAttack = false;
 }
 
-
-
 void Simon::CheckLevelUpState(DWORD dt) {
 	if (isLevelUp) {
 		levelUpTime -= dt;
@@ -205,21 +287,92 @@ void Simon::CheckLevelUpState(DWORD dt) {
 		isLevelUp = false;
 	}
 }
+
+void Simon::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT> *coObjects,
+	vector<LPCOLLISIONEVENT> &coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
+		{
+			//Check collision AABB of Simon & Item
+			if (dynamic_cast<Item *>(coObjects->at(i)))
+			{
+				Item *item = dynamic_cast<Item *>(coObjects->at(i));
+				float l1, t1, r1, b1;
+				float l2, t2, r2, b2;
+
+				GetBoundingBox(l1, t1, r1, b1);
+				item->GetBoundingBox(l2, t2, r2, b2);
+
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				{
+					item->isVanish = true;
+					if (item->GetType() == ITEM_WHIP_RED) {
+						this->SetState(SIMON_STATE_LEVEL_UP);
+						CWhip::GetInstance()->LevelUp();
+					}
+					else {
+
+						if (item->GetType() == ITEM_DAGGER) {
+							subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
+						}
+						else if (item->GetType() == ITEM_BIG_HEART) {
+							hearts += 5;
+						}
+					}
+					continue;
+				}
+			}
+
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
+		}
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+}
+
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
-
-	//Ensure render time >= render attack time
-	if (isAttack) {
-		if (GetTickCount() - attackTime > 300)
-		{
-			isAttack = false;
-		}
+	
+	if (subWeapons != NULL ) {
+		if (subWeapons->isVanish) 
+			isUsingSubWeapon = false;
+		else 
+			subWeapons->Update(dt, coObjects);
 	}
 
 
-	
+	//Ensure render time >= render attack time
+	if (isAttack == true && GetTickCount() - attackTime > 350) {
+		isAttack = false;
+		CWhip::GetInstance()->Update(dt, coObjects);
+		vx = 0;
+		if (nx > 0) {
+			animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
+			animation_set->at(ATTACK_STAND_RIGHT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() +2)->ResetFrame();
+		}
+		else {
+			animation_set->at(ATTACK_DUCK_LEFT)->ResetFrame();
+			animation_set->at(ATTACK_STAND_LEFT)->ResetFrame();
+			CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() -1)->ResetFrame();
+		}
+		if (isSit && !CGame::GetInstance()->IsKeyDown(DIK_DOWN))  //check neu dang danh luc ngoi thi danh het roi dung hoac ngoi tiep
+		{
+				y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+				isSit = false;
+		}
+	}
+
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	
@@ -236,6 +389,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		if (state == SIMON_STATE_AUTO) {
+			dx /= 1000;
+		}
+		
 		x += dx;
 		y += dy;
 	}
@@ -248,14 +405,30 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		if (nx != 0) {
+			if (state != SIMON_STATE_AUTO) {
+				vx = 0;
+			}
+		}
 		if (ny != 0) {
 			vy = 0;
+		}
+
+		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
+		{
+			if (GetPostionX() >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
+			{
+				SetState(SIMON_STATE_AUTO);
+			}
+			else if (GetPostionX() >= SIMON_AUTO_GO_AHEAD_POSITION_X && GetPostionX() < SIMON_AUTO_GO_BACK_POSITION_X)
+			{
+				flag = true;
+				SetState(SIMON_STATE_AUTO);
+			}
 		}
 
 		//
@@ -285,32 +458,31 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (goomba->GetState() != GOOMBA_STATE_DIE)
 						SetState(SIMON_STATE_IDLE);
 				}
-			} // if Goomba
-			else if (dynamic_cast<Item *>(e->obj)) {
+			} // if Item
+			else if (dynamic_cast<Item *>(e->obj)) 
+			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->isVanish = true;
-
-				if (item->GetType() == WHIP_RED)
-						this->SetState(SIMON_STATE_LEVEL_UP);
-
+				if (item->GetType() == ITEM_WHIP_RED) {
+					this->SetState(SIMON_STATE_LEVEL_UP);
+					CWhip::GetInstance()->LevelUp();
+				}
 				else {
-					map<int, int>::iterator temp; // element tạm để lưu trữ giá trị map
 
-					if (item->GetType() == DAGGER) {
-						temp = weapons.find(DAGGER);
-						if (temp != weapons.end()) 
-							temp->second += 1; //cộng thêm 1 cái dagger
+					if (item->GetType() == ITEM_DAGGER) {
+						subWeapons = WeaponManager::GetInstance()->createWeapon(DAGGER);
 					}
-						
+					else if (item->GetType() == ITEM_BIG_HEART) {
+						hearts += 5;
+					}
 				}
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
-				SetState(SIMON_STATE_AUTO);
-				vx = SIMON_WALKING_SPEED;
-				x += dx;
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				flag = false;
+				SetState(SIMON_STATE_IDLE);
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
@@ -326,22 +498,21 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 	}
 
+	CWhip::GetInstance()->SetDirect(nx);
+	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
+	left = x+12;
 	top = y;
-	right = x + SIMON_BBOX_WIDTH;
+	right = x + SIMON_BBOX_WIDTH-10;
 	bottom = y + SIMON_BBOX_HEIGHT;
 	if (isJump)
 	{
-		if(isAttack)
-			bottom = y + SIMON_BBOX_HEIGHT;
-		else
-			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
 	{

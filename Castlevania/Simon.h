@@ -1,7 +1,12 @@
 #pragma once
 #include "GameObject.h"
-#include <map> 
+#include "WeaponManager.h"
+#include "Whip.h"
+#include <map>
+#include "GameMap.h"
 
+#define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
+#define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -26,27 +31,31 @@
 #define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
 
-#define SIMON_TIME_LEVEL_UP_WHIP 1500
+#define SIMON_TIME_LEVEL_UP_WHIP 700
+
 
 class Simon : public CGameObject
 {
+	CWeapon *subWeapons;
+	static Simon * __instance;
+
+	int hearts = 5;
 
 	//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
 	bool isLevelUp = false;
+	bool isUsingSubWeapon = false;
 
-	float start_x;
-	float start_y;
-
-	map<int, int> weapons;
+	//flag is true when simon comes and render portal, back part of the castle  
+	bool flag;
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
-	float bottomOld;
+
 
 	enum animation
 	{
@@ -75,18 +84,20 @@ class Simon : public CGameObject
 		ATTACK_DOWN_LEFT,
 		ATTACK_DOWN_RIGHT
 	}ani;
-	
+
 public:
 
-	Simon(float x = 0.0f, float y = 0.0f);
+	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 
 	//Actions of Simon
 	void Attack();
 	void Walk();
 	void Sit();
 	void Jump();
+	void Stand();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -94,13 +105,17 @@ public:
 
 	//Set animation
 	void SetAnimation();
-	
+
 	//Getter & setter
 	bool IsJump() { return isJump; }
 	bool IsSit() { return isSit; }
 	bool IsLevelUp() { return isLevelUp; }
+	bool IsAttack() { return isAttack; }
+	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsFlagOn() { return flag; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
+	static Simon * GetInstance();
 };
 
 

@@ -2,32 +2,32 @@
 #include "Simon.h"
 
 
-Item::Item(int x, int y, Animation ani) {
+Item::Item(int x, int y, ItemType ani) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 	ani_set = animation_sets->Get(ITEM_ANI_SET_ID);
 
 	this->x = x;
 	this->y = y;
-	existingTime = 20000;
+	existingTime = 2000;
 
 	this->ani = ani;
 	switch (this->ani)
 	{
-	case SMALL_HEART:
-		widthBBox = 8;
-		heightBBox = 8;
-	break;
-	case BIG_HEART:
-		widthBBox = 12;
-		heightBBox = 10;
-		break;
-	case WHIP_RED:
+	case ITEM_SMALL_HEART:
 		widthBBox = 16;
 		heightBBox = 16;
+	break;
+	case ITEM_BIG_HEART:
+		widthBBox = 24;
+		heightBBox = 16;
 		break;
-	case DAGGER:
-		widthBBox = 16;
-		heightBBox = 9;
+	case ITEM_WHIP_RED:
+		widthBBox = 32;
+		heightBBox = 32;
+		break;
+	case ITEM_DAGGER:
+		widthBBox = 32;
+		heightBBox = 16;
 		break;
 	default:
 		break;
@@ -62,7 +62,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		x += min_tx * dx + nx * 0.2f;
 		y += min_ty * dy + ny * 0.2f;
 
-					//if (nx != 0) vx = 0;
+					if (nx != 0) vx = 0;
 					if (ny != 0) {
 						vy = 0;
 						//counting time to vanish item
@@ -75,11 +75,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		}
 	}
 
-
-
-		void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
-			l = x;
-			t = y;
-			r = x + widthBBox;
-			b = y + heightBBox;
-		}
+void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
+	l = x;
+	t = y;
+	r = x + widthBBox;
+	b = y + heightBBox;
+}

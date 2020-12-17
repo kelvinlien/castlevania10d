@@ -17,8 +17,6 @@ public:
 	void SetCamPos(float camX, float camY);
 	D3DXVECTOR3 CreatePositionVector(float x, float y);
 	D3DXVECTOR3 GetPositionVector();
-	void SetHDirection(int h) { hDirection = h; };
-	void Update(DWORD dt);
 	static Camera* GetInstance();
 };
 

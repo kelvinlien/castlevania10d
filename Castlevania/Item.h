@@ -5,24 +5,18 @@
 
 #define ITEM_ANI_SET_ID	4
 
-#define TYPE_ITEM_WHIP 0
-#define TYPE_ITEM_BIG_HEART 1
-#define TYPE_ITEM_SMALL_HEART 2
-#define TYPE_ITEM_DAGGER 3
-#define TYPE_ITEM_MONEY_BAG 4
+#define GRAVITY 0.2f
 
-#define GRAVITY 0.4f
-
-enum Animation
+enum ItemType
 {
-	SMALL_HEART,
-	BIG_HEART,
-	MONEY_BAG_RED,
-	MONEY_BAG_WHITE,
-	MONEY_BAG_BLUE,
-	WHIP_RED,
-	WHIP_BLUE,
-	DAGGER
+	ITEM_SMALL_HEART,
+	ITEM_BIG_HEART,
+	ITEM_MONEY_BAG_RED,
+	ITEM_MONEY_BAG_WHITE,
+	ITEM_MONEY_BAG_BLUE,
+	ITEM_WHIP_RED,
+	ITEM_WHIP_BLUE,
+	ITEM_DAGGER
 };
 
 class Item :public CGameObject {
@@ -32,14 +26,14 @@ public:
 	int widthBBox;
 	int heightBBox;
 	
-	Animation ani;
+	ItemType ani;
 
 	Item() {};
 	~Item() {  };
-	Item(int x, int y, Animation ani);
+	Item(int x, int y, ItemType ani);
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects); // for update collision
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-	Animation GetType() { return ani; }
+	ItemType GetType() { return ani; }
 };

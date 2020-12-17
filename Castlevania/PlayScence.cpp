@@ -25,6 +25,11 @@ using namespace std;
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPMATRIX 7
 
+#define SCENE_SECTION_ANI_SET		8
+#define SCENE_SECTION_ITEM		9
+#define SCENE_SECTION_FIREPOT	10
+#define SCENE_SECTION_OBJECT		11
+
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GOOMBA	2
@@ -49,6 +54,8 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
+
+
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -175,15 +182,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new Simon(x,y); 
+		obj = Simon::GetInstance(); 
 		player = (Simon*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_BRICK: {
+		//to assign mapWidth
+		int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+		int amountOfBrick = mapWidth / BRICK_WIDTH; 
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < amountOfBrick; i++) {
+			obj = new CBrick();
+			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+		
 	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_FIREPOT: obj = new CFirePot(); break;
+	case OBJECT_TYPE_FIREPOT: {
+		int type = atof(tokens[4].c_str());
+
+		obj = new CFirePot(type);
+		break;
+	}
+	
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -191,7 +225,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
 			obj = new CPortal(x, y, r, b, scene_id);
-			//obj = new Item(50, 50, DAGGER);
 		}
 		break;
 	default:
@@ -200,12 +233,129 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
+	if (!dynamic_cast<CBrick*>(obj)) {
+		obj->SetPosition(x, y);
 
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+	}
+		
+}
+/*
+	Parse Scene Ani_set
+*/
+void CPlayScene::_ParseSection_SCENE_ANI_SET(string line) {
+
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open %d\n",line);
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
+}
+/*
+
+	Parse Scene Object 
+
+*/
+void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
+{
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open %d\n", path);
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
 }
 
 void CPlayScene::Load()
@@ -229,15 +379,23 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_TEXTURES; continue; }
 		if (line == "[SPRITES]") { 
 			section = SCENE_SECTION_SPRITES; continue; }
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
 		if (line == "[MAPMATRIX]") {
 			section = SCENE_SECTION_MAPMATRIX; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
-
+		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]" || line == "[ENEMY]")
+		{
+			section = SCENE_SECTION_OBJECT; continue;		}
+		if (line == "[ITEM]" || line == "[WHIP]") 
+		{
+			section = SCENE_SECTION_ANI_SET; continue;		}
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
@@ -252,12 +410,20 @@ void CPlayScene::Load()
 			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_ANI_SET: _ParseSection_SCENE_ANI_SET(line); break;
+			case SCENE_SECTION_OBJECT: _ParseSection_SCENE_OBJECT(line); break;
 		}
 	}
 	f.close();
 
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	//to assign mapWidth
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+	CGameObject *obj = new Item(100, 0, ITEM_SMALL_HEART);
+	objects.push_back(obj);
+	
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -273,8 +439,19 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->isVanish == true)
+		 if (objects[i]->isVanish == true)
+		 {
+			 if (dynamic_cast<CFirePot*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
+				
+				 ItemType type = firePot->GetItemType();
+				 obj = new Item(firePot->x, firePot->y, type);
+				 objects.push_back(obj);
+			 }
 			objects.erase(objects.begin() + i);
+		 }
 		else 
 			objects[i]->Update(dt, &coObjects);
 	}
@@ -286,11 +463,21 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
+	if (cx < -14)
+	{
+		player->x = -14;
+	}
+
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	//Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	// check if current player pos is in map range and update cam pos accordingly
+
+	if (cx > 0 && cx < (mapWidth / 2 - TILE_SIZE) ) //to make sure it won't be out of range
+	{
+		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	}
 }
 
 void CPlayScene::Render()
@@ -310,7 +497,10 @@ void CPlayScene::Render()
 void CPlayScene::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i] = NULL;
 		delete objects[i];
+	}
 
 	objects.clear();
 	player = NULL;
@@ -324,8 +514,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO)
-		return;
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	switch (KeyCode)
 	{
@@ -356,16 +546,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
-	// disable control key when Simon die or pass scene 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) 
-		return;
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
 	}
 	else if (game->IsKeyDown(DIK_LEFT)) {
-		if (simon->IsLevelUp()) return;
+		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
@@ -374,25 +563,13 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 	else
 		simon->SetState(SIMON_STATE_IDLE);
-	if (game->IsKeyDown(DIK_L) && cam->GetCamX() < 730)
-	{
-		cam->SetHDirection(1);
-	}
-	else if (game->IsKeyDown(DIK_J) && cam->GetCamX() > 0)
-	{
-		cam->SetHDirection(-1);
-	}
-	else
-	{
-		cam->SetHDirection(0);
-	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO)
-		return;
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	switch (KeyCode)
 	{
@@ -400,9 +577,5 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 		if (simon->IsLevelUp()) break;
 		simon->SetState(SIMON_STATE_STAND);
 		break;
-
-	/*case DIK_SPACE:
-		simon->SetIsJump(false);
-		break;*/
 	}
 }

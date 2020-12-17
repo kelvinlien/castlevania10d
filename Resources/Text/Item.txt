@@ -1,0 +1,52 @@
+[TEXTURES]
+40	..\Resources\Texture\item.png	255	0	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+
+#ITEM
+#small heart
+40001	0	0	16	16	40
+#big heart
+40002	16	0	40	20	40
+#money bag
+#red
+40006	40	0	70	30	40
+#white
+40007	70	0	100	30	40
+#blue
+40008	100	0	130	30	40
+#whip
+#red
+40011	130	0	162	32	40
+#blue
+40012	194	0	224	32	40
+#dagger
+40016	162	0	194	18	40
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+
+# ==== ITEMS=========
+#small heart
+401	40001	100
+#big heart
+402	40002	100
+#money bag
+#red
+406	40006	100
+#white
+407	40007	100
+#blue
+408	40008	100
+#whip
+#red
+411	40011	100
+#blue
+412	40012	100
+#dagger
+416	40016	100
+
+[ANIMATION_SETS]
+# ITEMS
+4	401	402	406	407	408	411	412	416

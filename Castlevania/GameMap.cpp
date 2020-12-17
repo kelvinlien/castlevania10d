@@ -44,7 +44,21 @@ void CMap::LoadMap(LPCWSTR dataPath) {
 
 		while (ss >> n)
 		{
-			idTile = n + 1000;
+			switch (mapID)
+			{
+			case 1:
+				idTile = n + 1000;
+				break;
+			case 2: 
+				idTile = n + 2000;
+				break;
+			case 3:
+				idTile = n + 3000;
+				break;
+			default:
+				break;
+			}
+			 
 			mapSprites.push_back(sprites->Get(idTile));
 		}
 		titles.push_back(mapSprites);
