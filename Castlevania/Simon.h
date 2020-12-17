@@ -4,6 +4,7 @@
 #include "Whip.h"
 #include <map> 
 #include <cmath> 
+#include "TriggerStair.h"
 
 
 // ON STAIR SPEED
@@ -38,7 +39,7 @@
 
 #define SIMON_TIME_LEVEL_UP_WHIP 700
 
-
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	int currentFrame;
@@ -62,18 +63,22 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-	bool canGoOnStair = false;
-	bool isOnStair = false;
+	bool readyToUpStair;
+	bool readyToDownStair;
+	bool canGoUpStair;
+	bool canGoDownStair;
+	bool isOnStair;
 	bool isAutoWalkOnStair = false;
-	bool up;
-	bool down;
 
-
+	int directionY;
+	int stairNx;
+	DWORD time;
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
 
+	TriggerStairs *triggerStairs;
 
 	enum animation
 	{
@@ -104,14 +109,12 @@ class Simon : public CGameObject
 		//idle on stair
 		IDLE_STAIR_UP_LEFT,
 		IDLE_STAIR_UP_RIGHT,
-
 		IDLE_STAIR_DOWN_LEFT,
 		IDLE_STAIR_DOWN_RIGHT
 		
 	}ani;
 
 public:
-
 	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
@@ -126,6 +129,8 @@ public:
 	void GoUp();
 	void GoDown();
 	void AutoWalkOnStair();
+	void GoUp1Step();
+	void GoDown1Step();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -140,11 +145,14 @@ public:
 	bool IsLevelUp() { return isLevelUp; }
 	bool IsAttack() { return isAttack; }
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
+	bool IsReadyToUpStair() { return readyToUpStair; }
+	bool IsReadyToDownStair() { return readyToDownStair; }
+	bool IsCanGoUpStair() { return canGoUpStair; }
+	bool IsCanGoDownStair() { return canGoDownStair; }
 	bool IsOnStair() { return isOnStair; }
-	bool CanGoOnStair() { return canGoOnStair; }
+	void SetReadyToGoStair(int i);
+	void SetSimonAutoActionToGoStair(int i);
 	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
-	bool IsUp() { return up; }
-	bool IsDown() { return down; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

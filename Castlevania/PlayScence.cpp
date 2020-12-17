@@ -56,7 +56,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
 
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -191,7 +190,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	//case OBJECT_TYPE_GOOMBA: //obj = new CGoomba();break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -390,6 +388,9 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	if (id == 2)
+		LoadTriggerStair();
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -455,7 +456,49 @@ void CPlayScene::Load()
 	objects.push_back(obj);
 	
 }
-
+void CPlayScene::LoadTriggerStair() {
+	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
+	TriggerStair *s0 = new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s1 = new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s2 = new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s3 = new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s4 = new TriggerStair(1808, 183, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s5 = new TriggerStair(1872, 247, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s6 = new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s7 = new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT);
+	TriggerStair *s8 = new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s9 = new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s10 = new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s11 = new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s12 = new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s13 = new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s14 = new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s15 = new TriggerStair(4368, 249, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s16 = new TriggerStair(4688, 249, TYPE_ABOVE, DIRECT_RIGHT);
+	TriggerStair *s17 = new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT);
+	TriggerStair *s18 = new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT);
+	TriggerStair *s19 = new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT);
+	triggerStairs->Add(s0);
+	triggerStairs->Add(s1);
+	triggerStairs->Add(s2);
+	triggerStairs->Add(s3);
+	triggerStairs->Add(s4);
+	triggerStairs->Add(s5);
+	triggerStairs->Add(s6);
+	triggerStairs->Add(s7);
+	triggerStairs->Add(s8);
+	triggerStairs->Add(s9);
+	triggerStairs->Add(s10);
+	triggerStairs->Add(s11);
+	triggerStairs->Add(s12);
+	triggerStairs->Add(s13);
+	triggerStairs->Add(s14);
+	triggerStairs->Add(s15);
+	triggerStairs->Add(s16);
+	triggerStairs->Add(s17);
+	triggerStairs->Add(s18);
+	triggerStairs->Add(s19);
+}
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -523,26 +566,9 @@ void CPlayScene::Render()
 
 	// Bbox 2 dau cau thang
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-
-	CGame::GetInstance()->Draw(1232, 377, bbox, 1232, 377, 1264, 440, 50);  //int left, int top, int right, int bottom, int alpha
-
-	CGame::GetInstance()->Draw(1360, 247, bbox, 1360, 247, 1392, 310, 50);
-
-	CGame::GetInstance()->Draw(1424, 247, bbox, 1424, 247, 1456, 310, 50);
-
-	CGame::GetInstance()->Draw(1488, 183, bbox, 1488, 183, 1520, 246, 50);
-
-	CGame::GetInstance()->Draw(1808, 183, bbox, 1808, 183, 1840, 246, 50);
-
-	CGame::GetInstance()->Draw(1872, 247, bbox, 1872, 247, 1904, 310, 50);
-
-	CGame::GetInstance()->Draw(2576, 377, bbox, 2576, 377, 2608, 440, 50);
-
-	CGame::GetInstance()->Draw(2768, 183, bbox, 2768, 183, 2800, 246, 50);
-
-	CGame::GetInstance()->Draw(3408, 247, bbox, 3408, 247, 3440, 310, 50);
-
-	CGame::GetInstance()->Draw(3536, 377, bbox, 3536, 377, 3568, 440, 50);
+	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++) {
+		TriggerStairs::GetInstance()->Get(i)->Render();
+	}
 }
 
 /*
@@ -564,6 +590,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -579,13 +608,15 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	}
 	case DIK_DOWN:
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 		if (simon->CanGoOnStair())
 			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
 		else
 			simon->SetState(SIMON_STATE_SIT);
 		break;
-		
 	}
 }
 
@@ -597,7 +628,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die 
-	if (simon->GetState() == SIMON_STATE_DIE) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -608,6 +639,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 
 		if (simon->CanGoOnStair())
@@ -625,6 +659,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
