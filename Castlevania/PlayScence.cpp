@@ -539,9 +539,12 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (delObjects.size() > 0)
 		{
-			if (std::find(delObjects.begin(), delObjects.end(), objects[i]) != delObjects.end())
+			std::vector<CGameObject*>::iterator it;
+			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
+			if (it != delObjects.end())
 			{
 				objects.erase(objects.begin() + i);
+				delObjects.erase(it);
 			}
 			else
 			{
@@ -586,7 +589,7 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(Ghost->x, Ghost->y, type);
 				 objects.push_back(obj);
 			 }
-			 else if (dynamic_cast<CCandle*>(objects[i])) {
+			 else if (dynamic_cast<CCandle*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
 				 CCandle *candle = dynamic_cast<CCandle*>(current);
@@ -644,7 +647,7 @@ void CPlayScene::Render()
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
-
+	DebugOut(L"[TEST] current activeEntities size is %d \n", activeEntities.size());
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
 
