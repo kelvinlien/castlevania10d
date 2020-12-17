@@ -26,7 +26,7 @@ class CAnimation
 	DWORD lastFrameTime;
 	int currentFrame;
 	int defaultTime;
-	bool isLock = false;
+	bool isLock;
 	vector<LPANIMATION_FRAME> frames;
 public:
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
@@ -38,6 +38,7 @@ public:
 	LPANIMATION_FRAME Get(int id);
 	int GetCurrentFrame() { return currentFrame; }
 	void SetLock(bool a) { isLock = a; }
+	bool GetIsLock() { return isLock; }
 };
 
 typedef CAnimation *LPANIMATION;

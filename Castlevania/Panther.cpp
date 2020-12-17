@@ -14,6 +14,7 @@ CPanther::CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx) 
 	isJump = false;
 	isRun = false;
 	isSit = true; 
+	ani = PANTHER_ANI_SIT_LEFT;
 }
 void CPanther::Jump()
 {
@@ -23,10 +24,11 @@ void CPanther::Jump()
 	vy = -PANTHER_JUMP_SPEED_Y;
 	isJump = true;
 	isRun = false;
-	startJumpTime = GetTickCount();
 }
 void CPanther::Run()
 {
+	if (isRun)
+		return;
 	vx = PANTHER_RUN_SPEED*this->nx;
 	isRun = true;
 }
@@ -34,24 +36,39 @@ void CPanther::Run()
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {	
 	CGameObject::Update(dt);
+
+	if(!isLock)
 	vy += PANTHER_GRAVITY * dt;
 
 	float distance;
 	distance = PANTHER_DISTANCE;
 
-	//float simonCenterX = (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH) / 2;
-	if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH / 2 + 10 - (this->x + PANTHER_BBOX_WIDTH / 2)) <= distance)
-	{
-		
-		isSit = false;
-		isActive = true;
-		jumpCount = 1;
-		if (Simon::GetInstance()->x < this->x)
-			this->nx = -1;
-		else
-			this->nx = 1;
-		Run();
+	if (!isLock) {
+		//float simonCenterX = (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH) / 2;
+		if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH / 2 + 10 - (this->x + PANTHER_BBOX_WIDTH / 2)) <= distance)
+		{
+
+			isSit = false;
+			isActive = true;
+			jumpCount = 1;
+			if (Simon::GetInstance()->x < this->x)
+				this->nx = -1;
+			else
+				this->nx = 1;
+			Run();
+		}
+
+		if (jumpCount == 1)
+		{
+			if (this->nx < 0 && x < xJumpLeft || this->nx > 0 && x + PANTHER_BBOX_WIDTH >= xJumpRight)
+			{
+				vx = 0;
+				jumpCount = 0;
+				Jump();
+			}
+		}
 	}
+
 
 	/**************************
 	xet va cham voi nen gach
@@ -111,19 +128,9 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	if (jumpCount == 1)
-	{
-		if (this->nx < 0 && x < xJumpLeft || this->nx > 0 && x + PANTHER_BBOX_WIDTH >= xJumpRight)
-		{
-			vx = 0;
-			jumpCount = 0;
-			Jump();
-		}
-	}
 }
 void CPanther::SetAnimation()
 {
-	ani = PANTHER_ANI_SIT_LEFT;
 	if (nx > 0)
 	{
 		if (isSit)
@@ -139,13 +146,15 @@ void CPanther::SetAnimation()
 		else if (isJump)
 			ani = PANTHER_ANI_JUMP_LEFT;
 	}
+
 }
 void CPanther::Render() {
 	SetAnimation();
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
-	animation_set->at(ani)->Render(x, y, color);
 
+	DebugOut(L"Panther isLock: %d time : %d\n ", animation_set->at(ani)->GetIsLock(),i++);
+	animation_set->at(ani)->Render(x, y, color);
 	RenderBoundingBox();
 }
 

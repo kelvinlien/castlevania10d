@@ -26,12 +26,8 @@ class CPanther:public CEnemy
 	float xJumpLeft;
 	int jumpCount;
 
-
-	DWORD startJumpTime;
-
-	int ani;
+	int i = 0;
 public:
-	//CPanther(){}
 	CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);

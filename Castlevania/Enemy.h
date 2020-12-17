@@ -11,7 +11,7 @@ class CEnemy: public CGameObject
 {
 protected:
 	bool isActive;
-	bool isLock;
+	bool isLock=false;
 	int type;
 	ItemType itemType;
 	int ani;

@@ -14,15 +14,15 @@ void CEnemy::SetState(int state)
 			isLock = true;
 			backUpVx = vx;   // save vx, vy for reuse it when we set to state move
 			backUpVy = vy;  
-			vx = 0.0;
-			vy = 0.0;
-			animation_set->at(ani)->SetLock(true);
+			this->vx = 0.0;
+			this->vy = 0.0;
+			this->animation_set->at(ani)->SetLock(true);
 			break;
 		case ENEMY_STATE_MOVE:
 			isLock = false;
-			vx = backUpVx;
-			vy = backUpVy;
-			animation_set->at(ani)->SetLock(false);
+			this->vx = backUpVx;
+			this->vy = backUpVy;
+			this->animation_set->at(ani)->SetLock(false);
 			break;
 	}
 }

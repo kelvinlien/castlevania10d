@@ -40,7 +40,9 @@ void CAnimation::Render(float x, float y, int alpha)
 	}
 	else
 	{
-		if (!isLock) {
+		if (isLock) {
+		}
+		else{
 			DWORD t = frames[currentFrame]->GetTime();
 			if (now - lastFrameTime > t)
 			{
