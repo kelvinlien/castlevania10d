@@ -8,6 +8,7 @@
 #include "Portal.h"
 #include "Camera.h"
 #include "GameMap.h"
+#include "BlinkEffect.h"
 
 using namespace std;
 
@@ -488,7 +489,15 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-
+	if (BlinkEffect::GetInstance()->GetIsActive())
+	{
+		int alpha;
+		if (id == 1)
+			alpha = 255;
+		else
+			alpha = 120 + rand() % 70;
+		BlinkEffect::GetInstance()->Draw(alpha);
+	}
 }
 
 /*

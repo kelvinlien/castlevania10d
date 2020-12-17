@@ -16,7 +16,6 @@ class CPlayScene: public CScene
 {
 protected: 
 	Simon *player;					// A play scene has to have player, right? 
-
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	int mapWidth;
