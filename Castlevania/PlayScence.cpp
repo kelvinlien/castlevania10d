@@ -488,6 +488,7 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
+	board = new Board();
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -573,7 +574,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
-
+	board->Update();
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
@@ -588,7 +589,7 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-
+	board->Render();
 }
 
 /*
