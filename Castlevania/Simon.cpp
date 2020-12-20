@@ -1,5 +1,4 @@
-﻿
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
@@ -638,6 +637,7 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 			}
 		}
 	}
+	SetStairOutPoint(i);
 	time = GetTickCount();
 }
 
@@ -663,4 +663,34 @@ void Simon::GoDown1Step()
 		vx = SIMON_ON_STAIR_SPEED_X;
 	else
 		vx = -SIMON_ON_STAIR_SPEED_X;
+}
+
+void Simon::SetStairOutPoint(int i)
+{
+	if (i % 2 == 0)
+	{
+		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
+		{
+			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
+			aboveStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+		}
+		else
+		{
+			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
+			belowStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+		}
+	}
+	else
+	{
+		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
+		{
+			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
+			aboveStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+		}
+		else
+		{
+			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
+			belowStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+		}
+	}
 }

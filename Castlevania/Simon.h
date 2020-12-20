@@ -52,7 +52,7 @@ class Simon : public CGameObject
 	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
 	float simonAutoWalkDistanceY;
 	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
-
+	float aboveStairOutPoint, belowStairOutPoint;	//variables hold out point
 
 	//Flag of Simon's state
 	bool isJump;
@@ -147,6 +147,7 @@ public:
 	void SetReadyToGoStair(int i);
 	void SetSimonAutoActionToGoStair(int i);
 	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
+	void SetStairOutPoint(int i);
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
