@@ -17,7 +17,7 @@
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
 200	..\Resources\Texture\texture-map-2.png	255	255	255
-
+53	..\Resources\Texture\enemy_bullet.png	255	0	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #MAP2
@@ -287,7 +287,8 @@
 50018	45	0	51	26	52
 50019	74	2	86	26	52
 50020	96	0	128	26	52
-
+#enemy_bullet
+50030	0	0	10	12	53
 #Effect
 #Burn
 70000	18	10	24	36	70
@@ -521,7 +522,8 @@
 515	51017	100
 # using
 506	50018	100	50019	100	50020	100
-
+#enemy_bullet
+507	50030	100
 # ==== EFFECT =========
 #Burn
 700	70000	100	70001	100	70002	100
@@ -678,7 +680,7 @@
 # ITEMS
 4	401	402	406	407	408	411	412	416	417	418
 #WEAPON
-5	501	502	503	511	512	513	504	514	505	515	506
+5	501	502	503	511	512	513	504	514	505	515	506	507
 #EFFECT
 7	700	701	702	703	704
 #BOARD

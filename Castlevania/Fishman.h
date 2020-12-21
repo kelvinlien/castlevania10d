@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include "Weapon.h"
 #include "Camera.h"
-
+#include "Bullet.h"
 // Zombie
 #define FISH_MAN_BBOX_WIDTH			28
 #define FISH_MAN_BBOX_HEIGHT			64
@@ -38,7 +38,8 @@ class CFishman : public CEnemy
 	bool isWalk = false;
 	bool isWaitToShoot = false;
 	bool canShoot = false;
-
+	bool isShootyet = false;
+	CWeapon* bullet = new Bullet();
 
 	enum animation
 	{

@@ -34,6 +34,14 @@ void CFishman::SetState(int state)
 		isShoot = true;
 		startShootTime = GetTickCount();
 		shootingTimePeriod = rand() % 2500 + 500;
+		bullet->SetIsThrown(true);
+		if (nx == -1)
+			bullet->SetPosition(x, y + 10);
+		else
+			bullet->SetPosition(x + 15, y + 10);
+		bullet->nx = nx;
+		bullet->isVanish = false;
+		isShootyet = true;
 		break;
 	}
 }
@@ -45,7 +53,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		CGameObject::Update(dt);
 
 	vy += FISH_MAN_GRAVITY * dt;
-
+	bullet->Update(dt, coObjects);
 	if (isWaitToShoot && GetTickCount() - startWaitToShoot >= shootingTimePeriod)
 	{
 		startWaitToShoot = 0;
@@ -116,7 +124,14 @@ void CFishman::WaitToShoot() {
 void CFishman::Render() {
 
 	ani = FISH_MAN_WALK_RIGHT;
-	if (isShoot) ani = FISH_MAN_SHOOT_RIGHT;
+	if (isShoot)
+	{
+		ani = FISH_MAN_SHOOT_RIGHT;
+	}
+	if (isShoot || isShootyet)
+	{
+		bullet->Render();
+	}
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 	if (isDead) ani = FISH_MAN_DIE;
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
