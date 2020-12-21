@@ -171,12 +171,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	vector<string> tokens = split(line);
 
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
 	int ani_set_id = atoi(tokens[3].c_str());
+
 	int amount, axis, brickType, itemType;
 	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
@@ -642,7 +643,10 @@ void CPlayScene::Render()
 void CPlayScene::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i] = NULL;
 		delete objects[i];
+	}
 
 	objects.clear();
 	player = NULL;
@@ -678,7 +682,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
+	case DIK_M:
+		simon->SetHearts(4);
+		if (CGame::GetInstance()->GetCurrentSceneID() < 3)
+			CGame::GetInstance()->SwitchScene(2);
+		break;
 	}
 }
 
