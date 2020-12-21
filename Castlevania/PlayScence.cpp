@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Boss.h"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ using namespace std;
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_BOSS	15
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -216,6 +218,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	break;
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		break;
+	case OBJECT_TYPE_BOSS:
+		obj = new CBoss();
 		break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
