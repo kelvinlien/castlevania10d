@@ -1,5 +1,4 @@
-﻿
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
