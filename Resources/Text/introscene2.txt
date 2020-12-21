@@ -1,0 +1,33 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+0	..\Resources\Texture\intro_scene_2.png	255	255	255
+1	..\Resources\Texture\intro_bat.png	255	255	255
+2	..\Resources\Texture\helicopter.png	255	0	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#intro scene 2
+0	0	0	512	448	0
+#intro bat
+1	0	0	16	16	1
+2	16	0	32	16	1
+#helicopter
+3	0	0	64	28	2
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+#intro scene 2
+0	0	100
+#intro bat
+1	1	100	2	100
+#helicopter
+2	3	100
+
+# id	ani1	ani2	ani3
+[ANIMATION_SETS]
+#intro scene 2
+0	0
+#intro bat
+1	1
+#helicopter
+2	2
