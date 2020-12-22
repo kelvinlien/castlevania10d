@@ -70,7 +70,7 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
-
+	bool isDoubleShot = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -141,11 +141,13 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	bool IsDoubleShot() { return isDoubleShot; }
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

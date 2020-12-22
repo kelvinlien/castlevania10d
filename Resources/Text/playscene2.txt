@@ -13,6 +13,7 @@
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
+75	..\Resources\Texture\doubleshot.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -235,14 +236,12 @@
 40012	194	0	224	32	40
 #dagger
 40016	162	0	194	18	40
-
 #Cross
 40018	224	0	256	32	40
-
 #Holy water item
 40019	30	32	62	64	40
-
-
+#double shot
+40020	0	0	29	29	75
 
 #WEAPON
 #whip
