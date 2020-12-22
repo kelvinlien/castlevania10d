@@ -218,14 +218,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GHOST: {
-		if (ghost != NULL)
-		{
-			DebugOut(L"[ERROR] GHOST object was created before!\n");
-			return;
-		}
 		int itemType = atof(tokens[4].c_str());
 		obj = new CGhost(x, y, -1, itemType);
-		ghost = (CGhost*)obj;
 	}
 	break;
 	case OBJECT_TYPE_PANTHER: 
@@ -601,6 +595,25 @@ void CPlayScene::Update(DWORD dt)
 			 delObjects.push_back(current);
 			
 		 }
+		 else if (dynamic_cast<CEnemy*>(current)) {
+			 CEnemy *enemy = dynamic_cast<CEnemy*>(current);
+			 float eX = enemy->GetPostionX();
+			 int eD = enemy->GetDirect();
+			 float l, t, r, b;
+			 enemy->GetBoundingBox(l, t, r, b);
+			 float eBBWidth = r - l;
+			 float camLeftLimit = Camera::GetInstance()->GetCamX();
+			 float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
+			 if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
+			 {
+				 current->isVanish = true;
+				 delObjects.push_back(current);
+			 }
+			 else
+			 {
+				 current->Update(dt, &coObjects);
+			 }
+		 }
 		else 
 			current->Update(dt, &coObjects);
 	}
@@ -622,18 +635,6 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-
-	if (ghost != NULL)
-	{
-		float gx, gy;
-		ghost->GetPosition(gx, gy);
-
-		if (gx <= Camera::GetInstance()->GetCamX() || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
-		{
-			ghost->SetDirect(-(ghost->GetDirect()));
-		}
-	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
