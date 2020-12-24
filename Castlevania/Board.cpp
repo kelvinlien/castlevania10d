@@ -8,10 +8,15 @@ Board::Board()
 	font = new CFont();
 }
 
+Board::~Board()
+{
+}
+
 void Board::Render()
 {
+
 	ani_set->at(0)->Render(x,y);
-	font->Render(std::to_string(score), x + 100, 15);
+	font->Render(std::to_string(score), x + 105, 15);
 	font->Render(std::to_string(time), x + 300, 15);
 	font->Render(std::to_string(state), x + 480, 15);
 	font->Render(std::to_string(simon->GetHearts()), x + 400, 35);
@@ -29,22 +34,28 @@ void Board::Render()
 	{
 		HP_set->at(37)->Render((x + 120) + i * 10, 32);
 		healtime =0;
+		
 	}
 
 }
 
 void Board::Update()
 {
-	healtime = GetTickCount64();
+
 	this->x = cam->GetCamX();
 	this->y = cam->GetCamY();
 
-	if (healtime > 1000000)
+	if ((healtime / 2) > 100)
+	{
 		if (board_health < simon->GetHealth())
 			board_health++;
 		else
 			board_health = simon->GetHealth();
-	score++;
-	if (time != 0)
-		time --;
+	}
+	if (time != 0 && healtime / 2 > 100)
+	{
+		score--;
+		time--;
+	}
+	healtime = GetTickCount64();
 }

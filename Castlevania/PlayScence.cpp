@@ -490,7 +490,7 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	board = new Board();
-	board->Setstateboard(currentMapID);
+	board->SetState_OnBoard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	

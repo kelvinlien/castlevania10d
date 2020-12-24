@@ -466,6 +466,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
+
 				item->BeingProcessed();
 
 			}

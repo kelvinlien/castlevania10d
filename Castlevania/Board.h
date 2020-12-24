@@ -13,7 +13,7 @@ class Board
 	float y = 0.0f;
 	int time=10000;
 	int state;
-	int score=0;
+	int score=10000;
 	CFont* font;
 	DWORD healtime;
 	LPANIMATION_SET ani_set;
@@ -25,6 +25,6 @@ public:
 	Board();
 	~Board();
 	void Render();
-	void Setstateboard(int _state) { this->state = _state; }
+	void SetState_OnBoard(int _state) { this->state = _state; }
 	void Update();
 };
