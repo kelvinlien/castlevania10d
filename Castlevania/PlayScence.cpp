@@ -638,6 +638,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
+	case DIK_N:
+		simon->SetHealth(16);
+		break;
+	case DIK_M:
+		simon->SetHealth(2);
+		break;
 		
 	}
 }
