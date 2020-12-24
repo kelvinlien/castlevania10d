@@ -17,5 +17,4 @@ void Board::Update()
 	this->y = cam->GetCamY();
 	if (time != 0)
 		time --;
-	DebugOut(L"Time : %d\n", time);
 }
