@@ -142,8 +142,11 @@ public:
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
 
-	void SetHearts(int _hearts) {  hearts = _hearts; }
+	void SetHealth(int _health) {  health = _health; }
+	int GetHealth() { return health; }
+	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
+
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 

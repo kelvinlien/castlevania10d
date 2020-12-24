@@ -488,8 +488,9 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	board = new Board();
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	board = new Board();
+	board->Setstateboard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
