@@ -49,7 +49,7 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
-	int hearts = 5;
+	int hearts = 500;
 	int health = 16;
 
 	//time variables
@@ -70,6 +70,7 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
+	bool isFreeze = false;
 
 
 	//flag is true when simon comes and render portal, back part of the castle  
@@ -141,7 +142,9 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	bool IsFreeze() { return isFreeze; }
 
+	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHealth(int _health) {  health = _health; }
 	int GetHealth() { return health; }
 	void SetHearts(int _hearts) { hearts = _hearts; }

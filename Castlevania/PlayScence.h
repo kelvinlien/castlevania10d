@@ -23,8 +23,7 @@ protected:
 
 	CGhost *ghost;					// Beta ghost for testing purpose
 	
-	Board *board;
-
+	Board* board;
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	int mapWidth;
@@ -38,6 +37,7 @@ protected:
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
 public:
+	
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();

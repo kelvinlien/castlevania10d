@@ -1,7 +1,7 @@
 #include "Item.h"
 #include "Simon.h"
 #include "Weapon.h"
-
+#include "Board.h"
 
 Item::Item(int x, int y, ItemType ani) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
@@ -164,6 +164,7 @@ void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 void Item::BeingProcessed()
 {
 	Simon *simon = Simon::GetInstance();
+	Board* board = Board::Getinstance();
 	isEaten = true;
 	switch (ani)
 	{
@@ -171,7 +172,9 @@ void Item::BeingProcessed()
 		simon->SetHearts(simon->GetHearts() + 1);
 		break;
 	case ITEM_BIG_HEART:
+		simon->SetHealth(16);
 		simon->SetHearts(simon->GetHearts() + 5);
+		board->SetFinish(true);
 		break;
 	case ITEM_MONEY_BAG_RED:
 		effect = ONE_THOUSAND_EFFECT;

@@ -489,7 +489,7 @@ void CPlayScene::Load()
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
-	board = new Board();
+	board=Board::Getinstance();
 	board->SetState_OnBoard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -575,7 +575,9 @@ void CPlayScene::Update(DWORD dt)
 	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
+	
 	board->Update();
+
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
@@ -616,7 +618,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
@@ -657,6 +659,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
