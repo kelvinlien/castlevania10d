@@ -3,6 +3,7 @@
 #include "WeaponManager.h"
 #include "Whip.h"
 #include "Enemy.h"
+#include "Bat.h"
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
@@ -12,7 +13,7 @@
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
-#define SIMON_JUMP_SPEED_Y		0.5f
+#define SIMON_JUMP_SPEED_Y		0.8f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.0015f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f

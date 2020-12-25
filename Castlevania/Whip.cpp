@@ -2,6 +2,9 @@
 #include"Simon.h"
 #include"Ghost.h"
 #include "Candle.h"
+#include "Panther.h"
+#include "Bat.h"
+
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -57,13 +60,19 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 1:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
 					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case 20:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
 				if (e != NULL) {
 					e->GetBoundingBox(l2, t2, r2, b2);
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-						e->SetState(GHOST_STATE_DIE);
+						e->SetState(ENEMY_STATE_DIE);
 				}
 			}
 			else if (dynamic_cast<CCandle *>(coObjects->at(i)))
@@ -73,6 +82,17 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					e->SetState(CANDLE_STATE_BREAK);
 			}
+		}
+		else if (dynamic_cast<CCandle *>(coObjects->at(i)))
+		{
+			CCandle *e = dynamic_cast<CCandle *>(coObjects->at(i));
+			e->GetBoundingBox(l2, t2, r2, b2);
+			rect2.left = (int)l2;
+			rect2.top = (int)t2;
+			rect2.right = (int)r2;
+			rect2.bottom = (int)b2;
+			if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				e->SetState(CANDLE_STATE_BREAK);
 		}
 		  
 	}
@@ -100,7 +120,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					break;
 				}
 				if (e != NULL) {
-					e->SetState(GHOST_STATE_DIE);
+					e->SetState(ENEMY_STATE_DIE);
 				}
 
 			}

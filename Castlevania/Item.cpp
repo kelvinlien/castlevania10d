@@ -45,12 +45,7 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 30;
 		start_x = x;
 		break;
-	case ITEM_WHIP_RED:
-		widthBBox = 32;
-		heightBBox = 32;
-		start_x = x;
-		break;
-	case ITEM_WHIP_BLUE:
+	case ITEM_WHIP:
 		widthBBox = 32;
 		heightBBox = 32;
 		start_x = x;
@@ -195,11 +190,7 @@ void Item::BeingProcessed()
 		widthBBox = 29;
 		heightBBox = 16;
 		break;
-	case ITEM_WHIP_RED:
-		simon->SetState(SIMON_STATE_LEVEL_UP);
-		CWhip::GetInstance()->LevelUp();
-		break;
-	case ITEM_WHIP_BLUE:
+	case ITEM_WHIP:
 		simon->SetState(SIMON_STATE_LEVEL_UP);
 		CWhip::GetInstance()->LevelUp();
 		break;

@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "SmallBrick.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -115,7 +116,6 @@ void Simon::SetAnimation()
 			ani = IDLE_RIGHT;
 	
 		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
-
 }
 
 void Simon::Render()
@@ -134,12 +134,12 @@ void Simon::Render()
 
 	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
 		subWeapons->SetIsThrown(true);
-
 	}
-
+	
 	//render subweapon
-	if (subWeapons != NULL  && !subWeapons ->isVanish) 
+	if (subWeapons != NULL && !subWeapons->isVanish) {
 		subWeapons->Render();
+	}
 	RenderBoundingBox();
 
 	
@@ -486,9 +486,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
+				if (dynamic_cast<CBat *>(e->obj))
+					e->obj->SetState(ENEMY_STATE_DIE);
+
 				if (!isUntouchable) {
 					health -= 2;
 					if (e->obj->nx == nx) {
+
 						this->nx = -e->obj->nx;
 					}
 					
@@ -512,6 +516,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
 					if (isJump)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
 					{
 						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 						isJump = false;
