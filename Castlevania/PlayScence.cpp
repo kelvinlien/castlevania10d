@@ -34,7 +34,6 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-<<<<<<<<< Temporary merge branch 1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
@@ -618,12 +617,6 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-=========
->>>>>>>>> Temporary merge branch 2
-	// check if current player pos is in map range and update cam pos accordingly
-
-	// check if current player pos is in map range and update cam pos accordingly
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);

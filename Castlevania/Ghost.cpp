@@ -14,7 +14,8 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 void CGhost::SetState(int state)
 {
 	CEnemy::SetState(state);
-	if (state == GHOST_STATE_DIE)
+	if (state == ENEMY_STATE_DIE)
+	{
 		die_time = GetTickCount();
 		vx = 0;
 	}
