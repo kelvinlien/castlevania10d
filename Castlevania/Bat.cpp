@@ -12,7 +12,7 @@ CBat::CBat(float x, float y, int nx, int itemType) :CEnemy()
 }
 void CBat::SetState(int state)
 {
-	this->state = state;
+	CEnemy::SetState(state);
 
 	if (state == ENEMY_STATE_DIE) {
 		die_time = GetTickCount();

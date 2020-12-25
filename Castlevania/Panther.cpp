@@ -174,7 +174,7 @@ void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bott
 
 void CPanther::SetState(int state)
 {
-	this->state = state;
+	
 	if (state == PANTHER_STATE_DIE)
 	{
 		isDead = true;
