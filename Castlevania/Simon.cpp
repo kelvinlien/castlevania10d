@@ -119,6 +119,13 @@ void Simon::SetAnimation()
 		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->getType())));
+	
+}
+
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable

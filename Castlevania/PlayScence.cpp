@@ -214,7 +214,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = Simon::GetInstance(); 
 		player = (Simon*)obj;  
-
+		player->ReLoadAllAniSet();
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GHOST: {
@@ -714,8 +714,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_SIT);
 	}
-	else
-		simon->SetState(SIMON_STATE_IDLE);
+	/*else
+		simon->SetState(SIMON_STATE_IDLE);*/
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {

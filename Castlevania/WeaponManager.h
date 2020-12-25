@@ -22,6 +22,8 @@ public:
 
 	//getter & setter 
 	int getAmount() { return this->amount; };
+	Available getType() { return available; }
+
 	CWeapon *createWeapon(Available available);
 	static WeaponManager * GetInstance();
 };
