@@ -13,7 +13,6 @@ CBat::CBat(float x, float y, int nx, int itemType) :CEnemy()
 void CBat::SetState(int state)
 {
 	CEnemy::SetState(state);
-
 	if (state == ENEMY_STATE_DIE) {
 		die_time = GetTickCount();
 		vx = 0;
@@ -23,10 +22,12 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > BAT_DIE_TIME))
 		isVanish = true;
-	else if (state != ENEMY_STATE_DIE)
+	else if (state != ENEMY_STATE_DIE && isLock!=true)
 		vx = BAT_FLY_SPEED_X * this->nx;
 
 	CGameObject::Update(dt);
+
+	if(isLock!=true)
 	vy += amplitude;
 	
 	if (vy >= BAT_FLY_SPEED_Y || vy <= -BAT_FLY_SPEED_Y)
