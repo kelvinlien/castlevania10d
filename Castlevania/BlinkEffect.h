@@ -1,5 +1,5 @@
 #pragma once
-#define BLINK_EFFECT_TEXTURE_ID	75
+#define BLINK_EFFECT_TEXTURE_ID	76
 #define SCREEN_HEIGHT_WITHOUT_FLOOR	471
 #include "Textures.h"
 #include "Game.h"
