@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "EnemyFactory.h"
 
 using namespace std;
 
@@ -210,13 +211,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		int itemType = atof(tokens[4].c_str());
-		obj = new CGhost(x, y, -1, itemType);
-		ghost = (CGhost*)obj;
+		ghost = new CGhost(x, y, -1, itemType);
+		ghost->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(ghost);
+		return;
 	}
-	break;
+	//break;
 	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
-		break;
+		panther = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		panther->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(panther);
+		return;
+		//break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -265,8 +271,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-  case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
@@ -292,7 +297,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
+	
 	// General object setup
 	if (!dynamic_cast<CBrick*>(obj)) {
 		obj->SetPosition(x, y);
@@ -301,8 +306,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
-	}
-		
+	}	
 }
 /*
 	Parse Scene Ani_set
@@ -490,8 +494,12 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+	//Load enemies in EnemyFactory
+	for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
+		objects.push_back(CEnemyFactory::GetInstance()->enemies[i]);
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
 }
 
 void CPlayScene::Update(DWORD dt)

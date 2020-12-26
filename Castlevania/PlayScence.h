@@ -22,6 +22,7 @@ protected:
 	Simon *player;					// A play scene has to have player, right?
 
 	CGhost *ghost;					// Beta ghost for testing purpose
+	CPanther *panther;
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
