@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "EnemyFactory.h"
 
 using namespace std;
 
@@ -41,6 +42,7 @@ using namespace std;
 #define OBJECT_TYPE_BRICKS_GROUP	5
 
 #define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_ENEMY_FACTORY	100
 
 #define MAX_SCENE_LINE 1024
 
@@ -210,8 +212,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		int itemType = atof(tokens[4].c_str());
-		obj = new CGhost(x, y, -1, itemType);
-		ghost = (CGhost*)obj;
+		//obj = new CGhost(x, y, -1, itemType);
+		CEnemyFactory::GetInstance()->enemies.push_back(new CGhost(x, y, -1, itemType));
+		//ghost = (CGhost*)obj;
 	}
 	break;
 	case OBJECT_TYPE_PANTHER: 
@@ -288,6 +291,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
+	case OBJECT_TYPE_ENEMY_FACTORY:
+	{
+		obj = new CEnemyFactory();
+	}
+	break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
