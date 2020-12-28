@@ -10,6 +10,8 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "BlinkEffect.h"
+
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -52,8 +54,8 @@ void Simon::SetState(int state)
 		Walk();
 		break;
 	case SIMON_STATE_IDLE:
-			vx = 0;
-			break;
+		vx = 0;
+		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
@@ -496,6 +498,22 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (e->nx != 0) x += dx;
 					if (e->ny != 0) y += dy;
 				}
+			}
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				if(startBlinkEffect == 0)
+					startBlinkEffect = GetTickCount();
+				if (GetTickCount() - startBlinkEffect >= 500)
+				{
+					BlinkEffect::GetInstance()->SetIsActive(false);
+
+					CPortal *p = dynamic_cast<CPortal *>(e->obj);
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+					flag = false;
+					SetState(SIMON_STATE_IDLE);
+				}
+				else
+					BlinkEffect::GetInstance()->SetIsActive(true);		
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{

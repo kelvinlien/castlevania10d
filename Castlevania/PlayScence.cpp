@@ -601,7 +601,11 @@ void CPlayScene::Render()
 		objects[i]->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{
-		int alpha = 120 + rand() % 70;
+		int alpha;
+		if (id == 1)
+			alpha = 255;
+		else
+			alpha = 120 + rand() % 70;
 		BlinkEffect::GetInstance()->Draw(alpha);
 	}
 }
@@ -613,7 +617,7 @@ void CPlayScene::Unload()
 {
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]=NULL;
+		objects[i] = NULL;
 		delete objects[i];
 	}
 
