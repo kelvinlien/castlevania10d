@@ -55,7 +55,7 @@ class Simon : public CGameObject
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 	DWORD attackTime;
-
+	DWORD startBlinkEffect = 0;
 
 	enum animation
 	{
