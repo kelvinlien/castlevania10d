@@ -14,8 +14,7 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include "Ghost.h"
-#include "SmallBrick.h"
-#include "BrokenBrick.h"
+#include  "Area.h"
 
 class CPlayScene: public CScene
 {

@@ -68,12 +68,6 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 32;
 		start_x = x;
 		break;
-	case ITEM_CHICKEN_THIGH:
-		widthBBox = 32;
-		heightBBox = 26;
-		start_x = x;
-		start_y = y + 32;
-		break;
 	default:
 		break;
 	}

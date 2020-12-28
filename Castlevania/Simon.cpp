@@ -9,9 +9,7 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
-#include "SmallBrick.h"
 #include "WaterSurface.h"
-
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -217,7 +215,6 @@ void Simon::Attack()
 			attackTime = GetTickCount();
 			isUsingSubWeapon = true;
 			subWeapons->isVanish = false;
-			DebugOut(L"[INFO] 3\n");
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -334,6 +331,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
@@ -526,17 +524,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			}
 			
-			else if (dynamic_cast<CSmallBrick *>(e->obj))
-			{
-				if (e->ny < 0)
-				{
-					if (isJump == true)
-					{
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-						isJump = false;
-					}
-				}
-			}
 		}
 	}
 
