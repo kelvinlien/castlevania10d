@@ -322,7 +322,6 @@ void Simon::CalcPotentialCollisions(
 				}
 			}
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
 			if (e->t > 0 && e->t <= 1.0f)
 				coEvents.push_back(e);
 			else

@@ -104,15 +104,24 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		vy = 0;
 	}
 	CGameObject::Update(dt, coObjects);
-
+	vector<LPGAMEOBJECT> coObjectsItem;
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CBrick*> (coObjects->at(i)))
+			coObjectsItem.push_back(coObjects->at(i));
+	}
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+	CalcPotentialCollisions(&coObjectsItem, coEvents);
 	// No collision occured, proceed normally
-
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
 
@@ -147,8 +156,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						}
 						effectTime -= dt;
 					}
-		}
 	}
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+}
 
 void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 	l = x;
