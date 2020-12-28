@@ -15,7 +15,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL)=0;
 	virtual void Render()=0;
 	virtual void SetState(int state) { this->state = state; }
-
+	virtual void Respawn();
 	// Getter && Setter
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }

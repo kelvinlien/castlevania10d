@@ -3,6 +3,9 @@ CEnemy::CEnemy() :CGameObject()
 {
 	isActive = false;
 }
+void CEnemy::Respawn()
+{
+}
 void CEnemy::SetItem(int itemType) {
 	ItemType type;
 	switch (itemType)
