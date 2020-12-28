@@ -205,14 +205,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GHOST: {
-		if (ghost != NULL)
-		{
-			DebugOut(L"[ERROR] GHOST object was created before!\n");
-			return;
-		}
 		int itemType = atof(tokens[4].c_str());
 		obj = new CGhost(x, y, -1, itemType);
-		ghost = (CGhost*)obj;
 	}
 	break;
 	case OBJECT_TYPE_PANTHER: 
@@ -571,17 +565,6 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-
-	if (ghost != NULL)
-	{
-		float gx, gy;
-		ghost->GetPosition(gx, gy);
-
-		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
-		{
-			ghost->SetDirect(-(ghost->GetDirect()));
-		}
-	}
 	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
