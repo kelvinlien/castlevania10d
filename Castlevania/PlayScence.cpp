@@ -10,6 +10,7 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include "EnemyFactory.h"
+#include "Enemy.h"
 
 using namespace std;
 
@@ -512,6 +513,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
+	CEnemyFactory* factory= CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
+	{
+		CEnemy* enemy=factory->enemies[i];
+	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -585,6 +591,15 @@ void CPlayScene::Update(DWORD dt)
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	}
+	CEnemyFactory* fac = CEnemyFactory::GetInstance();
+	{
+		for (size_t i = 0; i < factory->enemies.size(); i++)
+		{
+			CEnemy* enemy = factory->enemies[i];
+			if (enemy->isVanish == true)
+				enemy->Respawn();
+		}
 	}
 }
 
