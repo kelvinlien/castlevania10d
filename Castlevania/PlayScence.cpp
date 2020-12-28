@@ -9,6 +9,8 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Entity.h"
+#include <algorithm>
 
 #include "BlinkEffect.h"
 using namespace std;
@@ -190,6 +192,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
+
+	CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
+
+	Entity* panther = new Entity(panTest, 160);
+	DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
+
+	CCandle *canTest = new CCandle(1);
+	canTest->SetPosition(600, 100);
+
+	Entity* candle = new Entity(canTest, 0);
+	RECT triggerZone = candle->GetTriggerZone();
+	DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
 
 	switch (object_type)
 	{
@@ -485,8 +499,15 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	RECT screen;
+	screen.left = 0;
+	screen.top = 0;
+	int offset = mapWidth > mapHeight ? mapWidth : mapHeight;
+	screen.right = screen.left + offset;
+	screen.bottom = screen.top + offset;
+	qtree = new Quadtree(0, screen);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -494,10 +515,23 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	vector<LPGAMEOBJECT> coObjects;
+	//if (!qtree->GetNodes().empty())
+	//{
+	//	qtree->Clear();
+	//}
+
+	qtree->Clear();
+
+	//vector<LPGAMEOBJECT> coObjects;
+	//for (size_t i = 0; i < objects.size(); i++)
+	//{
+	//	coObjects.push_back(objects[i]);
+	//}
+	
+	// check delObjects
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
 		if (dynamic_cast<CEnemy*>(objects[i])) {
 		if (BlinkEffect::GetInstance()->GetIsActive())
 		{
@@ -508,44 +542,91 @@ void CPlayScene::Update(DWORD dt)
 			enemy->SetState(30);
 		}
 		 }
+		if (delObjects.size() > 0)
+		{
+			std::vector<CGameObject*>::iterator it;
+			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
+			if (it != delObjects.end())
+			{
+				objects.erase(objects.begin() + i);
+				delObjects.erase(it);
+			}
+			else
+			{
+				Entity *entity = new Entity(objects[i], 0);
+				qtree->Insert(entity);
+			}
+		}
+		else
+		{
+			Entity *entity = new Entity(objects[i], 0);
+			qtree->Insert(entity);
+		}
 	}
 
-	for (size_t i = 0; i < objects.size(); i++)
+	activeEntities.clear();
+	qtree->RetrieveFromCamera(activeEntities);
+	vector<LPGAMEOBJECT> coObjects;
+	for (size_t i = 0; i < activeEntities.size(); i++)
 	{
-		 if (objects[i]->isVanish == true)
+		coObjects.push_back(activeEntities[i]->GetGameObject());
+	}
+	for (size_t i = 0; i < activeEntities.size(); i++)
+	{
+		CGameObject *current = activeEntities[i]->GetGameObject();
+		 if (current->isVanish == true)
 		 {
-			 if (dynamic_cast<CFirePot*>(objects[i])) {
+			 if (dynamic_cast<CFirePot*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
+				 CFirePot *firePot = dynamic_cast<CFirePot*>(current);
 				
 				 ItemType type = firePot->GetItemType();
 				 obj = new Item(firePot->x, firePot->y, type);
 				 objects.push_back(obj);
 			 }
-			 else if (dynamic_cast<CGhost*>(objects[i])) {
+			 else if (dynamic_cast<CGhost*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CGhost *Ghost = dynamic_cast<CGhost*>(objects[i]);
+				 CGhost *Ghost = dynamic_cast<CGhost*>(current);
 
 				 ItemType type = Ghost->GetItemType();
 				 obj = new Item(Ghost->x, Ghost->y, type);
 				 objects.push_back(obj);
 			 }
-			 else if (dynamic_cast<CCandle*>(objects[i])) {
+			 else if (dynamic_cast<CCandle*>(current)) {
 				 CGameObject *obj; //temp obj to create item
 
-				 CCandle *candle = dynamic_cast<CCandle*>(objects[i]);
+				 CCandle *candle = dynamic_cast<CCandle*>(current);
 
 				 ItemType type = candle->GetItemType();
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
-
-			objects.erase(objects.begin() + i);
+			 delObjects.push_back(current);
+			
+		 }
+		 else if (dynamic_cast<CEnemy*>(current)) {
+			 CEnemy *enemy = dynamic_cast<CEnemy*>(current);
+			 float eX = enemy->GetPostionX();
+			 int eD = enemy->GetDirect();
+			 float l, t, r, b;
+			 enemy->GetBoundingBox(l, t, r, b);
+			 float eBBWidth = r - l;
+			 float camLeftLimit = Camera::GetInstance()->GetCamX();
+			 float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
+			 if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
+			 {
+				 current->isVanish = true;
+				 delObjects.push_back(current);
+			 }
+			 else
+			 {
+				 current->Update(dt, &coObjects);
+			 }
 		 }
 		else 
-			objects[i]->Update(dt, &coObjects);
+			current->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -565,7 +646,6 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
@@ -579,6 +659,9 @@ void CPlayScene::Render()
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	DebugOut(L"[TEST] current activeEntities size is %d \n", activeEntities.size());
+	for (int i = 0; i < activeEntities.size(); i++)
+		activeEntities[i]->GetGameObject()->Render();
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();

@@ -69,6 +69,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	
 	for (int i = 0; i < coObjects->size(); i++)
 	{
+		if (isJump && y < 350) break;
 		if(dynamic_cast<CBrick *> (coObjects->at(i)))
 		  coObjectsPanther.push_back(coObjects->at(i));
 	}
@@ -159,7 +160,6 @@ void CPanther::Render() {
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (isJump && y < 350) return;
 	if (isDead) return;
 	left = x;
 	top = y;
