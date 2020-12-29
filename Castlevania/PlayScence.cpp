@@ -532,16 +532,6 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (dynamic_cast<CEnemy*>(objects[i])) {
-		if (BlinkEffect::GetInstance()->GetIsActive())
-		{
-			CGameObject *obj; //temp obj to create item
-
-			CEnemy *enemy = dynamic_cast<CEnemy*>(objects[i]);
-			// Conventional state for enemy: death is 30
-			enemy->SetState(30);
-		}
-		 }
 		if (delObjects.size() > 0)
 		{
 			std::vector<CGameObject*>::iterator it;
@@ -622,11 +612,18 @@ void CPlayScene::Update(DWORD dt)
 			 }
 			 else
 			 {
+				 if (BlinkEffect::GetInstance()->GetIsActive() && enemy->GetState() != 30)
+				 {
+					 // Conventional state for enemy: death is 30
+					 enemy->SetState(30);
+				 }
 				 current->Update(dt, &coObjects);
 			 }
 		 }
-		else 
-			current->Update(dt, &coObjects);
+		 else
+		 {
+			 current->Update(dt, &coObjects);
+		 }
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
