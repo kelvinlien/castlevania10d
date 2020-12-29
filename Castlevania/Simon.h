@@ -4,14 +4,18 @@
 #include "Whip.h"
 #include "Enemy.h"
 #include <map> 
+#include <cmath> 
 #include "GameMap.h"
 #include "Utils.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
+// ON STAIR SPEED
+#define SIMON_ON_STAIR_SPEED_X		0.035f
+#define SIMON_ON_STAIR_SPEED_Y		0.035f
+//
 #define SIMON_WALKING_SPEED		0.15f 
-//0.1f
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.0015f
@@ -27,9 +31,13 @@
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
 #define SIMON_STATE_STAND			900
-#define SIMON_STATE_HURT			1000			
+#define SIMON_STATE_HURT			1000		
 #define SIMON_STATE_SIT_AFTER_FALL	1100
 #define SIMON_STATE_AFTER_HURT		1200	
+#define SIMON_STATE_GO_UP_STAIR		2000
+#define SIMON_STATE_GO_DOWN_STAIR	4000
+#define SIMON_STATE_IDLE_ON_STAIR	3000
+#define SIMON_STATE_AUTOWALK_ON_STAIR	3100
 
 
 #define SIMON_BBOX_WIDTH  60
@@ -46,11 +54,19 @@
 
 class Simon : public CGameObject
 {
+	int currentFrame;
+
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
+	int directionY;
 	int hearts = 5;
 	int health = 16;
+	int stairNx = 1;
+	//to handle on stair
+	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
+	float simonAutoWalkDistanceY;
+	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
 
 	//time variables
 	DWORD startSit;
@@ -66,6 +82,11 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
+	bool canGoOnStair = false;
+	bool isOnStair = false;
+	bool isAutoWalkOnStair = false;
+	bool up;
+	bool down;
 	bool isHurt = false;
 	bool isFall = false;
 	bool isUntouchable = false;
@@ -74,7 +95,6 @@ class Simon : public CGameObject
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
-
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
@@ -105,7 +125,14 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		//idle on stair
+		IDLE_STAIR_UP_LEFT,
+		IDLE_STAIR_UP_RIGHT,
+
+		IDLE_STAIR_DOWN_LEFT,
+		IDLE_STAIR_DOWN_RIGHT
+		
 	}ani;
 
 public:
@@ -121,6 +148,9 @@ public:
 	void Sit();
 	void Jump();
 	void Stand();
+	void GoUp();
+	void GoDown();
+	void AutoWalkOnStair();
 	void Hurt();
 	void SitAfterFall();
 	void StartUntouchable();
@@ -142,6 +172,11 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	bool IsOnStair() { return isOnStair; }
+	bool CanGoOnStair() { return canGoOnStair; }
+	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
+	bool IsUp() { return up; }
+	bool IsDown() { return down; }
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }

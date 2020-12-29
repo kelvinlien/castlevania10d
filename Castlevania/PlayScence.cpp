@@ -623,13 +623,6 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
-
-	//if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
-	//{
-	//	Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	//}
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
 }
 
@@ -642,6 +635,28 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	// Bbox 2 dau cau thang
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+
+	CGame::GetInstance()->Draw(1232, 377, bbox, 1232, 377, 1264, 440, 50);  //int left, int top, int right, int bottom, int alpha
+
+	CGame::GetInstance()->Draw(1360, 247, bbox, 1360, 247, 1392, 310, 50);
+
+	CGame::GetInstance()->Draw(1424, 247, bbox, 1424, 247, 1456, 310, 50);
+
+	CGame::GetInstance()->Draw(1488, 183, bbox, 1488, 183, 1520, 246, 50);
+
+	CGame::GetInstance()->Draw(1808, 183, bbox, 1808, 183, 1840, 246, 50);
+
+	CGame::GetInstance()->Draw(1872, 247, bbox, 1872, 247, 1904, 310, 50);
+
+	CGame::GetInstance()->Draw(2576, 377, bbox, 2576, 377, 2608, 440, 50);
+
+	CGame::GetInstance()->Draw(2768, 183, bbox, 2768, 183, 2800, 246, 50);
+
+	CGame::GetInstance()->Draw(3408, 247, bbox, 3408, 247, 3440, 310, 50);
+
+	CGame::GetInstance()->Draw(3536, 377, bbox, 3536, 377, 3568, 440, 50);
 }
 
 /*
@@ -687,7 +702,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	case DIK_DOWN:
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
+		if (simon->CanGoOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
 		break;
 	case DIK_M:
 		simon->SetHearts(4);
@@ -718,8 +736,16 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_SIT);
+		if (simon->IsLevelUp()) return;
+
+		if (simon->CanGoOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else 
+			simon->SetState(SIMON_STATE_SIT);
+	}
+	else if (game->IsKeyDown(DIK_UP)) {
+		if (simon->IsLevelUp()) return;
+		simon->SetState(SIMON_STATE_GO_UP_STAIR);
 	}
 	else
 		simon->SetState(SIMON_STATE_IDLE);
@@ -735,8 +761,13 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_STAND);
+
+		if (simon->IsLevelUp()) break;
+			
+		if (simon->IsAutoWalkOnStair())
+			simon->SetState(SIMON_STATE_AUTOWALK_ON_STAIR);
+		else 
+			simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
 }

@@ -24,6 +24,7 @@ Simon::Simon() : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+	canGoOnStair = true;
 	CWhip::GetInstance();
 }
 
@@ -52,21 +53,36 @@ void Simon::SetState(int state)
 		Walk();
 		break;
 	case SIMON_STATE_IDLE:
-			vx = 0;
-			break;
+		if (isOnStair) return;
+		 vx = 0;
+		 break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = -1;
+		if (isOnStair) {
+			if (stairNx > 0)             //check the direct of stair
+				GoDown();
+			else
+				GoUp();
+			break;
+		}
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = 1;
+		if (isOnStair){
+			if (stairNx > 0)
+				GoUp();
+			else
+				GoDown();
+			break;
+		}
 		Walk();
 		break;
 	case SIMON_STATE_JUMP:
@@ -81,6 +97,28 @@ void Simon::SetState(int state)
 	case SIMON_STATE_STAND:
 		Stand();
 		break;
+	case SIMON_STATE_GO_UP_STAIR:
+		if (!canGoOnStair) return;
+		nx = 1;
+		if (stairNx < 0)
+			nx = -1;
+		GoUp();
+		break;
+	case SIMON_STATE_GO_DOWN_STAIR:
+		if (!canGoOnStair) return;
+		nx = -1;
+		if (stairNx < 0)
+			nx = 1;
+		GoDown();
+		break;
+	case SIMON_STATE_AUTOWALK_ON_STAIR:
+		isAutoWalkOnStair = true;
+		break;
+	case SIMON_STATE_IDLE_ON_STAIR:
+		vy = 0;
+		vx = 0;
+		isAutoWalkOnStair = false;
+		break;
 	case SIMON_STATE_HURT:
 		//On stair's logic here
 		StartUntouchable();
@@ -94,12 +132,15 @@ void Simon::SetState(int state)
 }
 void Simon::SetAnimation()
 {
-//	if (state == SIMON_STATE_DIE) return;
-		if (isDead)
-			ani = DEATH_RIGHT;
-		else if (isHurt)
-			ani = HURT_RIGHT;
-		else if (isJump && isAttack) 
+	if (state == SIMON_STATE_DIE) return;
+	
+	if (!isOnStair) {
+		//use this code when merging
+		/*if (isDead)
+		ani = DEATH_RIGHT;*/
+		/*else if (isHurt)
+		ani = HURT_RIGHT;*/
+		if (isJump && isAttack)
 			ani = ATTACK_STAND_RIGHT;
 		else if (isJump)
 			ani = JUMP_DUCK_RIGHT;
@@ -111,17 +152,27 @@ void Simon::SetAnimation()
 			ani = JUMP_DUCK_RIGHT;
 		else if (vx != 0)
 			ani = WALK_RIGHT;
+		else if (isHurt)
+			ani = HURT_RIGHT;
 		else
 			ani = IDLE_RIGHT;
+	}
+	else {
+		if (isAttack && directionY < 0)
+			ani = ATTACK_UP_RIGHT;
+		else if (isAttack && directionY > 0)
+			ani = ATTACK_DOWN_RIGHT;
+		else if (vx != 0 && directionY < 0)
+			ani = STAIR_UP_RIGHT;
+		else if (vx != 0 && directionY > 0)
+			ani = STAIR_DOWN_RIGHT;
+		else if (directionY < 0)
+			ani = IDLE_STAIR_UP_RIGHT;
+		else
+			ani = IDLE_STAIR_DOWN_RIGHT;
+	}
 	
-		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
-}
-
-void Simon::ReLoadAllAniSet()
-{
-	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
-	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->getType())));
-	
+	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 }
 
 void Simon::Render()
@@ -141,30 +192,11 @@ void Simon::Render()
 	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
 		subWeapons->SetIsThrown(true);
 	}
-	
+
 	//render subweapon
 	if (subWeapons != NULL && !subWeapons->isVanish) {
 		subWeapons->Render();
-	}
-	RenderBoundingBox();
-
-	
-	if (flag)
-	{
-		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
-		int endCol = startCol + SCREEN_WIDTH / 32;
-		int numOfRow = CMaps::GetInstance()->Get(1)->GetTitles().size();
-		for (int i = 0; i < numOfRow; i++)
-		{
-			for (int j = startCol; j <= endCol; j++)
-			{
-				float x = TILE_SIZE * (j - startCol) + Camera::GetInstance()->GetCamX() - (int)Camera::GetInstance()->GetCamX() % 32;
-				float y = TILE_SIZE * i + 151;
-				//draw back part of the castle
-				if (j >= 44)
-					CMaps::GetInstance()->Get(1)->GetTitles()[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-			}
-		}
+		RenderBoundingBox();
 	}
 }
 void Simon::Stand(){
@@ -196,25 +228,26 @@ void Simon::StartUntouchable() {
 	startUntouchable = GetTickCount();
 }
 void Simon::Attack()
-{
+{	
 	// normal attack
-	if (isAttack)
+
+	if (isAttack || isAutoWalkOnStair)
 		return;
-	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP))) {
-		vx = 0;
-		isAttack = true;
-		attackTime = GetTickCount();
-	}
+
+	vx = 0;
+	isAttack = true;
+	attackTime = GetTickCount();
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
-			hearts--;
-			subWeapons->SetPosition(x - 15, y + 15);
-			subWeapons->nx = nx;
-			isAttack = true;
-			attackTime = GetTickCount();
-			isUsingSubWeapon = true;
-			subWeapons->isVanish = false;
+		hearts--;
+		subWeapons->SetPosition(x, y + 10);
+		subWeapons->nx = nx;
+	
+		isUsingSubWeapon = true;
+		subWeapons->isVanish = false;
+		isAttack = true;
+		attackTime = GetTickCount();
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -230,11 +263,45 @@ void Simon::Attack()
 	}
 
 }
+void Simon::GoUp()
+{
+	if (isAttack) return;
+	directionY = -1;
+	vx = nx * SIMON_ON_STAIR_SPEED_X;
+	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
+	isAutoWalkOnStair = true;
+	isOnStair = true;
+	isSit = false;
+	isJump = false;
+}
+void Simon::GoDown()
+{
+	if (isAttack) return;
+	directionY = 1;
+	vx = nx * SIMON_ON_STAIR_SPEED_X;
+	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
+	isOnStair = true;
+	isAutoWalkOnStair = true;
+	isSit = false;
+	isJump = false;
+}
+void Simon::AutoWalkOnStair() {
+	simonAutoWalkDistanceX += abs(vx * dt);
 
+	x += dx;
+	y += dy;
+
+	if (simonAutoWalkDistanceX > autoWalkDistance)
+	{
+		isAutoWalkOnStair = false;
+		simonAutoWalkDistanceX = 0;
+		SetState(SIMON_STATE_IDLE_ON_STAIR);
+	}
+}
 void Simon::Sit()
 {
 	
-	if (isJump || isSit || isAttack) return;
+	if (isJump || isSit || isAttack || isOnStair) return;
 	if (nx > 0) {
 		animation_set->at(ATTACK_DUCK_RIGHT)->ResetFrame();
 		CWhip::GetInstance()->animation_set->at(CWhip::GetInstance()->GetLevel() + 2)->ResetFrame();
@@ -251,15 +318,16 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
+	if (isJump || isSit || isAttack || isOnStair)
 	if (isJump || isSit || isAttack || isHurt)
 		return;
-	vy = -SIMON_JUMP_SPEED_Y;
+	vy = -SIMON_JUMP_SPEED_Y * 1.5;
 	isJump = true;
 }
 
 void Simon::Walk()
 {
-	if (isAttack || isSit || isJump)
+	if (isAttack || isSit || isJump )
 		return;
 	if (flag)
 		vx = nx * SIMON_WALKING_SPEED / 2;
@@ -330,17 +398,24 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
+	if(!isOnStair)
 	vy += SIMON_GRAVITY * dt;
 
 	
+	if (isOnStair && isAutoWalkOnStair) {
+		AutoWalkOnStair();
+	}
+
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
-			isUsingSubWeapon = false;
+			isUsingSubWeapon = false;	
 		else 
 			subWeapons->Update(dt, coObjects);
 	}
 
 
+	/*if (directionY != 0)
+		vy = 0;*/
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
 		isAttack = false;
@@ -405,10 +480,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
+	if (coEvents.size() == 0 && !isAutoWalkOnStair)
 	{
-		x += dx;
-		y += dy;
+			x += dx;
+			y += dy;
 	}
 	else
 	{
@@ -433,6 +508,43 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		}
 		
 
+		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
+		{
+			//trigger cau thang duoi
+			if ((x + SIMON_BBOX_WIDTH - 10 >= 1232 && x + 12 < 1264 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2576 && x + 12 < 2608 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1424 && x + 12 < 1456 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1872 && x + 12 < 1904 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3536 && x + 12 < 3568 && y >= 377 && y + SIMON_BBOX_HEIGHT < 441))
+			{
+				up = true;
+				if (CGame::GetInstance()->IsKeyDown(DIK_UP))
+				{
+					state = SIMON_STATE_GO_UP_STAIR;
+				}
+			}
+			else
+			{
+				up = false;
+			}
+			//trigger cau thang tren
+			if ((x + SIMON_BBOX_WIDTH - 10 >= 1360 && x + 12 < 1392 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1488 && x + 12 < 1520 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 1808 && x + 12 < 1840 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 2768 && x + 12 < 2800 && y >= 183 && y + SIMON_BBOX_HEIGHT < 247)
+				|| (x + SIMON_BBOX_WIDTH - 10 >= 3408 && x + 12 < 3440 && y >= 247 && y + SIMON_BBOX_HEIGHT < 311))
+			{
+				down = true;
+				if (CGame::GetInstance()->IsKeyDown(DIK_DOWN))
+				{
+					state = SIMON_STATE_GO_DOWN_STAIR;
+				}
+			}
+			else
+			{
+				down = false;
+			}
+		}
 		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
 		{
 			if (x >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
@@ -452,26 +564,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
 
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -SIMON_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else if (e->nx != 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-						SetState(SIMON_STATE_IDLE);
-				}
-			} // if Item
-			else if (dynamic_cast<Item *>(e->obj)) 
+			 // if Item
+			if (dynamic_cast<Item *>(e->obj)) 
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
 				item->BeingProcessed();
@@ -530,6 +625,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
+
+	//DebugOut(L"simon right is : %f \n", this->x);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
