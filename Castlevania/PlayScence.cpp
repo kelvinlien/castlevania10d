@@ -582,17 +582,19 @@ void CPlayScene::Update(DWORD dt)
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
+	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
+	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	board->Render();
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
-	board->Render();
 }
 
 /*
