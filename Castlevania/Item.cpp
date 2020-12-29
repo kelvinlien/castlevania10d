@@ -12,7 +12,7 @@ Item::Item(int x, int y, ItemType ani) {
 	this->x = x;
 	this->y = y;
 	existingTime = 2000;
-	effectTime = 0;
+	effectDuration = 0;
 	isEaten = false;
 	effect = BURN_EFFECT;
 
@@ -75,16 +75,16 @@ Item::Item(int x, int y, ItemType ani) {
 	}
 }
 void Item::Render() {
-	if (!isEaten)
-	{
-		ani_set->at(ani)->Render(x, y);
-	}
-	else
+	if (isEaten)
 	{
 		if (ani != ITEM_CROSS)
 		{
 			ani_set->at(effect)->Render(x, y);
 		}
+	}
+	else
+	{
+		ani_set->at(ani)->Render(x, y);
 	}
 	RenderBoundingBox();
 }
@@ -115,47 +115,36 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	coEvents.clear();
 
 	CalcPotentialCollisions(&coObjectsItem, coEvents);
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
+	float min_tx, min_ty, nx = 0, ny;
+
+	float rdx = 0;
+	float rdy = 0;
+	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+	x += min_tx * dx + nx * 0.2f;
+	y += min_ty * dy + ny * 0.2f;
+	if (nx != 0) vx = 0;
+	if (ny != 0) {
+		vx = 0;
+		vy = 0;
 	}
+	if (isEaten)
+	{
+		if (effectDuration <= 0)
+		{
+			BlinkEffect::GetInstance()->SetIsActive(false);
+			this->isVanish = true;
+		}
+		effectDuration -= dt;
+	}
+	//counting time to vanish item	
 	else
 	{
-		float min_tx, min_ty, nx = 0, ny;
-
-		float rdx = 0;
-		float rdy = 0;
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		// block 
-		x += min_tx * dx + nx * 0.2f;
-		y += min_ty * dy + ny * 0.2f;
-
-					if (nx != 0) vx = 0;
-					if (ny != 0) {
-						vx = 0;
-						vy = 0;
-						//counting time to vanish item
-						if (!isEaten)
-						{
-							if (existingTime <= 0)
-							{
-								this->isVanish = true;
-							}
-							existingTime -= dt;
-						}
-					}
-					if (isEaten)
-					{
-						if (effectTime <= 0)
-						{
-							BlinkEffect::GetInstance()->SetIsActive(false);
-							this->isVanish = true;
-						}
-						effectTime -= dt;
-					}
+		if (existingTime <= 0)
+		{
+			this->isVanish = true;
+		}
+		existingTime -= dt;
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -182,21 +171,21 @@ void Item::BeingProcessed()
 	case ITEM_MONEY_BAG_RED:
 		effect = ONE_THOUSAND_EFFECT;
 		this->y -= 20;
-		effectTime = 1000;
+		effectDuration = 1000;
 		widthBBox = 37;
 		heightBBox = 16;
 		break;
 	case ITEM_MONEY_BAG_WHITE:
 		effect = SEVEN_HUNDRED_EFFECT;
 		this->y -= 20;
-		effectTime = 1000;
+		effectDuration = 1000;
 		widthBBox = 28;
 		heightBBox = 16;
 		break;
 	case ITEM_MONEY_BAG_BLUE:
 		effect = FOUR_HUNDRED_EFFECT;
 		this->y -= 20;
-		effectTime = 1000;
+		effectDuration = 1000;
 		widthBBox = 29;
 		heightBBox = 16;
 		break;
@@ -211,8 +200,9 @@ void Item::BeingProcessed()
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 		break;
 	case ITEM_CROSS:
-		effectTime = 1000;
+		effectDuration = 1000;
 		BlinkEffect::GetInstance()->SetIsActive(true);
+		//BlinkEffect::GetInstance()->StartEffect(GetTickCount());
 		break;
 	case ITEM_HOLY_WATER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
@@ -221,7 +211,7 @@ void Item::BeingProcessed()
 		break;
 	}
 
-	if (effectTime == 0)
+	if (effectDuration == 0)
 	{
 		isVanish = true;
 	}

@@ -612,10 +612,11 @@ void CPlayScene::Update(DWORD dt)
 			 }
 			 else
 			 {
-				 if (BlinkEffect::GetInstance()->GetIsActive() && enemy->GetState() != 30)
+				 if (BlinkEffect::GetInstance()->GetIsActive())
 				 {
-					 // Conventional state for enemy: death is 30
-					 enemy->SetState(30);
+					 if (enemy->GetState() != 30)
+						// Conventional state for enemy: death is 30
+						enemy->SetState(30);
 				 }
 				 current->Update(dt, &coObjects);
 			 }
