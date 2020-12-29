@@ -49,7 +49,7 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
-	int hearts = 500;
+	int hearts = 5;
 	int health = 16;
 
 	//time variables

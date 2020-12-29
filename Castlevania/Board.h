@@ -12,8 +12,8 @@ class Board
 	float x = 0.0f;
 	float y = 0.0f;
 
-	int time=1000;
-	int state;
+	int time = 300;
+	int stage;
 	int score=0;
 	int board_health=0;
 
@@ -47,7 +47,7 @@ public:
 	bool Check_isFinish (){ return isFinish;}
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
 
-	void SetState_OnBoard(int _state) { this->state = _state; }
+	void SetState_OnBoard(int _stage) { this->stage = _stage; }
 
 	static Board* Getinstance();
 };

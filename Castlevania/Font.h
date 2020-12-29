@@ -8,5 +8,5 @@ private:
 public:
 	CFont();
 	~CFont();
-	void Render(string string, int x, int y);
+	void Render(string string, int x, int y, int maxLength);
 };
