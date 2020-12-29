@@ -489,6 +489,8 @@ void CPlayScene::Load()
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	if(currentMapID!=5)
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
@@ -584,6 +586,7 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
+	if(CGame::GetInstance()->GetCurrentSceneID()!=5)
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
