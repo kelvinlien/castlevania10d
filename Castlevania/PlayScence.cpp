@@ -36,11 +36,13 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GHOST	2
-#define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_GHOST	2
+#define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -175,8 +177,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
-	if (object_type == 5) {
+	int amount, axis;
+	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
 	}
 
@@ -187,6 +189,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -272,6 +278,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+
+		//first small brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CSmallBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			//DebugOut(L"[CHECK] top: %f\n", y + SMALL_BRICK_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
