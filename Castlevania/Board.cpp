@@ -24,7 +24,7 @@ Board::~Board()
 void Board::Render()
 {
 	ani_set->at(0)->Render(x + 140, y + 20);
-	font->Render(std::to_string(score), x + 245, 35, 6);
+	font->Render(std::to_string(score), x + 245, 35, 8);
 	font->Render(std::to_string(time), x + 440, 35, 4);
 	font->Render(std::to_string(stage), x + 620, 35, 2);
 	font->Render(std::to_string(simon->GetHearts()), x + 540, 55, 2);
@@ -56,10 +56,20 @@ void Board::Update()
 	{
 		if(simon->IsFreeze())
 		simon->SetisFreeze(false);
-		if (board_health < simon->GetHealth())
-			board_health += 1;
+		if (GetTickCount() - healtime >= 1000)
+		{
+			if (board_health < simon->GetHealth())
+			{
+				board_health += 1;
+			}
+			else
+			{
+				board_health = simon->GetHealth();
+			}
+				time_flag = true;
+		}
 		else
-			board_health = simon->GetHealth();
+			time_flag = false;
 		if (time != 0 && GetTickCount() - healtime >= 1000)
 		{
 			time--;

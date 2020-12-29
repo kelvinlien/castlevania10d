@@ -15,7 +15,7 @@ class Board
 	int time = 300;
 	int stage;
 	int score=0;
-	int board_health=0;
+	int board_health=16;
 
 	bool time_flag = true;
 	bool isFinish = false;
