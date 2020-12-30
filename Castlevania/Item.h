@@ -26,6 +26,8 @@ enum ItemType
 	ITEM_CHICKEN_THIGH,
 	ITEM_VASE,
 	ITEM_AXE
+	ITEM_ORD,
+	ITEM_DOUBLE_SHOT
 };
 
 enum EffectType
