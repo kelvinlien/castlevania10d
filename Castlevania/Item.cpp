@@ -75,24 +75,19 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 26;
 		start_x = x;
 		break;
-	case ITEM_VASE:
-		widthBBox = 26;
-		heightBBox = 32;
-		start_x = x;
-		break;
 	case ITEM_AXE:
 		widthBBox = 30;
 		heightBBox = 28;
 		start_x = x;
 		break;
 	case ITEM_ORD:
-		widthBBox = 32;
-		heightBBox = 32;
+		widthBBox = 24;
+		heightBBox = 28;
 		start_x = x;
 		break; 
 	case ITEM_DOUBLE_SHOT:
-		widthBBox = 32;
-		heightBBox = 32;
+		widthBBox = 28;
+		heightBBox = 28;
 		start_x = x;
 		break;
 	default:
