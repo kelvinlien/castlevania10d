@@ -7,6 +7,7 @@
 #include <cmath> 
 #include "GameMap.h"
 #include "Utils.h"
+#include "TriggerStair.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
@@ -51,7 +52,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
-
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	int currentFrame;
@@ -59,14 +60,14 @@ class Simon : public CGameObject
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
-	int directionY;
 	int hearts = 5;
 	int health = 16;
-	int stairNx = 1;
+	int stairNx;
 	//to handle on stair
 	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
 	float simonAutoWalkDistanceY;
 	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
+	float aboveStairOutPoint, belowStairOutPoint;	//variables hold out point
 
 	//time variables
 	DWORD startSit;
@@ -82,8 +83,9 @@ class Simon : public CGameObject
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-	bool canGoOnStair = false;
-	bool isOnStair = false;
+	bool readyToUpStair;
+	bool readyToDownStair;
+	bool isOnStair;
 	bool isAutoWalkOnStair = false;
 	bool up;
 	bool down;
@@ -92,6 +94,8 @@ class Simon : public CGameObject
 	bool isUntouchable = false;
 	bool isDead = false;
 
+	int directionY;
+	DWORD time;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -99,6 +103,7 @@ class Simon : public CGameObject
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 
+	TriggerStairs *triggerStairs;
 
 	enum animation
 	{
@@ -129,14 +134,12 @@ class Simon : public CGameObject
 		//idle on stair
 		IDLE_STAIR_UP_LEFT,
 		IDLE_STAIR_UP_RIGHT,
-
 		IDLE_STAIR_DOWN_LEFT,
 		IDLE_STAIR_DOWN_RIGHT
 		
 	}ani;
 
 public:
-
 	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
@@ -154,6 +157,8 @@ public:
 	void Hurt();
 	void SitAfterFall();
 	void StartUntouchable();
+	void GoUp1Step();
+	void GoDown1Step();
 
 	//State function
 	void CheckLevelUpState(DWORD dt);
@@ -172,11 +177,13 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	bool IsReadyToUpStair() { return readyToUpStair; }
+	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsOnStair() { return isOnStair; }
-	bool CanGoOnStair() { return canGoOnStair; }
+	void SetReadyToGoStair(int i);
+	void SetSimonAutoActionToGoStair(int i);
 	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
-	bool IsUp() { return up; }
-	bool IsDown() { return down; }
+	void SetStairOutPoint(int i);
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }

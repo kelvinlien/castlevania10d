@@ -147,6 +147,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="TriggerStair.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="TriggerStair.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

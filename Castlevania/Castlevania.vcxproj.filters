@@ -77,4 +77,7 @@
     <ClInclude Include="WaterSurface.h" />
     <ClInclude Include="Area.h" />
   </ItemGroup>
+    <ClInclude Include="TriggerStair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
 </Project>

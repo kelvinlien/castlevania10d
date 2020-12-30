@@ -10,8 +10,8 @@
 #define LIMIT_RIGHT_CAM_23	4864
 class Area
 {
-	int areaID = 22;
-	float spawnPos = 3500;
+	int areaID = 21;
+	float spawnPos = 50;
 	float limitLeftCam = 0;
 	float limitRightCam;
 

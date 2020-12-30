@@ -15,6 +15,7 @@
 #include "Panther.h"
 #include "Ghost.h"
 #include  "Area.h"
+#include "TriggerStair.h"
 
 class CPlayScene: public CScene
 {
@@ -41,9 +42,9 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	virtual void LoadTriggerStair();
 
 	Simon * GetPlayer() { return player; } 
-
 	//friend class CPlayScenceKeyHandler;
 };
 
