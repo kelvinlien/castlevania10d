@@ -92,6 +92,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				case 10:
 					enemy = dynamic_cast<CPanther*>(e->obj);
 					break;
+
 				default:
 					break;
 				}

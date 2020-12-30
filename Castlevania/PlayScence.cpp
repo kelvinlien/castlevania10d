@@ -11,7 +11,6 @@
 #include "Panther.h"
 #include "EnemyFactory.h"
 #include "Enemy.h"
-#include "Fishman.h"
 
 
 using namespace std;
@@ -236,24 +235,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		//break;
 	case OBJECT_TYPE_BAT:
-		bat = new CBat(x, y, -1, 1);
+		//int itemType = atof(tokens[4].c_str());
+		bat = new CBat(x, y, -1,1);
 		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(bat);
 		return;
-		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
-		break;
-	case OBJECT_TYPE_FISHMAN: {
-		int itemType = atof(tokens[4].c_str());
-		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
-
-		float randomDistance = rand() % (BRICK_WIDTH * 2 * 16) + 1;
-		DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
-		obj->SetPosition(x + randomDistance, y);
-		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
-	}
-	break;
+	case OBJECT_TYPE_FISHMAN:
+		fishman = new CFishman(x, y, -Simon::GetInstance()->nx, 0);
+		fishman->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(fishman);
+		return;
+	//break;
 
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;

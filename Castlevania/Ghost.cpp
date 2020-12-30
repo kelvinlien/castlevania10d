@@ -30,7 +30,7 @@ void CGhost::SetState(int state)
 }
 void CGhost::Respawn()
 {
-	x = xbackup;
+	//x = xbackup;
 	y = ybackup;
 	srand(time(NULL));
 	int res = rand() % (2 - 1 + 1) + 1;

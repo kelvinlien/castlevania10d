@@ -19,7 +19,7 @@
 #define FISH_MAN_STATE_DEAD			30
 #define FISH_MAN_STATE_SHOOT		1
 #define FISH_MAN_STATE_WALK			2
-#define FISH_MAN_STATE_JUMP			3
+#define FISH_MAN_STATE_JUMP			4
 
 
 class CFishman : public CEnemy
@@ -52,6 +52,8 @@ class CFishman : public CEnemy
 		FISH_MAN_DIE,
 
 	}ani;
+	float xbackup;
+	float ybackup;
 public:
 
 	CFishman(float x, float y, int nx, int itemType);
@@ -62,5 +64,6 @@ public:
 	//actions
 	void Jump() {};
 	void WaitToShoot();
+	void Respawn();
 };
 
