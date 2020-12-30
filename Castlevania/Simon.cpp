@@ -329,8 +329,8 @@ void Simon::Sit()
 
 void Simon::Jump()
 {
-	if (isJump || isSit || isAttack || isOnStair)
-	if (isJump || isSit || isAttack || isHurt)
+
+	if (isJump || isSit || isAttack || isHurt || isOnStair)
 		return;
 	vy = -SIMON_JUMP_SPEED_Y * 1.5;
 	isJump = true;
@@ -702,7 +702,7 @@ void Simon::SetSimonAutoActionToGoStair(int i)
 				}
 				stairNx = triggerStairs->Get(i)->GetDirect();
 			}
-			
+
 		}
 		else
 		{

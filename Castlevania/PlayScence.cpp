@@ -785,12 +785,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_GO_UP_STAIR);
 	}
-	else {
-		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
-			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon())
-				return;
+	else 
 		simon->SetState(SIMON_STATE_IDLE);
-	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
