@@ -115,7 +115,6 @@ void Simon::SetAnimation()
 			ani = IDLE_RIGHT;
 	
 		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
-
 }
 
 void Simon::Render()
@@ -134,12 +133,12 @@ void Simon::Render()
 
 	if (isUsingSubWeapon && (animation_set->at(ani)->GetCurrentFrame() == 2)) {
 		subWeapons->SetIsThrown(true);
-
 	}
-
+	
 	//render subweapon
-	if (subWeapons != NULL  && !subWeapons ->isVanish) 
+	if (subWeapons != NULL && !subWeapons->isVanish) {
 		subWeapons->Render();
+	}
 	RenderBoundingBox();
 
 	
@@ -215,6 +214,12 @@ void Simon::Attack()
 				subWeapons->SetPosition(x, y + 20);
 			break;
 		case STOPWATCH:
+			break;
+		case AXE:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
 			break;
 		}
 		subWeapons->nx = nx;

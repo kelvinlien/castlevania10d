@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "Game.h"
 #include "Sprites.h"
 #include "Textures.h"
 

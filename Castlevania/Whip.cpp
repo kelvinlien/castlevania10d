@@ -2,6 +2,8 @@
 #include"Simon.h"
 #include"Ghost.h"
 #include "Candle.h"
+#include "Panther.h"
+
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -57,13 +59,16 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 1:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
 					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
 				if (e != NULL) {
 					e->GetBoundingBox(l2, t2, r2, b2);
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-						e->SetState(GHOST_STATE_DIE);
+						e->SetState(ENEMY_STATE_DIE);
 				}
 			}
 			else if (dynamic_cast<CCandle *>(coObjects->at(i)))
@@ -100,7 +105,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					break;
 				}
 				if (e != NULL) {
-					e->SetState(GHOST_STATE_DIE);
+					e->SetState(ENEMY_STATE_DIE);
 				}
 
 			}
