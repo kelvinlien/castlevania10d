@@ -25,7 +25,7 @@ protected:
 
 	CGhost *ghost;					// Beta ghost for testing purpose
 	CPanther *panther;
-
+	CBat* bat;
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	int mapWidth;

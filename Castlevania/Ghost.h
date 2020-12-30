@@ -1,7 +1,7 @@
 #pragma once
 #include"Enemy.h"
-#include <cstdlib>
-#include <ctime>
+//#include <cstdlib>
+// <ctime>
 #define GHOST_ANI_LEFT   0
 #define GHOST_ANI_RIGHT  1
 #define GHOST_ANI_DIE	 2

@@ -30,7 +30,6 @@ void CGhost::SetState(int state)
 }
 void CGhost::Respawn()
 {
-	
 	x = xbackup;
 	y = ybackup;
 	srand(time(NULL));
@@ -57,7 +56,6 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (state == ENEMY_STATE_DIE && (GetTickCount() - die_time) > GHOST_DIE_TIME)
 	{
 		isVanish = true;
-		//Respawn();	
 	}
 
 	else if (state != ENEMY_STATE_DIE)

@@ -230,6 +230,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		CEnemyFactory::GetInstance()->enemies.push_back(panther);
 		return;
 		//break;
+	case OBJECT_TYPE_BAT:
+		bat = new CBat(x, y, -1, 1);
+		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(bat);
+		return;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
