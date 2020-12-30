@@ -11,6 +11,8 @@
 #include "Panther.h"
 #include "EnemyFactory.h"
 #include "Enemy.h"
+#include "Fishman.h"
+
 
 using namespace std;
 
@@ -36,6 +38,9 @@ using namespace std;
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_GHOST	2
+#define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
@@ -184,7 +189,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
@@ -235,6 +240,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(bat);
 		return;
+		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		break;
+	case OBJECT_TYPE_FISHMAN: {
+		int itemType = atof(tokens[4].c_str());
+		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
+
+		float randomDistance = rand() % (BRICK_WIDTH * 2 * 16) + 1;
+		DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
+		obj->SetPosition(x + randomDistance, y);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+	}
+	break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -335,11 +355,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}	
