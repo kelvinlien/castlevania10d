@@ -27,11 +27,11 @@ CFragment::CFragment(float x, float y, float nx, int type):CGameObject()
 void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	
-	if(isVanish == true)
+	/*if(isVanish == true)
 		return;
 
 	if (GetTickCount() - existTime > 1100 && existTime!=0)
-		isVanish = true;
+		isVanish = true;*/
 
 	CGameObject::Update(dt, coObjects);
 	vy += FRAGMENT_GRAVITY;
@@ -42,12 +42,12 @@ void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CFragment::Render()
 {
-	if (existTime == 0)
+	/*if (existTime == 0)
 		existTime = GetTickCount();
 
 	if (isVanish == true)
 		return;
-
+*/
 	animation_set->at(ani)->Render(x, y);
 }
 CFragment::~CFragment()

@@ -14,13 +14,12 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include"Ghost.h"
-#include "RepeatableEffect.h"
+#include "RepeatableEffects.h"
 
 class CPlayScene: public CScene
 {
 protected: 
-	CRepeatableEffect *a;
-
+	CRepeatableEffects *effects;	//list contain effects
 	Simon *player;					// A play scene has to have player, right?
 
 	CGhost *ghost;					// Beta ghost for testing purpose

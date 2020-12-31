@@ -5,6 +5,8 @@ class CRepeatableEffect:public CGameObject
 {
 	vector<LPFRAGMENT> fragments;
 	type fragmentType;
+	DWORD existTime = 0;
+
 public:
 	CRepeatableEffect(float x, float y, type FragmentType);
 	void SetType(float x, float y,type FragmentType);
@@ -13,4 +15,6 @@ public:
 	virtual void Render();
 	~CRepeatableEffect();
 };
+
+typedef CRepeatableEffect * LPREPEATEFFECT;
 

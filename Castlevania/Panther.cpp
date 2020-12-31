@@ -1,6 +1,8 @@
 #include "Panther.h"
 #include"Simon.h"
 #include"Brick.h"
+#include "RepeatableEffect.h"
+#include "RepeatableEffects.h"
 CPanther::CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx) :CEnemy()
 {
 	this->nx = nx;

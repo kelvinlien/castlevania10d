@@ -16,7 +16,7 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 		break;
 	case RUBBLE_FRAGMENT:
 		fragments.push_back(new CFragment(x - 10, y + 5, -1, RUBBLE_FRAGMENT));
-		fragments.push_back(new CFragment(x+4, y + 8, 0, RUBBLE_FRAGMENT));
+		fragments.push_back(new CFragment(x + 4, y + 8, 0, RUBBLE_FRAGMENT));
 		fragments.push_back(new CFragment(x, y + 1, 1, RUBBLE_FRAGMENT));
 		fragments.push_back(new CFragment(x + 15, y + 3, 1, RUBBLE_FRAGMENT));
 		break;
@@ -27,12 +27,24 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 
 void CRepeatableEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects )
 {
+	if (isVanish == true)
+		return;
+
+	if (GetTickCount() - existTime > 1300 && existTime != 0)
+		isVanish = true;
+
 	for (int i = 0; i < fragments.size(); i++)
 		fragments.at(i)->Update(dt, coObjects);
 }
 
 void CRepeatableEffect::Render()
 {
+	if (existTime == 0)
+		existTime = GetTickCount();
+
+	if (isVanish == true)
+		return;
+
 	for (int i = 0; i < fragments.size(); i++)
 		fragments.at(i)->Render();
 }

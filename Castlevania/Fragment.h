@@ -18,7 +18,7 @@ class CFragment :public CGameObject
 {
 	type fragmentType;
 	int ani;
-	DWORD existTime = 0;
+	/*DWORD existTime = 0;*/
 public:
 	CFragment(float x, float  y, float  nx, int type);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
