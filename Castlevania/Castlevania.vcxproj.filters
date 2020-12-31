@@ -33,6 +33,10 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="SmallBrick.cpp" />
+    <ClCompile Include="BrokenBrick.cpp" />
+    <ClCompile Include="Fishman.cpp" />
+    <ClCompile Include="WaterSurface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -68,5 +72,15 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="SmallBrick.h" />
+    <ClInclude Include="BrokenBrick.h" />
+    <ClInclude Include="Fishman.h" />
+    <ClInclude Include="WaterSurface.h" />
+    <ClCompile Include="TriggerStair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
+    <ClInclude Include="TriggerStair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
 </Project>

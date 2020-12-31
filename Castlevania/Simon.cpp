@@ -1,15 +1,19 @@
-﻿
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
 #include "Goomba.h"
 #include "Brick.h"
 #include "Portal.h"
-#include"Game.h"
+#include "Game.h"
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "SmallBrick.h"
+#include "BrokenBrick.h"
+#include "WaterSurface.h"
+
+#include "Textures.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -19,6 +23,8 @@ Simon* Simon::GetInstance()
 }
 Simon::Simon() : CGameObject()
 {
+	triggerStairs = TriggerStairs::GetInstance();
+
 	SetState(SIMON_STATE_IDLE);
 	start_x = x;
 	start_y = y;
@@ -60,12 +66,19 @@ void Simon::SetState(int state)
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = -1;
+		//if(onStair) {
+		//	if (stairNx > 0)             //check the direct of stair
+		//		GoDown();
+		//	else
+		//		GoUp();
+		//	break;
+		//}
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack || isJump) break;
 		nx = 1;
 		Walk();
 		break;
@@ -247,7 +260,7 @@ void Simon::Jump()
 {
 	if (isJump || isSit || isAttack || isHurt)
 		return;
-	vy = -SIMON_JUMP_SPEED_Y;
+	vy = -SIMON_JUMP_SPEED_Y * 1.5;
 	isJump = true;
 }
 
@@ -324,7 +337,8 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
-	vy += SIMON_GRAVITY * dt;
+	//if(!canGoUpStair && !canGoDownStair)
+		vy += SIMON_GRAVITY * dt;
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
@@ -332,7 +346,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		else 
 			subWeapons->Update(dt, coObjects);
 	}
-
 
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
@@ -396,12 +409,23 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
 	}
 
+	/*if (CGame::GetInstance()->GetCurrentSceneID() == 3 && y < 120)
+		CGame::GetInstance()->SwitchScene(2);*/
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		
 		x += dx;
 		y += dy;
+
+		//if (nx != 0 && /*(state == SIMON_STATE_GO_UP_STAIR || state == SIMON_STATE_GO_DOWN_STAIR)onStair &&*/ GetTickCount() - time >= 150)
+		//{
+		//	vx = 0;
+		//	vy = 0;
+		//	//SetState(SIMON_STATE_IDLE_ON_STAIR);
+		//}
+
 	}
 	else
 	{
@@ -504,7 +528,49 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-		
+			else if (dynamic_cast<CWaterSurface *>(e->obj))
+			{
+				//effect
+				x += dx;
+				y += dy;
+				health = 0;
+			}
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CBrokenBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+					{
+
+						isHurt = false;
+						isJump = false;
+						//y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						SetState(SIMON_STATE_SIT_AFTER_FALL);
+					}
+					if (isJump)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);

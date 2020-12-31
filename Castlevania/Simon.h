@@ -6,13 +6,14 @@
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
+#include "TriggerStair.h"
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
-#define SIMON_JUMP_SPEED_Y		0.5f
+#define SIMON_JUMP_SPEED_Y		0.8f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.0015f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
@@ -43,7 +44,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
-
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
@@ -71,6 +72,9 @@ class Simon : public CGameObject
 	bool isUntouchable = false;
 	bool isDead = false;
 
+	int directionY;
+	int stairNx;
+	DWORD time;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -79,6 +83,7 @@ class Simon : public CGameObject
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
 
+	TriggerStairs *triggerStairs;
 
 	enum animation
 	{
@@ -105,11 +110,14 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		IDLE_STAIR_UP_LEFT,
+		IDLE_STAIR_UP_RIGHT,
+		IDLE_STAIR_DOWN_LEFT,
+		IDLE_STAIR_DOWN_RIGHT
 	}ani;
 
 public:
-
 	Simon();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
