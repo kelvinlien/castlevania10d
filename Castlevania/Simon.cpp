@@ -217,6 +217,12 @@ void Simon::Attack()
 			break;
 		case STOPWATCH:
 			break;
+		case AXE:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
 		}
 		subWeapons->nx = nx;
 	
@@ -346,8 +352,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		else 
 			subWeapons->Update(dt, coObjects);
 	}
-
-
+	if (isBuff && GetTickCount64()-buffTime > 10)
+	{
+		isBuff = false;
+	}
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
 		isAttack = false;
