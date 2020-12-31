@@ -45,12 +45,7 @@ Item::Item(int x, int y, ItemType ani) {
 		heightBBox = 30;
 		start_x = x;
 		break;
-	case ITEM_WHIP_RED:
-		widthBBox = 32;
-		heightBBox = 32;
-		start_x = x;
-		break;
-	case ITEM_WHIP_BLUE:
+	case ITEM_WHIP:
 		widthBBox = 32;
 		heightBBox = 32;
 		start_x = x;
@@ -73,6 +68,26 @@ Item::Item(int x, int y, ItemType ani) {
 	case ITEM_HOLY_WATER:
 		widthBBox = 32;
 		heightBBox = 32;
+		start_x = x;
+		break;
+	case ITEM_CHICKEN_THIGH:
+		widthBBox = 32;
+		heightBBox = 26;
+		start_x = x;
+		break;
+	case ITEM_AXE:
+		widthBBox = 30;
+		heightBBox = 28;
+		start_x = x;
+		break;
+	case ITEM_ORD:
+		widthBBox = 24;
+		heightBBox = 28;
+		start_x = x;
+		break; 
+	case ITEM_DOUBLE_SHOT:
+		widthBBox = 28;
+		heightBBox = 28;
 		start_x = x;
 		break;
 	default:
@@ -174,6 +189,12 @@ void Item::BeingProcessed()
 	case ITEM_BIG_HEART:
 		simon->SetHearts(simon->GetHearts() + 5);
 		break;
+	case ITEM_ORD:
+		simon->SetHealth(SIMON_MAX_HEALTH); 
+		break;
+	case ITEM_DOUBLE_SHOT:
+		simon->SetisBuff();
+		break;
 	case ITEM_MONEY_BAG_RED:
 		effect = ONE_THOUSAND_EFFECT;
 		this->y -= 20;
@@ -195,11 +216,7 @@ void Item::BeingProcessed()
 		widthBBox = 29;
 		heightBBox = 16;
 		break;
-	case ITEM_WHIP_RED:
-		simon->SetState(SIMON_STATE_LEVEL_UP);
-		CWhip::GetInstance()->LevelUp();
-		break;
-	case ITEM_WHIP_BLUE:
+	case ITEM_WHIP:
 		simon->SetState(SIMON_STATE_LEVEL_UP);
 		CWhip::GetInstance()->LevelUp();
 		break;
@@ -215,6 +232,9 @@ void Item::BeingProcessed()
 		break;
 	case ITEM_HOLY_WATER:
 		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(HOLYWATER));
+		break;
+	case ITEM_AXE:
+		simon->SetSubWeapons(WeaponManager::GetInstance()->createWeapon(AXE));
 		break;
 	default:
 		break;

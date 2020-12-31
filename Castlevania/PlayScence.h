@@ -5,16 +5,16 @@
 #include "GameObject.h"
 #include "Brick.h"
 #include "Simon.h"
-#include "Goomba.h"
+#include "FirePot.h"
 #include "Koopas.h"
 #include "GameMap.h"
 #include "FirePot.h"
 #include "Candle.h"
 #include "Item.h"
 #include "GameMap.h"
+#include "Panther.h"
 
-
-#include "Ghost.h"
+#include"Ghost.h"
 
 class CPlayScene: public CScene
 {

@@ -3,13 +3,14 @@
 #include "Dagger.h"
 #include "HolyWater.h"
 #include "StopWatch.h"
-
+#include "Axe.h"
 
 enum Available
 {
 	DAGGER,
 	HOLYWATER,
 	STOPWATCH,
+	AXE
 };
 
 class WeaponManager {

@@ -20,7 +20,7 @@ void Dagger::SetAnimation() {
 }
 
 void Dagger::Render() {
-	if (!isVanish) {
+	if (!isVanish && GetIsThrown()) {
 		this->SetAnimation();
 		ani->Render(x, y);
 		RenderBoundingBox();
@@ -34,9 +34,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CGameObject::Update(dt, coObjects);
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
-
-	
+	if (!GetIsThrown()) return;
 	vx = nx * DAGGER_VX;
 	coEvents.clear();
 
@@ -49,6 +47,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		if (x < Camera::GetInstance()->GetCamX() ||
 			x > Camera::GetInstance()->GetCamX() + SCREEN_WIDTH) {
 			isVanish = true;
+			SetIsThrown(false);
 		}
 	}
 	else
