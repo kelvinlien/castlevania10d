@@ -8,7 +8,6 @@ float float_rand(float min, float max)
 CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 {
 	SetItem(itemType);
-	Camera* cam = Camera::GetInstance();
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
