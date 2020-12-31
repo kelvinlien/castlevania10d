@@ -208,7 +208,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player->ReLoadAllAniSet();
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj->SetPosition(Area::GetInstance()->GetSpawnPos(), y);
+		Area::GetInstance()->SetSpawnPos();
+		obj->SetPosition(Area::GetInstance()->GetSpawnPosX(), Area::GetInstance()->GetSpawnPosY());
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 
@@ -453,11 +454,11 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
 	switch (currentMapID) {
-		//case 1:
-		//	Area::GetInstance()->SetAreaID(11);
-		//	//Area::GetInstance()->SetLimitLeftCam(0);
-		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
-		//	break;
+	case 1:
+		Area::GetInstance()->SetAreaID(11);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_11);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_11);
+		break;
 	case 2:
 		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
 			Area::GetInstance()->SetAreaID(21);
@@ -474,9 +475,11 @@ void CPlayScene::Load()
 		}
 
 		break;
-		/*case 3:
+	case 3:
 		Area::GetInstance()->SetAreaID(31);
-		break;*/
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_31);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_31);
+		break;
 	default:
 		break;
 	}
@@ -685,10 +688,10 @@ void CPlayScene::Render()
 		objects[i]->Render();
 
 	// Bbox 2 dau cau thang
-	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+	/*LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
 	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++) {
 		TriggerStairs::GetInstance()->Get(i)->Render();
-	}
+	}*/
 }
 
 /*
@@ -744,8 +747,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_M:
 		simon->SetHearts(4);
-		if (CGame::GetInstance()->GetCurrentSceneID() < 3)
-			CGame::GetInstance()->SwitchScene(2);
+		if (CGame::GetInstance()->GetCurrentSceneID() <= 3)
+			CGame::GetInstance()->SwitchScene(3);
 		break;
 	}
 }

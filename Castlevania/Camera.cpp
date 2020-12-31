@@ -101,6 +101,17 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 			y = 0.0f;
 		}
 	}
+	else if (Area::GetInstance()->GetAreaID() == 31 /*&& x < 2300*/)
+	{
+		DebugOut(L"Rigt cam : %f \n", playerX);
+
+		if (playerX > Area::GetInstance()->GetLimitLeftCam() && playerX < Area::GetInstance()->GetLimitRightCam()) //cap at door - scene 2 area 1
+		{
+
+			x = playerX;
+			y = 0.0f;
+		}
+	}
 	else
 	{
 		if (playerX > 0 && playerX < (mapWidth - screenWidth - TILE_SIZE / 2) /*&& moveCamera*/) //to make sure it won't be out of range  
