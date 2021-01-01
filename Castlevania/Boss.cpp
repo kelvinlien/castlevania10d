@@ -9,6 +9,23 @@ CBoss::CBoss()
 	vx = 0;
 	vy = 0;
 }
+void CBoss::SetDirect(D3DXVECTOR2 targetPos) {
+	if (this->x <= targetPos.x)
+		this->nx = 1;
+	else if (this->x > targetPos.x)
+		this->nx = -1;
+
+	if (this->y <= targetPos.y)
+		this->ny = 1;
+	else if (this->y >= targetPos.y)
+		this->ny = -1;
+}
+void CBoss::SetDirectWhenCollideEdge() {
+	if (this->x <= leftBound || this->x > rightBound)
+		nx = -nx;
+	if (this->y <= topBound || this->y > bottomBound)
+		ny = -ny;
+}
 
 void CBoss::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -37,12 +54,15 @@ void CBoss::SetState(int state)
 		if (isWaiting) return;
 		this->start_x = this->x;
 		this->start_y = this->y;
+
 		isWaiting = true;
 		isFlying = false;
 		isReverse = false;
+
 		startWaitTime = GetTickCount();
 		vx = 0;
 		vy = 0;
+		fliedDistance = 0;
 		RandomWaitingPos();
 		break;
 	case BOSS_STATE_FLYING:
@@ -51,29 +71,18 @@ void CBoss::SetState(int state)
 		isWaiting = false;
 		isFlying = true;
 		isReverse = false;
+
 		startWaitTime = 0;
-		startFlyTime = GetTickCount();
+		//startFlyTime = GetTickCount();
 		isFlying = true;
 
-		if (this->x < targetPos.x) {
-			vx = BOSS_FLY_SPEED_X;
-		}
-		else 
-			vx = -BOSS_FLY_SPEED_X;
-
-
-		if (this->y >= targetPos.y) {
-			vy = -BOSS_FLY_SPEED_Y;
-		}
-		else
-			vy = BOSS_FLY_SPEED_Y;
+		vx = BOSS_FLY_SPEED_X * this->nx;
+		vy = BOSS_FLY_SPEED_Y * this->ny;
 	}
 	
 }
 
 void CBoss::SetTargetPos() {
-	//if (Simon::GetInstance()->x >= this->x)
-	//	isNearSimon = true;
 
 	targetPos.x = Simon::GetInstance()->x;
 	targetPos.y = Simon::GetInstance()->y;
@@ -81,11 +90,26 @@ void CBoss::SetTargetPos() {
 
 void CBoss::RandomWaitingPos() {
 	srand(time(NULL));
-	int camX = (int)Camera::GetInstance()->GetCamX();
-	int camY = (int)Camera::GetInstance()->GetCamY() ; // 120 is height of board
+	int middleLineX = (leftBound + rightBound) / 2;
+	int middleLineY = (topBound + bottomBound) / 2;
+	if (this->x >= middleLineX)
+		waitingPos.x = rand() % (middleLineX - leftBound + 1) + leftBound;
+	else if (this->x < middleLineX)
+		waitingPos.x = rand() % (rightBound - middleLineX + 1) + middleLineX;
 
-	waitingPos.x = rand() % (512 - BOSS_FLY_BBOX_WIDTH) + camX;
-	waitingPos.y = rand() % (480 - 160) + 80;
+	if (this->y >= middleLineY)
+		waitingPos.y = rand() % (middleLineY - topBound + 1) + topBound;
+	else if (this->y < middleLineY)
+		waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;
+
+	DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
+	DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
+	DebugOut(L"[TEST] waitingPos.x: %f\n", waitingPos.x);
+	DebugOut(L"[TEST] waitingPos.y: %f\n", waitingPos.y);
+	DebugOut(L"[TEST] x: %f\n", x); 
+	DebugOut(L"[TEST] y: %f\n", y);
+
+
 }
 
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -100,65 +124,55 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else return;
 	}
 
-
 	if (isWaiting) {
 		if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
 			SetState(BOSS_STATE_FLYING);
 		}
 		SetTargetPos();
+		SetDirect(targetPos);
 		flyDistance = sqrt(pow(targetPos.x - this->start_x, 2) + pow(targetPos.y - this->start_y, 2));
-
 	}
 
 	if (isFlying)
 	{
-		DebugOut(L"[TEST]  leftX: %f\n", leftCamX);
-		DebugOut(L"[TEST]  rightX: %f\n", rightCamX);
-		DebugOut(L"[TEST]  topY: %f\n", topCamY);
-		DebugOut(L"[TEST]  bottomY: %f\n", bottomCamY);
+		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
 
-		if (!isReverse)
-			fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
-		else {
-
-			fliedDistance = sqrt(pow(this->x - targetPos.x, 2) + pow(this->y - targetPos.y, 2));
-
-		}
-		if (isOutCamera()) {
-			if (this->x < targetPos.x) {
-				vx = BOSS_FLY_SPEED_X;
-			}
-			else
-				vx = -BOSS_FLY_SPEED_X;
-
-
-			if (this->y >= targetPos.y) {
-				vy = -BOSS_FLY_SPEED_Y;
-			}
-			else
-				vy = BOSS_FLY_SPEED_Y;
-		}
-		if (fliedDistance >= flyDistance && !isReverse) {
-
+		if (isOutCamera() && !isReverse) {
+			RandomWaitingPos();
 			targetPos.x = waitingPos.x;
 			targetPos.y = waitingPos.y;
-			//vx = -vx/2;
-			//vy = -vy/2;
+			SetDirect(targetPos);
+
+			vx = vx / 2 * this->nx;
+			vy = vy / 2 * this->ny;
 			flyDistance = sqrt(pow(this->x - targetPos.x, 2) + pow(this->y - targetPos.y, 2));
-
-			//fliedDistance = 0;
-
-			/*vx = -0.15;
-			vy = -0.1;
-
-			if (this->x < targetPos.x) {
-				vx = -vx;
-			}
-
-			if (this->y >= targetPos.y) {
-				vy = -vy;
-			}*/
+			isReverse = true;
+			this->start_x = this->x;
+			this->start_y = this->y;
 		}
+		else if (fliedDistance >= flyDistance && !isReverse) {
+			targetPos.x = waitingPos.x;
+			targetPos.y = waitingPos.y;
+			SetDirect(targetPos);
+
+			fliedDistance = 0;
+			vx = vx/2 * this->nx;
+			vy = vy/2 * this->ny;
+			flyDistance = sqrt(pow(this->x - targetPos.x, 2) + pow(this->y - targetPos.y, 2));
+			isReverse = true;
+			this->start_x = this->x;
+			this->start_y = this->y;
+		} 
+		//else if (isOutCamera() && fliedDistance <= flyDistance) {
+		//	targetPos.x = waitingPos.x;
+		//	targetPos.y = waitingPos.y;
+		//	SetDirect(targetPos);
+		//	isReverse = true;
+		//	vx = vx * this->nx;
+		//	vy = vy  * this->ny;
+		//	this->start_x = this->x;
+		//	this->start_y = this->y;
+		//}
 
 		Fly(targetPos);
 		//DebugOut(L"[TEST] distance: %f\n", flyDistance); 
@@ -181,41 +195,20 @@ void CBoss::SetAnimation()
 
 void CBoss::Fly(D3DXVECTOR2 targetPos)
 {
-	//if (!isNearSimonByAxisX() && !isNearSimonByAxisY()) {
 		x += dx;
 		y += dy;
-	//}
-
-	/*if (isNearSimonByAxisX()) {
-		y += dy;
-	} 
-
-	if (isNearSimonByAxisY()) {
-		x += dx;
-	}
-*/		
-		/*DebugOut(L"[TEST] fliedDistance: %f\n", fliedDistance);
-		DebugOut(L"[TEST]  flyDistance: %f\n", flyDistance);*/
-		//DebugOut(L"[TEST]  targetPos.x: %f\n", targetPos.x);
-		//DebugOut(L"[TEST]  waitingPos.x: %f\n", waitingPos.x);
-		//DebugOut(L"[TEST]  targetPos.y: %f\n", targetPos.y);
-		//DebugOut(L"[TEST]  waitingPos.y: %f\n", waitingPos.y);
-
-		if (fliedDistance >= flyDistance && targetPos.x == waitingPos.x && targetPos.y == waitingPos.y) {
-			SetState(BOSS_STATE_WAITING);
-			isReverse = true;
-			DebugOut(L"[TEST] isWaiting....\n");
-
+		if (targetPos.x == waitingPos.x && targetPos.y == waitingPos.y  && fliedDistance >= flyDistance) {
+				SetState(BOSS_STATE_WAITING);
+				DebugOut(L"[TEST] isWaiting....\n");
 		}
 
-	//if (isNearSimonByAxisX() && isNearSimonByAxisY())
-	//{
-		//isAtTarget = true;
-		/*DebugOut(L"[TEST] targetPos: %f\n", targetPos);
-		DebugOut(L"[TEST] waitingPos: %f\n", waitingPos);*/
+		//if (targetPos.x == waitingPos.x && targetPos.y == waitingPos.y && fliedDistance >= flyDistance /*|| isOutCamera() && fliedDistance <= flyDistance*/) {
+		//	SetState(BOSS_STATE_WAITING);
+		//	DebugOut(L"[TEST] isWaiting....\n");
+		//}
 
-		/*if (this->x == waitingPos.x && targetPos.y == waitingPos.y) {
-			SetState(BOSS_STATE_WAITING);
-		}*/
-	//}
+		//else if (isOutCamera()) {
+		//	vx = -vx;
+		//	vy = -vy;
+		//}
 }

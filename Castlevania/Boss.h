@@ -29,20 +29,23 @@
 
 class CBoss :public CEnemy
 {
-	float leftCamX = 5000;
-	float rightCamX = 5000 + (float)SCREEN_WIDTH;
-	float topCamY = (float)SCREEN_HEIGHT - 120 - 32;
-	float bottomCamY =   600 + (float)SCREEN_HEIGHT - 120 - 32;
 	int ani;
 	int percentFlyToSimon;
+	int ny;
 	//flag variables
 	bool isFlying;
 	bool isWaiting;
 	bool isReverse;
 	bool isNearSimon;
+	//coordinates
+	// coordinates
 
-	//time variables
-	DWORD startFlyTime;
+	int leftBound = 4900 + BOSS_FLY_BBOX_WIDTH; // 4900 is leftbound of camera
+	int rightBound = 4900 + SCREEN_WIDTH - BOSS_FLY_BBOX_WIDTH;
+	int topBound = 80 + BOSS_FLY_BBOX_HEIGHT; // height of Score Board
+	int bottomBound = SCREEN_HEIGHT - 100 - BOSS_FLY_BBOX_HEIGHT; // 80 is height of brick
+
+	//DWORD startFlyTime;
 	DWORD startWaitTime;
 
 	//target pos
@@ -64,6 +67,8 @@ public:
 	void SetTargetPos();
 	int RandomPercentFlyToSimon() { return  rand() % 3 + 1 ;} // to decide how many percent Boss can fly to Simon
 	void RandomWaitingPos(); //to random waiting pos
-	bool isOutCamera() { return (this->x <= leftCamX || this->x >= rightCamX || this->y <= topCamY || this->y >= bottomCamY); }
+	void SetDirect(D3DXVECTOR2 targetPos);
+	void SetDirectWhenCollideEdge();
+	bool isOutCamera() { return (this->x <= leftBound || this->x >= rightBound || this->y <= topBound || this->y >= bottomBound); }
 };
 
