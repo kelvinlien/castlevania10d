@@ -1,5 +1,7 @@
 #pragma once
 #include"Enemy.h"
+//#include <cstdlib>
+// <ctime>
 #define GHOST_ANI_LEFT   0
 #define GHOST_ANI_RIGHT  1
 #define GHOST_ANI_DIE	 2
@@ -20,11 +22,14 @@ class CGhost:public CEnemy
 {
 	int ani;
 	DWORD die_time;
+	float xbackup;
+	float ybackup;
 public:
 	CGhost(float x, float y, int nx,int itemType);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void SetState(int state);
+	virtual void Respawn();
 };
 

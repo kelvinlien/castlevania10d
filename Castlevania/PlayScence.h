@@ -13,7 +13,9 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
-
+#include  "Bat.h"
+#include "SmallBrick.h"
+#include "Fishman.h"
 #include"Ghost.h"
 
 class CPlayScene: public CScene
@@ -23,6 +25,8 @@ protected:
 
 	CGhost *ghost;					// Beta ghost for testing purpose
 	CPanther *panther;
+	CBat* bat;
+	CFishman* fishman;
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;

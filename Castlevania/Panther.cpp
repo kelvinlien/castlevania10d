@@ -6,6 +6,8 @@ CPanther::CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx) 
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
+	this->xbackup = x;
+	this->ybackup = y;
 	this->xJumpRight = xJumpRight;
 	this->xJumpLeft = xJumpLeft;
 	type = 10;  // panther type
@@ -34,7 +36,12 @@ void CPanther::Run()
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {	
 	if (state == PANTHER_STATE_DIE && GetTickCount() - dieTime >= PANTHER_DIE_TIME)
-		isVanish = true;
+	{
+		if (isVanish == true)
+			isVanish = false;
+		Respawn();
+		
+	}
 	
 	CGameObject::Update(dt);
 	if (!isDead)
@@ -172,6 +179,14 @@ void CPanther::Render() {
 	RenderBoundingBox();
 }
 
+void CPanther::Respawn()
+{
+	x = xbackup;
+	y = ybackup;
+	isActive = false;
+	SetState(PANTHER_STATE_IDLE);
+}
+
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	if (isJump && y < 350) return;
@@ -185,6 +200,12 @@ void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bott
 void CPanther::SetState(int state)
 {
 	this->state = state;
+	if (state == PANTHER_STATE_IDLE)
+	{
+		isDead = false;
+		isRun = false;
+		isJump = false;
+	}
 	if (state == PANTHER_STATE_DIE)
 	{
 		isDead = true;

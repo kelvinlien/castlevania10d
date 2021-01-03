@@ -10,6 +10,8 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include "EnemyFactory.h"
+#include "Enemy.h"
+
 
 using namespace std;
 
@@ -37,9 +39,14 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_GHOST	2
+#define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -174,18 +181,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
-	if (object_type == 5) {
+	int amount, axis;
+	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -223,6 +234,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		CEnemyFactory::GetInstance()->enemies.push_back(panther);
 		return;
 		//break;
+	case OBJECT_TYPE_BAT:
+		//int itemType = atof(tokens[4].c_str());
+		bat = new CBat(x, y, -1,1);
+		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(bat);
+		return;
+	case OBJECT_TYPE_FISHMAN:
+		fishman = new CFishman(x, y, -Simon::GetInstance()->nx, 0);
+		fishman->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(fishman);
+		return;
+	//break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -271,6 +295,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+
+		//first small brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CSmallBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			//DebugOut(L"[CHECK] top: %f\n", y + SMALL_BRICK_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -299,11 +347,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}	
@@ -512,6 +559,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
+	CEnemyFactory* factory= CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
+	{
+		CEnemy* enemy=factory->enemies[i];
+	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -585,6 +637,15 @@ void CPlayScene::Update(DWORD dt)
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	}
+	CEnemyFactory* fac = CEnemyFactory::GetInstance();
+	{
+		for (size_t i = 0; i < factory->enemies.size(); i++)
+		{
+			CEnemy* enemy = factory->enemies[i];
+			if (enemy->isVanish == true)
+				enemy->Respawn();
+		}
 	}
 }
 

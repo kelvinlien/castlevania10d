@@ -17,7 +17,14 @@ float Camera::GetCamY()
 {
 	return y;
 }
-
+float Camera::GetLeftSide()
+{
+	return x;
+}
+float Camera::GetRightSide()
+{
+	return x + SCREEN_WIDTH;
+}
 void Camera::SetCamX(float camX)
 {
 	this->x = camX;
