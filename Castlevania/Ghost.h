@@ -18,7 +18,6 @@
 
 class CGhost:public CEnemy
 {
-	int ani;
 	DWORD die_time;
 public:
 	CGhost(float x, float y, int nx,int itemType);

@@ -307,6 +307,78 @@ void CGame::SweptAABB(
 
 }
 
+/*
+	Update world status for this frame
+	dt: time period between beginning of last frame and beginning of this frame
+*/
+void CGame::Update(DWORD dt)
+{
+	this->GetCurrentScene()->Update(dt);
+}
+
+void CGame::Render()
+{
+	LPDIRECT3DDEVICE9 d3ddv = GetDirect3DDevice();
+	LPDIRECT3DSURFACE9 bb = GetBackBuffer();
+	LPD3DXSPRITE spriteHandler = GetSpriteHandler();
+
+	if (d3ddv->BeginScene())
+	{
+		// Clear back buffer with a color
+		d3ddv->ColorFill(bb, NULL, backgroundColor);
+
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+
+		this->GetCurrentScene()->Render();
+
+
+		spriteHandler->End();
+		d3ddv->EndScene();
+	}
+
+	// Display back buffer content to the screen
+	d3ddv->Present(NULL, NULL, NULL, NULL);
+}
+
+int CGame::Run()
+{
+	MSG msg;
+	int done = 0;
+	DWORD frameStart = GetTickCount64();
+	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
+
+	while (!done)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT) done = 1;
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		DWORD now = GetTickCount64();
+
+		// dt: the time between (beginning of last frame) and now
+		// this frame: the frame we are about to render
+		DWORD dt = now - frameStart;
+
+		if (dt >= tickPerFrame)
+		{
+			frameStart = now;
+
+			ProcessKeyboard();
+
+			Update(dt);
+			Render();
+		}
+		else
+			Sleep(tickPerFrame - dt);
+	}
+
+	return 1;
+}
+
 CGame *CGame::GetInstance()
 {
 	if (__instance == NULL) __instance = new CGame();
@@ -396,5 +468,5 @@ void CGame::SwitchScene(int scene_id)
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();	
+	s->Load();
 }

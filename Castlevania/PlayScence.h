@@ -17,15 +17,19 @@
 
 #include"Ghost.h"
 
+#include "Quadtree.h"
+
 class CPlayScene: public CScene
 {
 protected: 
 	Simon *player;					// A play scene has to have player, right?
 
-	CGhost *ghost;					// Beta ghost for testing purpose
+	Quadtree *qtree;
 
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> delObjects;
+	vector<Entity*> activeEntities;
 	int mapWidth;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

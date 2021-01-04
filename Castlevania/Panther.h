@@ -44,6 +44,6 @@ public:
 	void Jump();
 	void Run();
 	void SetAnimation();
-	void SetState(int state);
+	virtual void SetState(int state);
 };
 
