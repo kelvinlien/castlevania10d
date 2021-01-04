@@ -345,6 +345,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
 	
 	if (subWeapons != NULL ) {
 		if (subWeapons->isVanish) 
@@ -558,6 +559,26 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
+}
+void Simon::ResetSimon()
+{
+	switch (area->GetInstance()->GetAreaID())
+	{
+	case 21:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(50, 0);
+		break;
+	case 22:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_22, 0);
+		break;
+	case 23:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_23, 0);
+		break;
+	default:
+		break;
+	}
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
