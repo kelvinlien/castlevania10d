@@ -55,6 +55,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	
 	if (state == ENEMY_STATE_DIE && (GetTickCount() - die_time) > GHOST_DIE_TIME)
 	{
+		startDieTime = GetTickCount();
 		isVanish = true;
 	}
 

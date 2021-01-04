@@ -37,10 +37,8 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {	
 	if (state == PANTHER_STATE_DIE && GetTickCount() - dieTime >= PANTHER_DIE_TIME)
 	{
-		if (isVanish == true)
-			isVanish = false;
-		Respawn();
-		
+		startDieTime = GetTickCount();
+		isVanish = true;
 	}
 	
 	CGameObject::Update(dt);
@@ -185,6 +183,7 @@ void CPanther::Respawn()
 	y = ybackup;
 	isActive = false;
 	SetState(PANTHER_STATE_IDLE);
+	isVanish = false;
 }
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)

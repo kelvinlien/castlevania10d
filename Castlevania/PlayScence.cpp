@@ -559,11 +559,6 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
-	CEnemyFactory* factory= CEnemyFactory::GetInstance();
-	for (size_t i = 0; i < factory->enemies.size(); i++)
-	{
-		CEnemy* enemy=factory->enemies[i];
-	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -631,20 +626,21 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
 
 	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
-	CEnemyFactory* fac = CEnemyFactory::GetInstance();
+
+	//Create enemy factory
+	CEnemyFactory* factory = CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
 	{
-		for (size_t i = 0; i < factory->enemies.size(); i++)
+		CEnemy* enemy = factory->enemies[i];
+		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
 		{
-			CEnemy* enemy = factory->enemies[i];
-			if (enemy->isVanish == true)
-				enemy->Respawn();
+			enemy->Respawn();
+			objects.push_back(enemy);
 		}
 	}
 }

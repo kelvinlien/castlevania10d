@@ -8,6 +8,7 @@ protected:
 	bool isActive;
 	int type;
 	ItemType itemType;
+	DWORD startDieTime;
 public:
 	CEnemy();
 	void SetActive() { if (!isActive) isActive = true; }
@@ -20,5 +21,7 @@ public:
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }
 	void SetItem(int itemType);
+	DWORD GetStartDieTime() { return startDieTime; }
+	void SetStartDieTime(DWORD time) { startDieTime = time; }
 };
 
