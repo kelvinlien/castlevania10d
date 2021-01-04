@@ -454,11 +454,6 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
 	switch (currentMapID) {
-	case 1:
-		Area::GetInstance()->SetAreaID(11);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_11);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_11);
-		break;
 	case 2:
 		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
 			Area::GetInstance()->SetAreaID(21);
@@ -477,8 +472,9 @@ void CPlayScene::Load()
 		break;
 	case 3:
 		Area::GetInstance()->SetAreaID(31);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_31);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_31);
+		Area::GetInstance()->SetLimitLeftCam(0);
+		Area::GetInstance()->SetLimitRightCam(240);
+		Camera::GetInstance()->SetCamX(0);
 		break;
 	default:
 		break;

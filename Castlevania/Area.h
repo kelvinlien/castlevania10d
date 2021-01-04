@@ -2,8 +2,6 @@
 #pragma once
 #include <Windows.h>
 #include <d3dx9.h>
-#define LIMIT_LEFT_CAM_11	0
-#define LIMIT_RIGHT_CAM_11	2285
 #define LIMIT_LEFT_CAM_21	0
 #define LIMIT_RIGHT_CAM_21	2285
 #define LIMIT_LEFT_CAM_22	3072
@@ -11,11 +9,11 @@
 #define LIMIT_LEFT_CAM_23	4076
 #define LIMIT_RIGHT_CAM_23	4864
 #define LIMIT_LEFT_CAM_31	0
-#define LIMIT_RIGHT_CAM_31	2285
+#define LIMIT_RIGHT_CAM_31	350
 class Area
 {
-	int areaID = 21;
-	float spawnPosX = 50;
+	int areaID = 0;
+	float spawnPosX = 0;
 	float spawnPosY = 0;
 	float limitLeftCam = 0;
 	float limitRightCam;

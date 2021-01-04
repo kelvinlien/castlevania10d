@@ -18,11 +18,11 @@ void Area::SetSpawnPos()
 		spawnPosY = 0;
 		break;
 	case 3:
-		spawnPosX = 50.0f;
-		spawnPosY = 10.0f;
+		spawnPosX = 60.0f;
+		spawnPosY = 20.0f;
 		break;
 	default:
-		spawnPosX = 1000.0f;
+		spawnPosX = 50.0f;
 		spawnPosY = 0;
 		break;
 	}
