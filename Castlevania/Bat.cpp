@@ -46,7 +46,10 @@ void CBat::Respawn()
 void CBat::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > BAT_DIE_TIME))
+	{
+		startDieTime = GetTickCount();
 		isVanish = true;
+	}
 	else if (state != ENEMY_STATE_DIE)
 		vx = BAT_FLY_SPEED_X * this->nx;
 

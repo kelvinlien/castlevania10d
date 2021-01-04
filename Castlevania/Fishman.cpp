@@ -23,6 +23,7 @@ void CFishman::SetState(int state)
 	switch (state)
 	{
 	case FISH_MAN_STATE_JUMP:
+		vx = 0;
 		vy = FISH_MAN_JUMPING_SPEED;
 		isJump = true;
 		break;
@@ -57,6 +58,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (isDead && GetTickCount() - dieTime >= FISH_MAN_DIE_TIME)
 	{
+		startDieTime = GetTickCount();
 		isVanish = true;
 	}
 	if (!isDead)
@@ -138,7 +140,7 @@ void CFishman::Respawn()
 	srand(time(NULL));
 	Camera* cam = Camera::GetInstance();
 	float res = float_rand(cam->GetCamX(),cam->GetCamX() + SCREEN_WIDTH);
-	x =res;
+	x = res;
 	isActive = true;
 	SetState(FISH_MAN_STATE_JUMP);
 	isVanish = false;
