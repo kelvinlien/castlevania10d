@@ -34,7 +34,8 @@ void Simon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_IDLE:
-		if (isOnStair) return;
+		isOnStair = false;
+		isSit = false;
 		 vx = 0;
 		 break;
 	case SIMON_STATE_LEVEL_UP:
@@ -244,6 +245,11 @@ void Simon::AutoWalkOnStair() {
 		isAutoWalkOnStair = false;
 		simonAutoWalkDistanceX = 0;
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
+	}
+
+	if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
+		SetState(SIMON_STATE_IDLE);
+		return;
 	}
 }
 void Simon::Sit()
@@ -490,12 +496,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
-				if (e->ny < 0)
-				{
-					if (isJump == true)
+				if (!isOnStair) {
+					if (e->ny < 0)
 					{
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-						isJump = false;
+						if (isJump == true)
+						{
+							y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+							isJump = false;
+						}
 					}
 				}
 			}

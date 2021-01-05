@@ -148,6 +148,9 @@ public:
 	void SetSimonAutoActionToGoStair(int i);
 	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
 	void SetStairOutPoint(int i);
+	float GetAboveStairOutPoint() { return aboveStairOutPoint; }
+	float GetBelowStairOutPoint() { return belowStairOutPoint; }
+
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

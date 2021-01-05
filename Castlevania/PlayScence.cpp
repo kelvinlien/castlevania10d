@@ -653,8 +653,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_GO_UP_STAIR);
 	}
-	else
+	else {
+		if (simon->IsOnStair()) return;
 		simon->SetState(SIMON_STATE_IDLE);
+	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
