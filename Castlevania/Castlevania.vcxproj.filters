@@ -33,7 +33,6 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="Area.cpp" />
     <ClCompile Include="BlinkEffect.cpp" />
     <ClCompile Include="Axe.cpp" />
   </ItemGroup>
@@ -71,7 +70,6 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="Area.h" />
     <ClInclude Include="BlinkEffect.h" />
     <ClInclude Include="Axe.h" />
   </ItemGroup>
