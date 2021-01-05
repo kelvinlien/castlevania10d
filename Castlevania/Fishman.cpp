@@ -135,6 +135,10 @@ void CFishman::WaitToShoot() {
 
 void CFishman::Respawn()
 {
+	isWaitToShoot = false;
+	isShoot = false;
+	startShootTime=0;
+	startWaitToShoot=0;
 	isDead = false;
 	y = ybackup;
 	srand(time(NULL));
