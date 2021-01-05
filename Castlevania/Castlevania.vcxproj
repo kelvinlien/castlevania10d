@@ -128,7 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
-    <ClCompile Include="Area.cpp" />
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="BlinkEffect.cpp" />
     <ClCompile Include="Brick.cpp" />
@@ -165,7 +164,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
-    <ClInclude Include="Area.h" />
     <ClInclude Include="Axe.h" />
     <ClInclude Include="BlinkEffect.h" />
     <ClInclude Include="Brick.h" />
