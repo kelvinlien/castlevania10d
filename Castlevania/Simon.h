@@ -51,7 +51,7 @@ class Simon : public CGameObject
 	Area *area;
 	CGame *game;
 	int hearts = 5;
-	int health = 16;
+	int health = 2;
 
 	//time variables
 	DWORD startSit;
