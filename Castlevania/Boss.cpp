@@ -20,6 +20,7 @@ void CBoss::SetDirect(D3DXVECTOR2 targetPos) {
 	else if (this->y >= targetPos.y)
 		this->ny = -1;
 }
+
 void CBoss::SetDirectWhenCollideEdge() {
 	if (this->x <= leftBound || this->x > rightBound)
 		nx = -nx;
@@ -65,7 +66,7 @@ void CBoss::SetState(int state)
 		fliedDistance = 0;
 		RandomWaitingPos();
 		break;
-	case BOSS_STATE_FLYING:
+	case BOSS_STATE_FLY_TO_TARGET:
 		if (isFlying) return;
 
 		isWaiting = false;
@@ -97,10 +98,10 @@ void CBoss::RandomWaitingPos() {
 	else if (this->x < middleLineX)
 		waitingPos.x = rand() % (rightBound - middleLineX + 1) + middleLineX;
 
-	if (this->y >= middleLineY)
-		waitingPos.y = rand() % (middleLineY - topBound + 1) + topBound;
-	else if (this->y < middleLineY)
-		waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;
+	//if (this->y >= middleLineY)
+		waitingPos.y = rand() % (bottomBound - topBound + 1) + topBound;
+	//else if (this->y < middleLineY)
+	//	waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;
 
 	DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
 	DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
@@ -126,7 +127,7 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isWaiting) {
 		if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
-			SetState(BOSS_STATE_FLYING);
+			SetState(BOSS_STATE_FLY_TO_TARGET);
 		}
 		SetTargetPos();
 		SetDirect(targetPos);

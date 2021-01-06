@@ -20,12 +20,12 @@
 //State
 #define BOSS_STATE_IDLE		0
 #define	BOSS_STATE_WAITING	1
-#define	BOSS_STATE_FLYING	2
-#define BOSS_STATE_DEAD		3
+#define	BOSS_STATE_FLY_TO_TARGET	2
+#define BOSS_STATE_FLY_BACK	3
+#define BOSS_STATE_DEAD		4
 
 //Time
 #define BOSS_WAITING_TIME	1500
-#define BOSS_FLYING_TIME	1500
 
 class CBoss :public CEnemy
 {
@@ -48,7 +48,7 @@ class CBoss :public CEnemy
 	//DWORD startFlyTime;
 	DWORD startWaitTime;
 
-	//target pos
+	//positions
 	D3DXVECTOR2 targetPos;
 	D3DXVECTOR2 waitingPos;
 	
@@ -63,6 +63,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();
 	void SetAnimation();
+	//actions
 	void Fly(D3DXVECTOR2 targetPos);
 	void SetTargetPos();
 	int RandomPercentFlyToSimon() { return  rand() % 3 + 1 ;} // to decide how many percent Boss can fly to Simon
