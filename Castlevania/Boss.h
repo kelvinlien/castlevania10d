@@ -7,11 +7,14 @@
 
 #define BOSS_ANI_IDLE	0
 #define BOSS_ANI_FLY	1
-#define BOSS_FLY_SPEED_X	0.1f
-#define BOSS_FLY_SPEED_Y	0.2f
+#define BOSS_FLY_SPEED_X	0.15f
+#define BOSS_FLY_SPEED_Y	0.25f
 #define NEAR_DISTANCE_BOSS_AND_SIMON 50.0f
 #define TOP_BOUND	120
-#define BOT_BOUND	370
+#define BOT_BOUND	350
+#define LEFT_BOUND	4000
+#define RIGHT_BOUND	6000
+
 
 
 //BBox

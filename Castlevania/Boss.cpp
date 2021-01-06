@@ -115,10 +115,10 @@ void CBoss::RandomWaitingPos() {
 	else if (this->x < middleLineX)
 		waitingPos.x = rand() % (rightBound - middleLineX + 1) + middleLineX;
 
-	//if (this->y >= middleLineY)
+	if (this->y >= middleLineY)
 		waitingPos.y = rand() % (middleLineY - topBound + 1) + topBound;
-	/*else if (this->y < middleLineY)
-		waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;*/
+	else if (this->y < middleLineY)
+		waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;
 
 	//DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
 	//DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
@@ -191,7 +191,7 @@ void CBoss::SetAnimation()
 void CBoss::Fly(D3DXVECTOR2 targetPos)
 {
 	
-	if (fliedDistance >= flyDistance) {
+	if (fliedDistance >= flyDistance || this->y >= BOT_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
 		SetState(BOSS_STATE_FLY_BACK);
 		return;
 	}
@@ -203,7 +203,7 @@ void CBoss::Fly(D3DXVECTOR2 targetPos)
 void CBoss::FlyStraight(D3DXVECTOR2 targetPos)
 {
 
-	if (fliedDistance >= flyDistance) {
+	if (fliedDistance >= flyDistance || this->y >= BOT_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
 		SetState(BOSS_STATE_FLY_BACK);
 		return;
 	}
@@ -212,7 +212,7 @@ void CBoss::FlyStraight(D3DXVECTOR2 targetPos)
 
 
 void CBoss :: FlyBack(D3DXVECTOR2 targetPos) {
-	if (fliedDistance >= flyDistance || this->y <= TOP_BOUND || this->y >= BOT_BOUND) {
+	if (fliedDistance >= flyDistance || this->y <= TOP_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
 		DebugOut(L"[TEST] prepare to waiting....\n");
 		SetState(BOSS_STATE_WAITING);
 		return;
