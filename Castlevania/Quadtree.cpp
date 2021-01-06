@@ -229,6 +229,7 @@ void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 	{
 		for (int i = 0; i < indexes.size(); i++)
 		{
+
 			int index = indexes[i];
 			nodes.at(index)->RetrieveFromCamera(return_entities_list);
 		}

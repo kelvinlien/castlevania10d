@@ -109,8 +109,6 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 
 	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
-
 	LPANIMATION ani = new CAnimation();
 
 	int ani_id = atoi(tokens[0].c_str());
@@ -166,8 +164,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 {
 
 	vector<string> tokens = split(line);
-
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
@@ -274,8 +270,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-  case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
@@ -515,20 +510,7 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	//if (!qtree->GetNodes().empty())
-	//{
-	//	qtree->Clear();
-	//}
-
 	qtree->Clear();
-
-	//vector<LPGAMEOBJECT> coObjects;
-	//for (size_t i = 0; i < objects.size(); i++)
-	//{
-	//	coObjects.push_back(objects[i]);
-	//}
-	
-	// check delObjects
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -536,12 +518,12 @@ void CPlayScene::Update(DWORD dt)
 		{
 			std::vector<CGameObject*>::iterator it;
 			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
-			if (it != delObjects.end())
+			if (it != delObjects.end())	// Neu objects[i] thuoc mang delObjects
 			{
 				objects.erase(objects.begin() + i);
 				delObjects.erase(it);
 			}
-			else
+			else // Neu khong thuoc mang delObjects
 			{
 				Entity *entity = new Entity(objects[i], 0);
 				qtree->Insert(entity);
@@ -564,6 +546,7 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < activeEntities.size(); i++)
 	{
 		CGameObject *current = activeEntities[i]->GetGameObject();
+		
 		 if (current->isVanish == true)
 		 {
 			 if (dynamic_cast<CFirePot*>(current)) {
@@ -594,7 +577,6 @@ void CPlayScene::Update(DWORD dt)
 				 objects.push_back(obj);
 			 }
 			 delObjects.push_back(current);
-			
 		 }
 		 else if (dynamic_cast<CEnemy*>(current)) {
 			 CEnemy *enemy = dynamic_cast<CEnemy*>(current);
@@ -657,12 +639,10 @@ void CPlayScene::Render()
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
-	DebugOut(L"[TEST] current activeEntities size is %d \n", activeEntities.size());
+	
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
 
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{
 		int alpha;

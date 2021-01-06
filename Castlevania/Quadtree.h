@@ -1,8 +1,10 @@
 #include <list>
 #include "GameObject.h"
 #include "Entity.h"
+#include "Panther.h"
 #include "Define.h"
 #include "Camera.h"
+#include "Utils.h"
 
 
 #define MIN_OBJECT_NUMBER_TO_SPLIT 1

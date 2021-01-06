@@ -101,6 +101,9 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 1:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
 					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
