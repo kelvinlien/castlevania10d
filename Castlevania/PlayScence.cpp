@@ -459,6 +459,7 @@ void CPlayScene::Load()
 			Area::GetInstance()->SetAreaID(21);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			Camera::GetInstance()->SetCamX(0);
 		}
 		else if (Area::GetInstance()->GetAreaID() == 22) {
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
@@ -672,6 +673,8 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+
+	DebugOut(L"[CAMERA X] this is the camera x bruh: %f \n", Camera::GetInstance()->GetCamX());
 }
 
 void CPlayScene::Render()

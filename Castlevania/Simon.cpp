@@ -618,6 +618,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				flag = false;
+				SetState(SIMON_STATE_IDLE);
 			}
 			
 		}
