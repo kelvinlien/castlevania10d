@@ -530,20 +530,26 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 void Simon::ResetSimon()
 {
 	isDead = false;
+	this->nx = -1;
+	cam=Camera::GetInstance();
+	
 	SetState(SIMON_STATE_IDLE);
 	switch (area->GetInstance()->GetAreaID())
 	{
 	case 21:
 		game->GetInstance()->SwitchScene(2);
 		SetPosition(50, 0);
+		cam->SetCamPos(0, 0);
 		break;
 	case 22:
 		game->GetInstance()->SwitchScene(2);
 		SetPosition(RESPAWN_POS_22, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_22, 0);
 		break;
 	case 23:
 		game->GetInstance()->SwitchScene(2);
 		SetPosition(RESPAWN_POS_23, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_23, 0);
 		break;
 	default:
 		break;

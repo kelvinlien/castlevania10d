@@ -7,6 +7,7 @@
 #include "GameMap.h"
 #include "Utils.h"
 #include "Area.h"
+#include "Camera.h"
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
@@ -50,6 +51,8 @@ class Simon : public CGameObject
 	static Simon * __instance;
 	Area *area;
 	CGame *game;
+	Camera* cam;
+
 	int hearts = 5;
 	int health = 2;
 
