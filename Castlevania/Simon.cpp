@@ -395,8 +395,6 @@ void Simon::CalcPotentialCollisions(
 					}
 				}
 			}
-			if (dynamic_cast<CPortal *> (coObjects->at(i)))
-				DebugOut(L"[PORTAL] this is a portal");
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 			if (e->t > 0 && e->t <= 1.0f)
@@ -629,8 +627,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 
-	DebugOut(L"simon left is : %f \n", this->x+12);
-	DebugOut(L"simon top is : %f \n", this->y);
+	DebugOut(L"simon x is : %f \n", this->x+12);
+	DebugOut(L"simon y is : %f \n", this->y);
 	DebugOut(L"simon right is : %f \n", this->x+SIMON_BBOX_WIDTH-10);
 	DebugOut(L"simon bottom is : %f \n", this->y+SIMON_BBOX_HEIGHT);
 	// clean up collision events
