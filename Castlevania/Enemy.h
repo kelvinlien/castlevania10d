@@ -6,6 +6,8 @@ class CEnemy: public CGameObject
 {
 protected:
 	bool isActive;
+	bool isLock;
+	int ani;
 	int type;
 	ItemType itemType;
 public:

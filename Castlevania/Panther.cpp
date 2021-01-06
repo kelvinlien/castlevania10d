@@ -23,7 +23,6 @@ void CPanther::Jump()
 	vy = -PANTHER_JUMP_SPEED_Y;
 	isJump = true;
 	isRun = false;
-	startJumpTime = GetTickCount();
 }
 void CPanther::Run()
 {

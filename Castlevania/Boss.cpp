@@ -76,7 +76,6 @@ void CBoss::SetState(int state)
 		isFlying = true;
 
 		vy = BOSS_FLY_SPEED_Y * this->ny;
-
 		break;
 	case BOSS_STATE_FLY_BACK:
 		DebugOut(L"[TEST] flying back....\n");
@@ -94,8 +93,15 @@ void CBoss::SetState(int state)
 
 		//DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
 		//DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
-
-
+		break;
+	case BOSS_STATE_HURT:
+		if (startStopTime == 0)
+		{
+			startStopTime = GetTickCount();
+			isLock = true;
+			animation_set->at(ani)->SetLock(true);
+		}
+		health--;
 		break;
 	}
 }
@@ -133,6 +139,11 @@ void CBoss::RandomWaitingPos() {
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
+	if(GetTickCount()- startStopTime > BOSS_STOP_TIME)
+	{
+		animation_set->at(ani)->SetLock(false);
+	}
+
 	if (state == BOSS_STATE_IDLE) {
 		if (!isActive && Simon::GetInstance()->x >= this->x)
 		{
