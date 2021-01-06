@@ -631,7 +631,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	}
-
+	Camera* cam = Camera::GetInstance();
 	//Create enemy factory
 	CEnemyFactory* factory = CEnemyFactory::GetInstance();
 	for (size_t i = 0; i < factory->enemies.size(); i++)
@@ -639,8 +639,19 @@ void CPlayScene::Update(DWORD dt)
 		CEnemy* enemy = factory->enemies[i];
 		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
 		{
-			enemy->Respawn();
-			objects.push_back(enemy);
+			if (enemy->GetType() == 10)
+			{
+				if (enemy->GetPostionX() < cam->GetCamX() || enemy->GetPostionX() > (cam->GetCamX() + SCREEN_WIDTH))
+				{
+					enemy->Respawn();
+					objects.push_back(enemy);
+				}
+			}
+			else
+			{
+				enemy->Respawn();
+				objects.push_back(enemy);
+			}
 		}
 	}
 }
