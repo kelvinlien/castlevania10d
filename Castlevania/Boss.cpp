@@ -20,12 +20,6 @@ void CBoss::SetDirect(D3DXVECTOR2 targetPos) {
 	else if (this->y >= targetPos.y)
 		this->ny = -1;
 }
-void CBoss::SetDirectWhenCollideEdge() {
-	if (this->x <= leftBound || this->x > rightBound)
-		nx = -nx;
-	if (this->y <= topBound || this->y > bottomBound)
-		ny = -ny;
-}
 
 void CBoss::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -51,35 +45,59 @@ void CBoss::SetState(int state)
 	switch (state)
 	{
 	case BOSS_STATE_WAITING:
-		if (isWaiting) return;
 		this->start_x = this->x;
 		this->start_y = this->y;
 
 		isWaiting = true;
 		isFlying = false;
-		isReverse = false;
 
 		startWaitTime = GetTickCount();
 		vx = 0;
 		vy = 0;
 		fliedDistance = 0;
 		RandomWaitingPos();
+		DebugOut(L"[TEST] isWaiting....\n");
 		break;
-	case BOSS_STATE_FLYING:
-		if (isFlying) return;
+	case BOSS_STATE_FLY_TO_TARGET:
+		DebugOut(L"[TEST] flying to target....\n");
 
 		isWaiting = false;
 		isFlying = true;
-		isReverse = false;
-
 		startWaitTime = 0;
-		//startFlyTime = GetTickCount();
 		isFlying = true;
 
 		vx = BOSS_FLY_SPEED_X * this->nx;
 		vy = BOSS_FLY_SPEED_Y * this->ny;
+		break;
+	case BOSS_STATE_FLY_STRAIGHT:
+		isWaiting = false;
+		isFlying = true;
+		startWaitTime = 0;
+		isFlying = true;
+
+		vy = BOSS_FLY_SPEED_Y * this->ny;
+
+		break;
+	case BOSS_STATE_FLY_BACK:
+		DebugOut(L"[TEST] flying back....\n");
+		this->start_x = this->x;
+		this->start_y = this->y;
+		targetPos.x = waitingPos.x;
+		targetPos.y = waitingPos.y;
+		isWaiting = false;
+
+		SetDirect(targetPos);
+		startWaitTime = 0;
+		vx = BOSS_FLY_SPEED_X / 2 * this->nx;
+		vy = BOSS_FLY_SPEED_Y / 2 * this->ny;
+		flyDistance = sqrt(pow(targetPos.x - this->start_x, 2) + pow(targetPos.y - this->start_y, 2));
+
+		//DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
+		//DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
+
+
+		break;
 	}
-	
 }
 
 void CBoss::SetTargetPos() {
@@ -102,12 +120,12 @@ void CBoss::RandomWaitingPos() {
 	else if (this->y < middleLineY)
 		waitingPos.y = rand() % (bottomBound - middleLineY + 1) + middleLineY;
 
-	DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
-	DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
-	DebugOut(L"[TEST] waitingPos.x: %f\n", waitingPos.x);
-	DebugOut(L"[TEST] waitingPos.y: %f\n", waitingPos.y);
-	DebugOut(L"[TEST] x: %f\n", x); 
-	DebugOut(L"[TEST] y: %f\n", y);
+	//DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
+	//DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
+	//DebugOut(L"[TEST] waitingPos.x: %f\n", waitingPos.x);
+	//DebugOut(L"[TEST] waitingPos.y: %f\n", waitingPos.y);
+	//DebugOut(L"[TEST] x: %f\n", x); 
+	//DebugOut(L"[TEST] y: %f\n", y);
 
 
 }
@@ -124,59 +142,36 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else return;
 	}
 
-	if (isWaiting) {
-		if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
-			SetState(BOSS_STATE_FLYING);
-		}
+	if (state == BOSS_STATE_WAITING) {
 		SetTargetPos();
 		SetDirect(targetPos);
 		flyDistance = sqrt(pow(targetPos.x - this->start_x, 2) + pow(targetPos.y - this->start_y, 2));
+
+		if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
+
+			if (abs(this->x - Simon::GetInstance()->x) <= NEAR_DISTANCE_BOSS_AND_SIMON)
+				SetState(BOSS_STATE_FLY_STRAIGHT);
+			else
+				SetState(BOSS_STATE_FLY_TO_TARGET);
+		}
 	}
 
-	if (isFlying)
+	else if (state == BOSS_STATE_FLY_TO_TARGET)
 	{
 		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
-
-		if (isOutCamera() && !isReverse) {
-			RandomWaitingPos();
-			targetPos.x = waitingPos.x;
-			targetPos.y = waitingPos.y;
-			SetDirect(targetPos);
-
-			vx = vx / 2 * this->nx;
-			vy = vy / 2 * this->ny;
-			flyDistance = sqrt(pow(this->x - targetPos.x, 2) + pow(this->y - targetPos.y, 2));
-			isReverse = true;
-			this->start_x = this->x;
-			this->start_y = this->y;
-		}
-		else if (fliedDistance >= flyDistance && !isReverse) {
-			targetPos.x = waitingPos.x;
-			targetPos.y = waitingPos.y;
-			SetDirect(targetPos);
-
-			fliedDistance = 0;
-			vx = vx/2 * this->nx;
-			vy = vy/2 * this->ny;
-			flyDistance = sqrt(pow(this->x - targetPos.x, 2) + pow(this->y - targetPos.y, 2));
-			isReverse = true;
-			this->start_x = this->x;
-			this->start_y = this->y;
-		} 
-		//else if (isOutCamera() && fliedDistance <= flyDistance) {
-		//	targetPos.x = waitingPos.x;
-		//	targetPos.y = waitingPos.y;
-		//	SetDirect(targetPos);
-		//	isReverse = true;
-		//	vx = vx * this->nx;
-		//	vy = vy  * this->ny;
-		//	this->start_x = this->x;
-		//	this->start_y = this->y;
-		//}
-
 		Fly(targetPos);
-		//DebugOut(L"[TEST] distance: %f\n", flyDistance); 
+	}
 
+	else if (state == BOSS_STATE_FLY_STRAIGHT)
+	{
+		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
+		FlyStraight(targetPos);
+	}
+
+
+	else if (state == BOSS_STATE_FLY_BACK) {
+		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
+		FlyBack(targetPos);
 	}
 }
 
@@ -195,20 +190,33 @@ void CBoss::SetAnimation()
 
 void CBoss::Fly(D3DXVECTOR2 targetPos)
 {
-		x += dx;
-		y += dy;
-		if (targetPos.x == waitingPos.x && targetPos.y == waitingPos.y  && fliedDistance >= flyDistance) {
-				SetState(BOSS_STATE_WAITING);
-				DebugOut(L"[TEST] isWaiting....\n");
-		}
+	
+	if (fliedDistance >= flyDistance || this->y >= BOT_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
+		SetState(BOSS_STATE_FLY_BACK);
+		return;
+	}
+	
+	x += dx;
+	y += dy;
+}
 
-		//if (targetPos.x == waitingPos.x && targetPos.y == waitingPos.y && fliedDistance >= flyDistance /*|| isOutCamera() && fliedDistance <= flyDistance*/) {
-		//	SetState(BOSS_STATE_WAITING);
-		//	DebugOut(L"[TEST] isWaiting....\n");
-		//}
+void CBoss::FlyStraight(D3DXVECTOR2 targetPos)
+{
 
-		//else if (isOutCamera()) {
-		//	vx = -vx;
-		//	vy = -vy;
-		//}
+	if (fliedDistance >= flyDistance || this->y >= BOT_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
+		SetState(BOSS_STATE_FLY_BACK);
+		return;
+	}
+	y += dy;
+}
+
+
+void CBoss :: FlyBack(D3DXVECTOR2 targetPos) {
+	if (fliedDistance >= flyDistance || this->y <= TOP_BOUND || this->x <= LEFT_BOUND || this->x >= RIGHT_BOUND) {
+		DebugOut(L"[TEST] prepare to waiting....\n");
+		SetState(BOSS_STATE_WAITING);
+		return;
+	}
+	x += dx;
+	y += dy;
 }
