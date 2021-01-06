@@ -395,6 +395,8 @@ void Simon::CalcPotentialCollisions(
 					}
 				}
 			}
+			if (dynamic_cast<CPortal *> (coObjects->at(i)))
+				DebugOut(L"[PORTAL] this is a portal");
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 			if (e->t > 0 && e->t <= 1.0f)
