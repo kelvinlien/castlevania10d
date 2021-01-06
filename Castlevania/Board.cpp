@@ -21,7 +21,7 @@ Board::Board()
 	ani_set = CAnimationSets::GetInstance()->Get(10);
 	HP_set = CAnimationSets::GetInstance()->Get(8);
 	font = new CFont();
-	
+	doubleShot = CSprites::GetInstance()->Get(40020);
 }
 
 Board::~Board()
@@ -56,6 +56,8 @@ void Board::Render()
 		healtime = GetTickCount();
 	if (sprite != NULL)
 		sprite->Draw(x+450.0f, y +52.7f,255);
+	if(Simon::GetInstance()->IsDoubleShot())
+	doubleShot->Draw(x + 580.0f, y + 55.0f, GenerateAlpha());
 }
 
 void Board::Update()
@@ -115,6 +117,16 @@ void Board::Update()
 	}
 		DebugOut(L" BOARD HEALTH UPDATE : %d\n",board_health);
 	SetSpriteSubWeap();
+	if (Simon::GetInstance()->IsDoubleShot() && flashingTime == 0)
+		flashingTime = GetTickCount();
+	else if (Simon::GetInstance()->IsDoubleShot() == false)
+		flashingTime = 0;
+}
+int Board::GenerateAlpha() {
+	int randNum = 255;
+	if (GetTickCount() - flashingTime < 2000)
+		randNum = rand() % 256;
+	return randNum;
 }
 void Board::SetSpriteSubWeap()
 {

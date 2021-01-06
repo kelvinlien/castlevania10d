@@ -25,20 +25,20 @@ class Board
 	CFont* font;
 
 	DWORD healtime;
-
+	DWORD flashingTime = 0;
 	LPANIMATION_SET ani_set;
 	CSprite * sprite;
 	LPANIMATION_SET HP_set;
-
+	CSprite * doubleShot;
 	Camera* cam= Camera::GetInstance();;
 	Simon* simon = Simon::GetInstance();
-
 	static Board* _instance;
 public:
 	Board();
 	~Board();
 	void Render();
 	void Update();
+	int GenerateAlpha();
 
 	void SetScore(int _score) { this->score += _score; }
 	int GetScore() { return score; }
@@ -51,5 +51,4 @@ public:
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }
 	void SetSpriteSubWeap();
 	static Board* Getinstance();
-	
 };
