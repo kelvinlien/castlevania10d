@@ -530,7 +530,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 void Simon::ResetSimon()
 {
 	isDead = false;
-	this->nx = -1;
+	nx = 1;
 	cam=Camera::GetInstance();
 	
 	SetState(SIMON_STATE_IDLE);
