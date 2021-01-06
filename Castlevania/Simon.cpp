@@ -523,6 +523,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::ResetSimon()
 {
+	isDead = false;
+	SetState(SIMON_STATE_IDLE);
 	switch (area->GetInstance()->GetAreaID())
 	{
 	case 21:
