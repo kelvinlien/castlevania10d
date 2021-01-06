@@ -20,10 +20,8 @@ class CPlayScene: public CScene
 {
 protected: 
 	Simon *player;					// A play scene has to have player, right?
-
 	CGhost *ghost;					// Beta ghost for testing purpose
 
-	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	int mapWidth;
 	void _ParseSection_TEXTURES(string line);
