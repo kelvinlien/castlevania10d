@@ -152,6 +152,7 @@ public:
 
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	CWeapon * GetSubWeapon() { return subWeapons; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

@@ -2,12 +2,14 @@
 #include "GameObject.h"
 #include "Animations.h"
 #include "Camera.h"
+#include"Sprites.h"
+#include"Sprites.h"
 #include "Game.h"
 #include "Utils.h"
 #include "Simon.h"
 #include "Font.h"
 #define BOARD_ID 10
-class Board 
+class Board
 {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -25,6 +27,7 @@ class Board
 	DWORD healtime;
 
 	LPANIMATION_SET ani_set;
+	CSprite * sprite;
 	LPANIMATION_SET HP_set;
 
 	Camera* cam= Camera::GetInstance();;
@@ -34,7 +37,6 @@ class Board
 public:
 	Board();
 	~Board();
-
 	void Render();
 	void Update();
 
@@ -46,8 +48,8 @@ public:
 
 	bool Check_isFinish (){ return isFinish;}
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
-
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }
-
+	void SetSpriteSubWeap();
 	static Board* Getinstance();
+	
 };
