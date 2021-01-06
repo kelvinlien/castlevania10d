@@ -51,7 +51,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
-	int health = 16;
+	int health = 4;
 
 	//time variables
 	DWORD startSit;
@@ -143,6 +143,8 @@ public:
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
 
+	void SetHealth(int _health) { health = _health; }
+	int GetHealth() { return health; }
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }
 

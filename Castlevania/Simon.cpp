@@ -355,7 +355,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				isSit = false;
 		}
 	}
-
 	//when simon level up whip
 	CheckLevelUpState(dt);
 

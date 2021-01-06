@@ -42,7 +42,7 @@ void CFishman::SetState(int state)
 		vx = 0;
 		isShoot = true;
 		startShootTime = GetTickCount();
-		shootingTimePeriod = rand() % 2500 + 500;
+		shootingTimePeriod = rand() % 5500 + 3500;
 		bullet->SetIsThrown(true);
 		if (nx == -1)
 			bullet->SetPosition(x, y + 10);
@@ -137,6 +137,7 @@ void CFishman::Respawn()
 {
 	isWaitToShoot = false;
 	isShoot = false;
+	isShootyet = false;
 	startShootTime=0;
 	startWaitToShoot=0;
 	isDead = false;
