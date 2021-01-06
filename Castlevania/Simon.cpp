@@ -358,6 +358,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
+	if (state == SIMON_STATE_DIE)
+		ResetSimon();
 
 	//Update when Simon is hurt
 	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
@@ -523,6 +525,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::ResetSimon()
 {
+	isDead = false;
+	SetState(SIMON_STATE_IDLE);
 	switch (area->GetInstance()->GetAreaID())
 	{
 	case 21:
