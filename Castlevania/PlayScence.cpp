@@ -208,11 +208,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 	case OBJECT_TYPE_GHOST: {
-		if (ghost != NULL)
-		{
-			DebugOut(L"[ERROR] GHOST object was created before!\n");
-			return;
-		}
 		int itemType = atof(tokens[4].c_str());
 		obj = new CGhost(x, y, -1, itemType);
 		ghost = (CGhost*)obj;
@@ -594,7 +589,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	DebugOut(L"[INFO] x %f\n", cx);
+	//DebugOut(L"[INFO] x %f\n", cx);
 
 	if (ghost != NULL)
 	{
@@ -633,7 +628,7 @@ void CPlayScene::Unload()
 		objects[i] = NULL;
 		delete objects[i];
 	}
-
+	//ghost=NULL;
 	objects.clear();
 	player = NULL;
 
@@ -667,6 +662,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_DOWN:
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
+		simon->ResetSimon();
 		break;
 		
 	}
