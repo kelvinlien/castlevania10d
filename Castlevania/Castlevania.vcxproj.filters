@@ -33,6 +33,9 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="CastleAndBat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -68,5 +71,8 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="CastleAndBat.h" />
   </ItemGroup>
 </Project>
