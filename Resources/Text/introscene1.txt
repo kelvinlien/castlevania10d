@@ -3,7 +3,7 @@
 0	..\Resources\Texture\IntroBatMenu.png	255	0	255
 1	..\Resources\Texture\push-start-key.png	255	0	255
 2	..\Resources\Texture\push-start-key-black.png	0	0	0
-3	..\Resources\Texture\mainmenu.png	0	0	0	
+3	..\Resources\Texture\mainmenu.png	0	0	0
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -33,7 +33,8 @@
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 #intro bat menu
-0	0	100	1	100	2	100	3	100	4	100	5	100	6	100	7	100	8	100	9	100	10	100	11	100	12	100	1s3	100	14	100
+0	0	100	1	100	2	100	3	100	4	100	5	100	6	100	7	100	8	100	9	100	10	100	11	100	12	100	13	100	14	100
+10	12	50	13	50	14	50
 #font PUSH START KEY
 1	15	100
 2	15	100	16	100
@@ -44,19 +45,17 @@
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
 #intro bat menu
-0	0
+0	0	10
 #font PUSH START KEY
-1	1
-2	1	2
+1	1	2
 #background main menu
-3	3
+2	3
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 100 = Castle and bat, 110 = Push Key text, 120 = Background,
 
-# BACKGROUND
-120	0	0	3
-110	152	268	2
-
+120	0	0	2
+110	152	268	1
+100	360	210	0
 

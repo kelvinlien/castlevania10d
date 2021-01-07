@@ -303,6 +303,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Title();
 		break;
 	}
+	case OBJECT_TYPE_CASTLE_AND_BAT:
+	{
+		obj = new CastleAndBat();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

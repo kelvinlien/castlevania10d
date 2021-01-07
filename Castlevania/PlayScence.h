@@ -15,6 +15,7 @@
 #include "Panther.h"
 #include "Background.h"
 #include "Title.h"
+#include "CastleAndBat.h"
 #include"Ghost.h"
 
 #define PLAY_SCENE_1_ID	1
