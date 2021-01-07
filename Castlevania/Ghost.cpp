@@ -13,9 +13,9 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 }
 void CGhost::SetState(int state)
 {
-	this->state = state;
-
-	if (state == ENEMY_STATE_DIE) {
+	CEnemy::SetState(state);
+	if (state == ENEMY_STATE_DIE)
+	{
 		die_time = GetTickCount();
 		vx = 0;
 	}
@@ -24,10 +24,11 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
-	else if (state != ENEMY_STATE_DIE)
+	else if (state != ENEMY_STATE_DIE && isLock != true)
 		vx = GHOST_WALKING_SPEED * this->nx;
 
 	CGameObject::Update(dt);
+
 	vy += GHOST_GRAVITY * dt;
 	vector<LPGAMEOBJECT> coObjectsGhost;
 
@@ -66,11 +67,9 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		
 		 //Collision logic with other objects
-		
 		//for (UINT i = 0; i < coEventsResult.size(); i++)
 		//{
 		//	LPCOLLISIONEVENT e = coEventsResult[i];
-
 		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
 		//	{
 		//	}
