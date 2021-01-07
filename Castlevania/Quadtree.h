@@ -4,7 +4,6 @@
 #include "Define.h"
 #include "Camera.h"
 
-
 #define MIN_OBJECT_NUMBER_TO_SPLIT 1
 
 class Quadtree
@@ -17,8 +16,6 @@ class Quadtree
 	vector<Entity*>         entities_list;
 	vector<Quadtree*>    nodes;
 
-	bool           IsContain(Entity* entity);
-	bool	IsInsideCamera();
 	void           Split();
 public:
 	//Quadtree();
