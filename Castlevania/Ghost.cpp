@@ -23,7 +23,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == ENEMY_STATE_HURT && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
 		isVanish = true;
-	else if (state != ENEMY_STATE_DIE && isLock != true)
+	else if (state != ENEMY_STATE_HURT && isLock != true)
 		vx = GHOST_WALKING_SPEED * this->nx;
 
 	CGameObject::Update(dt);

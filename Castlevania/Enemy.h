@@ -14,6 +14,7 @@ protected:
 	int ani;
 	int type;
 	ItemType itemType;
+
 	float backUpVx;
 	float backUpVy;
 	int	  backUpState;

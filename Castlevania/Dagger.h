@@ -2,6 +2,7 @@
 #include "Weapon.h"
 #include "FirePot.h"
 #include "Simon.h"
+#include "Boss.h"
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"

@@ -41,7 +41,7 @@ void CBoss::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 
 void CBoss::SetState(int state)
 {
-	CGameObject::SetState(state);
+	CEnemy::SetState(state);
 	switch (state)
 	{
 	case BOSS_STATE_WAITING:
@@ -104,7 +104,6 @@ void CBoss::SetState(int state)
 			backUpVy = vy;
 			vx = 0;
 			vy = 0;
-			//backUpState = this->state;
 		}
 		health--;
 		break;

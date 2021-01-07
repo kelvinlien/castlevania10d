@@ -73,14 +73,21 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				this->isVanish = true;
 				e->obj->isVanish = true;
 			}
-			if (dynamic_cast<CBrick*>(e->obj))
+			else if (dynamic_cast<CBrick*>(e->obj))
 			{
 				x += dx;
 			}
-			if (dynamic_cast<CEnemy*>(e->obj))
+			else if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				this->isVanish = true;
-				e->obj->isVanish = true;
+				if (dynamic_cast<CEnemy*>(e->obj)->GetType() != 15)
+				{
+					this->isVanish = true;
+					e->obj->isVanish = true;
+				}
+				else {
+					dynamic_cast<CBoss *>(e->obj)->SetState(ENEMY_STATE_HURT);
+					this->isVanish = true;
+				}
 			}
 		}
 

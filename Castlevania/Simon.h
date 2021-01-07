@@ -78,7 +78,7 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	animation ani;
-	int hearts = 5;
+	int hearts = 10000;
 	int health = SIMON_MAX_HEALTH;
 
 	//time variables
