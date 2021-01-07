@@ -1,6 +1,9 @@
 #pragma once
 #include"GameObject.h"
 #include "Item.h"
+
+#define ENEMY_STATE_HURT  30
+
 using namespace std;
 class CEnemy: public CGameObject
 {
@@ -10,6 +13,10 @@ protected:
 	int ani;
 	int type;
 	ItemType itemType;
+
+	float backUpVx;
+	float backUpVy;
+	int	  backUpState;
 public:
 	CEnemy();
 	void SetActive() { if (!isActive) isActive = true; }

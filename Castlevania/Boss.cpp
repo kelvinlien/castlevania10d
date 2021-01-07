@@ -94,12 +94,17 @@ void CBoss::SetState(int state)
 		//DebugOut(L"[TEST] middleLineX: %d\n", middleLineX);
 		//DebugOut(L"[TEST] middleLineY: %d\n", middleLineY);
 		break;
-	case BOSS_STATE_HURT:
+	case ENEMY_STATE_HURT:
 		if (startStopTime == 0)
 		{
 			startStopTime = GetTickCount();
 			isLock = true;
 			animation_set->at(ani)->SetLock(true);
+			backUpVx = vx;
+			backUpVy = vy;
+			vx = 0;
+			vy = 0;
+			//backUpState = this->state;
 		}
 		health--;
 		break;
@@ -139,51 +144,57 @@ void CBoss::RandomWaitingPos() {
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
-	if(GetTickCount()- startStopTime > BOSS_STOP_TIME)
+	if(startStopTime!=0 && GetTickCount()- startStopTime > BOSS_STOP_TIME)
 	{
 		animation_set->at(ani)->SetLock(false);
+		startStopTime = 0;
+		isLock = false;
+		vx = backUpVx;
+		vy = backUpVy;
+		this->state = BOSS_STATE_WAITING;
 	}
+	if (!isLock) {
+		if (state == BOSS_STATE_IDLE) {
+			if (!isActive && Simon::GetInstance()->x >= this->x)
+			{
+				isActive = true;
+				SetState(BOSS_STATE_WAITING);
+			}
+			else return;
+		}
 
-	if (state == BOSS_STATE_IDLE) {
-		if (!isActive && Simon::GetInstance()->x >= this->x)
+		if (state == BOSS_STATE_WAITING) {
+			SetTargetPos();
+			SetDirect(targetPos);
+			flyDistance = sqrt(pow(targetPos.x - this->start_x, 2) + pow(targetPos.y - this->start_y, 2));
+
+			if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
+
+				if (abs(this->x - Simon::GetInstance()->x) <= NEAR_DISTANCE_BOSS_AND_SIMON)
+					SetState(BOSS_STATE_FLY_STRAIGHT);
+				else
+					SetState(BOSS_STATE_FLY_TO_TARGET);
+			}
+		}
+
+		else if (state == BOSS_STATE_FLY_TO_TARGET)
 		{
-			isActive = true;
-			SetState(BOSS_STATE_WAITING);
+			fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
+			Fly(targetPos);
 		}
-		else return;
-	}
 
-	if (state == BOSS_STATE_WAITING) {
-		SetTargetPos();
-		SetDirect(targetPos);
-		flyDistance = sqrt(pow(targetPos.x - this->start_x, 2) + pow(targetPos.y - this->start_y, 2));
+		else if (state == BOSS_STATE_FLY_STRAIGHT)
+		{
+			fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
+			FlyStraight(targetPos);
+		}
 
-		if (GetTickCount() - startWaitTime > BOSS_WAITING_TIME) {
-
-			if (abs(this->x - Simon::GetInstance()->x) <= NEAR_DISTANCE_BOSS_AND_SIMON)
-				SetState(BOSS_STATE_FLY_STRAIGHT);
-			else
-				SetState(BOSS_STATE_FLY_TO_TARGET);
+		else if (state == BOSS_STATE_FLY_BACK) {
+			fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
+			FlyBack(targetPos);
 		}
 	}
-
-	else if (state == BOSS_STATE_FLY_TO_TARGET)
-	{
-		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
-		Fly(targetPos);
-	}
-
-	else if (state == BOSS_STATE_FLY_STRAIGHT)
-	{
-		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
-		FlyStraight(targetPos);
-	}
-
-
-	else if (state == BOSS_STATE_FLY_BACK) {
-		fliedDistance = sqrt(pow(this->x - this->start_x, 2) + pow(this->y - this->start_y, 2));
-		FlyBack(targetPos);
-	}
+	DebugOut(L"[TEST] Health point %d\n", health);
 }
 
 void CBoss::Render()

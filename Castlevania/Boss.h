@@ -30,10 +30,10 @@
 #define BOSS_STATE_FLY_BACK	3
 #define BOSS_STATE_FLY_STRAIGHT	4
 #define BOSS_STATE_DEAD		5
-#define BOSS_STATE_HURT		6
+
 //Time
 #define BOSS_WAITING_TIME	1500
-#define	BOSS_STOP_TIME		1000
+#define	BOSS_STOP_TIME		150
 
 class CBoss :public CEnemy
 {
