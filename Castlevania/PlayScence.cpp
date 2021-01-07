@@ -641,7 +641,7 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (enemy->GetType() == 10)
 			{
-				if (enemy->GetPostionX() < cam->GetCamX() || enemy->GetPostionX() > (cam->GetCamX() + SCREEN_WIDTH))
+				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
 				{
 					enemy->Respawn();
 					objects.push_back(enemy);
