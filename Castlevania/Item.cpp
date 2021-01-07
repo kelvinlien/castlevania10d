@@ -109,7 +109,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	}
 	coEvents.clear();
 
-	CalcPotentialCollisions(&coObjectsItem, coEvents);
+	CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{

@@ -299,7 +299,7 @@ void Simon::CalcPotentialCollisions(
 					GetBoundingBox(l1, t1, r1, b1);
 					item->GetBoundingBox(l2, t2, r2, b2);
 
-					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					if (!(r1 < l2 || l1 > r2 || t1 > b2|| b1 < t2))
 					{
 						item->BeingProcessed();
 						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
@@ -412,8 +412,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+
+		//x += min_tx * dx + nx * 0.4f;
+		///y += min_ty * dy + ny * 0.4f;
 
 		if (!isHurt) {
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
@@ -486,6 +487,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
 				if (e->ny < 0)
 				{
 					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
