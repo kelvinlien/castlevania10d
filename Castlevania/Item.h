@@ -9,6 +9,8 @@
 
 #define GRAVITY 0.3f
 
+#define TIME_BEFORE_SWITCHING_TO_OTHER_BACKGROUND_COLOR_WHILE_USING_CROSS	500
+
 enum ItemType
 {
 	ITEM_SMALL_HEART,
@@ -20,7 +22,11 @@ enum ItemType
 	ITEM_STOP_WATCH,
 	ITEM_DAGGER,
 	ITEM_CROSS,
-	ITEM_HOLY_WATER
+	ITEM_HOLY_WATER,
+	ITEM_CHICKEN_THIGH,
+	ITEM_AXE,
+	ITEM_ORD,
+	ITEM_DOUBLE_SHOT
 };
 
 enum EffectType
@@ -36,7 +42,7 @@ class Item :public CGameObject {
 public:
 	LPANIMATION_SET ani_set;
 	float existingTime;
-	float effectTime;
+	float effectDuration;
 	int widthBBox;
 	int heightBBox;
 	bool isEaten;

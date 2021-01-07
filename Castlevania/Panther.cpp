@@ -26,36 +26,49 @@ void CPanther::Jump()
 }
 void CPanther::Run()
 {
+	if (isRun)
+		return;
 	vx = PANTHER_RUN_SPEED*this->nx;
 	isRun = true;
 }
 
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {	
-	if (state == PANTHER_STATE_DIE && GetTickCount() - dieTime >= PANTHER_DIE_TIME)
+	if (state == PANTHER_STATE_DIE && GetTickCount() - dieTime >= PANTHER_DIE_TIME) {
 		isVanish = true;
+	}
 	
 	CGameObject::Update(dt);
-	if (!isDead)
+
+	if (!isDead && !isLock)
 	{
 		vy += PANTHER_GRAVITY * dt;
 	}
 
-	float distance;
-	distance = PANTHER_DISTANCE;
+	float distance = PANTHER_DISTANCE;
+	if (!isLock) {
+		//float simonCenterX = (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH) / 2;
+		if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH / 2 + 10 - (this->x + PANTHER_BBOX_WIDTH / 2)) <= distance)
+		{
 
-	//float simonCenterX = (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH) / 2;
-	if (isActive == false && abs(Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH / 2 + 10 - (this->x + PANTHER_BBOX_WIDTH / 2)) <= distance)
-	{
-		
-		isSit = false;
-		isActive = true;
-		jumpCount = 1;
-		if (Simon::GetInstance()->x < this->x)
-			this->nx = -1;
-		else
-			this->nx = 1;
-		Run();
+			isSit = false;
+			isActive = true;
+			jumpCount = 1;
+			if (Simon::GetInstance()->x < this->x)
+				this->nx = -1;
+			else
+				this->nx = 1;
+			Run();
+		}
+		if (jumpCount == 1)
+		{
+			if ((this->nx < 0 && x < xJumpLeft || this->nx > 0 && x + PANTHER_BBOX_WIDTH >= xJumpRight))
+			{
+				vx = 0;
+				jumpCount = 0;
+				Jump();
+			}
+		}
 	}
 
 	/**************************
@@ -67,6 +80,7 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	
 	for (int i = 0; i < coObjects->size(); i++)
 	{
+		if (isJump && y < 350) break;
 		if(dynamic_cast<CBrick *> (coObjects->at(i)))
 		  coObjectsPanther.push_back(coObjects->at(i));
 	}
@@ -92,22 +106,6 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else
 			y += dy;
 
-		//if (ny == -1) {
-		//	vy = 0;
-		//	if (isJump) {
-		//		isJump = false;
-		//		if (Simon::GetInstance()->x < this->x)// && this->nx > 0)
-		//			this->nx = -1;
-		//		else //if (Simon::GetInstance()->x >= this->x > 0)// && this->nx < 0)
-		//			this->nx = 1;
-		//		Run();
-		//	}
-		//}
-
-
-		//
-		// Collision logic with other objects
-		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -118,9 +116,9 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (isJump) {
 
 					isJump = false;
-					if (Simon::GetInstance()->x < this->x)// && this->nx > 0)
+					if (Simon::GetInstance()->x < this->x)
 						this->nx = -1;
-					else //if (Simon::GetInstance()->x >= this->x > 0)// && this->nx < 0)
+					else
 						this->nx = 1;
 					Run();
 				}
@@ -130,16 +128,6 @@ void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	if (jumpCount == 1)
-	{
-		if (this->nx < 0 && x < xJumpLeft || this->nx > 0 && x + PANTHER_BBOX_WIDTH >= xJumpRight)
-		{
-			vx = 0;
-			jumpCount = 0;
-			Jump();
-		}
-	}
 }
 void CPanther::SetAnimation()
 {
@@ -173,17 +161,15 @@ void CPanther::Render() {
 
 void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (isJump && y < 350) return;
-	if (isDead) return;
 	left = x;
 	top = y;
 	right = x + PANTHER_BBOX_WIDTH;
 	bottom = y + PANTHER_BBOX_HEIGHT;
 }
 
-void CPanther::SetState(int state)
+void CPanther ::SetState(int state)
 {
-	this->state = state;
+	CEnemy::SetState(state);
 	if (state == PANTHER_STATE_DIE)
 	{
 		isDead = true;

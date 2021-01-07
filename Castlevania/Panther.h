@@ -32,6 +32,7 @@ class CPanther:public CEnemy
 	int jumpCount;
 
 	DWORD dieTime;
+
 public:
 	//CPanther(){}
 	CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx);
@@ -41,6 +42,6 @@ public:
 	void Jump();
 	void Run();
 	void SetAnimation();
-	void SetState(int state);
+	virtual void SetState(int state);
 };
 
