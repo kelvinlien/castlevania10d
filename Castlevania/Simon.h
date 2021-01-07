@@ -43,7 +43,7 @@
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
-#define SIMON_MAX_HEALTH	16
+#define SIMON_MAX_HEALTH	2
 
 enum animation
 {
@@ -156,6 +156,8 @@ public:
 	int GetHearts() { return hearts; }
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+
+	void ResetSimon();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
