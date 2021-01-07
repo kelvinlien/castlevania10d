@@ -628,10 +628,7 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetScreenHeight() / 2;
 	// check if current player pos is in map range and update cam pos accordingly
 
-	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
-	{
-		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	}
+    Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
 }
 
 void CPlayScene::Render()
@@ -696,6 +693,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_DOWN: {
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
+		simon->ResetSimon();
 		break;
 		}
 	}
