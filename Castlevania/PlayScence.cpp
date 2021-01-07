@@ -42,6 +42,13 @@ using namespace std;
 
 #define OBJECT_TYPE_PORTAL	50
 
+#define OBJECT_TYPE_CASTLE_AND_BAT	100
+#define OBJECT_TYPE_PUSH_ANY_KEY	110
+#define OBJECT_TYPE_BACKGROUND	120
+
+
+
+
 #define MAX_SCENE_LINE 1024
 
 wchar_t * ConvertToWideChar(char * p)
@@ -58,8 +65,6 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -288,10 +293,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
+	case OBJECT_TYPE_BACKGROUND:
+	{
+		obj = new Background();
+		break;
+	}
+	case OBJECT_TYPE_PUSH_ANY_KEY:
+	{
+		obj = new Title();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
+	
 
 	// General object setup
 	if (!dynamic_cast<CBrick*>(obj)) {
@@ -489,7 +505,9 @@ void CPlayScene::Load()
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
-	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+	if (currentMapID != 4)
+		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
 }
@@ -584,7 +602,8 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	if (id != 4)
+		CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
@@ -646,26 +665,35 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	Camera* cam = Camera::GetInstance();
+	
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
+	if (ID == 4) {
+		//set key for intro
+	}
+	else {
 
-	// disable control key when Simon die 
-	if (simon->IsHurt()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+		// disable control key when Simon die 
+		if (simon->IsHurt()) return;
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
-	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		if (game->IsKeyDown(DIK_RIGHT)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
+		else if (game->IsKeyDown(DIK_LEFT)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+		else if (game->IsKeyDown(DIK_DOWN)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_SIT);
+		}
+		else
+			simon->SetState(SIMON_STATE_IDLE);
 	}
-	else if (game->IsKeyDown(DIK_LEFT)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	}
-	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_SIT);
-	}
-	else
-		simon->SetState(SIMON_STATE_IDLE);
+
+	
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {

@@ -1,8 +1,9 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\IntroBatMenu.png	255	0	255
-1	..\Resources\Texture\push-start-key.png		255	0	255
+1	..\Resources\Texture\push-start-key.png	255	0	255
 2	..\Resources\Texture\push-start-key-black.png	0	0	0
+3	..\Resources\Texture\mainmenu.png	0	0	0	
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -23,8 +24,11 @@
 13	474	246	632	369	0
 14	632	246	790	369	0
 #font PUSH START KEY
-15	0	0	350	25	1
-16	0	0	350	25	2
+15	0	0	245	18	1
+16	0	0	245	18	2
+
+#background main menu
+17	0	0	514	450	3
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -34,6 +38,9 @@
 1	15	100
 2	15	100	16	100
 
+#background main menu
+3	17	100
+
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
 #intro bat menu
@@ -41,3 +48,15 @@
 #font PUSH START KEY
 1	1
 2	1	2
+#background main menu
+3	3
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings per object type
+# type: 100 = Castle and bat, 110 = Push Key text, 120 = Background,
+
+# BACKGROUND
+120	0	0	3
+110	152	268	2
+
+

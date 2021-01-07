@@ -13,6 +13,8 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Background.h"
+#include "Title.h"
 
 #include"Ghost.h"
 
