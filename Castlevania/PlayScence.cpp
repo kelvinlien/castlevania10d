@@ -179,13 +179,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	
 	int ani_set_id = atoi(tokens[3].c_str());
 	int amount;
-	if (object_type == 5) {
+	if (object_type == OBJECT_TYPE_BRICKS_GROUP) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
@@ -506,7 +506,7 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (currentMapID != 4)
+	if (currentMapID != INTRO_SCENE_ID)
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
@@ -602,7 +602,7 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	if (id != 4)
+	if (id != INTRO_SCENE_ID)
 		CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
@@ -632,31 +632,50 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (ID == INTRO_SCENE_ID) {
+		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
 
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		if (!simon->IsJump()) {
-			if (simon->IsLevelUp()) return;
-			simon->SetState(SIMON_STATE_JUMP);
+		switch (KeyCode)
+		{
+		case DIK_RETURN:
+			for (int i = 0; i < objects.size(); i++) {
+				LPGAMEOBJECT e = objects[i];
+				if (dynamic_cast<Title*> (e)) {
+					if (e->GetState() == TITLE_STATE_BLINK) return;
+					e->SetState(TITLE_STATE_BLINK);
+				}
+
+			}
 		}
-		break;
-	case DIK_A:
-	{
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_ATTACK);
-		break;
 	}
-	case DIK_DOWN:
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
-		break;
-		
-	}
+	else {
+		if (simon->IsHurt()) return;
+
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+		switch (KeyCode)
+		{
+		case DIK_SPACE:
+			if (!simon->IsJump()) {
+				if (simon->IsLevelUp()) return;
+				simon->SetState(SIMON_STATE_JUMP);
+			}
+			break;
+		case DIK_A:
+		{
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_ATTACK);
+			break;
+		}
+		case DIK_DOWN:
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_SIT);
+			break;
+
+		}
+	}	
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
@@ -667,11 +686,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 	
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
-	if (ID == 4) {
-		//set key for intro
-	}
-	else {
 
+	if (ID != INTRO_SCENE_ID)
+	{
 		// disable control key when Simon die 
 		if (simon->IsHurt()) return;
 		// disable control key when Simon die or enter an auto area
@@ -698,16 +715,21 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (ID != INTRO_SCENE_ID) {
+		if (simon->IsHurt()) return;
 
-	switch (KeyCode)
-	{
-	case DIK_DOWN:
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_STAND);
-		break;
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+
+		switch (KeyCode)
+		{
+		case DIK_DOWN:
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_STAND);
+			break;
+		}
 	}
+	
 }

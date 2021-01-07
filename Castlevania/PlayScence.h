@@ -15,8 +15,13 @@
 #include "Panther.h"
 #include "Background.h"
 #include "Title.h"
-
 #include"Ghost.h"
+
+#define PLAY_SCENE_1_ID	1
+#define PLAY_SCENE_2_ID	2
+#define PLAY_SCENE_3_ID	3
+#define INTRO_SCENE_ID	4
+
 
 class CPlayScene: public CScene
 {
@@ -46,7 +51,7 @@ public:
 	virtual void Unload();
 
 	Simon * GetPlayer() { return player; } 
-
+	vector<LPGAMEOBJECT> GetObjects() { return objects; }
 	//friend class CPlayScenceKeyHandler;
 };
 
