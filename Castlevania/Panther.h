@@ -31,9 +31,7 @@ class CPanther:public CEnemy
 	float xJumpLeft;
 	int jumpCount;
 
-	DWORD startJumpTime, dieTime;
-
-	int ani;
+	DWORD dieTime;
 
 public:
 	//CPanther(){}
