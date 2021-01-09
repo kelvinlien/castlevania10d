@@ -33,7 +33,7 @@ TriggerStair::TriggerStair(float l, float t, int type, int direct)
 	if (type == TYPE_BELOW)
 		outPoint = y + height - 1;
 	else
-		outPoint = y + height;
+		outPoint = y + height + 1;
 }
 
 
@@ -52,7 +52,7 @@ void TriggerStair::GetBoundingBox(float &l, float &t, float &r, float &b)
 
 bool TriggerStair::IsContainSimon()
 {
-	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 >= x && Simon::GetInstance()->GetPostionX() + 12 < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() < y + height + 1)
+	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 >= x && Simon::GetInstance()->GetPostionX() + 12 < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() < y + height / 4  + 1)
 		return true;
 	return false;
 }
