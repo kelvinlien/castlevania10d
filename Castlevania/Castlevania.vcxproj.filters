@@ -33,7 +33,6 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="Area.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
@@ -74,7 +73,6 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="Area.h" />
     <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="BrokenBrick.h" />
