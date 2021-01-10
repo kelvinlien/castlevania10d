@@ -173,12 +173,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
+	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount, axis, brickType, itemType;
-	if (object_type == 5 || object_type == 9) {
+	int amount;
+	if (object_type == 5) {
 		amount = atoi(tokens[4].c_str());
 	}
 
@@ -205,17 +207,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+	case OBJECT_TYPE_MARIO: {
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
+
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetPosition(Area::GetInstance()->GetSpawnPos(), y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
 
 		DebugOut(L"[INFO] Player object created!\n");
-		break;
+	}
+	break;
 	case OBJECT_TYPE_GHOST: {
 		if (ghost != NULL)
 		{
@@ -346,7 +354,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<Simon*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
@@ -476,6 +484,36 @@ void CPlayScene::Load()
 	if (id == 2 || id == 3)
 		LoadTriggerStair();
 
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 22) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 23) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+
+		break;
+		/*case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;*/
+	default:
+		break;
+	}
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -543,12 +581,10 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	// init camera areaID
-	// area 1
-	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
+	
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
@@ -652,6 +688,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+	DebugOut(L"[INFO] x %f\n", cx);
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy,dt);
 
 	if (ghost != NULL)
@@ -709,7 +746,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() )return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	switch (KeyCode)
 	{
@@ -745,7 +782,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -768,7 +805,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
 	switch (KeyCode)
 	{

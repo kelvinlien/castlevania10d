@@ -223,7 +223,6 @@ void Simon::Attack()
 			attackTime = GetTickCount();
 			isUsingSubWeapon = true;
 			subWeapons->isVanish = false;
-			DebugOut(L"[INFO] 3\n");
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -270,7 +269,7 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	if (flag || isAutoWalking)
+	if (flag)
 		vx = nx * SIMON_WALKING_SPEED / 2;
 	else 	
 		vx = nx * SIMON_WALKING_SPEED;
@@ -370,21 +369,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				isSit = false;
 		}
 	}
-
-	//auto move simon and camera when simon hit the door in playscene 2 
-	for (int i = 0; i < coObjects->size(); i++) {
-		if (dynamic_cast<CDoor*>(coObjects->at(i))) {
-			CDoor *door = dynamic_cast<CDoor *>(coObjects->at(i));
-			if (door->GetId()==doorId && isAutoWalking) {
-				if (door->IsOpened() && this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
-					Walk();
-				else
-					SetState(SIMON_STATE_IDLE);
-			}
-		}
-	}
-
-
 
 	//when simon level up whip
 	CheckLevelUpState(dt);

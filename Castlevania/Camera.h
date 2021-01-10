@@ -1,9 +1,10 @@
 #include <d3dx9.h>
+#include "Area.h"
 #pragma once
 class Camera
 {
 	static Camera * __instance;
-	float x = 0.0f;
+	float x = 0;
 	float y = 0.0f;
 	// camera vx
 	float movingSpeed = 0.2f;
@@ -28,7 +29,6 @@ public:
 	int GetAreaID() { return areaID; }
 	void SetIsAuto(bool _isAuto) { isAuto = _isAuto; }
 	bool GetIsAuto() { return isAuto; }
-	void Move(float mapWidth, float screenWidth, float playerX, float playerY,DWORD dt);
+	void Move(float mapWidth, float screenWidth, float playerX, float playerY, DWORD dt);
 	static Camera* GetInstance();
 };
-

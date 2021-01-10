@@ -17,6 +17,7 @@
 #include "SmallBrick.h"
 #include "BrokenBrick.h"
 #include "TriggerStair.h"
+#include  "Area.h"
 
 class CPlayScene: public CScene
 {
