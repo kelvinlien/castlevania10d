@@ -34,6 +34,7 @@
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="WaterSurface.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="SmallBrick.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Fishman.h" />
     <ClInclude Include="WaterSurface.h" />

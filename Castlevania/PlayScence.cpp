@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Door.h"
 #include "Fishman.h"
 #include "WaterSurface.h"
 
@@ -39,8 +40,9 @@ using namespace std;
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
-#define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_CANDLE	4
+#define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
 #define OBJECT_TYPE_WATER_SURFACE	12
@@ -314,6 +316,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CANDLE: {
 		int type = atof(tokens[4].c_str());
 		obj = new CCandle(type);
+		break;
+	}
+	case OBJECT_TYPE_DOOR:
+	{
+		int id = atof(tokens[4].c_str());
+		obj = new CDoor(x, y, id);
 		break;
 	}
 	case OBJECT_TYPE_WATER_SURFACE:
@@ -644,7 +652,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy,dt);
 
 	if (ghost != NULL)
 	{
@@ -656,14 +664,6 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
-
-	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
-	{
-		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	}
-
 }
 
 void CPlayScene::Render()
@@ -709,7 +709,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() )return;
 
 	switch (KeyCode)
 	{
@@ -745,7 +745,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -768,7 +768,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode)
 	{

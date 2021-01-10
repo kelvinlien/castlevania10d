@@ -13,6 +13,7 @@ class Camera
 	// eg: scene 2, area 2 ==> areaID = 22
 	int areaID = 11;
 	bool isAuto;
+	bool moveCamera = true;
 public:
 	Camera();
 	~Camera();
@@ -27,7 +28,7 @@ public:
 	int GetAreaID() { return areaID; }
 	void SetIsAuto(bool _isAuto) { isAuto = _isAuto; }
 	bool GetIsAuto() { return isAuto; }
-	void Move(float mapWidth, float screenWidth, float playerX, float playerY );
+	void Move(float mapWidth, float screenWidth, float playerX, float playerY,DWORD dt);
 	static Camera* GetInstance();
 };
 
