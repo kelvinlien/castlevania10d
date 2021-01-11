@@ -724,6 +724,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_SIT);
 	}
 	else
+		if(!simon->IsJump())
 		simon->SetState(SIMON_STATE_IDLE);
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
