@@ -84,9 +84,15 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				e->obj->isVanish = true;
+				if (dynamic_cast<CEnemy*>(e->obj)->GetType() != 15)
+				{
+					e->obj->isVanish = true;
+				}
+				else {
+					dynamic_cast<CBoss *>(e->obj)->SetState(ENEMY_STATE_HURT);
+				}
 			}
-			if (dynamic_cast<CCandle*>(e->obj))
+			else if(dynamic_cast<CCandle*>(e->obj))
 			{
 				e->obj->SetState(CANDLE_STATE_BREAK);
 			}

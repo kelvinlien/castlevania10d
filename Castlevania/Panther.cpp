@@ -34,7 +34,7 @@ void CPanther::Run()
 
 void CPanther::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {	
-	if (state == PANTHER_STATE_DIE && GetTickCount() - dieTime >= PANTHER_DIE_TIME) {
+	if (state == ENEMY_STATE_HURT && GetTickCount() - dieTime >= PANTHER_DIE_TIME) {
 		isVanish = true;
 	}
 	
@@ -147,7 +147,7 @@ void CPanther::SetAnimation()
 		else if (isJump)
 			ani = PANTHER_ANI_JUMP_LEFT;
 	}
-	if (state == PANTHER_STATE_DIE)
+	if (state == ENEMY_STATE_HURT)
 		ani = PANTHER_ANI_DIE;
 }
 void CPanther::Render() {
@@ -170,7 +170,7 @@ void CPanther::GetBoundingBox(float &left, float &top, float &right, float &bott
 void CPanther ::SetState(int state)
 {
 	CEnemy::SetState(state);
-	if (state == PANTHER_STATE_DIE)
+	if (state == ENEMY_STATE_HURT)
 	{
 		isDead = true;
 		vx = 0;

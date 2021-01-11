@@ -104,8 +104,8 @@ void CBoss::SetState(int state)
 			backUpVy = vy;
 			vx = 0;
 			vy = 0;
+			health--;
 		}
-		health--;
 		break;
 	}
 }

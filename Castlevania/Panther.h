@@ -18,7 +18,6 @@
 #define PANTHER_BBOX_WIDTH	64
 #define PANTHER_BBOX_HEIGHT	32
 
-#define PANTHER_STATE_DIE	30
 #define PANTHER_DIE_TIME	200
 
 class CPanther:public CEnemy 
