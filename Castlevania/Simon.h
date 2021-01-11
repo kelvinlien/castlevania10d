@@ -157,7 +157,12 @@ public:
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
+	void SetdieTime(int _dieTime) { dieTime = _dieTime; }
+	int GetdieTime() { return dieTime; }
+
 	void ResetSimon();
+
+	void Test();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

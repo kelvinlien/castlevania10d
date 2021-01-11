@@ -11,7 +11,7 @@
 #include "Whip.h"
 #include "Candle.h"
 #include "BlinkEffect.h"
-
+#include "Game.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -296,9 +296,7 @@ void Simon::CheckLevelUpState(DWORD dt) {
 	}
 }
 
-void Simon::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT> *coObjects,
-	vector<LPCOLLISIONEVENT> &coEvents)
+void Simon::CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects,vector<LPCOLLISIONEVENT> &coEvents)
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
@@ -380,11 +378,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
-	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
-	{
-		ResetSimon();
-		dieTime = 0;
-	}
+	
 
 	//Update when Simon is hurt
 	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
@@ -403,6 +397,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		startUntouchable = 0;
 		isUntouchable = false;
 
+	}
+	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 2000)
+	{
+		//ResetSimon();
+		//dieTime = 0;
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -571,10 +570,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 void Simon::ResetSimon()
 {
 	isDead = false;
+	isAttack = false;
+	isLevelUp = false;
+	isUsingSubWeapon = false;
+	isHurt = false;
+	isBuff = false;
 	nx = 1;
+	health = SIMON_MAX_HEALTH;
+	SetState(SIMON_STATE_IDLE);
+	ani = IDLE_RIGHT;
+	//SetAnimation();
 	cam=Camera::GetInstance();
 	
-	SetState(SIMON_STATE_IDLE);
+	DebugOut(L"Area ID : %d\n", area->GetInstance()->GetAreaID());
 	switch (area->GetInstance()->GetAreaID())
 	{
 	case 21:
@@ -595,6 +603,9 @@ void Simon::ResetSimon()
 	default:
 		break;
 	}
+}
+void Simon::Test()
+{
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {

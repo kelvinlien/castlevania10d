@@ -13,7 +13,7 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
-
+#include "Area.h"
 #include"Ghost.h"
 
 #include "Quadtree.h"
