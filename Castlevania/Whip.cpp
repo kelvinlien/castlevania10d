@@ -3,6 +3,7 @@
 #include"Ghost.h"
 #include "Candle.h"
 #include "Panther.h"
+#include "BrokenBrick.h"
 
 CWhip* CWhip::__instance = NULL;
 
@@ -77,6 +78,13 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				e->GetBoundingBox(l2, t2, r2, b2);
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					e->SetState(CANDLE_STATE_BREAK);
+			}
+			else if (dynamic_cast<CBrokenBrick *>(coObjects->at(i)))
+			{
+				CBrokenBrick *e = dynamic_cast<CBrokenBrick *>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(STATE_BRICK_BREAK);
 			}
 		}
 		  

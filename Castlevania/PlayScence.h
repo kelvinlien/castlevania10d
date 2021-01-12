@@ -17,6 +17,8 @@
 #include"Ghost.h"
 
 #include "Quadtree.h"
+#include "SmallBrick.h"
+#include "BrokenBrick.h"
 
 class CPlayScene: public CScene
 {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
@@ -36,6 +36,9 @@
     <ClCompile Include="BlinkEffect.cpp" />
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="SmallBrick.cpp" />	
+    <ClCompile Include="Door.cpp" />	
+    <ClCompile Include="BrokenBrick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -74,5 +77,8 @@
     <ClInclude Include="BlinkEffect.h" />
     <ClInclude Include="Axe.h" />
     <ClInclude Include="Area.h" />
+    <ClInclude Include="SmallBrick.h" />	
+    <ClInclude Include="Door.h" />	
+    <ClInclude Include="BrokenBrick.h" />
   </ItemGroup>
 </Project>

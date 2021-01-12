@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include "BlinkEffect.h"
+#include "Door.h"
 using namespace std;
 
 
@@ -42,6 +43,9 @@ using namespace std;
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_DOOR			6
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_BROKEN_BRICK	8
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -172,13 +176,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
-	if (object_type == 5) {
+	int amount, axis, brickType, itemType;
+	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
+	}
 	if (object_type == 10)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
@@ -270,6 +283,29 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+		//first small brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CSmallBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+		for (int i = 1; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	case OBJECT_TYPE_BROKEN_BRICK:
+		obj = new CBrokenBrick(brickType, itemType);
+		break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -282,7 +318,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
+	case OBJECT_TYPE_DOOR:
+	{
+		int id = atof(tokens[4].c_str());
+		obj = new CDoor(x, y, id);
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -503,6 +544,7 @@ void CPlayScene::Load()
 	screen.right = screen.left + offset;
 	screen.bottom = screen.top + offset;
 	qtree = new Quadtree(0, screen);
+	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -575,6 +617,18 @@ void CPlayScene::Update(DWORD dt)
 				 ItemType type = candle->GetItemType();
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
+			 }
+			 else if (dynamic_cast<CBrokenBrick*>(current)) {
+				 CGameObject *obj; //temp obj to create item
+
+				 CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(current);
+
+				 if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
+				 {
+					 ItemType type = brokenBrick->GetItemType();
+					 obj = new Item(brokenBrick->x, brokenBrick->y, type);
+					 objects.push_back(obj);
+				 }
 			 }
 			 delObjects.push_back(current);
 		 }
@@ -676,7 +730,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode) {
 	case DIK_SPACE:
@@ -709,7 +763,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -733,7 +787,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode)
 	{
