@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Background.h"
 
 using namespace std;
 
@@ -39,10 +40,12 @@ using namespace std;
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_INTRO_FLOOR		11
 
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
+#define OBJECT_TYPE_BACKGROUND	120
 
 wchar_t * ConvertToWideChar(char * p)
 {
@@ -265,8 +268,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-  case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_INTRO_FLOOR: {
+
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < 35; i++) {
+			obj = new CBrick();
+			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
@@ -288,6 +307,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
+	case OBJECT_TYPE_BACKGROUND:
+	{
+		obj = new Background();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
