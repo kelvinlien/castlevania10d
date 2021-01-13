@@ -642,6 +642,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 
+	//return if this is intro 2
+	if (CGame::GetInstance()->GetCurrentSceneID() == 5) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
@@ -674,6 +676,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
+	//return if this is intro 2
+	if (CGame::GetInstance()->GetCurrentSceneID() == 5) return;
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
@@ -698,7 +702,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
+	//return if this is intro 2
+	if(CGame::GetInstance()->GetCurrentSceneID() == 5) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 

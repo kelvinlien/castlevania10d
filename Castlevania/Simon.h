@@ -9,7 +9,7 @@
 
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
-
+#define SIMON_AUTO_GO_LEFT_INTRO_X		232	
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
 #define SIMON_JUMP_SPEED_Y		0.5f
@@ -29,7 +29,7 @@
 #define SIMON_STATE_STAND			900
 #define SIMON_STATE_HURT			1000			
 #define SIMON_STATE_SIT_AFTER_FALL	1100
-#define SIMON_STATE_AFTER_HURT		1200	
+#define SIMON_STATE_AFTER_HURT		1200
 
 
 #define SIMON_BBOX_WIDTH  60
@@ -70,7 +70,7 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
-
+	bool isIdleIntro = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -105,7 +105,8 @@ class Simon : public CGameObject
 		ATTACK_UP_RIGHT,
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
+		ATTACK_DOWN_RIGHT,
+		IDLE_INTRO
 	}ani;
 
 public:
