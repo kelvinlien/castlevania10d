@@ -476,6 +476,37 @@ void CPlayScene::Load()
 	if (id == 2 || id == 3)
 		LoadTriggerStair();
 
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 22) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 23) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+
+		break;
+		/*case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;*/
+	default:
+		break;
+	}
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -543,7 +574,6 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	// init camera areaID
@@ -652,7 +682,7 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy,dt);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
 
 	if (ghost != NULL)
 	{
@@ -664,6 +694,10 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
+	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+		Area::GetInstance()->SetAreaID(22);
+	else if (Camera::GetInstance()->GetCamX() >= 4096)
+		Area::GetInstance()->SetAreaID(23);
 }
 
 void CPlayScene::Render()

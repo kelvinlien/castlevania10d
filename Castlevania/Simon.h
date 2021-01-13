@@ -11,6 +11,7 @@
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 #define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3180
+#define SIMON_AUTO_GO_THROUGH_SECOND_DOOR	4204
 
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
@@ -154,6 +155,7 @@ public:
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
 	void SetAutoWalking(bool a) { isAutoWalking = a; }
+	int GetDoorID() { return doorId; }
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }

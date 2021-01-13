@@ -3,21 +3,28 @@
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Dagger.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FirePot.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Holder.cpp" />
+    <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="SmallBrick.cpp" />
+    <ClCompile Include="TriggerStair.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -28,36 +35,38 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="WaterSurface.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponManager.cpp" />
     <ClCompile Include="Whip.cpp" />
-    <ClCompile Include="HolyWater.cpp" />
-    <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="SmallBrick.cpp" />
-    <ClCompile Include="Door.cpp" />
-    <ClCompile Include="BrokenBrick.cpp" />
-    <ClCompile Include="Fishman.cpp" />
-    <ClCompile Include="WaterSurface.cpp" />
+    <ClCompile Include="Area.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Dagger.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Fishman.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
+    <ClInclude Include="HolyWater.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="SmallBrick.h" />
+    <ClInclude Include="TriggerStair.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -68,21 +77,10 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="WaterSurface.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="Whip.h" />
-    <ClInclude Include="HolyWater.h" />
-    <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="SmallBrick.h" />
-    <ClInclude Include="Door.h" />
-    <ClInclude Include="BrokenBrick.h" />
-    <ClInclude Include="Fishman.h" />
-    <ClInclude Include="WaterSurface.h" />
-    <ClCompile Include="TriggerStair.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Area.h" />
   </ItemGroup>
-    <ClInclude Include="TriggerStair.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
 </Project>

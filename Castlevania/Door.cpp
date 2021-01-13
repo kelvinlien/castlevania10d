@@ -32,7 +32,7 @@ void CDoor::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects)
 		turnOffBb = true;
 		Time = 0;
 	}
-	else if (isOpened && Simon::GetInstance()->x> SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+	else if (isOpened && ((Simon::GetInstance()->x > SIMON_AUTO_GO_THROUGH_FIRST_DOOR && Camera::GetInstance()->GetAreaID() == 21) || (Simon::GetInstance()->x > SIMON_AUTO_GO_THROUGH_SECOND_DOOR && Camera::GetInstance()->GetAreaID() == 22)))
 	{
 		ani = DOOR_ANI_CLOSING;
 		isOpened = false;

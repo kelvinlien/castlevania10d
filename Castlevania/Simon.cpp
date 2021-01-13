@@ -375,8 +375,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	for (int i = 0; i < coObjects->size(); i++) {
 		if (dynamic_cast<CDoor*>(coObjects->at(i))) {
 			CDoor *door = dynamic_cast<CDoor *>(coObjects->at(i));
-			if (door->GetId()==doorId && isAutoWalking) {
-				if (door->IsOpened() && this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+			if (door->GetId() == doorId && isAutoWalking) {
+				if (door->IsOpened() && (this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR || this->x < SIMON_AUTO_GO_THROUGH_SECOND_DOOR))
 					Walk();
 				else
 					SetState(SIMON_STATE_IDLE);
