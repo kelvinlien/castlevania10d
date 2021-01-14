@@ -485,20 +485,9 @@ void CPlayScene::Load()
 		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
 		//	break;
 	case 2:
-		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
-			Area::GetInstance()->SetAreaID(21);
-			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
-			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
-		}
-		else if (Area::GetInstance()->GetAreaID() == 22) {
-			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
-			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
-		}
-		else if (Area::GetInstance()->GetAreaID() == 23) {
-			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
-			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
-		}
-
+		Area::GetInstance()->SetAreaID(21);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
 		break;
 		/*case 3:
 		Area::GetInstance()->SetAreaID(31);
@@ -695,9 +684,17 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+	{
 		Area::GetInstance()->SetAreaID(22);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+	}
 	else if (Camera::GetInstance()->GetCamX() >= 4096)
+	{
 		Area::GetInstance()->SetAreaID(23);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+	}
 }
 
 void CPlayScene::Render()

@@ -80,7 +80,7 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		if (x > playerX)
 			if((Area::GetInstance()->GetAreaID() == 21 && Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR) || (Area::GetInstance()->GetAreaID() == 22 && Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_SECOND_DOOR))
 				isAuto = false;
-		else if (x >= playerX + 285)
+		else if (x > playerX + 282)
 		{
 			Simon::GetInstance()->SetAutoWalking(false);
 			isAuto = false;
@@ -89,7 +89,7 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 	}
 	/*else if (Area::GetInstance()->GetAreaID() == 21)
 	{*/
-	else if (playerX >= Area::GetInstance()->GetLimitLeftCam() && playerX < Area::GetInstance()->GetLimitRightCam()) //cap at door - scene 2 area 1
+	    else if (playerX >= Area::GetInstance()->GetLimitLeftCam() && playerX < Area::GetInstance()->GetLimitRightCam()) //cap at door - scene 2 area 1
 		{
 			x = playerX;
 			y = 0.0f;
@@ -119,6 +119,10 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 			y = 0.0f;
 		}
 	}
+	/*DebugOut(L"[CHECK] AreaID: %d\n", Area::GetInstance()->GetAreaID());
+	DebugOut(L"[CHECK] PlayerX: %f\n", playerX);
+	DebugOut(L"[CHECK] Left cam: %d\n", Area::GetInstance()->GetLimitLeftCam());
+	DebugOut(L"[CHECK] Right cam: %d\n", Area::GetInstance()->GetLimitRightCam());*/
 }
 
 Camera * Camera::GetInstance()

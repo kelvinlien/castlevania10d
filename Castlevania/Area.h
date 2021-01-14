@@ -7,7 +7,7 @@
 #define LIMIT_LEFT_CAM_22	3072
 #define LIMIT_RIGHT_CAM_22	3310
 #define LIMIT_LEFT_CAM_23	4096
-#define LIMIT_RIGHT_CAM_23	4864
+#define LIMIT_RIGHT_CAM_23	4833
 class Area
 {
 	int areaID = 0;
