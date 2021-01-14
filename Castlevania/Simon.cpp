@@ -11,6 +11,7 @@
 #include "Whip.h"
 #include "Candle.h"
 #include "BlinkEffect.h"
+#include "SmallBrick.h"
 
 Simon* Simon::__instance = NULL;
 

@@ -46,8 +46,6 @@ using namespace std;
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
-#define OBJECT_TYPE_GHOST	2
-#define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_PORTAL	50
@@ -179,7 +177,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = atof(tokens[2].c_str());
 	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
+	int amount, axis;
 	if (object_type == 5) {
 		amount = atoi(tokens[4].c_str());
 	}
@@ -200,57 +198,62 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	CGameObject *obj = NULL;
 
-	CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
+	//CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
 
-	Entity* panther = new Entity(panTest, 160);
-	DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
+	//Entity* panther = new Entity(panTest, 160);
+	//DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
 
-	CCandle *canTest = new CCandle(1);
-	canTest->SetPosition(600, 100);
+	//CCandle *canTest = new CCandle(1);
+	//canTest->SetPosition(600, 100);
 
-	Entity* candle = new Entity(canTest, 0);
-	RECT triggerZone = candle->GetTriggerZone();
-	DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
+	//Entity* candle = new Entity(canTest, 0);
+	//RECT triggerZone = candle->GetTriggerZone();
+	//DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
 
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+	{
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
+	}
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
 		ghost = new CGhost(x, y, -1, itemType);
 		ghost->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(ghost);
-		return;
+		break;
 	}
 	//break;
 	case OBJECT_TYPE_PANTHER: 
+	{
 		panther = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		panther->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(panther);
-		return;
-		//break;
+		break;
+	}
 	case OBJECT_TYPE_BAT:
-		//int itemType = atof(tokens[4].c_str());
-		bat = new CBat(x, y, -1,1);
+	{
+		bat = new CBat(x, y, -1, 1);
 		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(bat);
-		return;
+		break;
+	}
 	case OBJECT_TYPE_FISHMAN:
+	{
 		fishman = new CFishman(x, y, -Simon::GetInstance()->nx, 0);
 		fishman->SetAnimationSet(animation_sets->Get(ani_set_id));
 		CEnemyFactory::GetInstance()->enemies.push_back(fishman);
-		return;
-	//break;
+		break;
+	}
 
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
