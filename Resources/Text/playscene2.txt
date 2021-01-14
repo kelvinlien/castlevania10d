@@ -22,7 +22,7 @@
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
 200	..\Resources\Texture\texture-map-2.png	255	255	255
-
+53	..\Resources\Texture\enemy_bullet.png	255	0	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #MAP2
@@ -312,6 +312,8 @@
 51023	60	0	90	28	53
 51024	90	0	120	28	53
 
+#enemy_bullet
+50030	0	0	10	12	53
 #Effect
 #Burn
 70000	18	10	24	36	70
@@ -559,6 +561,8 @@
 #Right
 517	51021	100	51022	100	51023	100	51024	100
 
+#enemy_bullet
+508	50030	100
 # ==== EFFECT =========
 #Burn
 700	70000	100	70001	100	70002	100
@@ -715,7 +719,7 @@
 # ITEMS
 4	401	402	406	407	408	411	412	416	417	418	419	420	421	422
 #WEAPON
-5	501	502	503	511	512	513	504	514	505	515	506	507	517
+5	501	502	503	511	512	513	504	514	505	515	506	507	517 508
 #EFFECT
 7	700	701	702	703	704
 #BOARD
@@ -725,8 +729,10 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
+<<<<<<<<< Temporary merge branch 1
+# type: 0 = Simon , 1 = Brick, 3 = Firepot
 
-# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle
+# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----

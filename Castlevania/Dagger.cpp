@@ -1,4 +1,6 @@
 #include "Dagger.h"
+#include "Ghost.h"
+#include "Panther.h"
 
 
 Dagger::Dagger()
@@ -79,8 +81,23 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			}
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
+				CEnemy* enemy=NULL;
 				this->isVanish = true;
-				e->obj->isVanish = true;
+				//e->obj->isVanish = true;
+				switch (dynamic_cast<CEnemy*>(e->obj)->GetType())
+				{
+				case 1:
+					enemy = dynamic_cast<CGhost*>(e->obj);
+					break;
+				case 10:
+					enemy = dynamic_cast<CPanther*>(e->obj);
+					break;
+
+				default:
+					break;
+				}
+				enemy->SetState(ENEMY_STATE_DIE);
+				
 			}
 		}
 

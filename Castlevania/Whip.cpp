@@ -3,6 +3,8 @@
 #include"Ghost.h"
 #include "Candle.h"
 #include "Panther.h"
+#include "Bat.h"
+#include "Fishman.h"
 
 CWhip* CWhip::__instance = NULL;
 
@@ -62,6 +64,11 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
+				case 20:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
+					break;
+				case 30:
+					e = dynamic_cast<CFishman *>(coObjects->at(i));
 				default:
 					break;
 				}

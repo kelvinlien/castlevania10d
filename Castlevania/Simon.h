@@ -3,6 +3,7 @@
 #include "WeaponManager.h"
 #include "Whip.h"
 #include "Enemy.h"
+#include "Bat.h"
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
@@ -152,6 +153,8 @@ public:
 	void SetHealth(int _health) { health = _health; }
 	int GetHealth() { return health; }
 
+	void SetHealth(int _health) { health = _health; }
+	int GetHealth() { return health; }
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }
 

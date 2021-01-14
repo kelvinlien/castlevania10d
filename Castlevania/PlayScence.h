@@ -13,7 +13,9 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
-
+#include  "Bat.h"
+#include "SmallBrick.h"
+#include "Fishman.h"
 #include"Ghost.h"
 
 #include "Quadtree.h"
@@ -22,7 +24,10 @@ class CPlayScene: public CScene
 {
 protected: 
 	Simon *player;					// A play scene has to have player, right?
-
+	CGhost *ghost;					// Beta ghost for testing purpose
+	CPanther *panther;
+	CBat* bat;
+	CFishman* fishman;
 	Quadtree *qtree;
 
 	Item item; //temp item to save when item created

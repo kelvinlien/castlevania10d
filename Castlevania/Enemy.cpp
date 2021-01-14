@@ -26,6 +26,9 @@ void CEnemy::SetState(int state)
 			break;
 	}
 }
+void CEnemy::Respawn()
+{
+}
 void CEnemy::SetItem(int itemType) {
 	ItemType type;
 	switch (itemType)

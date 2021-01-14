@@ -377,7 +377,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				isSit = false;
 		}
 	}
-
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
@@ -501,9 +500,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
+				if (dynamic_cast<CBat *>(e->obj))
+					e->obj->SetState(ENEMY_STATE_DIE);
+
 				if (!isUntouchable) {
 					health -= 2;
 					if (e->obj->nx == nx) {
+
 						this->nx = -e->obj->nx;
 					}
 					
@@ -545,6 +548,17 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
 					if (isJump)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
 					{
 						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 						isJump = false;

@@ -1,5 +1,6 @@
 ﻿#include "Ghost.h"
 #include "Simon.h"
+#include "EnemyFactory.h"
 CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 {
 	SetItem(itemType);
@@ -8,6 +9,8 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	this->y = y;
 	this->type = 1; // 1 là ghost nên thay bằng enum
 	isActive=true;
+	this->xbackup = x;
+	this->ybackup = y;
 	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
@@ -20,10 +23,36 @@ void CGhost::SetState(int state)
 		vx = 0;
 	}
 }
+void CGhost::Respawn()
+{
+	//x = xbackup;
+	y = ybackup;
+	srand(time(NULL));
+	int res = rand() % (2 - 1 + 1) + 1;
+	Camera* cam = Camera::GetInstance();
+	switch (res)
+	{
+	case 1:
+		x = cam->GetCamX()-20;
+		nx = 1;
+		break;
+	case 2:
+		x = cam->GetCamX()+SCREEN_WIDTH + 20;
+		nx = -1;
+		break;
+	}
+	isActive = true;
+	SetState(GHOST_STATE_IDLE);
+	isVanish = false;
+}
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
+	
+	if (state == ENEMY_STATE_DIE && (GetTickCount() - die_time) > GHOST_DIE_TIME)
+	{
+		startDieTime = GetTickCount();
 		isVanish = true;
+	}
 	else if (state != ENEMY_STATE_DIE && isLock != true)
 		vx = GHOST_WALKING_SPEED * this->nx;
 

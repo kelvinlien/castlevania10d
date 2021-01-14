@@ -11,6 +11,8 @@
 #include "Panther.h"
 #include "Entity.h"
 #include <algorithm>
+#include "EnemyFactory.h"
+#include "Enemy.h"
 
 #include "BlinkEffect.h"
 using namespace std;
@@ -39,9 +41,14 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_GHOST	2
+#define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -179,11 +186,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -216,12 +227,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
-		obj = new CGhost(x, y, -1, itemType);
+		ghost = new CGhost(x, y, -1, itemType);
+		ghost->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(ghost);
+		return;
 	}
-	break;
+	//break;
 	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
-		break;
+		panther = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		panther->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(panther);
+		return;
+		//break;
+	case OBJECT_TYPE_BAT:
+		//int itemType = atof(tokens[4].c_str());
+		bat = new CBat(x, y, -1,1);
+		bat->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(bat);
+		return;
+	case OBJECT_TYPE_FISHMAN:
+		fishman = new CFishman(x, y, -Simon::GetInstance()->nx, 0);
+		fishman->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(fishman);
+		return;
+	//break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -270,6 +300,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+
+		//first small brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CSmallBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			//DebugOut(L"[CHECK] top: %f\n", y + SMALL_BRICK_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -296,17 +350,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
+	
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
 		obj->SetPosition(x, y);
 
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
-	}
-		
+	}	
 }
 /*
 	Parse Scene Ani_set
@@ -495,6 +547,11 @@ void CPlayScene::Load()
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
+
+	//Load enemies in EnemyFactory
+	for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
+		objects.push_back(CEnemyFactory::GetInstance()->enemies[i]);
+
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	RECT screen;
 	screen.left = 0;
@@ -629,6 +686,29 @@ void CPlayScene::Update(DWORD dt)
 	// check if current player pos is in map range and update cam pos accordingly
 
     Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+	Camera* cam = Camera::GetInstance();
+	//Create enemy factory
+	CEnemyFactory* factory = CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
+	{
+		CEnemy* enemy = factory->enemies[i];
+		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
+		{
+			if (enemy->GetType() == 10)
+			{
+				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
+				{
+					enemy->Respawn();
+					objects.push_back(enemy);
+				}
+			}
+			else
+			{
+				enemy->Respawn();
+				objects.push_back(enemy);
+			}
+		}
+	}
 }
 
 void CPlayScene::Render()
