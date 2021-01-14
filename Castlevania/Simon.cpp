@@ -450,7 +450,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		float rdx = 0;
 		float rdy = 0;
 
-
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
@@ -466,7 +465,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 		}
 		
-
 		if (CGame::GetInstance()->GetCurrentSceneID() == 1)
 		{
 			if (x >= SIMON_AUTO_GO_BACK_POSITION_X && flag == false)
@@ -578,7 +576,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 						isHurt = false;
 						isJump = false;
-						//y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 						SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
 					if (isJump)
@@ -596,7 +593,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CDoor *>(e->obj))
 			{
 				CDoor *door = dynamic_cast<CDoor *>(e->obj);
-				if (!door->IsActive() && this->x-door->GetPostionX()<0)
+				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
 				{
 					doorId = door->GetId();
 					SetState(SIMON_STATE_IDLE);
@@ -604,17 +601,20 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					door->SetActive(true);
 					Camera::GetInstance()->SetIsAuto(true);
 				}
+				else if (door->IsActive())
+				{
+					x += dx;
+				}
 			}
 		}
 	}
 
-
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];	
 }
+
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 
@@ -639,5 +639,4 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
-	
 }

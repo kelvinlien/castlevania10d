@@ -18,7 +18,6 @@ class CDoor : public CGameObject
 	int ani;
 	//int openTime;
 	bool isActive;
-	bool turnOffBb;
 	bool isClosed;
 	bool isOpened;
 public:

@@ -665,6 +665,10 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->x = -14;
 	}
+	if (cx > 5555)
+	{
+		player->x = 5555;
+	}
 
 	CGame *game = CGame::GetInstance();
 	 
@@ -734,8 +738,6 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 
