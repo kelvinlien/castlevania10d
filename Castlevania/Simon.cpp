@@ -10,6 +10,8 @@
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "BlinkEffect.h"
+
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -52,20 +54,20 @@ void Simon::SetState(int state)
 		Walk();
 		break;
 	case SIMON_STATE_IDLE:
-			vx = 0;
-			break;
+		vx = 0;
+		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
 		if (isLevelUp) return;
 		isLevelUp = true;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = -1;
 		Walk();
 		break;
 	case SIMON_STATE_WALKING_RIGHT:
-		if (isAttack) break;
+		if (isAttack||isJump) break;
 		nx = 1;
 		Walk();
 		break;
@@ -201,14 +203,34 @@ void Simon::Attack()
 	// when using sub weapon
 	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && isUsingSubWeapon)) return;
 	else if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapons != NULL && !isUsingSubWeapon && hearts > 0)) {
-			hearts--;
-			subWeapons->SetPosition(x - 15, y + 15);
-			subWeapons->nx = nx;
-			isAttack = true;
-			attackTime = GetTickCount();
-			isUsingSubWeapon = true;
-			subWeapons->isVanish = false;
-			DebugOut(L"[INFO] 3\n");
+		hearts--;
+		switch (WeaponManager::GetInstance()->GetAvailable())
+		{
+		case DAGGER:
+			subWeapons->SetPosition(x, y + 10);
+			break;
+		case HOLYWATER:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
+		case STOPWATCH:
+			break;
+		case AXE:
+			if (nx == 1)
+				subWeapons->SetPosition(x + SIMON_BBOX_WIDTH - 14, y + 20);
+			else if (nx == -1)
+				subWeapons->SetPosition(x, y + 20);
+			break;
+		}
+		subWeapons->nx = nx;
+	
+		isUsingSubWeapon = true;
+		subWeapons->isVanish = false;
+
+		isAttack = true;
+		attackTime = GetTickCount();
 	}
 	else 
 		isUsingSubWeapon = false;
@@ -299,7 +321,7 @@ void Simon::CalcPotentialCollisions(
 					GetBoundingBox(l1, t1, r1, b1);
 					item->GetBoundingBox(l2, t2, r2, b2);
 
-					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					if (!(r1 < l2 || l1 > r2 || t1 > b2|| b1 < t2))
 					{
 						item->BeingProcessed();
 						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
@@ -308,7 +330,6 @@ void Simon::CalcPotentialCollisions(
 				}
 			}
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-
 			if (e->t > 0 && e->t <= 1.0f)
 				coEvents.push_back(e);
 			else
@@ -332,8 +353,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		else 
 			subWeapons->Update(dt, coObjects);
 	}
-
-
+	if (isBuff && GetTickCount64()-buffTime > 10)
+	{
+		isBuff = false;
+	}
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
 		isAttack = false;
@@ -358,6 +381,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
+	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
+	{
+		ResetSimon();
+		dieTime = 0;
+	}
 
 	//Update when Simon is hurt
 	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
@@ -366,6 +394,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (health <= 0) {
 			SetState(SIMON_STATE_DIE);
+			dieTime = GetTickCount64();
 		}
 		else
 			SetState(SIMON_STATE_STAND);
@@ -413,9 +442,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
 		if (!isHurt) {
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
@@ -485,8 +511,26 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (e->ny != 0) y += dy;
 				}
 			}
+			else if (dynamic_cast<CEnemy *>(e->obj))
+			{
+				if(startBlinkEffect == 0)
+					startBlinkEffect = GetTickCount();
+				if (GetTickCount() - startBlinkEffect >= 500)
+				{
+					BlinkEffect::GetInstance()->SetIsActive(false);
+
+					CPortal *p = dynamic_cast<CPortal *>(e->obj);
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+					flag = false;
+					SetState(SIMON_STATE_IDLE);
+				}
+				else
+					BlinkEffect::GetInstance()->SetIsActive(true);		
+			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
 				if (e->ny < 0)
 				{
 					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
@@ -520,6 +564,34 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
+}
+void Simon::ResetSimon()
+{
+	isDead = false;
+	nx = 1;
+	cam=Camera::GetInstance();
+	
+	SetState(SIMON_STATE_IDLE);
+	switch (area->GetInstance()->GetAreaID())
+	{
+	case 21:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(50, 0);
+		cam->SetCamPos(0, 0);
+		break;
+	case 22:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_22, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_22, 0);
+		break;
+	case 23:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_23, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+		break;
+	default:
+		break;
+	}
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {

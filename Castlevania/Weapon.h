@@ -15,7 +15,6 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {};
 	virtual void Render() {};
 
-	void SetIsThrown(bool isThrown) { this->isThrown = isThrown; }
 	bool GetIsThrown() { return isThrown; }
-
+	void SetIsThrown(bool isThrown) { this->isThrown = isThrown; }
 };

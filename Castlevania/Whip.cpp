@@ -54,7 +54,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (dynamic_cast<CEnemy*>(coObjects->at(i)))
 			{
 				CEnemy *e = NULL;
-
 				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
 				{
 				case 1:
@@ -79,7 +78,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 					e->SetState(CANDLE_STATE_BREAK);
 			}
-
 		}
 	}
 	else
@@ -96,11 +94,14 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 			if (dynamic_cast<CEnemy*>(coObjects->at(i)))
 			{
-				CEnemy *e=NULL;
+				CEnemy *e = NULL;
 				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
 				{
 				case 1:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					break;
+				case 10:
+					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
 				default:
 					break;
@@ -108,7 +109,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (e != NULL) {
 					e->SetState(ENEMY_STATE_DIE);
 				}
-
 			}
 		}
 	}

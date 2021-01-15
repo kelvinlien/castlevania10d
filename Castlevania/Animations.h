@@ -26,14 +26,18 @@ class CAnimation
 	DWORD lastFrameTime;
 	int currentFrame;
 	int defaultTime;
+	bool isLock = false;
 	vector<LPANIMATION_FRAME> frames;
 public:
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
-	int GetCurrentFrame() { return currentFrame; }
 	void ResetFrame() { lastFrameTime = -1; currentFrame = -1; }
 	void Render(float x, float y, int alpha = 255);
+
+	//Get and Set
 	LPANIMATION_FRAME Get(int id);
+	int GetCurrentFrame() { return currentFrame; }
+	void SetLock(bool a) { isLock = a; }
 };
 
 typedef CAnimation *LPANIMATION;
