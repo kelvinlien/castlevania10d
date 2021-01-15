@@ -334,6 +334,7 @@ void Simon::CalcPotentialCollisions(
 				coEvents.push_back(e);
 			else
 				delete e;
+			
 		}
 		
 	}
@@ -441,10 +442,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
-
-		//x += min_tx * dx + nx * 0.4f;
-		///y += min_ty * dy + ny * 0.4f;
-
 		if (!isHurt) {
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
@@ -514,7 +511,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (e->ny != 0) y += dy;
 				}
 			}
-			else if (dynamic_cast<CPortal *>(e->obj))
+			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
 				if(startBlinkEffect == 0)
 					startBlinkEffect = GetTickCount();

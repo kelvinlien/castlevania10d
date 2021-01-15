@@ -138,6 +138,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FirePot.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Holder.cpp" />
@@ -146,6 +147,8 @@
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="RepeatableEffect.cpp" />
+    <ClCompile Include="RepeatableEffects.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="StopWatch.cpp" />
@@ -176,6 +179,7 @@
     <ClInclude Include="FirePot.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Fragment.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
@@ -184,6 +188,8 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="RepeatableEffect.h" />
+    <ClInclude Include="RepeatableEffects.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="StopWatch.h" />

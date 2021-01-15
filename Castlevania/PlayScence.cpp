@@ -43,6 +43,9 @@ using namespace std;
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 
+#define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_EFFECT	21
+
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -61,8 +64,7 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
+	
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -204,13 +206,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -253,7 +255,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BRICKS_GROUP: {
 		int amountOfBrick = amount;
-		
+
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -263,7 +265,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			
+
 			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
@@ -282,7 +284,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -425,6 +426,8 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	effects= CRepeatableEffects::GetInstance();		// create instance of effects
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -609,6 +612,8 @@ void CPlayScene::Update(DWORD dt)
 		 }
 	}
 
+	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
+
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
@@ -626,6 +631,18 @@ void CPlayScene::Update(DWORD dt)
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+
+	if (ghost != NULL)
+	{
+		float gx, gy;
+		ghost->GetPosition(gx, gy);
+
+		if (gx <= 0 || gx >= (Camera::GetInstance()->GetCamX() + game->GetScreenWidth() - GHOST_BBOX_WIDTH))
+		{
+			ghost->SetDirect(-(ghost->GetDirect()));
+		}
+	}
+	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	// check if current player pos is in map range and update cam pos accordingly
 
     Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
@@ -640,6 +657,7 @@ void CPlayScene::Render()
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
 
+	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{
 		int alpha;
