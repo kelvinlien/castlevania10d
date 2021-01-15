@@ -15,6 +15,7 @@ class TriggerStair :public CGameObject
 	int direct;	//stair direction
 	float standingPoint;
 	float middlePoint;
+	float outPoint;
 	float offset = 0;	//distance from standingPoint to middlePoint
 
 public:
@@ -30,6 +31,7 @@ public:
 	int GetType() { return type; }
 	int GetDirect() { return direct; }
 	float GetStandingPoint() { return standingPoint; }
+	float GetOutPoint() { return outPoint; }
 
 	~TriggerStair() {};
 };

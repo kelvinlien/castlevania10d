@@ -19,17 +19,14 @@ TriggerStair::TriggerStair(float l, float t, int type, int direct)
 	this->direct = direct;
 	x = l;
 	y = t;
-	//middlePoint = x + width / 2;
-	//if (direct == 1)
-	//	offset = -0;
-	////if (type == 0)
-	//	standingPoint = middlePoint + offset;
-	//else
-		//standingPoint = middlePoint - 50;
-		if (direct == 1)
-			standingPoint = x + width + 8;
-		else
-			standingPoint = x - 4;
+	if (direct == DIRECT_RIGHT)
+		standingPoint = x + width + 8;
+	else
+		standingPoint = x - 4;
+	if (type == TYPE_BELOW)
+		outPoint = y + height - 1;
+	else
+		outPoint = y + height + 1;
 }
 
 
