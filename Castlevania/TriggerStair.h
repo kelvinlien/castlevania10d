@@ -5,7 +5,7 @@
 #define TYPE_BELOW	0
 #define TYPE_ABOVE	1
 #define DIRECT_RIGHT	1
-#define DIRECT_LEFT	0
+#define DIRECT_LEFT	-1
 
 class TriggerStair :public CGameObject
 {

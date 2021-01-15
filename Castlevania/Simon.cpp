@@ -97,9 +97,9 @@ void Simon::SetState(int state)
 		if (!isOnStair) return;
 		readyToUpStair = false;
 		readyToDownStair = false;
-		nx = -1;
+		nx = 1;
 		if (stairNx < 0)
-			nx = 1;
+			nx = -1;
 		GoDown();
 		break;
 	case SIMON_STATE_AUTOWALK_ON_STAIR:
@@ -461,10 +461,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (readyToUpStair || readyToDownStair)
 					{
 						SetSimonAutoActionToGoStair(i);
-						/*if (canGoUpStair || canGoDownStair)
-						onStair = true;
-						else
-						onStair = false;*/
 					}
 				}
 			}
@@ -660,7 +656,6 @@ void Simon::GoUp1Step()
 	isOnStair = true;
 	canGoUpStair = true;
 	canGoDownStair = false;
-	//SetState(SIMON_STATE_GO_UP_STAIR);
 	vy = -0.1;
 	directionY = -1;
 	if (nx == 1)
