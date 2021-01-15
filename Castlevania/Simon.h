@@ -3,9 +3,14 @@
 #include "WeaponManager.h"
 #include "Whip.h"
 #include <map> 
+#include <cmath> 
 #include "TriggerStair.h"
 
 
+// ON STAIR SPEED
+#define SIMON_ON_STAIR_SPEED_X		0.035f
+#define SIMON_ON_STAIR_SPEED_Y		0.035f
+//
 #define SIMON_WALKING_SPEED		0.15f 
 //0.1f
 #define SIMON_JUMP_SPEED_Y		0.5f
@@ -23,10 +28,10 @@
 #define SIMON_STATE_WALKING_RIGHT	700
 #define SIMON_STATE_DIE				800
 #define SIMON_STATE_STAND			900
-#define SIMON_STATE_GO_UP_STAIR	1000
-#define SIMON_STATE_GO_DOWN_STAIR	1100
-#define SIMON_STATE_IDLE_ON_STAIR	1200
-
+#define SIMON_STATE_GO_UP_STAIR		1000
+#define SIMON_STATE_GO_DOWN_STAIR	2000
+#define SIMON_STATE_IDLE_ON_STAIR	3000
+#define SIMON_STATE_AUTOWALK_ON_STAIR	3100
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
@@ -37,25 +42,33 @@
 class TriggerStairs;
 class Simon : public CGameObject
 {
+	int currentFrame;
+
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
 	int hearts = 5;
+	//to handle on stair
+	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
+	float simonAutoWalkDistanceY;
+	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
+	float aboveStairOutPoint, belowStairOutPoint;	//variables hold out point
 
-	//Flag of Simon's state
+													//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
 	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
-	
+
 	//Flag of trigger stair
 	bool readyToUpStair;
 	bool readyToDownStair;
 	bool canGoUpStair;
 	bool canGoDownStair;
 	bool isOnStair;
+	bool isAutoWalkOnStair = false;
 
 	int directionY;
 	int stairNx;
@@ -93,6 +106,7 @@ class Simon : public CGameObject
 		//go down and attack on stair
 		ATTACK_DOWN_LEFT,
 		ATTACK_DOWN_RIGHT,
+		//idle on stair
 		IDLE_STAIR_UP_LEFT,
 		IDLE_STAIR_UP_RIGHT,
 		IDLE_STAIR_DOWN_LEFT,
@@ -113,7 +127,9 @@ public:
 	void Stand();
 	void GoUp();
 	void GoDown();
-
+	void AutoWalkOnStair();
+	void GoUp1Step();
+	void GoDown1Step();
 	//State function
 	void CheckLevelUpState(DWORD dt);
 	void SetState(int state);
@@ -134,10 +150,11 @@ public:
 	bool IsOnStair() { return isOnStair; }
 	void SetReadyToGoStair(int i);
 	void SetSimonAutoActionToGoStair(int i);
+	bool IsAutoWalkOnStair() { return isAutoWalkOnStair; }
+	void SetStairOutPoint(int i);
+	float GetAboveStairOutPoint() { return aboveStairOutPoint; }
+	float GetBelowStairOutPoint() { return belowStairOutPoint; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
 };
-
-
-

@@ -13,8 +13,8 @@ using namespace std;
 
 
 /*
-	Load scene resources from scene file (textures, sprites, animations and objects)
-	See scene1.txt, scene2.txt for detail format specification
+Load scene resources from scene file (textures, sprites, animations and objects)
+See scene1.txt, scene2.txt for detail format specification
 */
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -24,6 +24,11 @@ using namespace std;
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPMATRIX 7
+
+#define SCENE_SECTION_ANI_SET		8
+#define SCENE_SECTION_ITEM		9
+#define SCENE_SECTION_FIREPOT	10
+#define SCENE_SECTION_OBJECT		11
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
@@ -84,7 +89,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -97,7 +102,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 
 	if (tokens.size() < 3) return; // skip invalid lines - an animation must at least has 1 frame and 1 frame time
 
-	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+								   //DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	LPANIMATION ani = new CAnimation();
 
@@ -105,7 +110,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i+1].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -127,7 +132,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	for (int i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
-		
+
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
@@ -135,9 +140,9 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 /*
-	Parse map matrix in section [MAPMATRIX]
+Parse map matrix in section [MAPMATRIX]
 */
-void CPlayScene::_ParseSection_MAPMATRIX(string line) 
+void CPlayScene::_ParseSection_MAPMATRIX(string line)
 {
 	vector<string> tokens = split(line);
 	if (tokens.size() < 2) return;
@@ -147,7 +152,7 @@ void CPlayScene::_ParseSection_MAPMATRIX(string line)
 	CMaps::GetInstance()->Add(matrixString.c_str(), id);
 }
 /*
-	Parse a line in section [OBJECTS] 
+Parse a line in section [OBJECTS]
 */
 
 void CPlayScene::_ParseSection_OBJECTS(string line)
@@ -162,7 +167,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-	
+
 	int ani_set_id = atoi(tokens[3].c_str());
 	int amount;
 	if (object_type == 5) {
@@ -175,13 +180,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -216,7 +221,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BRICKS_GROUP: {
 		int amountOfBrick = amount;
-		
+
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj = new CBrick();
@@ -226,30 +231,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		for (int i = 1; i < amountOfBrick; i++) {
 			obj = new CBrick();
-			
+
 			obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+								   //case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
 		break;
 	}
-	
-	case OBJECT_TYPE_PORTAL:
-		{	
 
-			float r = atof(tokens[4].c_str());
-			float b = atof(tokens[5].c_str());
-			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
-		}
-		break;
+	case OBJECT_TYPE_PORTAL:
+	{
+
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		int scene_id = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, scene_id);
+	}
+	break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -264,7 +269,119 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}
-		
+
+}
+/*
+Parse Scene Ani_set
+*/
+void CPlayScene::_ParseSection_SCENE_ANI_SET(string line) {
+
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open %d\n", line);
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
+}
+/*
+Parse Scene Object
+*/
+void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
+{
+	vector<string> tokens = split(line);
+	if (tokens.size() < 2) return;
+	int id = atof(tokens[0].c_str());
+	LPCWSTR path = ToLPCWSTR(tokens[1]);
+
+	ifstream file;
+	file.open(path);
+
+	if (file.fail())
+		DebugOut(L"[ERR] Cannot open %d\n", path);
+
+	// current resource section flag
+	int section = SCENE_SECTION_UNKNOWN;
+	char str[MAX_SCENE_LINE];
+	while (file.getline(str, MAX_SCENE_LINE))
+	{
+		string line(str);
+		if (line[0] == '#') continue;	// skip comment lines	
+
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
+
+		//
+		// data section
+		//
+		switch (section)
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		}
+	}
+	file.close();
+	DebugOut(L"[INFO] Done loading resources %s\n", path);
 }
 
 void CPlayScene::Load()
@@ -278,7 +395,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -287,33 +404,49 @@ void CPlayScene::Load()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
-		if (line == "[TEXTURES]") { 
-			section = SCENE_SECTION_TEXTURES; continue; }
-		if (line == "[SPRITES]") { 
-			section = SCENE_SECTION_SPRITES; continue; }
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
 		if (line == "[MAPMATRIX]") {
-			section = SCENE_SECTION_MAPMATRIX; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
-
-		if (line[0] == '[') { 
-			section = SCENE_SECTION_UNKNOWN; continue; }	
+			section = SCENE_SECTION_MAPMATRIX; continue;
+		}
+		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]" || line == "[ENEMY]")
+		{
+			section = SCENE_SECTION_OBJECT; continue;
+		}
+		if (line == "[ITEM]" || line == "[WHIP]")
+		{
+			section = SCENE_SECTION_ANI_SET; continue;
+		}
+		if (line[0] == '[') {
+			section = SCENE_SECTION_UNKNOWN; continue;
+		}
 
 		//
 		// data section
 		//
 		switch (section)
-		{ 
-			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
-			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-			case SCENE_SECTION_MAPMATRIX: _ParseSection_MAPMATRIX(line); break;
-			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_MAPMATRIX: _ParseSection_MAPMATRIX(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_ANI_SET: _ParseSection_SCENE_ANI_SET(line); break;
+		case SCENE_SECTION_OBJECT: _ParseSection_SCENE_OBJECT(line); break;
 		}
 	}
 	f.close();
@@ -325,7 +458,7 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	CGameObject *obj = new Item(100, 0, ITEM_SMALL_HEART);
 	objects.push_back(obj);
-	
+
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
@@ -383,25 +516,25 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		 if (objects[i]->isVanish == true)
-		 {
-			 if (dynamic_cast<CFirePot*>(objects[i])) {
-				 CGameObject *obj; //temp obj to create item
+		if (objects[i]->isVanish == true)
+		{
+			if (dynamic_cast<CFirePot*>(objects[i])) {
+				CGameObject *obj; //temp obj to create item
 
-				 CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
-				
-				 ItemType type = firePot->GetItemType();
-				 obj = new Item(firePot->x, firePot->y, type);
-				 objects.push_back(obj);
-			 }
+				CFirePot *firePot = dynamic_cast<CFirePot*>(objects[i]);
+
+				ItemType type = firePot->GetItemType();
+				obj = new Item(firePot->x, firePot->y, type);
+				objects.push_back(obj);
+			}
 			objects.erase(objects.begin() + i);
-		 }
-		else 
+		}
+		else
 			objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
 
 	// Update camera to follow mario
 	float cx, cy;
@@ -413,7 +546,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 	CGame *game = CGame::GetInstance();
-	 
+
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
@@ -443,7 +576,7 @@ void CPlayScene::Render()
 }
 
 /*
-	Unload current scene
+Unload current scene
 */
 void CPlayScene::Unload()
 {
@@ -480,10 +613,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	case DIK_DOWN:
 		for (int i = 0; i < 10; i++)
-			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
 				return;
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
+		if (simon->IsOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
 		break;
 	}
 }
@@ -495,7 +631,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	Camera* cam = Camera::GetInstance();
 
-	// disable control key when Simon die 
+	// disable control key when Simon die and is auto walk 1 step on stair
 	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
@@ -511,10 +647,20 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
 				return;
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
+
+		if (simon->IsOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
 	}
-	else
+	else if (game->IsKeyDown(DIK_UP)) {
+		if (simon->IsLevelUp()) return;
+		simon->SetState(SIMON_STATE_GO_UP_STAIR);
+	}
+	else {
+		if (simon->IsOnStair()) return;
 		simon->SetState(SIMON_STATE_IDLE);
+	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
@@ -525,8 +671,12 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
+
 		if (simon->IsLevelUp()) break;
-		simon->SetState(SIMON_STATE_STAND);
+		if (simon->IsAutoWalkOnStair())
+			simon->SetState(SIMON_STATE_AUTOWALK_ON_STAIR);
+		else
+			simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
 }
