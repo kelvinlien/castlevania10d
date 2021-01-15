@@ -10,6 +10,8 @@
 #include "GameMap.h"
 #include "Panther.h"
 #include "Background.h"
+#include "Helicopter.h"
+#include "IntroBat.h"
 
 using namespace std;
 
@@ -41,6 +43,8 @@ using namespace std;
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_INTRO_FLOOR		11
+#define OBJECT_TYPE_HELICOPTER		12
+#define OBJECT_TYPE_INTRO_BAT		13
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -299,6 +303,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	
+	case OBJECT_TYPE_HELICOPTER: {
+		obj = new CHelicopter();
+		break;
+	}
+
+	case OBJECT_TYPE_INTRO_BAT: {
+		int nx= atof(tokens[4].c_str());
+		obj = new CIntroBat(x,y,nx);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 		{	
 
