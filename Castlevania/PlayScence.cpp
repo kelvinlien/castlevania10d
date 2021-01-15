@@ -201,8 +201,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
+		obj = Simon::GetInstance();
 		player = (Simon*)obj;  
+		Simon::GetInstance()->SetIsIdleIntro(false);
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -614,7 +615,11 @@ void CPlayScene::Render()
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
+	{
+		if (i == 101)
+		DebugOut(L"something wrong");
 		objects[i]->Render();
+	}
 
 }
 

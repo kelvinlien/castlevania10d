@@ -37,7 +37,6 @@ void Simon::SetState(int state)
 		isUntouchable = false;
 		isSit = false;
 		isFall = false;
-		isIdleIntro = false;
 		y -= 30;
 		vy = 0;
 		break;
@@ -449,6 +448,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				SetState(SIMON_STATE_IDLE);
 				this->nx = 1;                        //need to change the simon direct when switch from intro 2 to scene 1
 				isIdleIntro = true;
+				if (introSceneTime == 0)
+					introSceneTime = GetTickCount();
+				else if (GetTickCount() - introSceneTime > 2000)
+					CGame::GetInstance()->SwitchScene(1);
 			}
 		}
 

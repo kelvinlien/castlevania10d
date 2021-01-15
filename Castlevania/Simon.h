@@ -57,7 +57,7 @@ class Simon : public CGameObject
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
-
+	DWORD introSceneTime;
 
 	//Flag of Simon's state
 	bool isJump;
@@ -145,7 +145,7 @@ public:
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }
-
+	void SetIsIdleIntro(bool a) { isIdleIntro = a; }
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
