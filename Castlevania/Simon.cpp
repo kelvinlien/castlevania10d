@@ -226,6 +226,7 @@ void Simon::GoUp()
 {
 	if (isAttack) return;
 	directionY = -1;
+
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
 	isAutoWalkOnStair = true;
@@ -236,7 +237,7 @@ void Simon::GoUp()
 void Simon::GoDown()
 {
 	if (isAttack) return;
-	directionY = 1;
+	directionY = 1; 
 	vx = nx * SIMON_ON_STAIR_SPEED_X;
 	vy = directionY * SIMON_ON_STAIR_SPEED_Y;
 	isOnStair = true;
@@ -257,10 +258,10 @@ void Simon::AutoWalkOnStair() {
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 
-	if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
+	/*if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
 		SetState(SIMON_STATE_IDLE);
 		return;
-	}
+	}*/
 }
 
 void Simon::Sit()
@@ -417,10 +418,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		x += dx;
 		y += dy;
 
-		if (nx != 0 && isOnStair && GetTickCount() - time >= 150)
+		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
 			vx = 0;
 			vy = 0;
+			readyToDownStair = false;
+			readyToUpStair = false;
+			isOnStair = true;
 		}
 
 	}
@@ -465,12 +469,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				}
 			}
 		}
-		DebugOut(L"[CHECK] Simon left: %f\n", x + 12.0f);
-		DebugOut(L"[CHECK] Simon y: %f\n", y);
-		DebugOut(L"[CHECK] Simon right: %f\n", x + SIMON_BBOX_WIDTH - 10.0f);
-		DebugOut(L"[CHECK] Simon bottom: %f\n", y + SIMON_BBOX_HEIGHT);
-		DebugOut(L"[CHECK] Simon vx: %f\n", this->vx);
-		DebugOut(L"[CHECK] Simon vy: %f\n", this->vy);
+		//DebugOut(L"[CHECK] Simon left: %f\n", x + 12.0f);
+		//DebugOut(L"[CHECK] Simon y: %f\n", y);
+		//DebugOut(L"[CHECK] Simon right: %f\n", x + SIMON_BBOX_WIDTH - 10.0f);
+		//DebugOut(L"[CHECK] Simon bottom: %f\n", y + SIMON_BBOX_HEIGHT);
+		//DebugOut(L"[CHECK] Simon vx: %f\n", this->vx);
+		//DebugOut(L"[CHECK] Simon vy: %f\n", this->vy);
 		//
 		// Collision logic with other objects
 		//
