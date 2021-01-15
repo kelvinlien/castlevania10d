@@ -9,9 +9,11 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Door.h"
+#include "Fishman.h"
+#include "WaterSurface.h"
 
 using namespace std;
-
 
 /*
 	Load scene resources from scene file (textures, sprites, animations and objects)
@@ -36,9 +38,14 @@ using namespace std;
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_GHOST	2
 #define OBJECT_TYPE_PANTHER	10
+#define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
+#define OBJECT_TYPE_DOOR			6
+#define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
+#define OBJECT_TYPE_BROKEN_BRICK	8
+#define OBJECT_TYPE_WATER_SURFACE	12
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -58,7 +65,6 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
 
 }
 
@@ -167,24 +173,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-	
 	int ani_set_id = atoi(tokens[3].c_str());
-	int amount;
-	if (object_type == 5) {
+	int amount, axis, brickType, itemType;
+	if (object_type == 5 || object_type == 9) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -217,6 +230,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		break;
+	case OBJECT_TYPE_FISHMAN: {
+		int itemType = atof(tokens[4].c_str());
+		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
+	}
+	break;
+
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -235,14 +254,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 
 		for (int i = 1; i < amountOfBrick; i++) {
-			obj = new CBrick();
-			if (currentMapID == 1)
-				obj->SetPosition(x + BRICK_WIDTH * i, y);
-			else
-				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+			if (i != 99 && i != 119)
+			{
+				obj = new CBrick();
+				if (currentMapID == 1)
+					obj->SetPosition(x + BRICK_WIDTH * i, y);
+				else
+					obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 
-			obj->SetAnimationSet(ani_set);
-			objects.push_back(obj);
+				obj->SetAnimationSet(ani_set);
+				objects.push_back(obj);
+			}
 		}
 		break;
 	}
@@ -265,8 +287,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 	}
-	//case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-  case OBJECT_TYPE_FIREPOT: {
+	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
+		int amountOfSmallBrick = amount;
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+		for (int i = 0; i <= amountOfSmallBrick; i++)
+		{
+			obj = new CSmallBrick();
+			if (axis == 0)
+				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
+			else
+				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
+	case OBJECT_TYPE_BROKEN_BRICK:
+		obj = new CBrokenBrick(brickType, itemType);
+		break;
+	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
 		obj = new CFirePot(type);
@@ -278,7 +318,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CCandle(type);
 		break;
 	}
-	
+	case OBJECT_TYPE_DOOR:
+	{
+		int id = atof(tokens[4].c_str());
+		obj = new CDoor(x, y, id);
+		break;
+	}
+	case OBJECT_TYPE_WATER_SURFACE:
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		obj = new CWaterSurface(x, y, r, b);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 		{	
 
@@ -421,6 +473,29 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	if (id == 2 || id == 3)
+		LoadTriggerStair();
+
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		Area::GetInstance()->SetAreaID(21);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+		break;
+		/*case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;*/
+	default:
+		break;
+	}
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -488,12 +563,37 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	
+	// init camera areaID
+	// area 1
+	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 }
-
+void CPlayScene::LoadTriggerStair() {
+	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
+	triggerStairs->Add(new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(1808, 183, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1872, 247, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4368, 249, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(4688, 249, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(176, 152, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(880, 216, TYPE_BELOW, DIRECT_LEFT));
+}
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -536,7 +636,18 @@ void CPlayScene::Update(DWORD dt)
 				 obj = new Item(candle->x, candle->y, type);
 				 objects.push_back(obj);
 			 }
+			 else if (dynamic_cast<CBrokenBrick*>(objects[i])) {
+				 CGameObject *obj; //temp obj to create item
 
+				 CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(objects[i]);
+
+				 if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
+				 {
+					 ItemType type = brokenBrick->GetItemType();
+					 obj = new Item(brokenBrick->x, brokenBrick->y, type);
+					 objects.push_back(obj);
+				 }
+			 }
 			objects.erase(objects.begin() + i);
 		 }
 		else 
@@ -554,12 +665,17 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->x = -14;
 	}
+	if (cx > 5555)
+	{
+		player->x = 5555;
+	}
 
 	CGame *game = CGame::GetInstance();
 	 
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
 
 	if (ghost != NULL)
 	{
@@ -571,12 +687,17 @@ void CPlayScene::Update(DWORD dt)
 			ghost->SetDirect(-(ghost->GetDirect()));
 		}
 	}
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
-
-	if (cx > 0 && cx < (mapWidth - game->GetScreenWidth() - TILE_SIZE / 2)) //to make sure it won't be out of range
+	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
 	{
-		Camera::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+		Area::GetInstance()->SetAreaID(22);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+	}
+	else if (Camera::GetInstance()->GetCamX() >= 4096)
+	{
+		Area::GetInstance()->SetAreaID(23);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
 }
 
@@ -589,6 +710,16 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	// Bbox 2 dau cau thang
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+	
+	//Render trigger stairs
+	if(id == 2)
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size() - 2; i++) 
+			TriggerStairs::GetInstance()->Get(i)->Render();
+	else if (id == 3)
+		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			TriggerStairs::GetInstance()->Get(i)->Render();
 }
 
 /*
@@ -607,13 +738,11 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() )return;
 
 	switch (KeyCode)
 	{
@@ -630,10 +759,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	}
 	case DIK_DOWN:
+		for (int i = 0; i < 10; i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
 		if (simon->IsLevelUp()) return;
 		simon->SetState(SIMON_STATE_SIT);
 		break;
-		
 	}
 }
 
@@ -647,7 +778,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -670,7 +801,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
 
 	switch (KeyCode)
 	{
