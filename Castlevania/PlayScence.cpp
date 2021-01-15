@@ -253,14 +253,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 
 		for (int i = 1; i < amountOfBrick; i++) {
-			obj = new CBrick();
-			if (currentMapID == 1)
-				obj->SetPosition(x + BRICK_WIDTH * i, y);
-			else
-				obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+			//if (i < 40)
+			{
+				obj = new CBrick();
+				if (currentMapID == 1)
+					obj->SetPosition(x + BRICK_WIDTH * i, y);
+				else
+					obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 
-			obj->SetAnimationSet(ani_set);
-			objects.push_back(obj);
+				obj->SetAnimationSet(ani_set);
+				objects.push_back(obj);
+			}
 		}
 		break;
 	}
