@@ -3,6 +3,8 @@
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 20	..\Resources\Texture\floor_2.png	255	255	255
+22	..\Resources\Texture\4_small_bricks.png	255	255	255
+23	..\Resources\Texture\3_small_bricks.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
 40	..\Resources\Texture\item.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
@@ -206,6 +208,15 @@
 
 #FLOOR
 20001	0	0	33	29	20
+
+#SMALL BRICK
+20002	0	160	16	176	200
+
+#4 SMALL BRICKS
+20003	0	0	32	32	22
+
+#3 SMALL BRICKS
+20004	0	0	32	32	23
 
 #HOLDERS
 #FIREPOT
@@ -488,6 +499,15 @@
 # ==== FLOOR =========
 201	20001	100
 
+# ==== SMALL BRICK ====
+202	20002	100
+
+# ==== 4 SMALL BRICKS ====
+203	20003	100
+
+# ==== 3 SMALL BRICKS ====
+204	20004	100
+
 # ==== HOLDER =========
 #fire pot
 301	30001	100	30002	100
@@ -719,10 +739,15 @@
 8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
 #DOOR
 9	900	901	902
+# SMALL BRICK
+10	202
+# BROKEN BRICK
+11	201	203	204
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup
+
+# 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup, 6=Door, 8=Broken Brick, 9=Small Brick Group
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
@@ -765,6 +790,27 @@
 5	2784	247	2	9
 5	3072	247	2	8
 5	3328	311	2	3
+
+#SMALL BRICK GROUP
+9	3056	120	10	2	1
+9	3056	280	10	10	1
+9	3072	120	10	2	1
+9	3072	280	10	10	1
+9	3584	280	10	6	1
+9	3584	457	10	8	0
+9	3584	441	10	8	0
+9	3600	280	10	7	0
+9	3616	376	10	4	1
+9	3696	312	10	8	1
+9	4080	280	10	10	1
+
+#DOOR
+6	3056	152	9	1
+
+#BROKEN_BRICK
+8	3584	376	11	1	-1
+8	3584	408	11	2	10
+8	2016	312	11	0	4
 
 # SIMON
 0	50.0	350	1

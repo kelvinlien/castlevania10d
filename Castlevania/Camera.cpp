@@ -56,19 +56,19 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		moveCamera = false;
 
 	// check if current player pos is in map range and update cam pos accordingly
-	//if (isAuto)
-	//{
-	//	x += movingSpeed * dt;
-	//	if (x > playerX &&  Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
-	//		isAuto = false;
-	//	else if (x > playerX + 285)
-	//	{
-	//		Simon::GetInstance()->SetAutoWalking(false);
-	//		isAuto = false;
-	//		moveCamera = false;
-	//	}
-	//}
-	/*	else*/ if (Area::GetInstance()->GetAreaID() == 21 && x < 2300)
+	if (isAuto)
+	{
+		x += movingSpeed * dt;
+		if (x > playerX &&  Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+			isAuto = false;
+		else if (x > playerX + 285)
+		{
+			Simon::GetInstance()->SetAutoWalking(false);
+			isAuto = false;
+			moveCamera = false;
+		}
+	}
+	else if (Area::GetInstance()->GetAreaID() == 21 && x < 2300)
 	{
 
 		if (playerX > Area::GetInstance()->GetLimitLeftCam() && playerX < Area::GetInstance()->GetLimitRightCam()) //cap at door - scene 2 area 1
