@@ -33,6 +33,9 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="Fragment.cpp" />
+    <ClCompile Include="RepeatableEffect.cpp" />
+    <ClCompile Include="RepeatableEffects.cpp" />
     <ClCompile Include="BlinkEffect.cpp" />
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="Area.cpp" />
@@ -74,6 +77,9 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="Fragment.h" />
+    <ClInclude Include="RepeatableEffect.h" />
+    <ClInclude Include="RepeatableEffects.h" />
     <ClInclude Include="BlinkEffect.h" />
     <ClInclude Include="Axe.h" />
     <ClInclude Include="Area.h" />

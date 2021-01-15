@@ -87,7 +87,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					e->SetState(STATE_BRICK_BREAK);
 			}
 		}
-		  
 	}
 	else
 	{
@@ -118,7 +117,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (e != NULL) {
 					e->SetState(ENEMY_STATE_DIE);
 				}
-
 			}
 		}
 	}
