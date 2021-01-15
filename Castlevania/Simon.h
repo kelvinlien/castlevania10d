@@ -112,34 +112,6 @@ class Simon : public CGameObject
 
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
-
-	enum animation
-	{
-		IDLE_LEFT,
-		IDLE_RIGHT,
-		WALK_LEFT,
-		WALK_RIGHT,
-		JUMP_DUCK_LEFT,
-		JUMP_DUCK_RIGHT,
-		HURT_LEFT,
-		HURT_RIGHT,
-		DEATH_LEFT,
-		DEATH_RIGHT,
-		STAIR_UP_LEFT,
-		STAIR_UP_RIGHT,
-		STAIR_DOWN_LEFT,
-		STAIR_DOWN_RIGHT,
-		ATTACK_STAND_LEFT,
-		ATTACK_STAND_RIGHT,
-		ATTACK_DUCK_LEFT,
-		ATTACK_DUCK_RIGHT,
-		//go up and attack on stair
-		ATTACK_UP_LEFT,
-		ATTACK_UP_RIGHT,
-		//go down and attack on stair
-		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
-	}ani;
 	DWORD startBlinkEffect = 0;
 
 public:
@@ -186,11 +158,6 @@ public:
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	void ResetSimon();
-
-	void SetHearts(int _hearts) {  hearts = _hearts; }
-	int GetHearts() { return hearts; }
-
-	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

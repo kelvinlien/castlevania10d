@@ -36,15 +36,6 @@ enum EffectType
 	HIT_EFFECT
 };
 
-enum EffectType
-{
-	BURN_EFFECT,
-	FOUR_HUNDRED_EFFECT,
-	SEVEN_HUNDRED_EFFECT,
-	ONE_THOUSAND_EFFECT,
-	HIT_EFFECT
-};
-
 class Item :public CGameObject {
 public:
 	LPANIMATION_SET ani_set;

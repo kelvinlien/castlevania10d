@@ -30,6 +30,5 @@ public:
 	ItemType GetItemType() { return itemType; }
 	void SetItem(int itemType);
 	virtual void SetState(int state);
-	void SetActive() { if (!isActive) isActive = true; }
 };
 
