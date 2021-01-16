@@ -45,7 +45,7 @@ void TriggerStair::GetBoundingBox(float &l, float &t, float &r, float &b)
 
 bool TriggerStair::IsContainSimon()
 {
-	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 - 4 >= x && Simon::GetInstance()->GetPostionX() + 12 + 4 < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() + SIMON_BBOX_HEIGHT - 10 < y + height + 1)
+	if (Simon::GetInstance()->GetPostionX() + SIMON_BBOX_WIDTH - 10 >= x && Simon::GetInstance()->GetPostionX() + 12 < x + width && Simon::GetInstance()->GetPostionY() >= y && Simon::GetInstance()->GetPostionY() + SIMON_BBOX_HEIGHT < y + height + 1)
 		return true;
 	return false;
 }

@@ -49,10 +49,12 @@ class Simon : public CGameObject
 
 	int hearts = 5;
 	//to handle on stair
-	float simonAutoWalkDistanceX; //to caculate the distance that Simon walked
+	float simonAutoWalkDistance = 0; //to caculate the distance that Simon walked
 	float simonAutoWalkDistanceY;
-	float autoWalkDistance = 8.0f; //Limit distance that Simon can walk automatic
+	float autoWalkDistance = 16.0f; //Limit distance that Simon can walk automatic
 	float aboveStairOutPoint, belowStairOutPoint;	//variables hold out point
+	float backupOnStairX;
+	float backupOnStairY;
 
 													//Flag of Simon's state
 	bool isJump;

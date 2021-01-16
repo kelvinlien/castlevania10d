@@ -39,6 +39,10 @@ void Simon::SetState(int state)
 		isSit = false;
 		isAutoWalkOnStair = false;
 		vx = 0;
+		/*readyToUpStair = false;
+		readyToUpStair = false;*/
+		/*canGoUpStair = false;
+		canGoDownStair = false;*/
 		break;
 	case SIMON_STATE_LEVEL_UP:
 		vx = 0;
@@ -247,15 +251,32 @@ void Simon::GoDown()
 	isJump = false;
 }
 void Simon::AutoWalkOnStair() {
-	simonAutoWalkDistanceX += abs(vx * dt);
-
 	x += dx;
 	y += dy;
+	
+	simonAutoWalkDistance = abs(x - backupOnStairX);
 
-	if (simonAutoWalkDistanceX > autoWalkDistance)
+	if (simonAutoWalkDistance >= autoWalkDistance)
 	{
+
 		isAutoWalkOnStair = false;
-		simonAutoWalkDistanceX = 0;
+		backupOnStairX = this->x;
+		backupOnStairY = this->y;
+
+		// cases for auto walk
+		if (nx > 0) {
+			this->x = this->x - abs(autoWalkDistance - simonAutoWalkDistance);
+		}
+		else {
+			this->x = this->x + abs(autoWalkDistance - simonAutoWalkDistance);
+		}
+
+		if (directionY > 0)
+			this->y = this->y - abs(autoWalkDistance - simonAutoWalkDistance);
+		else
+			this->y = this->y + abs(autoWalkDistance - simonAutoWalkDistance);
+
+		simonAutoWalkDistance = 0;
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 
@@ -364,7 +385,7 @@ void Simon::CalcPotentialCollisions(
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
-	if (!canGoUpStair && !canGoDownStair)
+	if (!canGoUpStair && !canGoDownStair && !isOnStair)
 		vy += SIMON_GRAVITY * dt;
 
 	if (isOnStair && isAutoWalkOnStair) {
@@ -413,7 +434,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0 && !isAutoWalkOnStair)
+	if (coEvents.size() == 0)// && !isAutoWalkOnStair)
 	{
 
 		x += dx;
@@ -421,11 +442,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
 			vx = 0;
 			vy = 0;
-			readyToDownStair = false;
-			readyToUpStair = false;
-			isOnStair = true;
+			if(readyToDownStair)
+				readyToDownStair = false;
+			if(readyToUpStair)
+				readyToUpStair = false;
+			if(canGoDownStair)
+				canGoDownStair = false;
+			if(canGoUpStair)
+				canGoUpStair = false;
+			//isOnStair = true;
 		}
 
 	}
@@ -662,6 +691,7 @@ void Simon::GoUp1Step()
 		vx = 0.1;
 	else
 		vx = -0.1;
+
 }
 
 void Simon::GoDown1Step()
