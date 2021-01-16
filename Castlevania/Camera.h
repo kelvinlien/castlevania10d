@@ -1,5 +1,6 @@
 #include <d3dx9.h>
 #include "Area.h"
+#include "Define.h"
 #pragma once
 class Camera
 {
@@ -20,6 +21,8 @@ public:
 	~Camera();
 	float GetCamX();
 	float GetCamY();
+	float GetLeftSide();
+	float GetRightSide();
 	void SetCamX(float camX);
 	void SetCamY(float camY);
 	void SetCamPos(float camX, float camY);

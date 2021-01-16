@@ -5,6 +5,7 @@
 #include "Panther.h"
 #include "BrokenBrick.h"
 #include "Bat.h"
+#include "Fishman.h"
 
 CWhip* CWhip::__instance = NULL;
 
@@ -67,6 +68,9 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 20:
 					e = dynamic_cast<CBat *>(coObjects->at(i));
 					break;
+				case 30:
+					e = dynamic_cast<CFishman *>(coObjects->at(i));
+                    break;
 				default:
 					break;
 				}

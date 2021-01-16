@@ -43,6 +43,8 @@
     <ClCompile Include="Door.cpp" />	
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Fishman.cpp" />
+    <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -88,5 +90,7 @@
     <ClInclude Include="Door.h" />	
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="Fishman.h" />
+    <ClInclude Include="Bullet.h" />
   </ItemGroup>
 </Project>
