@@ -26,7 +26,7 @@ TriggerStair::TriggerStair(float l, float t, int type, int direct)
 	if (type == TYPE_BELOW)
 		outPoint = y + height - 1;
 	else
-		outPoint = y + height + 1;
+		outPoint = y + 1;
 }
 
 

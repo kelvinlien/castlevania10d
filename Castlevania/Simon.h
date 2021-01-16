@@ -65,8 +65,6 @@ class Simon : public CGameObject
 	//Flag of trigger stair
 	bool readyToUpStair;
 	bool readyToDownStair;
-	bool canGoUpStair;
-	bool canGoDownStair;
 	bool isOnStair;
 	bool isAutoWalkOnStair = false;
 
@@ -145,8 +143,6 @@ public:
 	bool IsUsingSubWeapon() { return isUsingSubWeapon; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
-	bool IsCanGoUpStair() { return canGoUpStair; }
-	bool IsCanGoDownStair() { return canGoDownStair; }
 	bool IsOnStair() { return isOnStair; }
 	void SetReadyToGoStair(int i);
 	void SetSimonAutoActionToGoStair(int i);
