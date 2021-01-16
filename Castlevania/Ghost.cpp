@@ -66,9 +66,6 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		
 		 //Collision logic with other objects
-		//for (UINT i = 0; i < coEventsResult.size(); i++)
-		//{
-		//	LPCOLLISIONEVENT e = coEventsResult[i];
 		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
 		//	{
 		//	}

@@ -334,6 +334,7 @@ void Simon::CalcPotentialCollisions(
 				coEvents.push_back(e);
 			else
 				delete e;
+			
 		}
 		
 	}
@@ -380,6 +381,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 	//when simon level up whip
 	CheckLevelUpState(dt);
+	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
+	{
+		ResetSimon();
+		dieTime = 0;
+	}
 
 	//Update when Simon is hurt
 	if (isFall && (GetTickCount() - startSit > SIMON_SIT_AFTER_FALL_TIME))
@@ -388,6 +394,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (health <= 0) {
 			SetState(SIMON_STATE_DIE);
+			dieTime = GetTickCount64();
 		}
 		else
 			SetState(SIMON_STATE_STAND);
@@ -435,10 +442,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
-
-		//x += min_tx * dx + nx * 0.4f;
-		///y += min_ty * dy + ny * 0.4f;
-
 		if (!isHurt) {
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
@@ -508,7 +511,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (e->ny != 0) y += dy;
 				}
 			}
-			else if (dynamic_cast<CPortal *>(e->obj))
+			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
 				if(startBlinkEffect == 0)
 					startBlinkEffect = GetTickCount();
@@ -561,6 +564,34 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
+}
+void Simon::ResetSimon()
+{
+	isDead = false;
+	nx = 1;
+	cam=Camera::GetInstance();
+	
+	SetState(SIMON_STATE_IDLE);
+	switch (area->GetInstance()->GetAreaID())
+	{
+	case 21:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(50, 0);
+		cam->SetCamPos(0, 0);
+		break;
+	case 22:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_22, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_22, 0);
+		break;
+	case 23:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_23, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+		break;
+	default:
+		break;
+	}
 }
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {

@@ -23,7 +23,6 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom)=0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL)=0;
 	virtual void Render()=0;
-	
 	// Getter && Setter
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }

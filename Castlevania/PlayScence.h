@@ -13,6 +13,8 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include"Ghost.h"
+#include "RepeatableEffects.h"
 
 #include"Ghost.h"
 
@@ -21,6 +23,7 @@
 class CPlayScene: public CScene
 {
 protected: 
+	CRepeatableEffects *effects;	//list contain effects
 	Simon *player;					// A play scene has to have player, right?
 
 	Quadtree *qtree;

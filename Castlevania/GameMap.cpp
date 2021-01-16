@@ -81,6 +81,8 @@ void CMap::Draw(D3DXVECTOR3 camPosition, int alpha) {
 	int offSet = 150;
 	if (mapID == 2)
 		offSet = 120;
+	if (mapID == 3)
+		offSet = 120;
 
 	int numOfRow = titles.size();
 	for (int i = 0; i < numOfRow; i++)

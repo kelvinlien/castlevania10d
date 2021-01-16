@@ -1,4 +1,5 @@
 #pragma once
+
 #include "GameObject.h"
 #include "WeaponManager.h"
 #include "Whip.h"
@@ -6,7 +7,8 @@
 #include <map> 
 #include "GameMap.h"
 #include "Utils.h"
-
+#include "Area.h"
+#include "Camera.h"
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
@@ -42,7 +44,7 @@
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
-#define SIMON_MAX_HEALTH	16
+#define SIMON_MAX_HEALTH	2
 
 enum animation
 {
@@ -76,8 +78,10 @@ class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
+	Area *area;
+	CGame *game;
+	Camera* cam;
 
-	animation ani;
 	int hearts = 10000;
 	int health = SIMON_MAX_HEALTH;
 
@@ -87,6 +91,7 @@ class Simon : public CGameObject
 	DWORD startUntouchable;
 	DWORD attackTime;
 	DWORD buffTime;
+	DWORD dieTime;
 
 
 	//Flag of Simon's state
@@ -107,6 +112,33 @@ class Simon : public CGameObject
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
+	enum animation
+	{
+		IDLE_LEFT,
+		IDLE_RIGHT,
+		WALK_LEFT,
+		WALK_RIGHT,
+		JUMP_DUCK_LEFT,
+		JUMP_DUCK_RIGHT,
+		HURT_LEFT,
+		HURT_RIGHT,
+		DEATH_LEFT,
+		DEATH_RIGHT,
+		STAIR_UP_LEFT,
+		STAIR_UP_RIGHT,
+		STAIR_DOWN_LEFT,
+		STAIR_DOWN_RIGHT,
+		ATTACK_STAND_LEFT,
+		ATTACK_STAND_RIGHT,
+		ATTACK_DUCK_LEFT,
+		ATTACK_DUCK_RIGHT,
+		//go up and attack on stair
+		ATTACK_UP_LEFT,
+		ATTACK_UP_RIGHT,
+		//go down and attack on stair
+		ATTACK_DOWN_LEFT,
+		ATTACK_DOWN_RIGHT
+	}ani;
 	DWORD startBlinkEffect = 0;
 
 public:
@@ -151,6 +183,7 @@ public:
 	int GetHearts() { return hearts; }
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	void ResetSimon();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

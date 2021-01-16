@@ -83,7 +83,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					e->SetState(CANDLE_STATE_BREAK);
 			}
 		}
-		  
 	}
 	else
 	{
@@ -117,7 +116,6 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (enemy != NULL) {
 					enemy->SetState(ENEMY_STATE_HURT);
 				}
-
 			}
 		}
 	}

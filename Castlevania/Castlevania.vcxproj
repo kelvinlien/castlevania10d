@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="Area.cpp" />
     <ClCompile Include="Axe.cpp" />
     <ClCompile Include="BlinkEffect.cpp" />
     <ClCompile Include="Brick.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FirePot.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Holder.cpp" />
@@ -146,6 +148,8 @@
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="RepeatableEffect.cpp" />
+    <ClCompile Include="RepeatableEffects.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="StopWatch.cpp" />
@@ -166,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="Animations.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="Area.h" />
     <ClInclude Include="Axe.h" />
     <ClInclude Include="BlinkEffect.h" />
     <ClInclude Include="Brick.h" />
@@ -176,6 +181,7 @@
     <ClInclude Include="FirePot.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Fragment.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
@@ -184,6 +190,8 @@
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="RepeatableEffect.h" />
+    <ClInclude Include="RepeatableEffects.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="StopWatch.h" />

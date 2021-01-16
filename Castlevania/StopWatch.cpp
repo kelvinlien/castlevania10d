@@ -9,7 +9,6 @@ StopWatch::StopWatch()
 
 
 void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
-
 	
 	if (stopTime == 0)
 	{
