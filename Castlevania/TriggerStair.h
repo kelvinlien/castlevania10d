@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Simon.h"
 
-#define TYPE_BELOW	0
+#define TYPE_BELOW	-1
 #define TYPE_ABOVE	1
 #define DIRECT_RIGHT	1
 #define DIRECT_LEFT	-1

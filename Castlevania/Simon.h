@@ -73,7 +73,7 @@ class Simon : public CGameObject
 	bool isAutoWalkOnStair = false;
 
 	int directionY;
-	int stairNx;
+	int stairNx, stairNy;
 	DWORD time;
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
