@@ -15,6 +15,7 @@
 #include "Panther.h"
 #include"Ghost.h"
 #include "RepeatableEffects.h"
+#include  "Bat.h"
 
 #include"Ghost.h"
 

@@ -512,9 +512,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CEnemy *>(e->obj))
 			{
+				if (dynamic_cast<CBat *>(e->obj))
+					e->obj->SetState(ENEMY_STATE_DIE);
+
 				if (!isUntouchable) {
 					health -= 2;
 					if (e->obj->nx == nx) {
+
 						this->nx = -e->obj->nx;
 					}
 					

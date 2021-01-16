@@ -46,6 +46,7 @@ using namespace std;
 #define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
+#define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_EFFECT	21
@@ -237,6 +238,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PANTHER: 
 		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
 		break;
+	case OBJECT_TYPE_BAT: {
+		int itemType = atof(tokens[4].c_str());
+		obj = new CBat(x, y, Simon::GetInstance()->nx * -1, itemType);
+		break;
+	}
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth

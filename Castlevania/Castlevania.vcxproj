@@ -143,6 +143,7 @@
     <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="GameMap.cpp" />	
     <ClCompile Include="Ghost.cpp" />	
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -152,7 +153,7 @@
     <ClCompile Include="RepeatableEffect.cpp" />
     <ClCompile Include="RepeatableEffects.cpp" />
     <ClCompile Include="Simon.cpp" />
-	  <ClCompile Include="Quadtree.cpp" />	
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Candle.h" />	
     <ClInclude Include="Dagger.h" />	
     <ClInclude Include="Door.h" />	
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
@@ -196,7 +198,7 @@
     <ClInclude Include="RepeatableEffect.h" />
     <ClInclude Include="RepeatableEffects.h" />
     <ClInclude Include="Simon.h" />
-	  <ClInclude Include="Quadtree.h" />	
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="Utils.h" />
