@@ -6,7 +6,6 @@
 
 #define GHOST_STATE_IDLE 10
 #define GHOST_STATE_WALK 20
-#define ENEMY_STATE_DIE  30
 
 #define GHOST_BBOX_WIDTH	32
 #define GHOST_BBOX_HEIGHT	64
@@ -18,7 +17,6 @@
 
 class CGhost:public CEnemy
 {
-	int ani;
 	DWORD die_time;
 public:
 	CGhost(float x, float y, int nx,int itemType);

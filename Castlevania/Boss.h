@@ -33,12 +33,14 @@
 
 //Time
 #define BOSS_WAITING_TIME	1500
+#define	BOSS_STOP_TIME		170
 
 class CBoss :public CEnemy
 {
-	int ani;
 	int percentFlyToSimon;
 	int ny;
+	int health = 16;
+
 	//flag variables
 	bool isFlying;
 	bool isWaiting;
@@ -51,6 +53,7 @@ class CBoss :public CEnemy
 
 	//DWORD startFlyTime;
 	DWORD startWaitTime;
+	DWORD startStopTime = 0;
 
 	//positions
 	D3DXVECTOR2 targetPos;

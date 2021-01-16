@@ -9,6 +9,7 @@
 
 class StopWatch :public CWeapon {
 	LPANIMATION ani;
+	DWORD stopTime = 0;
 public:
 	StopWatch();
 	void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);

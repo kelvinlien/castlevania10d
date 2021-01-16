@@ -42,35 +42,64 @@
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
+#define SIMON_MAX_HEALTH	16
 
+enum animation
+{
+	IDLE_LEFT,
+	IDLE_RIGHT,
+	WALK_LEFT,
+	WALK_RIGHT,
+	JUMP_DUCK_LEFT,
+	JUMP_DUCK_RIGHT,
+	HURT_LEFT,
+	HURT_RIGHT,
+	DEATH_LEFT,
+	DEATH_RIGHT,
+	STAIR_UP_LEFT,
+	STAIR_UP_RIGHT,
+	STAIR_DOWN_LEFT,
+	STAIR_DOWN_RIGHT,
+	ATTACK_STAND_LEFT,
+	ATTACK_STAND_RIGHT,
+	ATTACK_DUCK_LEFT,
+	ATTACK_DUCK_RIGHT,
+	//go up and attack on stair
+	ATTACK_UP_LEFT,
+	ATTACK_UP_RIGHT,
+	//go down and attack on stair
+	ATTACK_DOWN_LEFT,
+	ATTACK_DOWN_RIGHT
+};
 
 class Simon : public CGameObject
 {
 	CWeapon *subWeapons;
 	static Simon * __instance;
 
-	int hearts = 5;
-	int health = 16;
+	animation ani;
+	int hearts = 10000;
+	int health = SIMON_MAX_HEALTH;
 
 	//time variables
 	DWORD startSit;
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
+	DWORD buffTime;
 
 
 	//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
-	bool isLand = false;
 	bool isLevelUp = false;
 	bool isUsingSubWeapon = false;
 	bool isHurt = false;
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
-
+	bool isBuff = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -78,35 +107,7 @@ class Simon : public CGameObject
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 
-
-
-	enum animation
-	{
-		IDLE_LEFT,
-		IDLE_RIGHT,
-		WALK_LEFT,
-		WALK_RIGHT,
-		JUMP_DUCK_LEFT,
-		JUMP_DUCK_RIGHT,
-		HURT_LEFT,
-		HURT_RIGHT,
-		DEATH_LEFT,
-		DEATH_RIGHT,
-		STAIR_UP_LEFT,
-		STAIR_UP_RIGHT,
-		STAIR_DOWN_LEFT,
-		STAIR_DOWN_RIGHT,
-		ATTACK_STAND_LEFT,
-		ATTACK_STAND_RIGHT,
-		ATTACK_DUCK_LEFT,
-		ATTACK_DUCK_RIGHT,
-		//go up and attack on stair
-		ATTACK_UP_LEFT,
-		ATTACK_UP_RIGHT,
-		//go down and attack on stair
-		ATTACK_DOWN_LEFT,
-		ATTACK_DOWN_RIGHT
-	}ani;
+	DWORD startBlinkEffect = 0;
 
 public:
 
@@ -141,6 +142,10 @@ public:
 	bool IsHurt() { return isHurt; }
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
+	
+	void SetisBuff() { isBuff = true; buffTime = GetTickCount64();}
+	void SetHealth(int _health) { health = _health; }
+	int GetHealth() { return health; }
 
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }

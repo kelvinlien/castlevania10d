@@ -34,6 +34,8 @@
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BlinkEffect.cpp" />
+    <ClCompile Include="Axe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -70,5 +72,7 @@
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BlinkEffect.h" />
+    <ClInclude Include="Axe.h" />
   </ItemGroup>
 </Project>

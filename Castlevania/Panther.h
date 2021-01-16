@@ -18,7 +18,6 @@
 #define PANTHER_BBOX_WIDTH	64
 #define PANTHER_BBOX_HEIGHT	32
 
-#define PANTHER_STATE_DIE	30
 #define PANTHER_DIE_TIME	200
 
 class CPanther:public CEnemy 
@@ -31,9 +30,7 @@ class CPanther:public CEnemy
 	float xJumpLeft;
 	int jumpCount;
 
-	DWORD startJumpTime, dieTime;
-
-	int ani;
+	DWORD dieTime;
 
 public:
 	//CPanther(){}
@@ -44,6 +41,6 @@ public:
 	void Jump();
 	void Run();
 	void SetAnimation();
-	void SetState(int state);
+	virtual void SetState(int state);
 };
 
