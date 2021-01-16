@@ -14,6 +14,7 @@
 #include "SmallBrick.h"
 #include "Door.h"
 #include "Camera.h"
+#include "Bat.h"
 
 Simon* Simon::__instance = NULL;
 
