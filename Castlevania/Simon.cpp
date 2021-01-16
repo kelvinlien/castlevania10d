@@ -37,6 +37,7 @@ void Simon::SetState(int state)
 	case SIMON_STATE_IDLE:
 		isOnStair = false;
 		isSit = false;
+		isAutoWalkOnStair = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_LEVEL_UP:
