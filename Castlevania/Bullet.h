@@ -8,8 +8,8 @@
 #define Bullet_BBOX_HEIGHT 16
 #define Bullet_BBOX_WIDTH 16
 #define Bullet_VX 0.35f
-#define ANI_Bullet_LEFT 11
-#define ANI_Bullet_RIGHT 11
+#define ANI_Bullet_LEFT 13
+#define ANI_Bullet_RIGHT 13
 
 
 class Bullet :public CWeapon {
