@@ -98,9 +98,9 @@ void Simon::SetState(int state)
 		if (!isOnStair) return;
 		readyToUpStair = false;
 		readyToDownStair = false;
-		nx = 1;
+		nx = -1;
 		if (stairNx < 0)
-			nx = -1;
+			nx = 1;
 		GoDown();
 		break;
 	case SIMON_STATE_AUTOWALK_ON_STAIR:
