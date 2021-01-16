@@ -132,6 +132,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
+	void ReLoadAllAniSet();
 
 	//Getter & setter
 	bool IsJump() { return isJump; }

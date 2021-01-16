@@ -118,6 +118,12 @@ void Simon::SetAnimation()
 		if (isIdleIntro) ani = IDLE_INTRO;
 }
 
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->getType())));
+}
+
 void Simon::Render()
 {
 	SetAnimation(); // set ani variable

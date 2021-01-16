@@ -206,7 +206,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = Simon::GetInstance();
-		player = (Simon*)obj;  
+		player = (Simon*)obj;
+		player->ReLoadAllAniSet();
 		Simon::GetInstance()->SetIsIdleIntro(false);
 
 		DebugOut(L"[INFO] Player object created!\n");
