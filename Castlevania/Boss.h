@@ -33,7 +33,7 @@
 
 //Time
 #define BOSS_WAITING_TIME	1500
-#define	BOSS_STOP_TIME		170
+#define	BOSS_STOP_TIME		10000
 
 class CBoss :public CEnemy
 {
