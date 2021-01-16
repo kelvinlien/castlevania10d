@@ -132,6 +132,7 @@ public:
 	void AutoWalkOnStair();
 	void GoUp1Step();
 	void GoDown1Step();
+	void StopAtFirstStepOnStair();
 	//State function
 	void CheckLevelUpState(DWORD dt);
 	void SetState(int state);

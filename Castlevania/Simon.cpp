@@ -258,18 +258,15 @@ void Simon::AutoWalkOnStair() {
 
 	if (simonAutoWalkDistance >= autoWalkDistance)
 	{
-
 		isAutoWalkOnStair = false;
 		backupOnStairX = this->x;
 		backupOnStairY = this->y;
 
 		// cases for auto walk
-		if (nx > 0) {
+		if (nx > 0)
 			this->x = this->x - abs(autoWalkDistance - simonAutoWalkDistance);
-		}
-		else {
+		else 
 			this->x = this->x + abs(autoWalkDistance - simonAutoWalkDistance);
-		}
 
 		if (directionY > 0)
 			this->y = this->y - abs(autoWalkDistance - simonAutoWalkDistance);
@@ -434,7 +431,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0)// && !isAutoWalkOnStair)
+	if (coEvents.size() == 0)
 	{
 
 		x += dx;
@@ -442,19 +439,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
-			backupOnStairX = this->x;
-			backupOnStairY = this->y;
-			vx = 0;
-			vy = 0;
-			if(readyToDownStair)
-				readyToDownStair = false;
-			if(readyToUpStair)
-				readyToUpStair = false;
-			if(canGoDownStair)
-				canGoDownStair = false;
-			if(canGoUpStair)
-				canGoUpStair = false;
-			//isOnStair = true;
+			StopAtFirstStepOnStair();
 		}
 
 	}
@@ -488,6 +473,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					SetReadyToGoStair(i);
 					if (readyToUpStair || readyToDownStair)
 					{
+
 						SetSimonAutoActionToGoStair(i);
 					}
 				}
@@ -549,8 +535,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
 }
+
+void Simon::StopAtFirstStepOnStair() {
+	backupOnStairX = this->x;
+	backupOnStairY = this->y;
+	vx = 0;
+	vy = 0;
+	readyToDownStair = false;
+	readyToUpStair = false;
+	canGoDownStair = false;
+	canGoUpStair = false;
+}
+
 void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x + 12;
