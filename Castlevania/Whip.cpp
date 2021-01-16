@@ -97,25 +97,25 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				CEnemy *e = NULL;
-				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				CEnemy *enemy = NULL;
+				switch (dynamic_cast<CEnemy *>(e->obj)->GetType())
 				{
 				case 1:
-					e = dynamic_cast<CGhost *>(coObjects->at(i));
+					enemy = dynamic_cast<CGhost *>(e->obj);
 					break;
 				case 10:
-					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					enemy = dynamic_cast<CPanther *>(e->obj);
 					break;
 				case 15:
-					e = dynamic_cast<CBoss *>(coObjects->at(i));
+					enemy = dynamic_cast<CBoss *>(e->obj);
 					break;
 				default:
 					break;
 				}
-				if (e != NULL) {
-					e->SetState(ENEMY_STATE_HURT);
+				if (enemy != NULL) {
+					enemy->SetState(ENEMY_STATE_HURT);
 				}
 
 			}
