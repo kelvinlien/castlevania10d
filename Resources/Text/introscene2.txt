@@ -3,7 +3,7 @@
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 10	..\Resources\Texture\intro_scene_2.png	255	255	255
-11	..\Resources\Texture\intro_bat.png	255	255	255
+11	..\Resources\Texture\intro_bat.png	255	0	255
 12	..\Resources\Texture\helicopter.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
 
@@ -218,6 +218,13 @@
 # type: 0 = Simon , 40 = intro scene 2, 41 = intro bat, 42 = helicopter
 #BACKGROUND
 120	0	0	2
+
+#INTRO_BAT
+13	300	160	3	-1
+13	70	200	3	1
+
+#HELICOPTER
+12	480	140	4
 
 # SIMON
 0	500	0	1
