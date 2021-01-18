@@ -117,7 +117,6 @@ void CGhost::Render() {
 		ani = GHOST_ANI_LEFT;
 	else if (state == ENEMY_STATE_DIE)
 		ani = GHOST_ANI_DIE;
-
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	animation_set->at(ani)->Render(x, y ,color);
 	RenderBoundingBox();

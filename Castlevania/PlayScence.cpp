@@ -221,6 +221,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = Simon::GetInstance();
 		player = (Simon*)obj;
+		player->ReLoadAllAniSet();
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -355,9 +356,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && obj!= NULL) {
 		obj->SetPosition(x, y);
-
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
@@ -480,6 +480,40 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			Camera::GetInstance()->SetCamX(0);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 22) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 23) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+
+		break;
+	case 3:
+		Area::GetInstance()->SetAreaID(31);
+		Area::GetInstance()->SetLimitLeftCam(0);
+		Area::GetInstance()->SetLimitRightCam(240);
+		Camera::GetInstance()->SetCamX(0);
+		break;
+	default:
+		break;
+	}
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -547,7 +581,6 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 
@@ -720,9 +753,11 @@ void CPlayScene::Render()
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 	
-	for (int i = 0; i < activeEntities.size(); i++)
-		activeEntities[i]->GetGameObject()->Render();
 
+	for (int i = 0; i < activeEntities.size(); i++)
+	{
+		activeEntities[i]->GetGameObject()->Render();
+	}
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{
 		int alpha;
@@ -743,8 +778,14 @@ void CPlayScene::Unload()
 	{
 		objects[i] = NULL;
 		delete objects[i];
-	}
 
+	}
+	for (int i = 0; i < activeEntities.size(); i++)
+	{
+		activeEntities[i] = NULL;
+		delete activeEntities[i];
+	}
+	activeEntities.clear();
 	objects.clear();
 	player = NULL;
 
@@ -754,7 +795,7 @@ void CPlayScene::Unload()
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
+	CGame* game = CGame::GetInstance();
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 
@@ -779,6 +820,16 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->ResetSimon();
 		break;
 		}
+	case DIK_M:
+	{
+		simon->ResetSimon();
+		break;
+	}
+	case DIK_N:
+	{
+		game->SwitchScene(2);
+		break;
+	}
 	}
 }
 

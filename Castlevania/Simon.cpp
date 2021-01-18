@@ -6,7 +6,6 @@
 #include "Goomba.h"
 #include "Brick.h"
 #include "Portal.h"
-#include"Game.h"
 #include "Item.h"
 #include "Whip.h"
 #include "Candle.h"
@@ -118,6 +117,12 @@ void Simon::SetAnimation()
 			ani = IDLE_RIGHT;
 	
 		if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+}
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
+
 }
 
 void Simon::Render()
@@ -380,7 +385,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	}
 	//when simon level up whip
 	CheckLevelUpState(dt);
-	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
+	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 1000)
 	{
 		ResetSimon();
 		dieTime = 0;
@@ -575,8 +580,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			
 		}
 	}
-
-
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
 	// clean up collision events
@@ -585,12 +588,20 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::ResetSimon()
 {
+	isAttack = false;
+	isSit = false;
+	isLevelUp = false;
+	isUsingSubWeapon = false;
+	isHurt = false;
+	isFall = false;
+	isUntouchable = false;
 	isDead = false;
+	isBuff = false;
 	nx = 1;
 	cam=Camera::GetInstance();
-	
 	SetState(SIMON_STATE_IDLE);
-	switch (area->GetInstance()->GetAreaID())
+	ReLoadAllAniSet();
+	switch(area->GetInstance()->GetAreaID())
 	{
 	case 21:
 		game->GetInstance()->SwitchScene(2);

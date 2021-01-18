@@ -17,9 +17,8 @@
 #include "SmallBrick.h"
 #include "Fishman.h"
 #include"Ghost.h"
-
 #include "Quadtree.h"
-
+#include "Area.h"
 class CPlayScene: public CScene
 {
 protected: 

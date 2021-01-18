@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "Area.h"
 #include "Camera.h"
+#include "Game.h"
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350
 
@@ -138,6 +139,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
+	void ReLoadAllAniSet();
 
 	//Getter & setter
 	bool IsJump() { return isJump; }
