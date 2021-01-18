@@ -49,10 +49,13 @@ void Simon::SetState(int state)
 		if (isAttack || isJump) break;
 		nx = -1;
 		if (isOnStair) {
-			if (stairNx == DIRECT_LEFT)             //check the direct of stair
-				GoDown();
-			else
+			directionY = 1;
+			GoDown();
+			if (stairNx == DIRECT_RIGHT && stairNy == TYPE_ABOVE || stairNx == DIRECT_LEFT && stairNy == TYPE_BELOW)           //check the direct of stair
+			{
+				directionY = -1;
 				GoUp();
+			}
 			break;
 		}
 		Walk();
@@ -61,10 +64,13 @@ void Simon::SetState(int state)
 		if (isAttack || isJump) break;
 		nx = 1;
 		if (isOnStair) {
-			if (stairNx == DIRECT_RIGHT)
-				GoUp();
-			else
+			directionY = -1;
+			GoUp();
+			if (stairNx == DIRECT_RIGHT && stairNy == TYPE_ABOVE || stairNx == DIRECT_LEFT && stairNy == TYPE_BELOW)
+			{
+				directionY = 1;
 				GoDown();
+			}
 			break;
 		}
 		Walk();
