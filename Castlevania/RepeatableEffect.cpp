@@ -20,6 +20,14 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 		fragments.push_back(new CFragment(x, y + 1, 1, RUBBLE_FRAGMENT));
 		fragments.push_back(new CFragment(x + 15, y + 3, 1, RUBBLE_FRAGMENT));
 		break;
+	case BOSS_DEAD_EFFECT:
+		fragments.push_back(new CFragment(x, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+20, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+40, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x, y+25, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+20, y+25, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+40, y+25, -1, BOSS_DEAD_EFFECT));
+		break;
 	default:
 		break;
 	}

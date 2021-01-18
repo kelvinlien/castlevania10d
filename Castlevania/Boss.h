@@ -37,6 +37,7 @@
 
 class CBoss :public CEnemy
 {
+	static CBoss * __instance;
 	int percentFlyToSimon;
 	int ny;
 	int health = 16;
@@ -65,6 +66,7 @@ class CBoss :public CEnemy
 
 public:
 	CBoss();
+	static CBoss * GetInstance();
 	void SetState(int state);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);

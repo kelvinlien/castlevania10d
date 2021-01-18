@@ -83,6 +83,7 @@ Item::Item(int x, int y, ItemType ani) {
 	case ITEM_ORD:
 		widthBBox = 24;
 		heightBBox = 28;
+		existingTime = 3000;
 		start_x = x;
 		break; 
 	case ITEM_DOUBLE_SHOT:
@@ -119,6 +120,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			vx = -vx;
 		}
 	}
+	else if (ani == ITEM_ORD && existingTime > 2300)
+		vy = 0;
+
 	if (isEaten)
 	{
 		vy = 0;

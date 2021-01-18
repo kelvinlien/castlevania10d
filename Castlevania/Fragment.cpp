@@ -17,6 +17,10 @@ CFragment::CFragment(float x, float y, float nx, int type):CGameObject()
 		this->fragmentType = RUBBLE_FRAGMENT;
 		ani = 5;
 		break;
+	case 2:
+		this->fragmentType = BOSS_DEAD_EFFECT;
+		ani = 0;
+		break;
 	default:
 		this->fragmentType = WATER_FRAGMENT;
 		ani = 6;
@@ -27,27 +31,18 @@ CFragment::CFragment(float x, float y, float nx, int type):CGameObject()
 void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	
-	/*if(isVanish == true)
-		return;
-
-	if (GetTickCount() - existTime > 1100 && existTime!=0)
-		isVanish = true;*/
-
 	CGameObject::Update(dt, coObjects);
 	vy += FRAGMENT_GRAVITY;
 
-	x += dx;
-	y += dy;
+	if (fragmentType != BOSS_DEAD_EFFECT)
+	{
+		x += dx;
+		y += dy;
+	}
 }
 
 void CFragment::Render()
 {
-	/*if (existTime == 0)
-		existTime = GetTickCount();
-
-	if (isVanish == true)
-		return;
-*/
 	animation_set->at(ani)->Render(x, y);
 }
 CFragment::~CFragment()

@@ -617,7 +617,7 @@ void CPlayScene::Update(DWORD dt)
 		 }
 	}
 
-	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
+	CRepeatableEffects::GetInstance()->Update(dt, &objects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
