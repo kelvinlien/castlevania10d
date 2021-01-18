@@ -343,6 +343,9 @@ void Simon::CalcPotentialCollisions(
 	{
 		if (!dynamic_cast<CFirePot *>(coObjects->at(i)))
 		{
+			if (isOnStair && dynamic_cast<CBrick *>(coObjects->at(i)))
+				continue;
+			
 			//Check collision AABB of Simon & Item
 			if (dynamic_cast<Item *>(coObjects->at(i)))
 			{
@@ -479,18 +482,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					SetReadyToGoStair(i);
 					if (readyToUpStair || readyToDownStair)
 					{
-
 						SetSimonAutoActionToGoStair(i);
 					}
 				}
 			}
 		}
-		//DebugOut(L"[CHECK] Simon left: %f\n", x + 12.0f);
-		//DebugOut(L"[CHECK] Simon y: %f\n", y);
-		//DebugOut(L"[CHECK] Simon right: %f\n", x + SIMON_BBOX_WIDTH - 10.0f);
-		//DebugOut(L"[CHECK] Simon bottom: %f\n", y + SIMON_BBOX_HEIGHT);
-		//DebugOut(L"[CHECK] Simon vx: %f\n", this->vx);
-		//DebugOut(L"[CHECK] Simon vy: %f\n", this->vy);
 		//
 		// Collision logic with other objects
 		//
@@ -524,11 +520,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
-				if (canGoUpStair || canGoDownStair || isOnStair) {
-					x += dx;
-					y += dy;
-				}
-				else if (e->ny < 0)
+				if (e->ny < 0)
 				{
 					if (isJump == true)
 					{
