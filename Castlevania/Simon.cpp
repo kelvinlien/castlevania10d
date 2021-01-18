@@ -265,8 +265,6 @@ void Simon::AutoWalkOnStair() {
 	if (simonAutoWalkDistance >= autoWalkDistance)
 	{
 		isAutoWalkOnStair = false;
-		backupOnStairX = this->x;
-		backupOnStairY = this->y;
 
 		// cases for auto walk
 		if (nx > 0)
@@ -279,6 +277,8 @@ void Simon::AutoWalkOnStair() {
 		else
 			this->y = this->y + abs(autoWalkDistance - simonAutoWalkDistance);
 
+		backupOnStairX = this->x;
+		backupOnStairY = this->y;
 		simonAutoWalkDistance = 0;
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
@@ -520,6 +520,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
+				if (isOnStair)
+					continue;
 				if (e->ny < 0)
 				{
 					if (isJump == true)
