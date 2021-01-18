@@ -472,7 +472,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 			{
 				if (triggerStairs->Get(i)->IsContainSimon())
 				{
@@ -524,7 +524,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
-
 				if (canGoUpStair || canGoDownStair || isOnStair) {
 					x += dx;
 					y += dy;
