@@ -77,6 +77,11 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			{
 				x += dx;
 			}
+			if (dynamic_cast<CCandle*>(e->obj))
+			{
+				e->obj->isVanish = true;
+				this->isVanish = true;
+			}
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
 				this->isVanish = true;
