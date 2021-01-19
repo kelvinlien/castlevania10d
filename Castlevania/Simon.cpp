@@ -142,7 +142,7 @@ void Simon::Render()
 	}
 	
 	//render subweapon
-	if (subWeapons != NULL && !subWeapons->isVanish) {
+	if (subWeapons != NULL && !subWeapons->isVanish && subWeapons->GetIsThrown()) {
 		subWeapons->Render();
 	}
 	RenderBoundingBox();

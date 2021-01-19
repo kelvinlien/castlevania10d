@@ -22,6 +22,7 @@ void Axe::SetState(int state)
 	{
 	case STATE_AXE_IDLE:
 		this->isVanish = true;
+		SetIsThrown(false);
 		this->vy = -AXE_VY;
 		break;
 	}
@@ -85,6 +86,7 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
 				e->obj->isVanish = true;
+				SetIsThrown(false);
 			}
 			if (dynamic_cast<CCandle*>(e->obj))
 			{
