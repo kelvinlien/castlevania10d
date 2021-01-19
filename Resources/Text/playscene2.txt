@@ -817,7 +817,7 @@
 8	2016	312	11	0	4
 
 # SIMON
-0	50.0	350	1
+0	50.0	377	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
