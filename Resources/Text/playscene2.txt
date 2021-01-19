@@ -13,7 +13,7 @@
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
-75	..\Resources\Texture\doubleshot.png	255	0	255
+75	..\Resources\Texture\blink-effect.png	0	0	0
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -240,8 +240,15 @@
 40018	224	0	256	32	40
 #Holy water item
 40019	30	32	62	64	40
-#double shot
-40020	0	0	29	29	75
+#Chicken thigh
+40020	62	32	94	58	40
+#Axe
+40021	256	0	286	28	40
+#Ord
+40022	234	34	258	62	40
+40023	260	34	258	62	40
+#Double Shot
+40024	94	32	122	60	40
 
 #WEAPON
 #whip
@@ -498,7 +505,14 @@
 417	40018	100
 #Holy water
 418	40019	100
-
+#Chicken thigh
+419	40020	100
+#Axe
+420	40021	100
+#Ord
+421	40022	100	40023	100
+#Double Shot
+422	40024	100
 # ==== WEAPON =========
 #whip
 #left
@@ -678,7 +692,7 @@
 # HOLDER
 3	301	302	303
 # ITEMS
-4	401	402	406	407	408	411	412	416	417	418
+4	401	402	406	407	408	411	412	416	417	418	419	420	421	422
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506
 #EFFECT

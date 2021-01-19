@@ -21,7 +21,7 @@ Board::Board()
 	ani_set = CAnimationSets::GetInstance()->Get(10);
 	HP_set = CAnimationSets::GetInstance()->Get(8);
 	font = new CFont();
-	doubleShot = CSprites::GetInstance()->Get(40020);
+	doubleShot = CSprites::GetInstance()->Get(40024);
 }
 
 Board::~Board()
@@ -55,9 +55,9 @@ void Board::Render()
 	if(time_flag)
 		healtime = GetTickCount();
 	if (sprite != NULL)
-		sprite->Draw(x+450.0f, y +52.7f,255);
+		sprite->Draw(x+452.0f, y +52.7f,255);
 	if(Simon::GetInstance()->IsDoubleShot())
-	doubleShot->Draw(x + 580.0f, y + 55.0f, GenerateAlpha());
+	doubleShot->Draw(x + 452.0f, y + 55.0f, GenerateAlpha());
 }
 
 void Board::Update()

@@ -42,6 +42,7 @@
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
+#define SIMON_MAX_HEALTH	16						   
 
 
 class Simon : public CGameObject
@@ -50,13 +51,14 @@ class Simon : public CGameObject
 	static Simon * __instance;
 
 	int hearts = 5;
-	int health = 16;
+	int health = SIMON_MAX_HEALTH;
 
 	//time variables
 	DWORD startSit;
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
+	DWORD buffTime;	
 
 
 	//Flag of Simon's state
@@ -71,7 +73,7 @@ class Simon : public CGameObject
 	bool isUntouchable = false;
 	bool isDead = false;
 	bool isFreeze = false;
-	bool isDoubleShot = true;
+	bool isDoubleShot = false;
 
 	//flag is true when simon comes and render portal, back part of the castle  
 	bool flag;
@@ -154,7 +156,7 @@ public:
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 	CWeapon * GetSubWeapon() { return subWeapons; }
-	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; }
+	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();

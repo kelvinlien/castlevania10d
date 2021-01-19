@@ -3,12 +3,13 @@
 #include "GameObject.h"
 #include "Animations.h"
 
-
 #define ITEM_ANI_SET_ID	4
 
 #define EFFECT_ANI_SET_ID	7
 
 #define GRAVITY 0.3f
+
+#define TIME_BEFORE_SWITCHING_TO_OTHER_BACKGROUND_COLOR_WHILE_USING_CROSS	500
 
 enum ItemType
 {
@@ -21,7 +22,11 @@ enum ItemType
 	ITEM_STOP_WATCH,
 	ITEM_DAGGER,
 	ITEM_CROSS,
-	ITEM_HOLY_WATER
+	ITEM_HOLY_WATER,
+	ITEM_CHICKEN_THIGH,
+	ITEM_AXE,
+	ITEM_ORD,
+	ITEM_DOUBLE_SHOT
 };
 
 enum EffectType
