@@ -54,7 +54,7 @@ void CFirePot::Render()
 	if (state == FIREPOT_STATE_BREAK) {
 		ani = FIREPOT_ANI_BREAK;
 	}
-	animation_set->at(ani)->Render(x, y);
+	//animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
 }

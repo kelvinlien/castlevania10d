@@ -16,6 +16,7 @@
 #include"Ghost.h"
 #include "RepeatableEffects.h"
 #include  "Bat.h"
+#include "TriggerStair.h"
 
 #include"Ghost.h"
 
@@ -42,7 +43,6 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_MAPMATRIX(string line);
-
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
 public:
@@ -52,18 +52,17 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	virtual void LoadTriggerStair();
 
-	Simon * GetPlayer() { return player; } 
-
+	Simon * GetPlayer() { return player; }
 	//friend class CPlayScenceKeyHandler;
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler
 {
-public: 
+public:
 	virtual void KeyState(BYTE *states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 	CPlayScenceKeyHandler(CScene *s) :CScenceKeyHandler(s) {};
 };
-

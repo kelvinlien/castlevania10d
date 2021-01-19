@@ -158,6 +158,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="TriggerStair.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="TriggerStair.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
