@@ -38,6 +38,7 @@
 #define SIMON_STATE_GO_DOWN_STAIR	2100
 #define SIMON_STATE_IDLE_ON_STAIR	2200
 #define SIMON_STATE_AUTOWALK_ON_STAIR	2300
+#define SIMON_DROP_DOWN_AFTER_HURT_ON_STAIR 2400
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
@@ -46,7 +47,7 @@
 #define SIMON_HURT_TIME	 500	
 #define SIMON_SIT_AFTER_FALL_TIME	 250	
 #define SIMON_UNTOUCHABLE_TIME	 2000	
-#define SIMON_MAX_HEALTH	2	
+#define SIMON_MAX_HEALTH	2
 enum animation
 {
 	IDLE_LEFT,
@@ -79,6 +80,7 @@ enum animation
 	IDLE_STAIR_DOWN_LEFT,
 	IDLE_STAIR_DOWN_RIGHT
 };
+class TriggerStairs;
 class Simon : public CGameObject
 {
 	int currentFrame;
@@ -135,6 +137,7 @@ class Simon : public CGameObject
 	int directionY;
 	int stairNx, stairNy;
 	DWORD time;
+	TriggerStairs *triggerStairs;
 
 	int levelUpTime = SIMON_TIME_LEVEL_UP_WHIP;
 	DWORD startBlinkEffect = 0;

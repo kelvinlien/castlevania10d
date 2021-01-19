@@ -46,7 +46,7 @@ void Simon::SetState(int state)
 		isUntouchable = false;
 		isSit = false;
 		isFall = false;
-		y -= 30;
+		y -= 20;
 		vy = 0;
 		break;
 	case SIMON_STATE_AUTO:
@@ -62,7 +62,6 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_IDLE:
 		isOnStair = false;
-		isSit = false;
 		isAutoWalkOnStair = false;
 		vx = 0;
 		break;
@@ -114,7 +113,7 @@ void Simon::SetState(int state)
 		Sit();
 		break;
 	case SIMON_STATE_STAND:
-		if (readyToDownStair || readyToUpStair) return;
+		//if (readyToDownStair || readyToUpStair) return;
 		Stand();
 		break;
 	case SIMON_STATE_HURT:
@@ -124,6 +123,10 @@ void Simon::SetState(int state)
 		break;
 	case SIMON_STATE_SIT_AFTER_FALL:
 		SitAfterFall();
+		break;
+	case SIMON_DROP_DOWN_AFTER_HURT_ON_STAIR:
+		vy = 0.4f;
+		isSit = true;
 		break;
 	case SIMON_STATE_GO_UP_STAIR:
 		if (!isOnStair) return;
@@ -159,20 +162,18 @@ void Simon::SetState(int state)
 		readyToDownStair = false;
 		readyToUpStair = false;
 		break;
+
 	}
 	
 }
 void Simon::SetAnimation()
 {
-	if (state == SIMON_STATE_DIE) return;
-
 	if (!isOnStair) {
-		//use this code when merging
 		if (isDead)
-		ani = DEATH_RIGHT;
+			ani = DEATH_RIGHT;
 		else if (isHurt)
-		ani = HURT_RIGHT;
-		if (isJump && isAttack)
+			ani = HURT_RIGHT;
+		else if (isJump && isAttack)
 			ani = ATTACK_STAND_RIGHT;
 		else if (isJump)
 			ani = JUMP_DUCK_RIGHT;
@@ -259,19 +260,30 @@ void Simon::Stand() {
 
 void Simon::Hurt() {
 	startHurt = GetTickCount();
+	isHurt = true;
+	if (isOnStair) return;
 	vx = -0.1*nx;
 	vy = -0.4f;
-	isHurt = true;
 	y -= 17;
 }
+
 void Simon::SitAfterFall() {
 	startSit = GetTickCount();
-	isSit = true; 
+	isSit = true;
 	isFall = true;
-	y += 17;
-	vx = 0;
-	vy = 0;
+	if (isOnStair) {
+		isOnStair = false;
+		y += 20;
+		vy = 0.4f;
+	}
+	else {
+		y += 17;
+		vx = 0;
+		vy = 0;
+	}
+	
 }
+
 void Simon::StartUntouchable() {
 	isUntouchable = true;
 	startUntouchable = GetTickCount();
@@ -402,6 +414,7 @@ void Simon::Sit()
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isJump = false;
 	isSit = true;
+
 }
 
 void Simon::Jump()
@@ -552,7 +565,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			SetState(SIMON_STATE_DIE);
 			dieTime = GetTickCount64();
 		}
-		else
+		else 
 			SetState(SIMON_STATE_STAND);
 	}
 	if (isUntouchable && (GetTickCount() - startUntouchable > SIMON_UNTOUCHABLE_TIME))
@@ -560,6 +573,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		startUntouchable = 0;
 		isUntouchable = false;
 
+	} 
+	//hurt on stair
+	if (isOnStair && isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+	{
+
+		isHurt = false;
+		isJump = false;
+		if (health <= 0) {
+
+			SetState(SIMON_STATE_SIT_AFTER_FALL);
+		}
+		else 
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -674,7 +700,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					if (e->ny != 0) y += dy;
 				}
 			}
-			else if (dynamic_cast<CEnemy *>(e->obj))
+			else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				if(startBlinkEffect == 0)
 					startBlinkEffect = GetTickCount();
@@ -703,7 +729,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 							isHurt = false;
 							isJump = false;
-							//y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
 					if (isJump)
@@ -740,7 +765,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			
 		}
 	}
-
 
 	CWhip::GetInstance()->SetDirect(nx);
 	CWhip::GetInstance()->Update(dt, coObjects);
