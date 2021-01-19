@@ -83,6 +83,7 @@ Item::Item(int x, int y, ItemType ani) {
 	case ITEM_ORD:
 		widthBBox = 24;
 		heightBBox = 28;
+		existingTime = 3000;
 		start_x = x;
 		break; 
 	case ITEM_DOUBLE_SHOT:
@@ -119,6 +120,9 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			vx = -vx;
 		}
 	}
+	else if (ani == ITEM_ORD && existingTime > 2300)
+		vy = 0;
+
 	if (isEaten)
 	{
 		vy = 0;
@@ -135,12 +139,6 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-  {
-    x += dx;
-    y += dy;
-  }
 	float min_tx, min_ty, nx = 0, ny;
 
 	float rdx = 0;

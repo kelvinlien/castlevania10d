@@ -1,5 +1,14 @@
 #include "Boss.h"
 #include "Simon.h"
+#include "RepeatableEffects.h"
+
+CBoss* CBoss::__instance = NULL;
+
+CBoss * CBoss::GetInstance()
+{
+	if (__instance == NULL) __instance = new CBoss();
+	return __instance;
+}
 
 CBoss::CBoss()
 {
@@ -142,6 +151,11 @@ void CBoss::RandomWaitingPos() {
 
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (health == 0)
+	{
+		isVanish = true;
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, BOSS_DEAD_EFFECT));
+	}
 	CGameObject::Update(dt);
 	if(startStopTime!=0 && GetTickCount()- startStopTime > BOSS_STOP_TIME)
 	{
