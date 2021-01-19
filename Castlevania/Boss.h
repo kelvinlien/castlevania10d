@@ -4,7 +4,6 @@
 #include "Define.h"
 #include <cmath>
 
-
 #define BOSS_ANI_IDLE	0
 #define BOSS_ANI_FLY	1
 #define BOSS_FLY_SPEED_X	0.15f

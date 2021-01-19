@@ -1,5 +1,6 @@
 #include "BlinkEffect.h"
 #include "GameMap.h"
+
 BlinkEffect* BlinkEffect::__instance = NULL;
 
 void BlinkEffect::Draw(int alpha)

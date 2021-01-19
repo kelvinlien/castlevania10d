@@ -106,6 +106,9 @@ void CBoss::SetState(int state)
 	case ENEMY_STATE_HURT:
 		if (startStopTime == 0)
 		{
+			//random effect position
+			CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x + rand() % (BOSS_FLY_BBOX_WIDTH + 1), this->y + rand() % (BOSS_FLY_BBOX_HEIGHT + 1), BOSS_INJURED_EFFECT));
+			
 			startStopTime = GetTickCount();
 			isLock = true;
 			animation_set->at(ani)->SetLock(true);
