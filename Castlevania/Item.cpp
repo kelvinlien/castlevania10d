@@ -134,7 +134,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	}
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+	CalcPotentialCollisions(&coObjectsItem, coEvents);
 	float min_tx, min_ty, nx = 0, ny;
 
 	float rdx = 0;
