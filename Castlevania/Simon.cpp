@@ -31,6 +31,7 @@ Simon::Simon() : CGameObject()
 	this->x = x;
 	this->y = y;
 	CWhip::GetInstance();
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 }
 
 void Simon::SetState(int state)
@@ -130,9 +131,10 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	else if (isUntouchable) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, 127);
-	if (isAttack && !isUsingSubWeapon)
+	if (isAttack)
 	{
-		CWhip::GetInstance()->Render();
+		if (!isUsingSubWeapon || dynamic_cast<StopWatch *>(subWeapons))
+			CWhip::GetInstance()->Render();
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
