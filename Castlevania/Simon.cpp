@@ -142,7 +142,7 @@ void Simon::Render()
 	}
 	
 	//render subweapon
-	if (subWeapons != NULL && !subWeapons->isVanish) {
+	if (subWeapons != NULL && !subWeapons->isVanish && subWeapons->GetIsThrown()) {
 		subWeapons->Render();
 	}
 	RenderBoundingBox();
@@ -197,7 +197,7 @@ void Simon::StartUntouchable() {
 void Simon::Attack()
 {
 	// normal attack
-	if (isAttack)
+	if (isAttack || isDead || isHurt || isFall)
 		return;
 	if (!(CGame::GetInstance()->IsKeyDown(DIK_UP))) {
 		vx = 0;
