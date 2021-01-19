@@ -21,6 +21,10 @@ CFragment::CFragment(float x, float y, float nx, int type):CGameObject()
 		this->fragmentType = BOSS_DEAD_EFFECT;
 		ani = 0;
 		break;
+	case 3:
+		this->fragmentType = BOSS_INJURED_EFFECT;
+		ani = 4;
+		break;
 	default:
 		this->fragmentType = WATER_FRAGMENT;
 		ani = 6;
@@ -34,7 +38,7 @@ void CFragment::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt, coObjects);
 	vy += FRAGMENT_GRAVITY;
 
-	if (fragmentType != BOSS_DEAD_EFFECT)
+	if (fragmentType != BOSS_DEAD_EFFECT && fragmentType != BOSS_INJURED_EFFECT)
 	{
 		x += dx;
 		y += dy;
