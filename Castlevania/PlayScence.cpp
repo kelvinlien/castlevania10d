@@ -545,9 +545,10 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
+
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != 5)
+	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != INTRO_SCENE_ID_2)
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
@@ -643,7 +644,7 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	if (id != INTRO_SCENE_ID_1)
+	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
 		CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
@@ -682,6 +683,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (ID == INTRO_SCENE_ID_1) {
 		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
 
+		if (GetTickCount() < CASTLE_AND_BAT_ACTIVE_TIME) return;
 		switch (KeyCode)
 		{
 		case DIK_RETURN:
@@ -691,7 +693,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 					if (e->GetState() == TITLE_STATE_BLINK) return;
 					e->SetState(TITLE_STATE_BLINK);
 				}
-
+				if (dynamic_cast<CastleAndBat*> (e)) {
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_ACTIVE)->SetLock(true);
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_IDLE)->SetLock(true);
+				}
 			}
 		}
 	}
