@@ -547,7 +547,7 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (currentMapID != INTRO_SCENE_ID && currentMapID != 5)
+	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != 5)
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
@@ -643,7 +643,7 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	if (id != INTRO_SCENE_ID)
+	if (id != INTRO_SCENE_ID_1)
 		CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
@@ -679,7 +679,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (ID == INTRO_SCENE_ID) {
+	if (ID == INTRO_SCENE_ID_1) {
 		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
 
 		switch (KeyCode)
@@ -696,7 +696,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 	}
 	else {
-        if (ID == 5) return;
+        if (ID == INTRO_SCENE_ID_2) return;
 		if (simon->IsHurt()) return;
 
 		// disable control key when Simon die or enter an auto area
@@ -733,9 +733,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (ID != INTRO_SCENE_ID)
+	if (ID != INTRO_SCENE_ID_1)
 	{
-        if (ID == 5) return;
+        if (ID == INTRO_SCENE_ID_2) return;
 		// disable control key when Simon die 
 		if (simon->IsHurt()) return;
 		// disable control key when Simon die or enter an auto area
@@ -764,8 +764,8 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if (ID != INTRO_SCENE_ID) {
-        if(CGame::GetInstance()->GetCurrentSceneID() == 5) return;
+	if (ID != INTRO_SCENE_ID_1) {
+        if(CGame::GetInstance()->GetCurrentSceneID() == INTRO_SCENE_ID_2) return;
 		if (simon->IsHurt()) return;
 
 		// disable control key when Simon die or enter an auto area

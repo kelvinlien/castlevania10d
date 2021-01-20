@@ -21,7 +21,9 @@
 #define PLAY_SCENE_1_ID	1
 #define PLAY_SCENE_2_ID	2
 #define PLAY_SCENE_3_ID	3
-#define INTRO_SCENE_ID	4
+#define INTRO_SCENE_ID_1	4
+#define INTRO_SCENE_ID_2	5
+
 
 
 class CPlayScene: public CScene
