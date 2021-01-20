@@ -683,6 +683,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (ID == INTRO_SCENE_ID_1) {
 		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
 
+		if (GetTickCount() < CASTLE_AND_BAT_ACTIVE_TIME) return;
 		switch (KeyCode)
 		{
 		case DIK_RETURN:
@@ -692,7 +693,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 					if (e->GetState() == TITLE_STATE_BLINK) return;
 					e->SetState(TITLE_STATE_BLINK);
 				}
-
+				if (dynamic_cast<CastleAndBat*> (e)) {
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_ACTIVE)->SetLock(true);
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_IDLE)->SetLock(true);
+				}
 			}
 		}
 	}
