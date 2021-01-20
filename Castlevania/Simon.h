@@ -44,11 +44,11 @@
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
-#define SIMON_TIME_LEVEL_UP_WHIP 700	
-#define SIMON_HURT_TIME	 500	
-#define SIMON_SIT_AFTER_FALL_TIME	 250	
-#define SIMON_UNTOUCHABLE_TIME	 2000	
-#define SIMON_MAX_HEALTH	20
+#define SIMON_TIME_LEVEL_UP_WHIP 700
+#define SIMON_HURT_TIME	 500
+#define SIMON_SIT_AFTER_FALL_TIME	 250
+#define SIMON_UNTOUCHABLE_TIME	 2000
+#define SIMON_MAX_HEALTH	16						   
 enum animation
 {
 	IDLE_LEFT,
@@ -122,7 +122,8 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
-	bool isBuff = false;
+	bool isFreeze = false;
+	bool isDoubleShot = false;
 	bool isAutoWalking = false;
 	//flag is true when simon comes and render portal, back part of the castle  	
 	bool flag;
@@ -198,11 +199,19 @@ public:
 	void SetStairOutPoint(int i);
 	float GetAboveStairOutPoint() { return aboveStairOutPoint; }
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
+	bool IsFreeze() { return isFreeze; }
+	bool IsDoubleShot() { return isDoubleShot; }
 
-	void SetHearts(int _hearts) {  hearts = _hearts; }
+	void SetisFreeze(bool _status) { isFreeze = _status; }
+	void SetHealth(int _health) {  health = _health; }
+	int GetHealth() { return health; }
+	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
 
+
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	CWeapon * GetSubWeapon() { return subWeapons; }
+	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
 
 	void ResetSimon();
 

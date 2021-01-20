@@ -590,6 +590,8 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
+	board=Board::Getinstance();
+	board->SetState_OnBoard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -779,13 +781,17 @@ void CPlayScene::Update(DWORD dt)
 		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
 		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
+    board->Update();
+	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
+	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	board->Render();
 	
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
@@ -832,6 +838,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
@@ -869,6 +876,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
@@ -909,7 +917,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 

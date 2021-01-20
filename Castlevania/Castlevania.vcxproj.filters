@@ -54,6 +54,8 @@
     <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="TriggerStair.cpp">
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Font.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -110,5 +112,7 @@
     <ClInclude Include="Fishman.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="TriggerStair.h">
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Font.h" />
   </ItemGroup>
 </Project>

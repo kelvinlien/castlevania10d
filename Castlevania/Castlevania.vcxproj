@@ -146,6 +146,8 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Fishman.cpp" />
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -186,6 +188,7 @@
     <ClInclude Include="Door.h" />	
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="Define.h" />
     <ClInclude Include="Fragment.h" />
     <ClInclude Include="Fishman.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />

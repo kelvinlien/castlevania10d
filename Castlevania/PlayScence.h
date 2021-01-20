@@ -17,7 +17,7 @@
 #include "RepeatableEffects.h"
 #include  "Bat.h"
 #include "TriggerStair.h"
-
+#include "Board.h"
 #include"Ghost.h"
 
 #include "Quadtree.h"
@@ -31,7 +31,7 @@ protected:
 	Simon *player;					// A play scene has to have player, right?
 
 	Quadtree *qtree;
-
+	Board* board;
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> delObjects;
@@ -46,6 +46,7 @@ protected:
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
 public:
+	
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
