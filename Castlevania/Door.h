@@ -14,11 +14,10 @@ class CDoor : public CGameObject
 {
 	int id;
 
-	DWORD Time = 0;
+	DWORD Time=0;
 	int ani;
 	//int openTime;
 	bool isActive;
-	bool turnOffBb;
 	bool isClosed;
 	bool isOpened;
 public:
@@ -35,3 +34,4 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 
 };
+

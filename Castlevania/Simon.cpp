@@ -1,22 +1,21 @@
-﻿
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 #include "Simon.h"
 #include "Goomba.h"
 #include "Brick.h"
 #include "Portal.h"
-#include"Game.h"
+#include "Game.h"
 #include "Item.h"
 #include "Whip.h"
-#include "Textures.h"
 #include "Candle.h"
 #include "BlinkEffect.h"
 #include "SmallBrick.h"
 #include "Door.h"
 #include "Camera.h"
 #include "Bat.h"
-
+#include "BrokenBrick.h"
+#include "WaterSurface.h"
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -536,18 +535,22 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			isSit = false;
 		}
 	}
+
 	//auto move simon and camera when simon hit the door in playscene 2 
 	for (int i = 0; i < coObjects->size(); i++) {
 		if (dynamic_cast<CDoor*>(coObjects->at(i))) {
 			CDoor *door = dynamic_cast<CDoor *>(coObjects->at(i));
 			if (door->GetId() == doorId && isAutoWalking) {
-				if (door->IsOpened() && this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR)
+				if (door->IsOpened() && (this->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR || this->x < SIMON_AUTO_GO_THROUGH_SECOND_DOOR))
 					Walk();
 				else
 					SetState(SIMON_STATE_IDLE);
 			}
 		}
 	}
+
+
+
 	//when simon level up whip
 	CheckLevelUpState(dt);
 	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 600)
@@ -607,6 +610,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
 	}
 
+	/*if (CGame::GetInstance()->GetCurrentSceneID() == 3 && y < 120)
+		CGame::GetInstance()->SwitchScene(2);*/
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -626,7 +631,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
-
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
@@ -738,7 +742,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-		
+			else if (dynamic_cast<CWaterSurface *>(e->obj))
+			{
+				//effect
+				x += dx;
+				y += dy;
+				health = 0;
+			}
 			else if (dynamic_cast<CSmallBrick *>(e->obj))
 			{
 				if (e->ny < 0)
@@ -763,6 +773,56 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				}
 			}
 			
+			else if (dynamic_cast<CSmallBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isJump == true)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CBrokenBrick *>(e->obj))
+			{
+				if (e->ny < 0)
+				{
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+					{
+
+						isHurt = false;
+						isJump = false;
+						SetState(SIMON_STATE_SIT_AFTER_FALL);
+					}
+					if (isJump)
+					{
+						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						isJump = false;
+					}
+				}
+			}
+			else if (dynamic_cast<CPortal *>(e->obj))
+			{
+				CPortal *p = dynamic_cast<CPortal *>(e->obj);
+				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			}
+			else if (dynamic_cast<CDoor *>(e->obj))
+			{
+				CDoor *door = dynamic_cast<CDoor *>(e->obj);
+				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
+				{
+					doorId = door->GetId();
+					SetState(SIMON_STATE_IDLE);
+					isAutoWalking = true;
+					door->SetActive(true);
+					Camera::GetInstance()->SetIsAuto(true);
+				}
+				else if (door->IsActive())
+				{
+					x += dx;
+				}
+			}
 		}
 	}
 
@@ -834,6 +894,7 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
+<<<<<<<<< Temporary merge branch 1
 	
 }
 

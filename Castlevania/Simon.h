@@ -13,6 +13,7 @@
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310	
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350	
 #define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3180	
+#define SIMON_AUTO_GO_THROUGH_SECOND_DOOR	4204
 #define SIMON_WALKING_SPEED		0.15f 	
 // ON STAIR SPEED
 #define SIMON_ON_STAIR_SPEED_X		0.035f
@@ -94,6 +95,7 @@ class Simon : public CGameObject
 	int doorId;
 	int hearts = 5;
 	int health = SIMON_MAX_HEALTH;
+	int doorId;
 	//time variables	
 	DWORD startSit;
 	DWORD startHurt;

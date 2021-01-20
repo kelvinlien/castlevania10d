@@ -11,12 +11,13 @@
 #include "Panther.h"
 #include "Entity.h"
 #include <algorithm>
+#include "Door.h"
 #include "Fishman.h"
+#include "WaterSurface.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
 using namespace std;
-
 
 /*
 Load scene resources from scene file (textures, sprites, animations and objects)
@@ -48,6 +49,7 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
+#define OBJECT_TYPE_WATER_SURFACE	12
 #define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
@@ -71,7 +73,10 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-	
+<<<<<<<<< Temporary merge branch 1
+
+=========
+>>>>>>>>> Temporary merge branch 2
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -175,11 +180,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	vector<string> tokens = split(line);
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-
+	
 	int ani_set_id = atoi(tokens[3].c_str());
 	int amount, axis, brickType, itemType;
 	if (object_type == 5 || object_type == 9) {
@@ -202,6 +206,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
+	}
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
 	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
@@ -227,8 +240,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance();
-		player = (Simon*)obj;
+		obj = Simon::GetInstance(); 
+		player = (Simon*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -276,7 +289,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 
 		for (int i = 1; i < amountOfBrick; i++) {
-			//if (i < 40)
+			if (i != 99 && i != 119)
 			{
 				obj = new CBrick();
 				if (currentMapID == 1)
@@ -311,13 +324,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
 		int amountOfSmallBrick = amount;
-		//first small brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj = new CSmallBrick();
-		obj->SetPosition(x, y);
-		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
-		for (int i = 1; i <= amountOfSmallBrick; i++)
+
+		for (int i = 0; i <= amountOfSmallBrick; i++)
 		{
 			obj = new CSmallBrick();
 			if (axis == 0)
@@ -350,6 +359,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CDoor(x, y, id);
 		break;
 	}
+	case OBJECT_TYPE_WATER_SURFACE:
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		obj = new CWaterSurface(x, y, r, b);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 	{
 
@@ -491,10 +507,28 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
-	effects= CRepeatableEffects::GetInstance();		// create instance of effects
-
-	if (id == 2)
+	if (id == 2 || id == 3)
 		LoadTriggerStair();
+
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		Area::GetInstance()->SetAreaID(21);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+		break;
+		/*case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;*/
+	default:
+		break;
+	}
 
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -595,6 +629,8 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(176, 152, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(880, 216, TYPE_BELOW, DIRECT_LEFT));
 }
 void CPlayScene::Update(DWORD dt)
 {
@@ -725,16 +761,29 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->x = -14;
 	}
+	if (cx > 5555)
+	{
+		player->x = 5555;
+	}
 
 	CGame *game = CGame::GetInstance();
 
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
-
-    Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+	{
+		Area::GetInstance()->SetAreaID(22);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+	}
+	else if (Camera::GetInstance()->GetCamX() >= 4096)
+	{
+		Area::GetInstance()->SetAreaID(23);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+	}
 }
 
 void CPlayScene::Render()
@@ -757,9 +806,14 @@ void CPlayScene::Render()
 		BlinkEffect::GetInstance()->Draw(alpha);
 	}
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
-	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++) {
-		TriggerStairs::GetInstance()->Get(i)->Render();
-	}
+	
+	//Render trigger stairs
+	if(id == 2)
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size() - 2; i++) 
+			TriggerStairs::GetInstance()->Get(i)->Render();
+	else if (id == 3)
+		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			TriggerStairs::GetInstance()->Get(i)->Render();
 }
 
 /*
@@ -781,13 +835,10 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode) {
 	case DIK_SPACE:
@@ -824,8 +875,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -866,8 +916,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	if (simon->IsHurt()) return;
 
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{
