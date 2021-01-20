@@ -35,6 +35,7 @@ void Board::Render()
 	font->Render(std::to_string(time), x + 440, 35, 4);
 	font->Render(std::to_string(stage), x + 620, 35, 2);
 	font->Render(std::to_string(simon->GetHearts()), x + 540, 55, 2);
+	font->Render(std::to_string(simon->GetLife()), x + 540, 75, 2);
 	//Khung HP 
 	for (int i = 0; i < 16; i++)
 	{

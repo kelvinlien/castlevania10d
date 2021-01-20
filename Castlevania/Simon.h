@@ -43,7 +43,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 #define SIMON_MAX_HEALTH	16						   
-
+#define SIMON_MAX_LIFE	5
 
 class Simon : public CGameObject
 {
@@ -52,6 +52,7 @@ class Simon : public CGameObject
 
 	int hearts = 5;
 	int health = SIMON_MAX_HEALTH;
+	int life = SIMON_MAX_LIFE;
 
 	//time variables
 	DWORD startSit;
@@ -152,6 +153,8 @@ public:
 	int GetHealth() { return health; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
+	void SetLife(int _life) { life = _life; }
+	int GetLife() { return life; }
 
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
