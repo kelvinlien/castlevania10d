@@ -607,6 +607,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		CalcPotentialCollisions(&coObjectsWhenDie, coEvents);
 	}
 
+	
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -618,6 +619,20 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
 			StopAtFirstStepOnStair();
+			/*if (currentstair==18)
+			{
+				
+					game->GetInstance()->SwitchScene(3);
+					backupOnStairX = this->x;
+					backupOnStairY = this->y;
+					SetState(SIMON_STATE_IDLE_ON_STAIR);
+					DebugOut(L"[OnSTAIR] %d\n", isOnStair);
+					DebugOut(L"[AUTOSTAIR] %d\n", isAutoWalkOnStair);
+					DebugOut(L"[aboveStairOutPoint]%f\n", aboveStairOutPoint);
+					DebugOut(L"[belowStairOutPoint]%f\n", belowStairOutPoint);
+			}*/
+			DebugOut(L"[aboveStairOutPoint]%f\n", aboveStairOutPoint);
+			DebugOut(L"[belowStairOutPoint]%f\n", belowStairOutPoint);
 		}
 
 	}
@@ -659,6 +674,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				if (triggerStairs->Get(i)->IsContainSimon())
 				{
+					currentstair = i;
 					SetReadyToGoStair(i);
 					if (readyToUpStair || readyToDownStair)
 					{
@@ -980,12 +996,14 @@ void Simon::SetStairOutPoint(int i)
 		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
 		{
 			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			aboveStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+			//if(i < 18)
+				aboveStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
 		}
 		else
 		{
 			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			belowStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+			//if (i < 18)
+				belowStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
 		}
 	}
 	else
@@ -993,12 +1011,14 @@ void Simon::SetStairOutPoint(int i)
 		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
 		{
 			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			aboveStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+			//if (i < 18)
+				aboveStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
 		}
 		else
 		{
 			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			belowStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+			//if (i < 18)
+				belowStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
 		}
 	}
 }

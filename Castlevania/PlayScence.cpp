@@ -228,7 +228,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = Simon::GetInstance();
-		player = (Simon*)obj;
+		player = Simon::GetInstance();
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -278,14 +278,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		for (int i = 1; i < amountOfBrick; i++) {
 			//if (i < 40)
 			{
-				obj = new CBrick();
-				if (currentMapID == 1)
-					obj->SetPosition(x + BRICK_WIDTH * i, y);
-				else
-					obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+				if (i != 99 && i != 119)
+				{
+					obj = new CBrick();
+					if (currentMapID == 1)
+						obj->SetPosition(x + BRICK_WIDTH * i, y);
+					else
+						obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 
-				obj->SetAnimationSet(ani_set);
-				objects.push_back(obj);
+					obj->SetAnimationSet(ani_set);
+					objects.push_back(obj);
+				}
 			}
 		}
 		break;
@@ -495,7 +498,35 @@ void CPlayScene::Load()
 
 	if (id == 2)
 		LoadTriggerStair();
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
+	switch (currentMapID) {
+	case 2:
+		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			Camera::GetInstance()->SetCamX(3150);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 22) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 23) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+
+		break;
+	case 3:
+		Area::GetInstance()->SetAreaID(31);
+		Area::GetInstance()->SetLimitLeftCam(0);
+		Area::GetInstance()->SetLimitRightCam(240);
+		Camera::GetInstance()->SetCamX(0);
+		break;
+	default:
+		break;
+	}
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -560,7 +591,7 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -585,8 +616,6 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT));
-	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));
-	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT));
@@ -595,6 +624,11 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));//18
+	triggerStairs->Add(new TriggerStair(176, 152, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(880, 216, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));//21
+
 }
 void CPlayScene::Update(DWORD dt)
 {
@@ -726,6 +760,7 @@ void CPlayScene::Update(DWORD dt)
 		player->x = -14;
 	}
 
+
 	CGame *game = CGame::GetInstance();
 
 
@@ -811,6 +846,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		else
 			simon->SetState(SIMON_STATE_SIT);
 		break;	
+	case DIK_B: {
+		CGame::GetInstance()->SwitchScene(3);
+		break;
+	}
+
 	}
 }
 

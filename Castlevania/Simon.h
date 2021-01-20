@@ -132,8 +132,9 @@ class Simon : public CGameObject
 	bool canGoUpStair;
 	bool canGoDownStair;
 	bool isOnStair;
-	bool isAutoWalkOnStair = false;
-
+	bool isAutoWalkOnStair;
+	
+	int currentstair;
 	int directionY;
 	int stairNx, stairNy;
 	DWORD time;
@@ -198,6 +199,8 @@ public:
 	float GetAboveStairOutPoint() { return aboveStairOutPoint; }
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
 
+	void SetOnStair(bool a) { isOnStair = a; }
+	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
 	void SetHearts(int _hearts) {  hearts = _hearts; }
 	int GetHearts() { return hearts; }
 
