@@ -18,7 +18,7 @@ Board* Board::Getinstance()
 
 Board::Board()
 {
-	ani_set = CAnimationSets::GetInstance()->Get(10);
+	ani_set = CAnimationSets::GetInstance()->Get(BOARD_ID);
 	HP_set = CAnimationSets::GetInstance()->Get(8);
 	font = new CFont();
 	doubleShot = CSprites::GetInstance()->Get(40024);

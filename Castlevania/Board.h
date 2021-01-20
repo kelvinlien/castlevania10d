@@ -8,7 +8,7 @@
 #include "Utils.h"
 #include "Simon.h"
 #include "Font.h"
-#define BOARD_ID 10
+#define BOARD_ID 12
 class Board
 {
 	float x = 0.0f;

@@ -185,7 +185,7 @@ public:
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
 	void SetAutoWalking(bool a) { isAutoWalking = a; }
-	void SetisBuff() { isBuff = true; buffTime = GetTickCount64();}
+	void SetisBuff() { isDoubleShot = true; buffTime = GetTickCount64();}
 	void SetHealth(int _health) { health = _health; }
 	int GetHealth() { return health; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
@@ -203,8 +203,6 @@ public:
 	bool IsDoubleShot() { return isDoubleShot; }
 
 	void SetisFreeze(bool _status) { isFreeze = _status; }
-	void SetHealth(int _health) {  health = _health; }
-	int GetHealth() { return health; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
 
