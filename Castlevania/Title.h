@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Game.h"
 #define TITLE_STATE_BLINK  100
-#define BLINK_TIME	1000
+#define BLINK_TIME	1500
 
 #define TITLE_ANI_IDLE	0
 #define TITLE_ANI_BLINK	1
