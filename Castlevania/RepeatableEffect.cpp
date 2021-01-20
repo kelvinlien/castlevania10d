@@ -20,6 +20,16 @@ void CRepeatableEffect::SetType(float x,float y, type FragmentType)
 		fragments.push_back(new CFragment(x, y + 1, 1, RUBBLE_FRAGMENT));
 		fragments.push_back(new CFragment(x + 15, y + 3, 1, RUBBLE_FRAGMENT));
 		break;
+	case BOSS_DEAD_EFFECT:
+		fragments.push_back(new CFragment(x, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+20, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+40, y, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x, y+25, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+20, y+25, -1, BOSS_DEAD_EFFECT));
+		fragments.push_back(new CFragment(x+40, y+25, -1, BOSS_DEAD_EFFECT));
+		break;
+	case BOSS_INJURED_EFFECT:
+		fragments.push_back(new CFragment(x, y, 0, BOSS_INJURED_EFFECT));
 	default:
 		break;
 	}
@@ -30,7 +40,7 @@ void CRepeatableEffect::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects )
 	if (isVanish == true)
 		return;
 
-	if (GetTickCount() - existTime > 1300 && existTime != 0)
+	if ((GetTickCount() - existTime >= 500 && fragmentType == BOSS_INJURED_EFFECT || GetTickCount() - existTime > 1300) && existTime != 0)
 		isVanish = true;
 
 	for (int i = 0; i < fragments.size(); i++)

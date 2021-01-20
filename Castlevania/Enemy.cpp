@@ -2,7 +2,6 @@
 CEnemy::CEnemy() :CGameObject()
 {
 	isActive = false;
-	state = ENEMY_STATE_MOVE;
 	isLock = false;
 }
 void CEnemy::SetState(int state)

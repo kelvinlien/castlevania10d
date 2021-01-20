@@ -88,7 +88,6 @@ class Simon : public CGameObject
 
 	CWeapon *subWeapons;
 	static Simon * __instance;
-	animation ani;
 	Area *area;
 	CGame *game;
 	Camera* cam;

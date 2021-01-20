@@ -10,6 +10,7 @@ class CRepeatableEffect:public CGameObject
 public:
 	CRepeatableEffect(float x, float y, type FragmentType);
 	void SetType(float x, float y,type FragmentType);
+	type GetFragmentType() { return fragmentType; }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) {};
 	virtual void Render();

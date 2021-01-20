@@ -116,13 +116,19 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
+				case 15:
+					e = dynamic_cast<CBoss *>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
 				if (e != NULL) {
 					e->GetBoundingBox(l2, t2, r2, b2);
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-						e->isVanish = true;
+						if (e->GetType() != 15)
+							e->isVanish = true;
+						else
+							e->SetState(ENEMY_STATE_HURT);
 				}
 			}
 		}
@@ -140,7 +146,11 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				e->obj->isVanish = true;
+				if (dynamic_cast<CEnemy*>(e->obj)->GetType() != 15)
+					e->obj->isVanish = true;
+				else 
+					dynamic_cast<CBoss *>(e->obj)->SetState(ENEMY_STATE_HURT);
+
 				if (!isBreak)
 				{
 					x += dx;

@@ -41,6 +41,7 @@
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="RepeatableEffect.cpp" />
     <ClCompile Include="RepeatableEffects.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="Whip.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Fragment.h" />
     <ClInclude Include="RepeatableEffect.h" />
     <ClInclude Include="RepeatableEffects.h" />

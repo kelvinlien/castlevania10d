@@ -4,6 +4,7 @@
 61	..\Resources\Texture\panther.png	255	0	255
 62	..\Resources\Texture\fishman.png	255	0	255
 63	..\Resources\Texture\bat.png	255	0	255
+64	..\Resources\Texture\boss.png	255	0	255
 31	..\Resources\Texture\hit-effect.png	255	0	255
 32	..\Resources\Texture\burn.png	255	0	255
 33	..\Resources\Texture\enemy_bullet.png	255	0	255
@@ -66,6 +67,13 @@
 63011	160	0	192	32	63
 63012	128	0	160	32	63
 
+#Boss
+#Idle
+64000	0	0	96	46	64
+#Fly
+64001	96	0	192	46	64
+64002	192	0	288	46	64
+
 #effect
 30011	0	0	16	20	31
 30012	43	0	85	44	32
@@ -127,6 +135,12 @@
 #right
 631	63010	100	63011	100	63012	100
 
+#Boss
+#Idle
+640	64000	100
+#Fly
+641	64001	100	64002	100
+
 #break
 303	30011	100	30012	100
 #idle left
@@ -152,6 +166,8 @@
 62	610	611	612	613	614	615	303	313
 63	620	621	622	623	624	625	303
 64	630	631	303
+#Boss
+65	640	641
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -165,6 +181,8 @@
 10	1885.0	0.0	62	1850.0	2050.0	-1
 #	FISHMAN
 30	200.0	412	63	1
+#	BOSS
+15	5292	132	65
 
 #	GHOST
 2	500.0	0.0	61	1

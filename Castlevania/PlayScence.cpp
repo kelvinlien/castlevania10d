@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Boss.h"
 #include "Entity.h"
 #include <algorithm>
 #include "Door.h"
@@ -50,6 +51,7 @@ See scene1.txt, scene2.txt for detail format specification
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
 #define OBJECT_TYPE_WATER_SURFACE	12
+#define OBJECT_TYPE_BOSS	15
 #define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
@@ -267,6 +269,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 
+	case OBJECT_TYPE_BOSS:
+		obj = new CBoss();
+		break;
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
 		//to assign mapWidth
@@ -745,7 +750,7 @@ void CPlayScene::Update(DWORD dt)
 		 }
 	}
 
-	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
+	CRepeatableEffects::GetInstance()->Update(dt, &objects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
