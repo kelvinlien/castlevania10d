@@ -48,7 +48,7 @@
 #define SIMON_HURT_TIME	 500	
 #define SIMON_SIT_AFTER_FALL_TIME	 250	
 #define SIMON_UNTOUCHABLE_TIME	 2000	
-#define SIMON_MAX_HEALTH	2
+#define SIMON_MAX_HEALTH	20
 enum animation
 {
 	IDLE_LEFT,
@@ -95,7 +95,6 @@ class Simon : public CGameObject
 	int doorId;
 	int hearts = 5;
 	int health = SIMON_MAX_HEALTH;
-	int doorId;
 	//time variables	
 	DWORD startSit;
 	DWORD startHurt;

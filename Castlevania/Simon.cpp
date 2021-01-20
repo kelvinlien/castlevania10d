@@ -677,7 +677,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
 			// if Item
 			if (dynamic_cast<Item *>(e->obj))
 			{
@@ -724,8 +725,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			{
 				if (isOnStair)
 					continue;
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
 				if (e->ny < 0)
 				{
 					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
@@ -770,6 +769,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					isAutoWalking = true;
 					door->SetActive(true);
 					Camera::GetInstance()->SetIsAuto(true);
+				}
+				if (door->IsActive())
+				{
+					x += dx;
 				}
 			}
 			
@@ -887,17 +890,14 @@ void Simon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 	if (isJump)
 	{
 		if (isHurt) return;
-			bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
 	if (isSit)
 	{
 		if (isHurt) return;
 		bottom -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	}
-<<<<<<<<< Temporary merge branch 1
-	
 }
-
 void Simon::SetReadyToGoStair(int i)
 {
 	if (triggerStairs->Get(i)->GetType() == TYPE_BELOW && CGame::GetInstance()->IsKeyDown(DIK_UP))
