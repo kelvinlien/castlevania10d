@@ -34,6 +34,8 @@
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="CastleAndBat.cpp" />
     <ClCompile Include="IntroBat.cpp" />
     <ClCompile Include="Helicopter.cpp" />
   </ItemGroup>
@@ -72,6 +74,8 @@
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="CastleAndBat.h" />
     <ClInclude Include="IntroBat.h" />
     <ClInclude Include="Helicopter.h" />
   </ItemGroup>

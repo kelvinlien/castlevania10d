@@ -48,6 +48,13 @@ using namespace std;
 
 #define OBJECT_TYPE_PORTAL	50
 
+#define OBJECT_TYPE_CASTLE_AND_BAT	100
+#define OBJECT_TYPE_PUSH_ANY_KEY	110
+#define OBJECT_TYPE_BACKGROUND	120
+
+
+
+
 #define MAX_SCENE_LINE 1024
 #define OBJECT_TYPE_BACKGROUND	120
 
@@ -65,8 +72,6 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -181,13 +186,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	
 	int ani_set_id = atoi(tokens[3].c_str());
 	int amount;
-	if (object_type == 5) {
+	if (object_type == OBJECT_TYPE_BRICKS_GROUP) {
 		amount = atoi(tokens[4].c_str());
 	}
 
 	float jumpLeftX, jumpRightX;
 	int directX;
-	if (object_type == 10)
+	if (object_type == OBJECT_TYPE_PANTHER)
 	{
 		jumpLeftX = atoi(tokens[4].c_str());
 		jumpRightX = atoi(tokens[5].c_str());
@@ -329,10 +334,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new Background();
 		break;
 	}
+	case OBJECT_TYPE_PUSH_ANY_KEY:
+	{
+		obj = new Title();
+		break;
+	}
+	case OBJECT_TYPE_CASTLE_AND_BAT:
+	{
+		obj = new CastleAndBat();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
+	
 
 	// General object setup
 	if (!dynamic_cast<CBrick*>(obj)) {
@@ -531,8 +547,8 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
-	if(currentMapID!=5)
-	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+	if (currentMapID != INTRO_SCENE_ID && currentMapID != 5)
+		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 	
 }
@@ -627,8 +643,8 @@ void CPlayScene::Render()
 {
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	if(CGame::GetInstance()->GetCurrentSceneID()!=5)
-	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	if (id != INTRO_SCENE_ID)
+		CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -661,33 +677,51 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	//return if this is intro 2
-	if (CGame::GetInstance()->GetCurrentSceneID() == 5) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (ID == INTRO_SCENE_ID) {
+		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
 
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		if (!simon->IsJump()) {
-			if (simon->IsLevelUp()) return;
-			simon->SetState(SIMON_STATE_JUMP);
+		switch (KeyCode)
+		{
+		case DIK_RETURN:
+			for (int i = 0; i < objects.size(); i++) {
+				LPGAMEOBJECT e = objects[i];
+				if (dynamic_cast<Title*> (e)) {
+					if (e->GetState() == TITLE_STATE_BLINK) return;
+					e->SetState(TITLE_STATE_BLINK);
+				}
+
+			}
 		}
-		break;
-	case DIK_A:
-	{
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_ATTACK);
-		break;
 	}
-	case DIK_DOWN:
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
-		break;
-		
-	}
+	else {
+        if (ID == 5) return;
+		if (simon->IsHurt()) return;
+
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+		switch (KeyCode)
+		{
+		case DIK_SPACE:
+			if (!simon->IsJump()) {
+				if (simon->IsLevelUp()) return;
+				simon->SetState(SIMON_STATE_JUMP);
+			}
+			break;
+		case DIK_A:
+		{
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_ATTACK);
+			break;
+		}
+		case DIK_DOWN:
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_SIT);
+			break;
+
+		}
+	}	
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
@@ -696,43 +730,54 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	Camera* cam = Camera::GetInstance();
+	
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	//return if this is intro 2
-	if (CGame::GetInstance()->GetCurrentSceneID() == 5) return;
-	// disable control key when Simon die 
-	if (simon->IsHurt()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	if (ID != INTRO_SCENE_ID)
+	{
+        if (ID == 5) return;
+		// disable control key when Simon die 
+		if (simon->IsHurt()) return;
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
 
-	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		if (game->IsKeyDown(DIK_RIGHT)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
+		else if (game->IsKeyDown(DIK_LEFT)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_WALKING_LEFT);
+		}
+		else if (game->IsKeyDown(DIK_DOWN)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_SIT);
+		}
+		else
+			simon->SetState(SIMON_STATE_IDLE);
 	}
-	else if (game->IsKeyDown(DIK_LEFT)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	}
-	else if (game->IsKeyDown(DIK_DOWN)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_SIT);
-	}
-	else
-		simon->SetState(SIMON_STATE_IDLE);
+
+	
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
-	//return if this is intro 2
-	if(CGame::GetInstance()->GetCurrentSceneID() == 5) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	switch (KeyCode)
-	{
-	case DIK_DOWN:
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_STAND);
-		break;
+	if (ID != INTRO_SCENE_ID) {
+        if(CGame::GetInstance()->GetCurrentSceneID() == 5) return;
+		if (simon->IsHurt()) return;
+
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+
+		switch (KeyCode)
+		{
+		case DIK_DOWN:
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_STAND);
+			break;
+		}
 	}
+	
 }
