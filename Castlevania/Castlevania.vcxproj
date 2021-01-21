@@ -146,6 +146,8 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Fishman.cpp" />
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -158,6 +160,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="TriggerStair.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -168,6 +171,7 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="WaterSurface.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponManager.cpp" />
     <ClCompile Include="Whip.cpp" />
@@ -184,6 +188,7 @@
     <ClInclude Include="Door.h" />	
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
@@ -191,6 +196,7 @@
     <ClInclude Include="Define.h" />
     <ClInclude Include="Fragment.h" />
     <ClInclude Include="Fishman.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Holder.h" />
@@ -205,6 +211,7 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="TriggerStair.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -215,6 +222,7 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="WaterSurface.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="Whip.h" />

@@ -11,16 +11,17 @@
 #include "Panther.h"
 #include "Entity.h"
 #include <algorithm>
+#include "Door.h"
 #include "Fishman.h"
+#include "WaterSurface.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
 using namespace std;
 
-
 /*
-	Load scene resources from scene file (textures, sprites, animations and objects)
-	See scene1.txt, scene2.txt for detail format specification
+Load scene resources from scene file (textures, sprites, animations and objects)
+See scene1.txt, scene2.txt for detail format specification
 */
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -48,6 +49,7 @@ using namespace std;
 #define OBJECT_TYPE_DOOR			6
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
+#define OBJECT_TYPE_WATER_SURFACE	12
 #define OBJECT_TYPE_BAT	20
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
@@ -71,7 +73,6 @@ wchar_t * ConvertToWideChar(char * p)
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath) {
 	key_handler = new CPlayScenceKeyHandler(this);
-	
 }
 
 void CPlayScene::_ParseSection_TEXTURES(string line)
@@ -105,7 +106,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -124,7 +125,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i+1].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -146,7 +147,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	for (int i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
-		
+
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
@@ -154,9 +155,9 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
 }
 /*
-	Parse map matrix in section [MAPMATRIX]
+Parse map matrix in section [MAPMATRIX]
 */
-void CPlayScene::_ParseSection_MAPMATRIX(string line) 
+void CPlayScene::_ParseSection_MAPMATRIX(string line)
 {
 	vector<string> tokens = split(line);
 	if (tokens.size() < 2) return;
@@ -166,7 +167,7 @@ void CPlayScene::_ParseSection_MAPMATRIX(string line)
 	CMaps::GetInstance()->Add(matrixString.c_str(), id);
 }
 /*
-	Parse a line in section [OBJECTS] 
+Parse a line in section [OBJECTS]
 */
 
 void CPlayScene::_ParseSection_OBJECTS(string line)
@@ -175,7 +176,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	vector<string> tokens = split(line);
 
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
-
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
@@ -203,6 +203,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		jumpRightX = atoi(tokens[5].c_str());
 		directX = atoi(tokens[6].c_str());
 	}
+	if (object_type == 8)
+	{
+		brickType = atoi(tokens[4].c_str());
+		itemType = atoi(tokens[5].c_str());
+	}
+	if (object_type == 9)
+	{
+		axis = atoi(tokens[5].c_str());
+	}
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
 
 	CGameObject *obj = NULL;
@@ -227,8 +236,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance();
-		player = (Simon*)obj;
+		obj = Simon::GetInstance(); 
+		player = (Simon*)obj;  
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -276,7 +285,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects.push_back(obj);
 
 		for (int i = 1; i < amountOfBrick; i++) {
-			//if (i < 40)
+			if (i != 99 && i != 119)
 			{
 				obj = new CBrick();
 				if (currentMapID == 1)
@@ -311,13 +320,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_SMALL_BRICK_GROUP: {
 		int amountOfSmallBrick = amount;
-		//first small brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj = new CSmallBrick();
-		obj->SetPosition(x, y);
-		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
-		for (int i = 1; i <= amountOfSmallBrick; i++)
+
+		for (int i = 0; i <= amountOfSmallBrick; i++)
 		{
 			obj = new CSmallBrick();
 			if (axis == 0)
@@ -350,15 +355,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CDoor(x, y, id);
 		break;
 	}
+	case OBJECT_TYPE_WATER_SURFACE:
+	{
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		obj = new CWaterSurface(x, y, r, b);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
-		{	
+	{
 
-			float r = atof(tokens[4].c_str());
-			float b = atof(tokens[5].c_str());
-			int scene_id = atoi(tokens[6].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
-		}
-		break;
+		float r = atof(tokens[4].c_str());
+		float b = atof(tokens[5].c_str());
+		int scene_id = atoi(tokens[6].c_str());
+		obj = new CPortal(x, y, r, b, scene_id);
+	}
+	break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -372,7 +384,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 	}
-		
+
 }
 /*
 	Parse Scene Ani_set
@@ -491,7 +503,28 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
-	effects= CRepeatableEffects::GetInstance();		// create instance of effects
+	if (id == 2 || id == 3)
+		LoadTriggerStair();
+
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+
+	switch (currentMapID) {
+		//case 1:
+		//	Area::GetInstance()->SetAreaID(11);
+		//	//Area::GetInstance()->SetLimitLeftCam(0);
+		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
+		//	break;
+	case 2:
+		Area::GetInstance()->SetAreaID(21);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+		break;
+		/*case 3:
+		Area::GetInstance()->SetAreaID(31);
+		break;*/
+	default:
+		break;
+	}
 
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -499,7 +532,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -508,10 +541,12 @@ void CPlayScene::Load()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 
-		if (line == "[TEXTURES]") { 
-			section = SCENE_SECTION_TEXTURES; continue; }
-		if (line == "[SPRITES]") { 
-			section = SCENE_SECTION_SPRITES; continue; }
+		if (line == "[TEXTURES]") {
+			section = SCENE_SECTION_TEXTURES; continue;
+		}
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
 		if (line == "[ANIMATIONS]") {
 			section = SCENE_SECTION_ANIMATIONS; continue;
 		}
@@ -522,19 +557,14 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_OBJECTS; continue;
 		}
 		if (line == "[MAPMATRIX]") {
-			section = SCENE_SECTION_MAPMATRIX; continue; }
-		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]" || line == "[ENEMY]")
-		{
-			section = SCENE_SECTION_OBJECT; continue;		}
-		if (line == "[ITEM]" || line == "[WHIP]") 
-		{
-			section = SCENE_SECTION_ANI_SET; continue;		}
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
+			section = SCENE_SECTION_MAPMATRIX; continue; 
+        }
+		if (line == "[FLOOR]" || line == "[FIREPOT]" || line == "[SIMON]" || line == "[POTAL]" || line == "[ENEMY]"){
+			section = SCENE_SECTION_OBJECT; continue;
+        }
+		if (line == "[ITEM]" || line == "[WHIP]"){
+			section = SCENE_SECTION_ANI_SET; continue;
+        }
 		if (line == "[ENEMY]") {
 			section = SCENE_SECTION_OBJECT; continue;
 		}
@@ -560,7 +590,8 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	board=Board::Getinstance();
+	board->SetState_OnBoard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -573,7 +604,31 @@ void CPlayScene::Load()
 	qtree = new Quadtree(0, screen);
 	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 }
-
+void CPlayScene::LoadTriggerStair() {
+	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
+	triggerStairs->Add(new TriggerStair(1232, 377, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1360, 247, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(1424, 247, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1488, 183, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(1808, 183, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(1872, 247, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(2576, 377, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4368, 249, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(4688, 249, TYPE_ABOVE, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT));
+	triggerStairs->Add(new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(176, 152, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(880, 216, TYPE_BELOW, DIRECT_LEFT));
+}
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -589,6 +644,7 @@ void CPlayScene::Update(DWORD dt)
 			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
 			if (it != delObjects.end())	// Neu objects[i] thuoc mang delObjects
 			{
+				Board::Getinstance()->RewardingPoints(objects[i]);
 				objects.erase(objects.begin() + i);
 				delObjects.erase(it);
 			}
@@ -693,7 +749,7 @@ void CPlayScene::Update(DWORD dt)
 	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
 
 	// Update camera to follow mario
 	float cx, cy;
@@ -703,23 +759,40 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->x = -14;
 	}
+	if (cx > 5555)
+	{
+		player->x = 5555;
+	}
 
 	CGame *game = CGame::GetInstance();
-	 
+
 
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
-	// check if current player pos is in map range and update cam pos accordingly
-
-    Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+	{
+		Area::GetInstance()->SetAreaID(22);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+	}
+	else if (Camera::GetInstance()->GetCamX() >= 4096)
+	{
+		Area::GetInstance()->SetAreaID(23);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+	}
+    board->Update();
+	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
+	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	board->Render();
 	
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
@@ -734,10 +807,19 @@ void CPlayScene::Render()
 			alpha = 120 + rand() % 70;
 		BlinkEffect::GetInstance()->Draw(alpha);
 	}
+	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+	
+	//Render trigger stairs
+	if(id == 2)
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size() - 2; i++) 
+			TriggerStairs::GetInstance()->Get(i)->Render();
+	else if (id == 3)
+		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			TriggerStairs::GetInstance()->Get(i)->Render();
 }
 
 /*
-	Unload current scene
+Unload current scene
 */
 void CPlayScene::Unload()
 {
@@ -755,13 +837,11 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode) {
 	case DIK_SPACE:
@@ -775,11 +855,16 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
-	case DIK_DOWN: {
+	case DIK_DOWN:
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
+				return;
 		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_SIT);
-		break;
-		}
+		if (simon->IsOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
+		break;	
 	}
 }
 
@@ -792,8 +877,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	if (game->IsKeyDown(DIK_RIGHT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
@@ -804,26 +890,49 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN)) {
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1)
+				return;
+		if (simon->IsLevelUp()) return;
+
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_SIT);
+		if (simon->IsOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
 	}
-	else
+	else if (game->IsKeyDown(DIK_UP)) {
+		if (simon->IsLevelUp()) return;
+		if (simon->IsOnStair())
+		{
+			simon->SetState(SIMON_STATE_GO_UP_STAIR);
+		}
+	}
+	else {
+		if (simon->IsOnStair()) return;
 		if(!simon->IsJump())
 		simon->SetState(SIMON_STATE_IDLE);
+	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt()) return;
-
+	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_STAND);
+
+		if (simon->IsLevelUp()) break;
+		if (simon->IsAutoWalkOnStair()) break;
+		/*if (simon->IsAutoWalkOnStair())
+			simon->SetState(SIMON_STATE_AUTOWALK_ON_STAIR);
+		else*/
+			simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
 }

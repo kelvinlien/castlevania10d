@@ -3,6 +3,7 @@
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 20	..\Resources\Texture\floor_2.png	255	255	255
+21	..\Resources\Texture\small_brick.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
 40	..\Resources\Texture\item.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
@@ -130,6 +131,9 @@
 
 #FLOOR
 20001	0	0	33	29	20
+
+#SMALL BRICK
+20002	0	0	16	16	21
 
 #HOLDERS
 #CANDLES
@@ -380,6 +384,9 @@
 # ==== FLOOR =========
 201	20001	100
 
+# ==== SMALL BRICK ====
+202	20002	100
+
 # ==== HOLDER =========
 #candle
 302	30006	100	30007	100
@@ -579,7 +586,7 @@
 # FLOOR 
 2	201
 # HOLDER
-3	302	303
+3	301	302	303
 # ITEMS
 4	401	402	406	407	408	411	412	416	417	418
 #WEAPON
@@ -588,6 +595,10 @@
 7	700	701	702	703	704	705	706
 #BOARD
 8	800	801	802	803	804	805	806	807
+# SMALL BRICK
+10	202
+# BROKEN BRICK
+11	201
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -595,26 +606,37 @@
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
-1	0	200	2
+#1	0	200	2
 
 # ---- Candle ----
-4	55	378	3	4
-4	183	314	3	1
-4	311	378	3	1
-4	439	314	3	9
-4	567	378	3	9
-4	693	314	3	0
+4	55	156	3	3
+4	183	156	3	0
+4	311	156	3	0
+4	439	156	3	3
+4	567	156	3	6
+4	695	156	3	0
+4	823	156	3	0
+4	983	156	3	1
 
 #BRICK GROUPS
-5	1376	200	2	3
-5	1504	200	2	10
-5	1856	200	2	6
-5	2784	200	2	9
-5	3072	200	2	8
-5	3328	200	2	3
+5	0	280	2	14
+5	192	216	2	2
+5	512	280	2	2
+5	640	280	2	9
+5	896	408	2	2
+5	960	344	2	2
+
+#SMALL BRICK GROUP
+9	1008	120	10	14	1
+
+#BROKEN_BRICK
+8	928	280	11	0	-1
 
 # SIMON
 0	50	0	1
+
+# WATER SURFACE
+12	0	410	0	1024	412
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

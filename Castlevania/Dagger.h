@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"
+#include "Candle.h"
 #define DAGGER_BBOX_HEIGHT 16
 #define DAGGER_BBOX_WIDTH 32
 #define DAGGER_VX 0.35f

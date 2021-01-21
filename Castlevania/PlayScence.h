@@ -16,7 +16,8 @@
 #include"Ghost.h"
 #include "RepeatableEffects.h"
 #include  "Bat.h"
-
+#include "TriggerStair.h"
+#include "Board.h"
 #include"Ghost.h"
 
 #include "Quadtree.h"
@@ -30,7 +31,7 @@ protected:
 	Simon *player;					// A play scene has to have player, right?
 
 	Quadtree *qtree;
-
+	Board* board;
 	Item item; //temp item to save when item created
 	vector<LPGAMEOBJECT> objects;
 	vector<LPGAMEOBJECT> delObjects;
@@ -42,28 +43,27 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_MAPMATRIX(string line);
-
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
 public:
+	
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	virtual void LoadTriggerStair();
 
-	Simon * GetPlayer() { return player; } 
-
+	Simon * GetPlayer() { return player; }
 	//friend class CPlayScenceKeyHandler;
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler
 {
-public: 
+public:
 	virtual void KeyState(BYTE *states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 	CPlayScenceKeyHandler(CScene *s) :CScenceKeyHandler(s) {};
 };
-
