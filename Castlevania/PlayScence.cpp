@@ -793,7 +793,10 @@ void CPlayScene::Render()
 	}
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
 	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++) {
-		TriggerStairs::GetInstance()->Get(i)->Render();
+		if(id == 3 && (i == 19 || i == 20))
+			TriggerStairs::GetInstance()->Get(i)->Render();
+		else if(id == 2 && i != 19 && i != 20)
+			TriggerStairs::GetInstance()->Get(i)->Render();
 	}
 }
 
