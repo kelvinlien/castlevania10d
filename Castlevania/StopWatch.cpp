@@ -1,6 +1,7 @@
 #include "StopWatch.h"
 #include"Ghost.h"
 #include"Panther.h"
+#include"Fishman.h"
 
 StopWatch::StopWatch()
 {
@@ -26,6 +27,9 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
+				case 30:
+					e = dynamic_cast<CFishman *>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
@@ -47,6 +51,9 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					break;
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case 30:
+					e = dynamic_cast<CFishman *>(coObjects->at(i));
 					break;
 				default:
 					break;

@@ -12,8 +12,7 @@ CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 }
 void CFishman::SetState(int state)
 {
-	this->state = state;
-
+	CEnemy::SetState(state);
 	switch (state)
 	{
 	case FISH_MAN_STATE_JUMP:
@@ -54,22 +53,26 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (!isDead)
 		CGameObject::Update(dt);
 
-	vy += FISH_MAN_GRAVITY * dt;
+	if(isLock != true)
+		vy += FISH_MAN_GRAVITY * dt;
 	bullet->Update(dt, coObjects);
-	if (isWaitToShoot && GetTickCount() - startWaitToShoot >= shootingTimePeriod)
-	{
-		startWaitToShoot = 0;
-		isWaitToShoot = false;
-		SetState(FISH_MAN_STATE_SHOOT);
 
-	}
-	if (isShoot && (GetTickCount() - startShootTime > FISH_MAN_SHOOTING_TIME))	//enemy fire
-	{
-		startShootTime = 0;
-		isShoot = false;
-		nx *= -1;
-		SetState(FISH_MAN_STATE_WALK);
-		WaitToShoot();
+	if (isLock != true) {
+		if (isWaitToShoot && GetTickCount() - startWaitToShoot >= shootingTimePeriod)
+		{
+			startWaitToShoot = 0;
+			isWaitToShoot = false;
+			SetState(FISH_MAN_STATE_SHOOT);
+
+		}
+		if (isShoot && (GetTickCount() - startShootTime > FISH_MAN_SHOOTING_TIME))	//enemy fire
+		{
+			startShootTime = 0;
+			isShoot = false;
+			nx *= -1;
+			SetState(FISH_MAN_STATE_WALK);
+			WaitToShoot();
+		}
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -108,7 +111,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		y += min_ty * dy + ny * 0.4f;
 
 		if (nx != 0) {}
-		if (ny != 0) {
+		if (ny != 0 && isLock != true) {
 			SetState(FISH_MAN_STATE_WALK);
 			WaitToShoot();
 			if (shootingTimePeriod == 0) 

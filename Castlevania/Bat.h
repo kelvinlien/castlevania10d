@@ -20,7 +20,6 @@
 
 class CBat :public CEnemy
 {
-	int ani;
 	DWORD die_time;
 	float amplitude = BAT_SPEED_AMPLITUDE;
 public:
