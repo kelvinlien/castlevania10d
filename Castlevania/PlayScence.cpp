@@ -782,13 +782,10 @@ void CPlayScene::Update(DWORD dt)
 		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
     board->Update();
-	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
-	DebugOut(L"------RENDER---------\n");
-	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 	board->Render();
