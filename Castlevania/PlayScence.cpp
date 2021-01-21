@@ -872,7 +872,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Camera* cam = Camera::GetInstance();
 
 	// disable control key when Simon die 
-	if (simon->IsHurt()) return;
+	if (simon->IsHurt() && !simon->IsOnStair()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;

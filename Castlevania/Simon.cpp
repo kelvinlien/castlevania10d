@@ -260,7 +260,7 @@ void Simon::Stand() {
 void Simon::Hurt() {
 	startHurt = GetTickCount();
 	isHurt = true;
-	if (isOnStair) return;
+	if (isOnStair || canGoDownStair || canGoUpStair) return;
 	vx = -0.1*nx;
 	vy = -0.4f;
 	y -= 17;
@@ -583,12 +583,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		isHurt = false;
 		isJump = false;
+		startHurt = 0;
 		if (health <= 0) {
 
 			SetState(SIMON_STATE_SIT_AFTER_FALL);
 		}
-		else 
-			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		else
+			isAutoWalkOnStair = true;
+			//SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -677,8 +679,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
+			if (!isOnStair && !canGoDownStair && !canGoUpStair) {
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
+			}
+
 			// if Item
 			if (dynamic_cast<Item *>(e->obj))
 			{
@@ -694,16 +699,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 				if (!isUntouchable) {
 					health -= 2;
-					if (e->obj->nx == nx) {
+					if (!isOnStair && !canGoDownStair && !canGoUpStair) {
+						if (e->obj->nx == nx) {
 
-						this->nx = -e->obj->nx;
+							this->nx = -e->obj->nx;
+						}
 					}
-					
 					SetState(SIMON_STATE_HURT);
 				}
 				else {
-					if (e->nx != 0) x += dx;
-					if (e->ny != 0) y += dy;
+					if (!isOnStair && !canGoDownStair && !canGoUpStair) {
+						if (e->nx != 0) x += dx;
+						if (e->ny != 0) y += dy;
+					}
 				}
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
