@@ -897,6 +897,11 @@ void CPlayScene::Render()
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
     }
+	else
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Render();
+	}
 }
 
 /*
