@@ -49,6 +49,8 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 #define SIMON_MAX_HEALTH	16						   
+#define SIMON_MAX_LIFE	5
+
 enum animation
 {
 	IDLE_LEFT,
@@ -95,7 +97,9 @@ class Simon : public CGameObject
 	int doorId;
 	int hearts = 5;
 	int health = SIMON_MAX_HEALTH;
-	//time variables	
+	int life = SIMON_MAX_LIFE;
+
+	//time variables
 	DWORD startSit;
 	DWORD startHurt;
 	DWORD startUntouchable;
@@ -205,6 +209,8 @@ public:
 	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
+	void SetLife(int _life) { life = _life; }
+	int GetLife() { return life; }
 
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }

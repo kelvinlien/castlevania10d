@@ -6,7 +6,7 @@
 #include "BrokenBrick.h"
 #include "Bat.h"
 #include "Fishman.h"
-
+#include "Board.h"
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -32,6 +32,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		SetPosition((Simon::GetInstance()->x - 20), Simon::GetInstance()->y);
 	else if (nx < 0)
 		SetPosition((Simon::GetInstance()->x - 80), Simon::GetInstance()->y);
+	Board* board = Board::Getinstance();
 
 	float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
