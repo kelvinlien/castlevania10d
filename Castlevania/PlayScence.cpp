@@ -827,13 +827,13 @@ void CPlayScene::Update(DWORD dt)
 		}
 
 		CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
-		if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+		if (Camera::GetInstance()->GetCamX() >= LIMIT_LEFT_CAM_22 && Camera::GetInstance()->GetCamX() < LIMIT_LEFT_CAM_23)
 		{
 			Area::GetInstance()->SetAreaID(22);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
 		}
-		else if (Camera::GetInstance()->GetCamX() >= 4096)
+		else if (Camera::GetInstance()->GetCamX() >= LIMIT_LEFT_CAM_23)
 		{
 			Area::GetInstance()->SetAreaID(23);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
@@ -973,6 +973,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				simon->SetState(SIMON_STATE_SIT);
 			break;
 		}
+		case DIK_K:
+			simon->SetPosition(3600, 0);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+			Area::GetInstance()->SetAreaID(22);
 		}
 	}
 }
