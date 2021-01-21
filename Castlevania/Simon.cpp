@@ -251,7 +251,7 @@ void Simon::Render()
 void Simon::Stand() {
 	if (isAttack || isJump || isOnStair)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
 		return;
-	y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+	y = y - ( SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT + 2);
 	isSit = false;
 	isFall = false;
 	isJump = false;
