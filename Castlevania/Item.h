@@ -21,7 +21,10 @@ enum ItemType
 	ITEM_DAGGER,
 	ITEM_CROSS,
 	ITEM_HOLY_WATER,
-	ITEM_CHICKEN_THIGH
+	ITEM_CHICKEN_THIGH,
+	ITEM_AXE,
+	ITEM_ORD,
+	ITEM_DOUBLE_SHOT
 };
 
 enum EffectType
@@ -37,7 +40,7 @@ class Item :public CGameObject {
 public:
 	LPANIMATION_SET ani_set;
 	float existingTime;
-	float effectTime;
+	float effectDuration;
 	int widthBBox;
 	int heightBBox;
 	bool isEaten;

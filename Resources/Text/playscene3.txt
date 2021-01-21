@@ -14,7 +14,8 @@
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
-75	..\Resources\Texture\steam.png	255	0	255
+75	..\Resources\Texture\broken_brick.png	255	0	255
+76	..\Resources\Texture\steam.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -228,8 +229,11 @@
 #hit effect
 70040	0	0	16	20	74
 
+#broken_brick
+70050	0	0	36	23	75
+
 #steam
-70050	0	0	14	28	75
+70060	0	0	14	28	76
 
 #Board element
 #Character
@@ -377,6 +381,16 @@
 #downing right
 122	11036	100	11037	100	11038	100
 
+#idle stair up left
+123	10012	100
+#idle stair up right
+124	11012	100
+#idle stair down left
+125	10017	100
+#idle stair down right
+126	11017	100
+
+
 # ==== FLOOR =========
 201	20001	100
 
@@ -450,8 +464,11 @@
 #hit effect
 704	70040	100
 
-#steam
+#broken_brick
 705	70050	100
+
+#steam
+706	70060	100
 
 # ==== BOARD ELEMENT =========
 #Character
@@ -575,7 +592,7 @@
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
 # SIMON
-1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122
+1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126
 # FLOOR 
 2	201
 # HOLDER
@@ -585,7 +602,7 @@
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506
 #EFFECT
-7	700	701	702	703	704	705
+7	700	701	702	703	704	705	706
 #BOARD
 8	800	801	802	803	804	805	806	807
 # SMALL BRICK
@@ -626,7 +643,7 @@
 8	928	280	11	0	-1
 
 # SIMON
-0	50	0	1
+0	128	120	1
 
 # WATER SURFACE
 12	0	410	0	1024	412
@@ -636,4 +653,4 @@
 #50	300	98	0	316	150	2
 
 [ENEMY]
-0	..\Resources\Text\Enemy.txt
+#0	..\Resources\Text\Enemy.txt

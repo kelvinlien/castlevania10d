@@ -1,166 +1,239 @@
 #include "Quadtree.h"
 
-Quadtree* Quadtree::__instance = NULL;
-bool Quadtree::IsContain(CGameObject * object)
-{
-	float l, t, r, b;
-	object->GetBoundingBox(l,t,r,b);
-
-	return !(r < m_region->left ||
-		b < m_region->top ||
-		l > m_region->right ||
-		t > m_region->bottom);
-}
 void Quadtree::Split()
 {
-	m_nodes = new Quadtree*[4];
-
-	long regionWidth = m_region->right - m_region->left;
-	long regionHeight = m_region->bottom - m_region->top;
+	level, region;
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
 
 	RECT tl, tr, bl, br;
-	tl.left = m_region->left;
-	tl.top = m_region->top;
-	tl.right = m_region->left + regionWidth / 2;
-	tl.bottom = m_region->top + regionHeight / 2;
-	m_nodes[0] = new Quadtree(m_level + 1,
+	tl.left = region.left;
+	tl.top = region.top;
+	tl.right = region.left + regionWidth / 2;
+	tl.bottom = region.top + regionHeight / 2;
+
+	tr.left = region.left + regionWidth / 2;
+	tr.top = region.top;
+	tr.right = region.right;
+	tr.bottom = region.top + regionHeight / 2;
+
+	bl.left = region.left;
+	bl.top = region.top + regionHeight / 2;
+	bl.right = region.left + regionWidth / 2;
+	bl.bottom = region.bottom;
+
+	br.left = region.left + regionWidth / 2;
+	br.top = region.top + regionHeight / 2;
+	br.right = region.right;
+	br.bottom = region.bottom;
+
+	if (nodes.empty())
+	{
+		nodes = vector<Quadtree*>(4);
+	}
+	nodes.at(0) = new Quadtree(level + 1,
 		tl);
-	tr.left = m_region->left + regionWidth / 2;
-	tr.top = m_region->top;
-	tr.right = m_region->right;
-	tr.bottom = m_region->top + regionHeight / 2;
-	m_nodes[1] = new Quadtree(m_level + 1,
+	nodes.at(1) = new Quadtree(level + 1,
 		tr);
-	bl.left = m_region->left;
-	bl.top = m_region->top + regionHeight / 2;
-	bl.right = m_region->left + regionWidth / 2;
-	bl.bottom = m_region->bottom;
-	m_nodes[2] = new Quadtree(m_level + 1,
+	nodes.at(2) = new Quadtree(level + 1,
 		bl);
-	br.left = m_region->left + regionWidth / 2;
-	br.top = m_region->top + regionHeight / 2;
-	br.right = m_region->right;
-	br.bottom = m_region->bottom;
-	m_nodes[3] = new Quadtree(m_level + 1,
+	nodes.at(3) = new Quadtree(level + 1,
 		br);
 }
-Quadtree::Quadtree()
+Quadtree::Quadtree(int pLevel, RECT pBounds)
 {
-	m_level = 1;
-	m_region->top = 0;
-	m_region->left = 0;
-	m_region->bottom = 600;
-	m_region->right = 800;
-	m_objects_list = NULL;
-	m_nodes = NULL;
-}
-Quadtree::Quadtree(int level, RECT region)
-{
-	m_level = level;
-	m_region->bottom = region.bottom;
-	m_region->top = region.top;
-	m_region->left = region.left;
-	m_region->right = region.right;
+	level = pLevel;
+	entities_list = vector<Entity*>();
+	region = pBounds;
+	nodes = vector<Quadtree*>(4);
 }
 Quadtree::~Quadtree()
 {
+	//delete region;
+	//delete entities_list;
+	//delete nodes;
+}
+
+//OUTPUT: an array of quadrant indexes
+vector<int> Quadtree::getIndexesForCamera(RECT * pRect)
+{
+	vector<int> indexes = vector<int>();
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
+	double verticalMidpoint = region.left + (regionWidth / 2);
+	double horizontalMidpoint = region.top + (regionHeight / 2);
+
+	long pRectWidth = pRect->right - pRect->left;
+	long pRectHeight = pRect->bottom - pRect->top;
+
+	// Object can completely fit within the top quadrants
+	//bool topQuadrant = (pRect->top < horizontalMidpoint && pRect->top + pRectHeight < horizontalMidpoint);
+	bool topHalf = ((pRect->top <= region.top && pRect->bottom >= region.top) || (pRect->top >= region.top && pRect->top <= horizontalMidpoint));
+	// Object can completely fit within the bottom quadrants
+	//bool bottomQuadrant = (pRect->top > horizontalMidpoint);
+	bool bottomHalf = ((pRect->bottom >= region.bottom && pRect->top <= region.bottom) || (pRect->bottom <= region.bottom && pRect->bottom >= horizontalMidpoint));
+	bool leftHalf = ((pRect->left <= region.left && pRect->right >= region.left) || (pRect->left >= region.left && pRect->left <= verticalMidpoint));
+	bool rightHalf = ((pRect->right >= region.right && pRect->left <= region.right) || (pRect->right <= region.right && pRect->right >= horizontalMidpoint));
+
+	// Object can completely fit within the left quadrants
+	if (leftHalf && topHalf)
+	{
+		indexes.push_back(0);
+	}
+	if (leftHalf && bottomHalf)
+	{
+		indexes.push_back(2);
+	}
+	// Object can completely fit within the right quadrants
+	if (rightHalf && topHalf)
+	{
+		indexes.push_back(1);
+	}
+	if (rightHalf && bottomHalf)
+	{
+		indexes.push_back(3);
+	}
+	return indexes;
+}
+int Quadtree::getIndex(RECT * pRect)
+{
+	int index = -1;
+	long regionWidth = region.right - region.left;
+	long regionHeight = region.bottom - region.top;
+	double verticalMidpoint = region.left + (regionWidth / 2);
+	double horizontalMidpoint = region.top + (regionHeight / 2);
+
+	long pRectWidth = pRect->right - pRect->left;
+	long pRectHeight = pRect->bottom - pRect->top;
+
+	// Object can completely fit within the top quadrants
+	bool topQuadrant = (pRect->top < horizontalMidpoint && pRect->top + pRectHeight < horizontalMidpoint);
+	// Object can completely fit within the bottom quadrants
+	bool bottomQuadrant = (pRect->top > horizontalMidpoint);
+
+	// Object can completely fit within the left quadrants
+	if (pRect->left < verticalMidpoint && pRect->left + pRectWidth < verticalMidpoint)
+	{
+		if (topQuadrant)
+		{
+			index = 0;
+		}
+		else if (bottomQuadrant)
+		{
+			index = 2;
+		}
+	}
+	// Object can completely fit within the right quadrants
+	else if (pRect->left > verticalMidpoint)
+	{
+		if (topQuadrant)
+		{
+			index = 1;
+		}
+		else if (bottomQuadrant)
+		{
+			index = 3;
+		}
+	}
+	return index;
 }
 void Quadtree::Clear()
 {
-	// Clear all nodes
-	if (m_nodes)
+	entities_list.clear();
+
+	for (int i = 0; i < nodes.size(); i++)
 	{
-		for (int i = 0; i < 4; i++)
+		// replace nullptr with empty vector with same type
+		if (nodes.at(i) != nullptr)
 		{
-			m_nodes[i]->Clear();
-			delete m_nodes[i];
-		}
-		delete[] m_nodes;
-	}
-
-	// Clear current Quadtree
-	m_objects_list->clear();
-
-	delete m_objects_list;
-	delete m_region;
-}
-
-void Quadtree::Insert(CGameObject* entity)
-{
-	// Insert entity into corresponding nodes
-	if (m_nodes)
-	{
-		if (m_nodes[0]->IsContain(entity))
-			m_nodes[0]->Insert(entity);
-		if (m_nodes[1]->IsContain(entity))
-			m_nodes[1]->Insert(entity);
-		if (m_nodes[2]->IsContain(entity))
-			m_nodes[2]->Insert(entity);
-		if (m_nodes[3]->IsContain(entity))
-			m_nodes[3]->Insert(entity);
-
-		return; // Return here to ignore rest.
-	}
-
-	// Insert entity into current quadtree
-	if (this->IsContain(entity))
-		m_objects_list->push_back(entity);
-
-	// Split and move all objects in list into itfs corresponding nodes
-	// Condition: current node region is little bigger than viewport and there's at least two objects in that node
-	if (m_objects_list->size() > MIN_OBJECT_NUMBER_TO_SPLIT && (m_region->right - m_region->left) > SCREEN_WIDTH && (m_region->bottom - m_region->top) > SCREEN_HEIGHT)
-	{
-		Split();
-
-		while (!m_objects_list->empty())
-		{
-			if (m_nodes[0]->IsContain(m_objects_list->back()))
-				m_nodes[0]->Insert(m_objects_list->back());
-			if (m_nodes[1]->IsContain(m_objects_list->back()))
-				m_nodes[1]->Insert(m_objects_list->back());
-			if (m_nodes[2]->IsContain(m_objects_list->back()))
-				m_nodes[2]->Insert(m_objects_list->back());
-			if (m_nodes[3]->IsContain(m_objects_list->back()))
-				m_nodes[3]->Insert(m_objects_list->back());
-
-			m_objects_list->pop_back();
+			nodes.at(i)->Clear();
+			nodes.at(i) = nullptr;
 		}
 	}
 }
 
-void Quadtree::Retrieve(vector<CGameObject*>* return_objects_list, CGameObject* entity)
+// check current node, find the correct index and add to the entities_list of node[index]
+// Split
+void Quadtree::Insert(Entity* entity)
 {
-	if (m_nodes)
+	RECT *pRect = &entity->GetTriggerZone();
+	if (nodes.at(0) != nullptr)
 	{
-		if (m_nodes[0]->IsContain(entity))
-			m_nodes[0]->Retrieve(return_objects_list, entity);
-		if (m_nodes[1]->IsContain(entity))
-			m_nodes[1]->Retrieve(return_objects_list, entity);
-		if (m_nodes[2]->IsContain(entity))
-			m_nodes[2]->Retrieve(return_objects_list, entity);
-		if (m_nodes[3]->IsContain(entity))
-			m_nodes[3]->Retrieve(return_objects_list, entity);
+		int index = getIndex(pRect);
 
-		return; // Return here to ignore rest.
+		if (index != -1)
+		{
+			nodes.at(index)->Insert(entity);
+
+			return;
+		}
 	}
 
-	// Add all entities in current region into return_objects_list
-	if (this->IsContain(entity))
+	entities_list.push_back(entity);
+
+	if (entities_list.size() > MAX_OBJECTS && level < MAX_LEVELS)
 	{
-		for (auto i = m_objects_list->begin(); i != m_objects_list->end(); i++)
+		if (nodes.at(0) == nullptr)
 		{
-			// might as well check this if the pointer is right
-			if (entity != *i)
-				return_objects_list->push_back(*i);
+			Split();
+		}
+
+		int i = 0;
+		while (i < entities_list.size())
+		{
+			int index = getIndex(&entities_list.at(i)->GetTriggerZone());
+			if (index != -1)
+			{
+				nodes.at(index)->Insert(entities_list.at(i));
+				entities_list.erase(entities_list.begin() + i);
+			}
+			else
+			{
+				i++;
+			}
 		}
 	}
 }
 
-Quadtree * Quadtree::GetInstance()
+//void Quadtree::Retrieve(vector<Entity*>* return_entities_list, Entity* entity)
+//{
+//	RECT* pRect = &entity->GetTriggerZone();
+//	vector<int> indexes = getIndex(pRect);
+//	if (!indexes.empty() && nodes.at(0) != nullptr)
+//	{
+//		for (int i = 0; i < indexes.size(); i++)
+//		{
+//			int index = indexes[i];
+//			nodes.at(index)->Retrieve(return_entities_list, entity);
+//		}
+//	}
+//
+//	return_entities_list->insert(return_entities_list->end(), entities_list.begin(), entities_list.end());
+//}
+
+void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 {
-	if (__instance == NULL)
+	Camera* cam = Camera::GetInstance();
+	float l, t, r, b;
+	l = cam->GetCamX();
+	t = cam->GetCamY();
+	r = l + 800;
+	b = t + 508;
+	RECT pRect;
+	pRect.left = l;
+	pRect.top = t;
+	pRect.right = r;
+	pRect.bottom = b;
+	vector<int> indexes = getIndexesForCamera(&pRect);
+	if (!indexes.empty() && nodes.at(0) != nullptr)
 	{
-		__instance = new Quadtree();
+		for (int i = 0; i < indexes.size(); i++)
+		{
+
+			int index = indexes[i];
+			nodes.at(index)->RetrieveFromCamera(return_entities_list);
+		}
 	}
-	return __instance;
+
+	return_entities_list.insert(return_entities_list.end(), entities_list.begin(), entities_list.end());
 }

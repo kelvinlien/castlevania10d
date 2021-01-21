@@ -1,6 +1,4 @@
 #pragma once
-
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 508
 

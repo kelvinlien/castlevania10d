@@ -1,29 +1,35 @@
 #include <list>
 #include "GameObject.h"
+#include "Entity.h"
 #include "Define.h"
-
+#include "Camera.h"
 
 #define MIN_OBJECT_NUMBER_TO_SPLIT 1
 
 class Quadtree
 {
-	static Quadtree* __instance;
-	int            m_level;
-	RECT*          m_region;
-	vector<CGameObject*>*         m_objects_list;
-	Quadtree**     m_nodes;
+	//static Quadtree* __instance;
+	int MAX_OBJECTS = 10;
+	int MAX_LEVELS = 5;
+	int            level = 0;
+	RECT          region;
+	vector<Entity*>         entities_list;
+	vector<Quadtree*>    nodes;
 
-	bool           IsContain(CGameObject* object);
 	void           Split();
 public:
-	Quadtree();
-	Quadtree(int level, RECT region);
+	//Quadtree();
+	Quadtree(int pLevel, RECT pBounds);
 	~Quadtree();
 
+	vector<int> getIndexesForCamera(RECT *pRect);
+	int getIndex(RECT* pRect);
 	void           Clear();
-	void           Insert(CGameObject* entity);
-	void          Retrieve(vector<CGameObject*>* return_objects_list, CGameObject* entity);
+	void           Insert(Entity* entity);
+	void          Retrieve(vector<Entity*>* return_entities_list, Entity* entity);
+	void          RetrieveFromCamera(vector<Entity*> &return_entities_list);
+	vector<Quadtree*> GetNodes() { return nodes; }
 
-	static Quadtree* GetInstance();
+	//static Quadtree* GetInstance();
 };
 

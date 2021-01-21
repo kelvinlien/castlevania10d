@@ -6,10 +6,6 @@ Entity::Entity()
 	triggerZone.top = 0;
 	triggerZone.right = 0;
 	triggerZone.bottom = 0;
-	activeZone.left = 0;
-	activeZone.top = 0;
-	activeZone.right = 0;
-	activeZone.bottom = 0;
 	width = 0;
 	height = 0;
 	start_x = 0;
@@ -17,17 +13,25 @@ Entity::Entity()
 	gameObj = NULL;
 }
 
-Entity::Entity(CGameObject * _gameObj, RECT _triggerZone, RECT _activeZone)
+Entity::Entity(CGameObject * _gameObj, float xTriggerDistance)
 {
-	triggerZone = _triggerZone;
-	activeZone = _activeZone;
+	gameObj = _gameObj;
 	start_x = gameObj->start_x;
 	start_y = gameObj->start_y;
 	float l, t, r, b;
 	_gameObj->GetBoundingBox(l, t, r, b);
 	width = r - l;
-	height = t - b;
-	gameObj = _gameObj;
+	height = b  - t;
+	if (xTriggerDistance < width / 2)
+	{
+		xTriggerDistance = width / 2;
+	}
+	float xCentralPoint = l + width / 2;
+	float yCentralPoint = t + height / 2;
+	triggerZone.top = yCentralPoint - VERTICAL_TRIGGER_DISTANCE;
+	triggerZone.bottom = yCentralPoint + VERTICAL_TRIGGER_DISTANCE;
+	triggerZone.left = xCentralPoint - xTriggerDistance;
+	triggerZone.right = xCentralPoint + xTriggerDistance;
 }
 
 
@@ -46,14 +50,12 @@ void Entity::SetTriggerZone(RECT zone)
 	triggerZone = zone;
 }
 
-RECT Entity::GetActiveZone()
+void Entity::GetTriggerZone(float & l, float & t, float & r, float & b)
 {
-	return activeZone;
-}
-
-void Entity::SetActiveZone(RECT zone)
-{
-	activeZone = zone;
+	l = triggerZone.left;
+	t = triggerZone.top;
+	r = triggerZone.right;
+	b = triggerZone.bottom;
 }
 
 float Entity::GetStartX()
@@ -74,5 +76,15 @@ float Entity::GetObjectWidth()
 float Entity::GetObjectHeight()
 {
 	return height;
+}
+
+void Entity::SetGameObject(CGameObject * _gameObj)
+{
+	gameObj = _gameObj;
+}
+
+CGameObject * Entity::GetGameObject()
+{
+	return gameObj;
 }
 
