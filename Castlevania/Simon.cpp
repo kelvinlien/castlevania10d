@@ -33,6 +33,7 @@ Simon::Simon() : CGameObject()
 	this->x = x;
 	this->y = y;
 	CWhip::GetInstance();
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
 }
 
 void Simon::SetState(int state)
@@ -203,6 +204,13 @@ void Simon::SetAnimation()
 	}
 
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+		if (isIdleIntro) ani = IDLE_INTRO;
+}
+
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->getType())));
 }
 
 void Simon::Render()
@@ -212,9 +220,10 @@ void Simon::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (isLevelUp) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	else if (isUntouchable) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, 127);
-	if (isAttack && !isUsingSubWeapon)
+	if (isAttack)
 	{
-		CWhip::GetInstance()->Render();
+		if (!isUsingSubWeapon || dynamic_cast<StopWatch *>(subWeapons))
+			CWhip::GetInstance()->Render();
 	}
 
 	animation_set->at(ani)->Render(x, y, color);
@@ -429,7 +438,7 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	if (flag || isAutoWalking)
+	if (flag || CGame::GetInstance()->GetCurrentSceneID() == 5 || isAutoWalking)
 		vx = nx * SIMON_WALKING_SPEED / 2;
 	else 	
 		vx = nx * SIMON_WALKING_SPEED;
@@ -659,7 +668,24 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (x >= SIMON_AUTO_GO_AHEAD_POSITION_X && x < SIMON_AUTO_GO_BACK_POSITION_X)
 			{
+				flag = true;
 				SetState(SIMON_STATE_AUTO);
+			}
+		}
+		else if (CGame::GetInstance()->GetCurrentSceneID() == 5)
+		{
+			if (x >= SIMON_AUTO_GO_LEFT_INTRO_X && flag == false)
+			{
+				SetState(SIMON_STATE_AUTO);
+			}
+			else {
+				SetState(SIMON_STATE_IDLE);
+				this->nx = 1;                        //need to change the simon direct when switch from intro 2 to scene 1
+				isIdleIntro = true;
+				if (introSceneTime == 0)
+					introSceneTime = GetTickCount();
+				else if (GetTickCount() - introSceneTime > 2000)
+					CGame::GetInstance()->SwitchScene(1);
 			}
 		}
 
@@ -720,7 +746,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
-				if(startBlinkEffect == 0)
+				if (startBlinkEffect == 0)
 					startBlinkEffect = GetTickCount();
 				if (GetTickCount() - startBlinkEffect >= 500)
 				{
@@ -732,7 +758,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					SetState(SIMON_STATE_IDLE);
 				}
 				else
-					BlinkEffect::GetInstance()->SetIsActive(true);		
+					BlinkEffect::GetInstance()->SetIsActive(true);
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
@@ -818,12 +844,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-			else if (dynamic_cast<CPortal *>(e->obj))
+			/*else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}
-			else if (dynamic_cast<CDoor *>(e->obj))
+			}*/
+			/*else if (dynamic_cast<CDoor *>(e->obj))
 			{
 				CDoor *door = dynamic_cast<CDoor *>(e->obj);
 				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
@@ -838,7 +864,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				{
 					x += dx;
 				}
-			}
+			}*/
 		}
 	}
 

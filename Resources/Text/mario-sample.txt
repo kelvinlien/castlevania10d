@@ -5,3 +5,5 @@ start	2
 1	..\Resources\Text\playscene1.txt
 2	..\Resources\Text\playscene2.txt
 3	..\Resources\Text\playscene3.txt
+4	..\Resources\Text\introscene1.txt
+5	..\Resources\Text\introscene2.txt

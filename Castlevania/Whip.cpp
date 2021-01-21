@@ -6,7 +6,6 @@
 #include "BrokenBrick.h"
 #include "Bat.h"
 #include "Fishman.h"
-
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()

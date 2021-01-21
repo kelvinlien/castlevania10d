@@ -13,6 +13,9 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
+#include "Background.h"
+#include "Title.h"
+#include "CastleAndBat.h"
 #include"Ghost.h"
 #include "RepeatableEffects.h"
 #include  "Bat.h"
@@ -23,6 +26,14 @@
 #include "Quadtree.h"
 #include "SmallBrick.h"
 #include "BrokenBrick.h"
+
+#define PLAY_SCENE_1_ID	1
+#define PLAY_SCENE_2_ID	2
+#define PLAY_SCENE_3_ID	3
+#define INTRO_SCENE_ID_1	4
+#define INTRO_SCENE_ID_2	5
+
+
 
 class CPlayScene: public CScene
 {
@@ -55,7 +66,8 @@ public:
 	virtual void Unload();
 	virtual void LoadTriggerStair();
 
-	Simon * GetPlayer() { return player; }
+	Simon * GetPlayer() { return player; } 
+	vector<LPGAMEOBJECT> GetObjects() { return objects; }
 	//friend class CPlayScenceKeyHandler;
 };
 

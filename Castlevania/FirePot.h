@@ -18,7 +18,7 @@
 
 class CFirePot :public CHolder
 {
-	DWORD break_time;
+	DWORD break_time = 0;
 	ItemType itemType;
 public:
 	CFirePot(int itemType);

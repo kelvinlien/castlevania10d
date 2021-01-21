@@ -51,7 +51,7 @@ class CFishman : public CEnemy
 		FISH_MAN_IDLE_RIGHT,
 		FISH_MAN_DIE,
 
-	}ani;
+	};
 public:
 
 	CFishman(float x, float y, int nx, int itemType);

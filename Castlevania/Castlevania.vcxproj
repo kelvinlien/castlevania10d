@@ -148,8 +148,12 @@
     <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="CastleAndBat.cpp" />
+    <ClCompile Include="Helicopter.cpp" />
     <ClCompile Include="Holder.cpp" />
     <ClCompile Include="HolyWater.cpp" />
+    <ClCompile Include="IntroBat.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Panther.cpp" />
@@ -161,6 +165,7 @@
     <ClCompile Include="SmallBrick.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="TriggerStair.cpp" />
+    <ClCompile Include="Title.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -189,6 +194,8 @@
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="CastleAndBat.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
@@ -199,8 +206,10 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameMap.h" />
     <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Helicopter.h" />
     <ClInclude Include="Holder.h" />
     <ClInclude Include="HolyWater.h" />
+    <ClInclude Include="IntroBat.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Panther.h" />
@@ -211,6 +220,7 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SmallBrick.h" />
     <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="TriggerStair.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />

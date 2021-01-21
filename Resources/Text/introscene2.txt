@@ -1,9 +1,22 @@
+# id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
+10	..\Resources\Texture\intro_scene_2.png	255	255	255
+11	..\Resources\Texture\intro_bat.png	255	0	255
+12	..\Resources\Texture\helicopter.png	255	0	255
+50	..\Resources\Texture\whip.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
+#INTRO SCENE 2
+0	0	0	512	448	10
+#INTRO BAT
+1	0	0	16	16	11
+2	16	0	32	16	11
+#HELICOPTER
+3	0	0	64	28	12
+
 #SIMON
 #intro
 10000	60	66	120	132	0
@@ -63,6 +76,7 @@
 #down
 11016	840	0	900	66	0
 11017	780	66	840	132	0
+
 #whip/use subweapon
 #standing
 11021	600	0	660	66	0
@@ -81,9 +95,47 @@
 11037	720	132	780	198	0
 11038	660	132	720	198	0
 
+#WEAPON
+#whip
+#left
+#lv1
+50001	0	0	160	68	50
+50002	160	0	320	68	50
+50003	320	0	480	68	50
+#lv2
+50006	0	68	160	136	50
+50007	160	68	320	136	50
+50008	320	68	480	136	50
+#lv3
+50011	0	136	160	204	50
+50012	160	136	320	204	50
+50013	320	136	480	204	50
+#right
+#lv1
+51001	1120	0	1280	68	50
+51002	960	0	1120	68	50
+51003	800	0	960	68	50
+#lv2
+51006	1120	68	1280	136	50
+51007	960	68	1120	136	50
+51008	800	68	960	136	50
+#lv3
+51011	1120	136	1280	204	50
+51012	960	136	1120	204	50
+51013	800	136	960	204	50
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+#INTRO SCENE 2
+0	0	100
+#INTRO BAT
+1	1	100	2	100
+#HELICOPTER
+2	3	100
+
 # ==== SIMON =========
+#idle intro
+100	10000	100
 #idle intro
 100	10000	100
 #idle left
@@ -149,15 +201,44 @@
 #idle stair down right
 126	11016	100	11017	100
 
-#
+# ==== WEAPON =========
+#WHIP
+#left
+501	50001	100	50002	120	50003	130
+502	50006	100	50007	120	50008	130
+503	50011	100	50012	120	50013	130
+#right
+511	51001	100	51002	120	51003	130
+512	51006	100	51007	120	51008	130
+513	51011	100	51012	120	51013	130
+
 # id	ani1	ani2	ani3
-#
 [ANIMATION_SETS]
+#INTRO SCENE 2
+2	0
+#INTRO BAT
+3	1
+#HELICOPTER
+4	2
+#WEAPON
+5	501	502	503	511	512	513
 # SIMON
 1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126	100
-
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = FirePot
+# type: 0 = Simon , 40 = intro scene 2, 41 = intro bat, 42 = helicopter
+#BACKGROUND
+120	0	0	2
+
+#INTRO_BAT
+13	300	160	3	-1
+13	70	200	3	1
+
+#HELICOPTER
+14	480	140	4
+
 # SIMON
-0	50.0	377	1
+0	500	0	1
+
+#FLOOR
+11	0	402	2
