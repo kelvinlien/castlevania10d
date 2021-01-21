@@ -744,9 +744,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 							isJump = false;
 							SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
-					if (isJump)
+					else if (isJump)
 					{
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+						y = y - (SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT + 2);
 						isJump = false;
 					}
 				}
