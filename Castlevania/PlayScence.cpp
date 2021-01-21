@@ -608,6 +608,7 @@ void CPlayScene::Load()
 	screen.bottom = screen.top + offset;
 	qtree = new Quadtree(0, screen);
 	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
+
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
@@ -730,8 +731,12 @@ void CPlayScene::Update(DWORD dt)
 			 float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
 			 if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
 			 {
-				 current->isVanish = true;
-				 delObjects.push_back(current);
+				
+				 if (!dynamic_cast<CBoss*>(current)) {
+					 current->isVanish = true;
+					 delObjects.push_back(current);
+				 }
+				 
 			 }
 			 else
 			 {
@@ -787,12 +792,10 @@ void CPlayScene::Update(DWORD dt)
 		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
     board->Update();
-	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
-	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
@@ -869,6 +872,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		else
 			simon->SetState(SIMON_STATE_SIT);
 		break;	
+
+	case DIK_M:
+		simon->SetPosition(4000, 0);
+		Camera::GetInstance()->SetCamPos(simon->x, 0);
 	}
 }
 
