@@ -63,6 +63,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (nx != 0){}
 		if (ny != 0) vy = 0;
+
 	}
 
 	// clean up collision events

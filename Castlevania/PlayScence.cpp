@@ -864,24 +864,11 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
-  
-	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
-	{
-		Area::GetInstance()->SetAreaID(22);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
-	}
-	else if (Camera::GetInstance()->GetCamX() >= 4096)
-	{
-		Area::GetInstance()->SetAreaID(23);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
-	}
-    board->Update();
 }
 
 void CPlayScene::Render()
 {
+	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
 	{
@@ -931,8 +918,7 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	
-
+	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID == INTRO_SCENE_ID_1) {
@@ -957,12 +943,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	else {
 		if (ID == INTRO_SCENE_ID_2) return;
-		Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt() && !simon->IsOnStair()) return;
-	if (simon->IsFall() && simon->IsOnStair()) return;
-	if (simon->IsFreeze()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+		if (simon->IsHurt()) return;
+		if (simon->IsFreeze()) return;
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 		switch (KeyCode)
 		{
 		case DIK_SPACE:
@@ -1011,9 +995,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	{
         if (ID == INTRO_SCENE_ID_2) return;
 	// disable control key when Simon die 
-	if (simon->IsHurt() && !simon->IsOnStair()) return;
-	if (simon->IsFall() && simon->IsOnStair()) return;
-
+	if (simon->IsHurt()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
@@ -1054,14 +1036,12 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-
+	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID != INTRO_SCENE_ID_1) {
         if(CGame::GetInstance()->GetCurrentSceneID() == INTRO_SCENE_ID_2) return;
-	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt() && !simon->IsOnStair()) return;
-	if (simon->IsFall() && simon->IsOnStair()) return;
+		if (simon->IsHurt()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;

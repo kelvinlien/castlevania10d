@@ -63,7 +63,6 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		x += movingSpeed * dt;
 		if (x > playerX && ((Area::GetInstance()->GetAreaID() == 21 && Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_FIRST_DOOR) || (Area::GetInstance()->GetAreaID() == 22 && Simon::GetInstance()->x < SIMON_AUTO_GO_THROUGH_SECOND_DOOR)))
 			isAuto = false;
-
 		else if (x >= playerX + 140)
 		{
 			Simon::GetInstance()->SetAutoWalking(false);

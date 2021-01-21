@@ -2,13 +2,9 @@
 #include "Weapon.h"
 #include "FirePot.h"
 #include "Simon.h"
-#include "Candle.h"
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"
-#include <algorithm>
-
-
 #define Bullet_BBOX_HEIGHT 16
 #define Bullet_BBOX_WIDTH 16
 #define Bullet_VX 0.35f
