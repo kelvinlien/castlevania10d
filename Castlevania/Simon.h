@@ -104,6 +104,7 @@ class Simon : public CGameObject
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
+	DWORD introSceneTime;
 	DWORD buffTime;
 	DWORD dieTime;
 	//to handle on stair
@@ -114,8 +115,7 @@ class Simon : public CGameObject
 	float backupOnStairX;
 	float backupOnStairY;
 
-
-	//Flag of Simon's state	
+	//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
@@ -131,6 +131,7 @@ class Simon : public CGameObject
 	bool isAutoWalking = false;
 	//flag is true when simon comes and render portal, back part of the castle  	
 	bool flag;
+	bool isIdleIntro = false;
 
 	//Flag of trigger stair
 	bool readyToUpStair;
@@ -177,6 +178,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
+	void ReLoadAllAniSet();
 
 	//Getter & setter
 	bool IsJump() { return isJump; }
@@ -211,8 +213,7 @@ public:
 	int GetHearts() { return hearts; }
 	void SetLife(int _life) { life = _life; }
 	int GetLife() { return life; }
-
-
+	void SetIsIdleIntro(bool a) { isIdleIntro = a; }
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 	CWeapon * GetSubWeapon() { return subWeapons; }
 	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}

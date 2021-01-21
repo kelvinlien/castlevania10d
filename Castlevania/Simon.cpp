@@ -204,6 +204,13 @@ void Simon::SetAnimation()
 	}
 
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+		if (isIdleIntro) ani = IDLE_INTRO;
+}
+
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->getType())));
 }
 
 void Simon::Render()
@@ -430,7 +437,7 @@ void Simon::Walk()
 {
 	if (isAttack || isSit || isJump)
 		return;
-	if (flag || isAutoWalking)
+	if (flag || CGame::GetInstance()->GetCurrentSceneID() == 5 || isAutoWalking)
 		vx = nx * SIMON_WALKING_SPEED / 2;
 	else 	
 		vx = nx * SIMON_WALKING_SPEED;
@@ -656,6 +663,22 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			else if (x >= SIMON_AUTO_GO_AHEAD_POSITION_X && x < SIMON_AUTO_GO_BACK_POSITION_X)
 			{
 				SetState(SIMON_STATE_AUTO);
+			}
+		}
+		else if (CGame::GetInstance()->GetCurrentSceneID() == 5)
+		{
+			if (x >= SIMON_AUTO_GO_LEFT_INTRO_X && flag == false)
+			{
+				SetState(SIMON_STATE_AUTO);
+			}
+			else {
+				SetState(SIMON_STATE_IDLE);
+				this->nx = 1;                        //need to change the simon direct when switch from intro 2 to scene 1
+				isIdleIntro = true;
+				if (introSceneTime == 0)
+					introSceneTime = GetTickCount();
+				else if (GetTickCount() - introSceneTime > 2000)
+					CGame::GetInstance()->SwitchScene(1);
 			}
 		}
 

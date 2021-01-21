@@ -14,6 +14,9 @@
 #include "Door.h"
 #include "Fishman.h"
 #include "WaterSurface.h"
+#include "Background.h"
+#include "Helicopter.h"
+#include "IntroBat.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
@@ -51,13 +54,24 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_BROKEN_BRICK	8
 #define OBJECT_TYPE_WATER_SURFACE	12
 #define OBJECT_TYPE_BAT	20
+#define OBJECT_TYPE_INTRO_FLOOR		11
+#define OBJECT_TYPE_HELICOPTER		14
+#define OBJECT_TYPE_INTRO_BAT		13
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_EFFECT	21
 
 #define OBJECT_TYPE_PORTAL	50
 
+#define OBJECT_TYPE_CASTLE_AND_BAT	100
+#define OBJECT_TYPE_PUSH_ANY_KEY	110
+#define OBJECT_TYPE_BACKGROUND	120
+
+
+
+
 #define MAX_SCENE_LINE 1024
+#define OBJECT_TYPE_BACKGROUND	120
 
 wchar_t * ConvertToWideChar(char * p)
 {
@@ -236,8 +250,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = Simon::GetInstance(); 
-		player = (Simon*)obj;  
+		obj = Simon::GetInstance();
+		player = (Simon*)obj;
+		player->ReLoadAllAniSet();
+		Simon::GetInstance()->SetIsIdleIntro(false);
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -337,6 +353,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BROKEN_BRICK:
 		obj = new CBrokenBrick(brickType, itemType);
 		break;
+	case OBJECT_TYPE_INTRO_FLOOR: {
+
+		//first brick
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj = new CBrick();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(ani_set);
+		objects.push_back(obj);
+
+		for (int i = 1; i < 35; i++) {
+			obj = new CBrick();
+			obj->SetPosition(x + BRICK_WIDTH * i, y);
+			obj->SetAnimationSet(ani_set);
+			objects.push_back(obj);
+		}
+		break;
+	}
 	case OBJECT_TYPE_FIREPOT: {
 		int type = atof(tokens[4].c_str());
 
@@ -362,19 +395,47 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWaterSurface(x, y, r, b);
 	}
 	break;
+	
+	case OBJECT_TYPE_HELICOPTER: {
+		obj = new CHelicopter();
+		break;
+	}
+
+	case OBJECT_TYPE_INTRO_BAT: {
+		int nx= atof(tokens[4].c_str());
+		obj = new CIntroBat(x,y,nx);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
-		int scene_id = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
+			float r = atof(tokens[4].c_str());
+			float b = atof(tokens[5].c_str());
+			int scene_id = atoi(tokens[6].c_str());
+			obj = new CPortal(x, y, r, b, scene_id);
+		}
+		break;
+	case OBJECT_TYPE_BACKGROUND:
+	{
+		obj = new Background();
+		break;
 	}
-	break;
+	case OBJECT_TYPE_PUSH_ANY_KEY:
+	{
+		obj = new Title();
+		break;
+	}
+	case OBJECT_TYPE_CASTLE_AND_BAT:
+	{
+		obj = new CastleAndBat();
+		break;
+	}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
+	
 
 	// General object setup
 	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
@@ -590,19 +651,19 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	board=Board::Getinstance();
-	board->SetState_OnBoard(currentMapID);
-	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
-	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
-	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
-	RECT screen;
-	screen.left = 0;
-	screen.top = 0;
-	int offset = mapWidth > mapHeight ? mapWidth : mapHeight;
-	screen.right = screen.left + offset;
-	screen.bottom = screen.top + offset;
-	qtree = new Quadtree(0, screen);
-	Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
+	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != INTRO_SCENE_ID_2)
+	{
+        mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+	    RECT screen;
+	    screen.left = 0;
+	    screen.top = 0;
+	    int offset = mapWidth > mapHeight ? mapWidth : mapHeight;
+	    screen.right = screen.left + offset;
+        screen.bottom = screen.top + offset;
+	    qtree = new Quadtree(0, screen);
+        Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
+    }
+    DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
@@ -791,11 +852,10 @@ void CPlayScene::Render()
 	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
-	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
+	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
+	{
+        CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 	board->Render();
-	
-	for (int i = 0; i < activeEntities.size(); i++)
-		activeEntities[i]->GetGameObject()->Render();
 
 	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
@@ -816,6 +876,9 @@ void CPlayScene::Render()
 	else if (id == 3)
 		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 			TriggerStairs::GetInstance()->Get(i)->Render();
+    }
+    for (int i = 0; i < activeEntities.size(); i++)
+		activeEntities[i]->GetGameObject()->Render();
 }
 
 /*
@@ -842,19 +905,48 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
-	switch (KeyCode) {
-	case DIK_SPACE:
-		if (!simon->IsJump()) {
-			if (simon->IsLevelUp()) return;
-			simon->SetState(SIMON_STATE_JUMP);
+	if (ID == INTRO_SCENE_ID_1) {
+		vector<LPGAMEOBJECT> objects = ((CPlayScene*)scence)->GetObjects();
+
+		if (GetTickCount() < CASTLE_AND_BAT_ACTIVE_TIME) return;
+		switch (KeyCode)
+		{
+		case DIK_RETURN:
+			for (int i = 0; i < objects.size(); i++) {
+				LPGAMEOBJECT e = objects[i];
+				if (dynamic_cast<Title*> (e)) {
+					if (e->GetState() == TITLE_STATE_BLINK) return;
+					e->SetState(TITLE_STATE_BLINK);
+				}
+				if (dynamic_cast<CastleAndBat*> (e)) {
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_ACTIVE)->SetLock(true);
+					CAnimationSets::GetInstance()->Get(0)->at(CASTLE_AND_BAT_ANI_IDLE)->SetLock(true);
+				}
+			}
 		}
-		break;
-	case DIK_A: {
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_ATTACK);
-		break;
 	}
+	else {
+        if (ID == INTRO_SCENE_ID_2) return;
+		if (simon->IsHurt()) return;
+
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+		switch (KeyCode)
+		{
+		case DIK_SPACE:
+			if (!simon->IsJump()) {
+				if (simon->IsLevelUp()) return;
+				simon->SetState(SIMON_STATE_JUMP);
+			}
+			break;
+		case DIK_A:
+		{
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_ATTACK);
+			break;
+		}
 	case DIK_DOWN:
 		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
@@ -874,17 +966,22 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 
 	Camera* cam = Camera::GetInstance();
+	
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
+	if (ID != INTRO_SCENE_ID_1)
+	{
+        if (ID == INTRO_SCENE_ID_2) return;
 	// disable control key when Simon die 
 	if (simon->IsHurt()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
-	if (game->IsKeyDown(DIK_RIGHT)) {
-		if (simon->IsLevelUp() || simon->IsAttack()) return;
-		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	}
+		if (game->IsKeyDown(DIK_RIGHT)) {
+			if (simon->IsLevelUp() || simon->IsAttack()) return;
+			simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		}
 	else if (game->IsKeyDown(DIK_LEFT)) {
 		if (simon->IsLevelUp() || simon->IsAttack()) return;
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
@@ -914,10 +1011,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		simon->SetState(SIMON_STATE_IDLE);
 	}
 }
+}
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
+	int ID = CGame::GetInstance()->GetCurrentSceneID();
+
+	if (ID != INTRO_SCENE_ID_1) {
+        if(CGame::GetInstance()->GetCurrentSceneID() == INTRO_SCENE_ID_2) return;
+		if (simon->IsHurt()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
@@ -935,4 +1037,5 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 			simon->SetState(SIMON_STATE_STAND);
 		break;
 	}
+    }
 }
