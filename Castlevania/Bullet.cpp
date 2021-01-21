@@ -29,8 +29,6 @@ void Bullet::Render() {
 
 
 
-
-
 void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 
 	CGameObject::Update(dt, coObjects);
@@ -59,47 +57,22 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 		float rdx = 0;
 		float rdy = 0;
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
+		x += dx;
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CFirePot*>(e->obj))
-			{
-				//this->isVanish = true;
-				//e->obj->isVanish = true;
-				x += dx;
-			}
-			if (dynamic_cast<CCandle*>(e->obj))
-			{
-				//this->isVanish = true;
-				//e->obj->isVanish = true;
-				x += dx;
-			}
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				x += dx;
+				this->isVanish = true;
 			}
 			if (dynamic_cast<Simon*>(e->obj))
 			{
-				this->x += dx;
-			
-				if (!Simon::GetInstance()->IsUntouchable()) {
-					int health  = Simon::GetInstance()->GetHealth();
-					health -= 2;
-					Simon::GetInstance()->SetHealth(health);
-					if (Simon::GetInstance()->nx == this->nx) {
-
-						Simon::GetInstance()->nx = -this->nx;
-					}
-
-					Simon::GetInstance()->SetState(SIMON_STATE_HURT);
-				}
-				else {
-					if (e->nx != 0) Simon::GetInstance()->x += dx;
-					if (e->ny != 0) Simon::GetInstance()->y += dy;
-				}
+				Simon* simon = Simon::GetInstance();
+				simon->SetHealth(simon->GetHealth() - 2);
+				simon->SetState(SIMON_STATE_HURT);
 			}
+
 		}
 
 		// clean up collision events
