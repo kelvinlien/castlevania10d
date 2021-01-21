@@ -421,7 +421,7 @@ void Simon::Jump()
 {
 	if (isJump || isSit || isAttack || isHurt || isOnStair)
 		return;
-	vy = -SIMON_JUMP_SPEED_Y * 1.5;
+	vy = -SIMON_JUMP_SPEED_Y;
 	isJump = true;
 }
 
@@ -638,6 +638,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
 		if (!isHurt) {
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
@@ -680,10 +683,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (!isOnStair && !canGoDownStair && !canGoUpStair) {
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
-			}
+			//if (!isOnStair && !canGoDownStair && !canGoUpStair) {
+			//	x += min_tx * dx + nx * 0.4f;
+			//	y += min_ty * dy + ny * 0.4f;
+			//}
 
 			// if Item
 			if (dynamic_cast<Item *>(e->obj))
