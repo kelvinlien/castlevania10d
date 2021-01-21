@@ -9,8 +9,8 @@
 #define LIMIT_LEFT_CAM_23	4096
 #define LIMIT_RIGHT_CAM_23	4833
 
-#define RESPAWN_POS_22	3172
-#define RESPAWN_POS_23	4176
+#define RESPAWN_POS_22	3122
+#define RESPAWN_POS_23	4126
 class Area
 {
 	int areaID = 0;
