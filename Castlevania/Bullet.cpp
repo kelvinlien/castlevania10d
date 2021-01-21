@@ -68,9 +68,35 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 				//e->obj->isVanish = true;
 				x += dx;
 			}
+			if (dynamic_cast<CCandle*>(e->obj))
+			{
+				//this->isVanish = true;
+				//e->obj->isVanish = true;
+				x += dx;
+			}
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
 				x += dx;
+			}
+			if (dynamic_cast<Simon*>(e->obj))
+			{
+				x += dx;
+			
+				if (!Simon::GetInstance()->IsUntouchable()) {
+					int health  = Simon::GetInstance()->GetHealth();
+					health -= 2;
+					Simon::GetInstance()->SetHealth(health);
+					if (Simon::GetInstance()->nx == this->nx) {
+
+						Simon::GetInstance()->nx = -this->nx;
+					}
+
+					Simon::GetInstance()->SetState(SIMON_STATE_HURT);
+				}
+				else {
+					if (Simon::GetInstance()->nx != 0) Simon::GetInstance()->x += dx;
+					if (Simon::GetInstance()->GetDirect() != 0) Simon::GetInstance()->y += dy;
+				}
 			}
 		}
 

@@ -3,6 +3,7 @@
 #include "WeaponManager.h"	
 #include "Whip.h"	
 #include "Enemy.h"	
+#include "Bullet.h"
 #include <map> 	
 #include "GameMap.h"	
 #include "Utils.h"	

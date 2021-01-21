@@ -47,7 +47,6 @@ void Board::Render()
 		HP_set->at(38)->Render((x + 260) + i * 10, 72);
 	}
 	//simon
-	DebugOut(L" BOARD HEALTH RENDER----- : %d\n", board_health);
 	for (int i = 0; i < board_health; i++)
 	{
 		HP_set->at(37)->Render((x + 260) + i * 10, 52);
@@ -115,7 +114,6 @@ void Board::Update()
 		if (simon->GetHearts() == 0)
 			isFinish = false;
 	}
-		DebugOut(L" BOARD HEALTH UPDATE : %d\n",board_health);
 	SetSpriteSubWeap();
 	if (Simon::GetInstance()->IsDoubleShot() && flashingTime == 0)
 		flashingTime = GetTickCount();
