@@ -401,12 +401,12 @@ void Simon::AutoWalkOnStair() {
 			game->GetInstance()->SwitchScene(2);
 			aboveStairOutPoint = 439;
 			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
-			SetPosition(3168, 400);
+			SetPosition(3152, 376);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
 		}
 
-		backupOnStairX = this->x;
-		backupOnStairY = this->y;
-		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 	else if (currentstair == 20)
 	{
@@ -416,12 +416,12 @@ void Simon::AutoWalkOnStair() {
 			game->GetInstance()->SwitchScene(2);
 			aboveStairOutPoint = 439;
 			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
-			SetPosition(3168, 300);
+			SetPosition(3152, 376);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
 		}
 
-		backupOnStairX = this->x;
-		backupOnStairY = this->y;
-		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 	if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
 			SetState(SIMON_STATE_IDLE);
@@ -445,7 +445,6 @@ void Simon::Sit()
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isJump = false;
 	isSit = true;
-
 }
 
 void Simon::Jump()
