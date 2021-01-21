@@ -497,7 +497,8 @@ void CPlayScene::Load()
 	effects= CRepeatableEffects::GetInstance();		// create instance of effects
 
 	if (id == 2)
-		LoadTriggerStair();
+		if(TriggerStairs::GetInstance()->GetTriggerStairs().size()==NULL)
+			LoadTriggerStair();
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
 	switch (currentMapID) {
@@ -778,8 +779,12 @@ void CPlayScene::Render()
 	// nhet camera vaoo truoc tham so alpha = 255
 	CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 	
-	for (int i = 0; i < activeEntities.size(); i++)
-		activeEntities[i]->GetGameObject()->Render();
+	/*for (int i = 0; i < activeEntities.size(); i++)
+		activeEntities[i]->GetGameObject()->Render();*/
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Render();
+	}
 
 	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
@@ -810,7 +815,6 @@ void CPlayScene::Unload()
 		objects[i] = NULL;
 		delete objects[i];
 	}
-
 	objects.clear();
 	player = NULL;
 

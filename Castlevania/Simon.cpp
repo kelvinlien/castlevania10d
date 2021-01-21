@@ -393,15 +393,32 @@ void Simon::AutoWalkOnStair() {
 		simonAutoWalkDistance = 0;
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
-	if (currentstair == 19)
+
+	if (currentstair == 18)
+	{
+
+		if (y+SIMON_BBOX_HEIGHT > 442 && nx==1)
+		{
+			aboveStairOutPoint = 120;
+			belowStairOutPoint = 215;
+			game->GetInstance()->SwitchScene(3);
+			currentstair = 19;
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+	}
+	else if (currentstair == 19)
 	{
 		aboveStairOutPoint = 120;
 		if (GetPostionY() < 120 )
 		{
 			game->GetInstance()->SwitchScene(2);
+			currentstair = 18;
 			aboveStairOutPoint = 439;
+			belowStairOutPoint = 480;
 			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
-			SetPosition(3152, 376);
+			SetPosition(3168, 408);
 			backupOnStairX = this->x;
 			backupOnStairY = this->y;
 			SetState(SIMON_STATE_IDLE_ON_STAIR);
@@ -414,14 +431,31 @@ void Simon::AutoWalkOnStair() {
 		if (GetPostionY() < 120)
 		{
 			game->GetInstance()->SwitchScene(2);
+			currentstair = 21;
 			aboveStairOutPoint = 439;
-			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
-			SetPosition(3152, 376);
+			belowStairOutPoint = 480;
+			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+			SetPosition(3808, 408);
 			backupOnStairX = this->x;
 			backupOnStairY = this->y;
 			SetState(SIMON_STATE_IDLE_ON_STAIR);
 		}
 
+	}
+	else if (currentstair == 21)
+	{
+		if (y + SIMON_BBOX_HEIGHT > 442 && nx == 1) 
+		{
+			aboveStairOutPoint = 120;
+			belowStairOutPoint = 278;
+			game->GetInstance()->SwitchScene(3);
+			currentstair = 20;
+			Camera::GetInstance()->SetCamPos(200, 0);
+			SetPosition(768, 120);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
 	}
 	if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
 			SetState(SIMON_STATE_IDLE);
@@ -528,6 +562,7 @@ void Simon::CalcPotentialCollisions(
 
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
+	DebugOut(L"[CurrentStair] %d \n", currentstair);
 	CGameObject::Update(dt);
 	if (!canGoUpStair && !canGoDownStair && !isOnStair)
 		vy += SIMON_GRAVITY * dt;
@@ -652,24 +687,8 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
 			StopAtFirstStepOnStair();
-			if (currentstair == 18)
-			{
-				aboveStairOutPoint = 120;
-				game->GetInstance()->SwitchScene(3);
-				backupOnStairX = this->x;
-				backupOnStairY = this->y;
-				SetState(SIMON_STATE_IDLE_ON_STAIR);
-			}
-			else if (currentstair == 21)
-			{
-				aboveStairOutPoint = 120;
-				game->GetInstance()->SwitchScene(3);
-				Camera::GetInstance()->SetCamPos(200, 0);
-				SetPosition(768, 120);
-				backupOnStairX = this->x;
-				backupOnStairY = this->y;
-				SetState(SIMON_STATE_IDLE_ON_STAIR);
-			}
+			
+			
 		}
 	}
 	else
