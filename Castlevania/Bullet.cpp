@@ -27,6 +27,46 @@ void Bullet::Render() {
 	}
 }
 
+void Bullet::CalcPotentialCollisions(
+	vector<LPGAMEOBJECT> *coObjects,
+	vector<LPCOLLISIONEVENT> &coEvents)
+{
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<CFirePot *>(coObjects->at(i)) && !dynamic_cast<CCandle *>(coObjects->at(i)))
+		{
+
+			//Check collision AABB of Simon & Bullet
+			if (dynamic_cast<Simon *>(coObjects->at(i)))
+			{
+				{
+					float l1, t1, r1, b1;
+					float l2, t2, r2, b2;
+
+					GetBoundingBox(l1, t1, r1, b1);
+					Simon::GetInstance()->GetBoundingBox(l2, t2, r2, b2);
+
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					{
+						this->x += dx;
+						return;
+					}
+				}
+			}
+
+			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
+
+		}
+
+	}
+
+	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
+}
+
 
 
 void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
@@ -80,7 +120,7 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 			}
 			if (dynamic_cast<Simon*>(e->obj))
 			{
-				x += dx;
+				this->x += dx;
 			
 				if (!Simon::GetInstance()->IsUntouchable()) {
 					int health  = Simon::GetInstance()->GetHealth();
@@ -94,8 +134,8 @@ void Bullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 					Simon::GetInstance()->SetState(SIMON_STATE_HURT);
 				}
 				else {
-					if (Simon::GetInstance()->nx != 0) Simon::GetInstance()->x += dx;
-					if (Simon::GetInstance()->GetDirect() != 0) Simon::GetInstance()->y += dy;
+					if (e->nx != 0) Simon::GetInstance()->x += dx;
+					if (e->ny != 0) Simon::GetInstance()->y += dy;
 				}
 			}
 		}

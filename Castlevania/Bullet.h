@@ -6,6 +6,9 @@
 #include "Camera.h"
 #include "Define.h"
 #include "Utils.h"
+#include <algorithm>
+
+
 #define Bullet_BBOX_HEIGHT 16
 #define Bullet_BBOX_WIDTH 16
 #define Bullet_VX 0.35f
@@ -19,6 +22,7 @@ public:
 	Bullet();
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 	void Render();
 	void SetAnimation();
 };
