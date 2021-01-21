@@ -84,6 +84,8 @@
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== SIMON =========
+#idle intro
+100	10000	100
 #idle left
 101	10001	100
 #idle right
@@ -137,12 +139,22 @@
 #downing right
 122	11036	100	11037	100	11038	100
 
+#idle stair up left
+123	10011	100	10012	100
+#idle stair up right
+124	11011	100	11012	100
+
+#idle stair down left
+125	10016	100	10017	100
+#idle stair down right
+126	11016	100	11017	100
+
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # SIMON
-1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122
+1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126	100
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type

@@ -230,17 +230,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	CGameObject *obj = NULL;
 
-	CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
+	//CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
 
-	Entity* panther = new Entity(panTest, 160);
-	DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
+	//Entity* panther = new Entity(panTest, 160);
+	//DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
 
-	CCandle *canTest = new CCandle(1);
-	canTest->SetPosition(600, 100);
+	//CCandle *canTest = new CCandle(1);
+	//canTest->SetPosition(600, 100);
 
-	Entity* candle = new Entity(canTest, 0);
-	RECT triggerZone = candle->GetTriggerZone();
-	DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
+	//Entity* candle = new Entity(canTest, 0);
+	//RECT triggerZone = candle->GetTriggerZone();
+	//DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
 
 	switch (object_type)
 	{
@@ -569,24 +569,6 @@ void CPlayScene::Load()
 
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 
-	switch (currentMapID) {
-		//case 1:
-		//	Area::GetInstance()->SetAreaID(11);
-		//	//Area::GetInstance()->SetLimitLeftCam(0);
-		//	//Area::GetInstance()->SetLimitRightCam(mapWidth);
-		//	break;
-	case 2:
-		Area::GetInstance()->SetAreaID(21);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
-		break;
-		/*case 3:
-		Area::GetInstance()->SetAreaID(31);
-		break;*/
-	default:
-		break;
-	}
-
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -632,6 +614,7 @@ void CPlayScene::Load()
 		if (line[0] == '[') { 
 			section = SCENE_SECTION_UNKNOWN; continue; }	
 
+
 		//
 		// data section
 		//
@@ -653,6 +636,7 @@ void CPlayScene::Load()
 	//to assign mapWidth
 	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != INTRO_SCENE_ID_2)
 	{
+		int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
         mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	    RECT screen;
 	    screen.left = 0;
@@ -662,6 +646,27 @@ void CPlayScene::Load()
         screen.bottom = screen.top + offset;
 	    qtree = new Quadtree(0, screen);
         Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
+		board = Board::Getinstance();
+
+		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
+
+		switch (currentMapID) {
+		case 1:
+			Area::GetInstance()->SetAreaID(11);
+			Area::GetInstance()->SetLimitLeftCam(0);
+			Area::GetInstance()->SetLimitRightCam(mapWidth);
+			break;
+		case 2:
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			break;
+			/*case 3:
+			Area::GetInstance()->SetAreaID(31);
+			break;*/
+		default:
+			break;
+		}
     }
     DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -694,120 +699,147 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
-	qtree->Clear();
-
-	for (size_t i = 0; i < objects.size(); i++)
+	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	if (currentMapID == INTRO_SCENE_ID_1 || currentMapID == INTRO_SCENE_ID_2)
 	{
-		if (delObjects.size() > 0)
+		vector<LPGAMEOBJECT> coObjects;
+		for (size_t i = 0; i < objects.size(); i++)
 		{
-			std::vector<CGameObject*>::iterator it;
-			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
-			if (it != delObjects.end())	// Neu objects[i] thuoc mang delObjects
+			coObjects.push_back(objects[i]);
+		}
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			objects[i]->Update(dt, &coObjects);
+		}
+	}
+	else {
+		qtree->Clear();
+
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (delObjects.size() > 0)
 			{
-				Board::Getinstance()->RewardingPoints(objects[i]);
-				objects.erase(objects.begin() + i);
-				delObjects.erase(it);
+				std::vector<CGameObject*>::iterator it;
+				it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
+				if (it != delObjects.end())	// Neu objects[i] thuoc mang delObjects
+				{
+					Board::Getinstance()->RewardingPoints(objects[i]);
+					objects.erase(objects.begin() + i);
+					delObjects.erase(it);
+				}
+				else // Neu khong thuoc mang delObjects
+				{
+					Entity *entity = new Entity(objects[i], 0);
+					qtree->Insert(entity);
+				}
 			}
-			else // Neu khong thuoc mang delObjects
+			else
 			{
 				Entity *entity = new Entity(objects[i], 0);
 				qtree->Insert(entity);
 			}
 		}
-		else
+
+		activeEntities.clear();
+		qtree->RetrieveFromCamera(activeEntities);
+		vector<LPGAMEOBJECT> coObjects;
+		for (size_t i = 0; i < activeEntities.size(); i++)
 		{
-			Entity *entity = new Entity(objects[i], 0);
-			qtree->Insert(entity);
+			coObjects.push_back(activeEntities[i]->GetGameObject());
 		}
+		for (size_t i = 0; i < activeEntities.size(); i++)
+		{
+			CGameObject *current = activeEntities[i]->GetGameObject();
+
+			if (current->isVanish == true)
+			{
+				if (dynamic_cast<CFirePot*>(current)) {
+					CGameObject *obj; //temp obj to create item
+
+					CFirePot *firePot = dynamic_cast<CFirePot*>(current);
+
+					ItemType type = firePot->GetItemType();
+					obj = new Item(firePot->x, firePot->y, type);
+					objects.push_back(obj);
+				}
+				else if (dynamic_cast<CGhost*>(current)) {
+					CGameObject *obj; //temp obj to create item
+
+					CGhost *Ghost = dynamic_cast<CGhost*>(current);
+
+					ItemType type = Ghost->GetItemType();
+					obj = new Item(Ghost->x, Ghost->y, type);
+					objects.push_back(obj);
+				}
+				else if (dynamic_cast<CCandle*>(current)) {
+					CGameObject *obj; //temp obj to create item
+
+					CCandle *candle = dynamic_cast<CCandle*>(current);
+
+					ItemType type = candle->GetItemType();
+					obj = new Item(candle->x, candle->y, type);
+					objects.push_back(obj);
+				}
+				else if (dynamic_cast<CBrokenBrick*>(current)) {
+					CGameObject *obj; //temp obj to create item
+
+					CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(current);
+
+					if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
+					{
+						ItemType type = brokenBrick->GetItemType();
+						obj = new Item(brokenBrick->x, brokenBrick->y, type);
+						objects.push_back(obj);
+					}
+				}
+				delObjects.push_back(current);
+			}
+			else if (dynamic_cast<CEnemy*>(current)) {
+				CEnemy *enemy = dynamic_cast<CEnemy*>(current);
+				float eX = enemy->GetPostionX();
+				int eD = enemy->GetDirect();
+				float l, t, r, b;
+				enemy->GetBoundingBox(l, t, r, b);
+				float eBBWidth = r - l;
+				float camLeftLimit = Camera::GetInstance()->GetCamX();
+				float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
+				if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
+				{
+					current->isVanish = true;
+					delObjects.push_back(current);
+				}
+				else
+				{
+					if (BlinkEffect::GetInstance()->GetIsActive())
+					{
+						if (enemy->GetState() != 30)
+							// Conventional state for enemy: death is 30
+							enemy->SetState(30);
+					}
+					current->Update(dt, &coObjects);
+				}
+			}
+			else
+			{
+				current->Update(dt, &coObjects);
+			}
+		}
+
+		CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
+		if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+		{
+			Area::GetInstance()->SetAreaID(22);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Camera::GetInstance()->GetCamX() >= 4096)
+		{
+			Area::GetInstance()->SetAreaID(23);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+		board->Update();
 	}
-
-	activeEntities.clear();
-	qtree->RetrieveFromCamera(activeEntities);
-	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < activeEntities.size(); i++)
-	{
-		coObjects.push_back(activeEntities[i]->GetGameObject());
-	}
-	for (size_t i = 0; i < activeEntities.size(); i++)
-	{
-		CGameObject *current = activeEntities[i]->GetGameObject();
-		
-		 if (current->isVanish == true)
-		 {
-			 if (dynamic_cast<CFirePot*>(current)) {
-				 CGameObject *obj; //temp obj to create item
-
-				 CFirePot *firePot = dynamic_cast<CFirePot*>(current);
-				
-				 ItemType type = firePot->GetItemType();
-				 obj = new Item(firePot->x, firePot->y, type);
-				 objects.push_back(obj);
-			 }
-			 else if (dynamic_cast<CGhost*>(current)) {
-				 CGameObject *obj; //temp obj to create item
-
-				 CGhost *Ghost = dynamic_cast<CGhost*>(current);
-
-				 ItemType type = Ghost->GetItemType();
-				 obj = new Item(Ghost->x, Ghost->y, type);
-				 objects.push_back(obj);
-			 }
-			 else if (dynamic_cast<CCandle*>(current)) {
-				 CGameObject *obj; //temp obj to create item
-
-				 CCandle *candle = dynamic_cast<CCandle*>(current);
-
-				 ItemType type = candle->GetItemType();
-				 obj = new Item(candle->x, candle->y, type);
-				 objects.push_back(obj);
-			 }
-			 else if (dynamic_cast<CBrokenBrick*>(current)) {
-				 CGameObject *obj; //temp obj to create item
-
-				 CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(current);
-
-				 if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
-				 {
-					 ItemType type = brokenBrick->GetItemType();
-					 obj = new Item(brokenBrick->x, brokenBrick->y, type);
-					 objects.push_back(obj);
-				 }
-			 }
-			 delObjects.push_back(current);
-		 }
-		 else if (dynamic_cast<CEnemy*>(current)) {
-			 CEnemy *enemy = dynamic_cast<CEnemy*>(current);
-			 float eX = enemy->GetPostionX();
-			 int eD = enemy->GetDirect();
-			 float l, t, r, b;
-			 enemy->GetBoundingBox(l, t, r, b);
-			 float eBBWidth = r - l;
-			 float camLeftLimit = Camera::GetInstance()->GetCamX();
-			 float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
-			 if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
-			 {
-				 current->isVanish = true;
-				 delObjects.push_back(current);
-			 }
-			 else
-			 {
-				 if (BlinkEffect::GetInstance()->GetIsActive())
-				 {
-					 if (enemy->GetState() != 30)
-						// Conventional state for enemy: death is 30
-						enemy->SetState(30);
-				 }
-				 current->Update(dt, &coObjects);
-			 }
-		 }
-		 else
-		 {
-			 current->Update(dt, &coObjects);
-		 }
-	}
-
-	CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
@@ -831,31 +863,16 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
-	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
-	{
-		Area::GetInstance()->SetAreaID(22);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
-	}
-	else if (Camera::GetInstance()->GetCamX() >= 4096)
-	{
-		Area::GetInstance()->SetAreaID(23);
-		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
-		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
-	}
-    board->Update();
-	DebugOut(L"UPDATE ______________\n");
 }
 
 void CPlayScene::Render()
 {
-	DebugOut(L"------RENDER---------\n");
 	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
 	{
         CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
-	board->Render();
+		board->Render();
 
 	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
@@ -876,9 +893,15 @@ void CPlayScene::Render()
 	else if (id == 3)
 		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 			TriggerStairs::GetInstance()->Get(i)->Render();
-    }
-    for (int i = 0; i < activeEntities.size(); i++)
+	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
+    }
+	for (int i = 0; i < objects.size(); i++)
+	{
+		if (i == 101)
+			DebugOut(L"something wrong");
+		objects[i]->Render();
+	}
 }
 
 /*
@@ -901,10 +924,6 @@ void CPlayScene::Unload()
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt()) return;
-	if (simon->IsFreeze()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID == INTRO_SCENE_ID_1) {
@@ -928,11 +947,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 	}
 	else {
-        if (ID == INTRO_SCENE_ID_2) return;
+		if (ID == INTRO_SCENE_ID_2) return;
 		if (simon->IsHurt()) return;
-
+		if (simon->IsFreeze()) return;
 		// disable control key when Simon die or enter an auto area
-		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO) return;
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 		switch (KeyCode)
 		{
 		case DIK_SPACE:
@@ -947,16 +966,19 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			simon->SetState(SIMON_STATE_ATTACK);
 			break;
 		}
-	case DIK_DOWN:
-		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
-			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
-				return;
-		if (simon->IsLevelUp()) return;
-		if (simon->IsOnStair())
-			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
-		else
-			simon->SetState(SIMON_STATE_SIT);
-		break;	
+		case DIK_DOWN:
+		{
+			for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+				if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
+					return;
+			if (simon->IsLevelUp()) return;
+			if (simon->IsOnStair())
+				simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+			else
+				simon->SetState(SIMON_STATE_SIT);
+			break;
+		}
+		}
 	}
 }
 

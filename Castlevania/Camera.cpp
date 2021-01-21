@@ -74,6 +74,7 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		x = playerX;
 		y = 0.0f;
 	}
+	DebugOut(L"playerX and Area limits %f %f %f\n", playerX, Area::GetInstance()->GetLimitLeftCam(), Area::GetInstance()->GetLimitRightCam());
 }
 
 Camera * Camera::GetInstance()
