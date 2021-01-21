@@ -30,34 +30,34 @@ Board::~Board()
 
 void Board::Render()
 {
-	ani_set->at(0)->Render(x + 140, y + 20);
-	font->Render(std::to_string(score), x + 245, 35, 8);
-	font->Render(std::to_string(time), x + 440, 35, 4);
-	font->Render(std::to_string(stage), x + 620, 35, 2);
-	font->Render(std::to_string(simon->GetHearts()), x + 540, 55, 2);
-	font->Render(std::to_string(simon->GetLife()), x + 540, 75, 2);
+	ani_set->at(0)->Render(x, y);
+	font->Render(std::to_string(score), x + 105, 15, 8);
+	font->Render(std::to_string(time), x + 300, 15, 4);
+	font->Render(std::to_string(stage), x + 480, 15, 2);
+	font->Render(std::to_string(simon->GetHearts()), x + 400, 35, 2);
+	font->Render(std::to_string(simon->GetLife()), x + 400, 55, 2);
 	//Khung HP 
 	for (int i = 0; i < 16; i++)
 	{
-		HP_set->at(39)->Render((x + 260) + i * 10, 52);
-		HP_set->at(39)->Render((x + 260) + i * 10, 72);
+		HP_set->at(39)->Render((x + 120) + i * 10, 32);
+		HP_set->at(39)->Render((x + 120) + i * 10, 52);
 	}
 	//enemy
 	for (int i = 0; i < 16; i++)
 	{
-		HP_set->at(38)->Render((x + 260) + i * 10, 72);
+		HP_set->at(38)->Render((x + 120) + i * 10, 52);
 	}
 	//simon
 	for (int i = 0; i < board_health; i++)
 	{
-		HP_set->at(37)->Render((x + 260) + i * 10, 52);
+		HP_set->at(37)->Render((x + 120) + i * 10, 32);
 	}
 	if(time_flag)
 		healtime = GetTickCount();
 	if (sprite != NULL)
-		sprite->Draw(x+452.0f, y +52.7f,255);
+		sprite->Draw(x+312.0f, y +32.7f,255);
 	if(Simon::GetInstance()->IsDoubleShot())
-	doubleShot->Draw(x + 452.0f, y + 55.0f, GenerateAlpha());
+	doubleShot->Draw(x + 312.0f, y + 35.0f, GenerateAlpha());
 }
 
 void Board::Update()

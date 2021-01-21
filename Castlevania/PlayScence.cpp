@@ -647,6 +647,7 @@ void CPlayScene::Load()
 	    qtree = new Quadtree(0, screen);
         Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 		board = Board::Getinstance();
+		board->SetState_OnBoard(currentMapID);
 
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 
