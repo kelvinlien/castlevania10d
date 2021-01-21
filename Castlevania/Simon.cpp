@@ -396,8 +396,9 @@ void Simon::AutoWalkOnStair() {
 
 	if (currentstair == 18)
 	{
-
-		if (y+SIMON_BBOX_HEIGHT > 442 && nx==1)
+		aboveStairOutPoint = 438;
+		belowStairOutPoint = 480;
+		if (y+SIMON_BBOX_HEIGHT > 472 && nx==1)
 		{
 			aboveStairOutPoint = 120;
 			belowStairOutPoint = 215;
@@ -415,7 +416,7 @@ void Simon::AutoWalkOnStair() {
 		{
 			game->GetInstance()->SwitchScene(2);
 			currentstair = 18;
-			aboveStairOutPoint = 439;
+			aboveStairOutPoint = 438;
 			belowStairOutPoint = 480;
 			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
 			SetPosition(3168, 408);
@@ -432,7 +433,7 @@ void Simon::AutoWalkOnStair() {
 		{
 			game->GetInstance()->SwitchScene(2);
 			currentstair = 21;
-			aboveStairOutPoint = 439;
+			aboveStairOutPoint = 438;
 			belowStairOutPoint = 480;
 			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_23, 0);
 			SetPosition(3808, 408);
@@ -444,6 +445,8 @@ void Simon::AutoWalkOnStair() {
 	}
 	else if (currentstair == 21)
 	{
+		aboveStairOutPoint = 438;
+		belowStairOutPoint = 480;
 		if (y + SIMON_BBOX_HEIGHT > 442 && nx == 1) 
 		{
 			aboveStairOutPoint = 120;
