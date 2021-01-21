@@ -10,6 +10,7 @@
 #include "Font.h"
 #include "Enemy.h"
 #include "Holder.h"
+#include "Item.h"
 #define BOARD_ID 12
 #define ENEMY_POINT_WORTH	10
 #define HOLDER_POINT_WORTH	5

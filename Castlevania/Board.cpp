@@ -150,4 +150,12 @@ void Board::RewardingPoints(CGameObject * obj)
 	{
 		SetScore(GetScore() + HOLDER_POINT_WORTH);
 	}
+	else if (dynamic_cast<Item*>(obj))
+	{
+		Item* item = dynamic_cast<Item*>(obj);
+		if (item->isEaten)
+		{
+			SetScore(GetScore() + ITEM_POINT_WORTH);
+		}
+	}
 }
