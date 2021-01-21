@@ -385,7 +385,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 	}
 	//when simon level up whip
 	CheckLevelUpState(dt);
-	if (state == SIMON_STATE_DIE && GetTickCount64() - dieTime > 1000)
+	if (state == SIMON_STATE_DIE && GetTickCount() - dieTime > 1000)
 	{
 		ResetSimon();
 		dieTime = 0;
@@ -398,7 +398,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 
 		if (health <= 0) {
 			SetState(SIMON_STATE_DIE);
-			dieTime = GetTickCount64();
+			dieTime = GetTickCount();
 		}
 		else
 			SetState(SIMON_STATE_STAND);
@@ -599,6 +599,7 @@ void Simon::ResetSimon()
 	isBuff = false;
 	nx = 1;
 	cam=Camera::GetInstance();
+	SetHealth(2);
 	SetState(SIMON_STATE_IDLE);
 	ReLoadAllAniSet();
 	switch(area->GetInstance()->GetAreaID())

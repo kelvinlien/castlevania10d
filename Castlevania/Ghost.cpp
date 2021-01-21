@@ -11,6 +11,7 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	isActive=true;
 	this->xbackup = x;
 	this->ybackup = y;
+	isVanish = false;
 	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
@@ -26,6 +27,8 @@ void CGhost::SetState(int state)
 void CGhost::Respawn()
 {
 	//x = xbackup;
+	isVanish = false;
+
 	y = ybackup;
 	srand(time(NULL));
 	int res = rand() % (2 - 1 + 1) + 1;
@@ -92,17 +95,6 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (nx != 0){}
 		if (ny != 0) vy = 0;
-
-
-		
-		 //Collision logic with other objects
-		//for (UINT i = 0; i < coEventsResult.size(); i++)
-		//{
-		//	LPCOLLISIONEVENT e = coEventsResult[i];
-		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
-		//	{
-		//	}
-		//}
 	}
 
 	// clean up collision events
