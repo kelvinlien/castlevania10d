@@ -644,6 +644,7 @@ void CPlayScene::Update(DWORD dt)
 			it = std::find(delObjects.begin(), delObjects.end(), objects[i]);
 			if (it != delObjects.end())	// Neu objects[i] thuoc mang delObjects
 			{
+				Board::Getinstance()->RewardingPoints(objects[i]);
 				objects.erase(objects.begin() + i);
 				delObjects.erase(it);
 			}

@@ -8,7 +8,12 @@
 #include "Utils.h"
 #include "Simon.h"
 #include "Font.h"
+#include "Enemy.h"
+#include "Holder.h"
 #define BOARD_ID 12
+#define ENEMY_POINT_WORTH	10
+#define HOLDER_POINT_WORTH	5
+#define ITEM_POINT_WORTH	5
 class Board
 {
 	float x = 0.0f;
@@ -40,7 +45,7 @@ public:
 	void Update();
 	int GenerateAlpha();
 
-	void SetScore(int _score) { this->score += _score; }
+	void SetScore(int _score) { this->score = _score; }
 	int GetScore() { return score; }
 
 	void SetTime(int _time) { this->time = time; }
@@ -50,5 +55,6 @@ public:
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }
 	void SetSpriteSubWeap();
+	void RewardingPoints(CGameObject* obj);
 	static Board* Getinstance();
 };

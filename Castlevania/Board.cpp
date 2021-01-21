@@ -139,3 +139,15 @@ void Board::SetSpriteSubWeap()
 		sprite = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
 	else sprite = NULL;
 }
+
+void Board::RewardingPoints(CGameObject * obj)
+{
+	if (dynamic_cast<CEnemy*>(obj))
+	{
+		SetScore(GetScore() + ENEMY_POINT_WORTH);
+	}
+	else if (dynamic_cast<CHolder*>(obj))
+	{
+		SetScore(GetScore() + HOLDER_POINT_WORTH);
+	}
+}
