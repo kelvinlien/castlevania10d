@@ -49,7 +49,7 @@
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
-#define SIMON_MAX_HEALTH	16						   
+#define SIMON_MAX_HEALTH	16			   
 enum animation
 {
 	IDLE_LEFT,
@@ -202,6 +202,8 @@ public:
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
 	bool IsFreeze() { return isFreeze; }
 	bool IsDoubleShot() { return isDoubleShot; }
+	bool IsFall() { return isFall; }
+
 
 	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHearts(int _hearts) { hearts = _hearts; }

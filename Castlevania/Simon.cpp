@@ -274,6 +274,7 @@ void Simon::SitAfterFall() {
 		isOnStair = false;
 		y += 20;
 		vy = 0.4f;
+		vx = 0;
 	}
 	else {
 		y += 17;
@@ -477,7 +478,6 @@ void Simon::CalcPotentialCollisions(
 					if (!(r1 < l2 || l1 > r2 || t1 > b2|| b1 < t2))
 					{
 						item->BeingProcessed();
-						DebugOut(L"[Info] subWeapons: %d\n", subWeapons);
 						continue;
 					}
 				}
@@ -571,6 +571,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		else 
 			SetState(SIMON_STATE_STAND);
 	}
+
 	if (isUntouchable && (GetTickCount() - startUntouchable > SIMON_UNTOUCHABLE_TIME))
 	{
 		startUntouchable = 0;
