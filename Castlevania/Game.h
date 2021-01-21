@@ -7,6 +7,8 @@
 #include <d3dx9.h>
 
 #define DIRECTINPUT_VERSION 0x0800
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
+#define ALTERNATE_BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
 #include <dinput.h>
 
 #include "Scence.h"
@@ -17,6 +19,7 @@ using namespace std;
 
 class CGame
 {
+	D3DCOLOR backgroundColor = BACKGROUND_COLOR;
 	static CGame * __instance;
 	HWND hWnd;									// Window handle
 
@@ -47,6 +50,8 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 public:
+	HWND GetHWnd() { return hWnd; }
+	
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
 	void Init(HWND hWnd);
@@ -59,6 +64,9 @@ public:
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	int GetCurrentSceneID() { return current_scene; }
 	void SwitchScene(int scene_id);
+
+	void SetBackgroundColor(D3DCOLOR newColor) { backgroundColor = newColor; }
+	D3DCOLOR GetBackgroundColor() { return backgroundColor; }
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -81,6 +89,9 @@ public:
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
+	void Update(DWORD dt);
+	void Render();
+	int Run();
 
 	//void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 

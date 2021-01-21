@@ -1,26 +1,30 @@
-[ENEMY]
-0	..\Resources\Text\Enemy.txt
-
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	..\Resources\Texture\simon.png	255	0	255
 1	..\Resources\Texture\simon-death.png	255	0	255
 20	..\Resources\Texture\floor_2.png	255	255	255
+21	..\Resources\Texture\small_brick.png	255	255	255
+22	..\Resources\Texture\4_small_bricks.png	255	255	255
+23	..\Resources\Texture\3_small_bricks.png	255	255	255
 30	..\Resources\Texture\holder.png	255	0	255
 40	..\Resources\Texture\item.png	255	0	255
 50	..\Resources\Texture\whip.png	255	0	255
 51	..\Resources\Texture\dagger.png	255	0	255
 52	..\Resources\Texture\holy_water.png	255	0	255
+53	..\Resources\Texture\axe.png	255	0	255
 70	..\Resources\Texture\burn.png	255	0	255
 71	..\Resources\Texture\effect400.png	255	0	255
 72	..\Resources\Texture\effect700.png	255	0	255
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
+75	..\Resources\Texture\blink-effect.png	0	0	0
+76	..\Resources\Texture\broken_brick.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
 200	..\Resources\Texture\texture-map-2.png	255	255	255
-
+100	..\Resources\Texture\enemy_bullet.png	255	0	255
+82	..\Resources\Texture\board.png	255	0	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #MAP2
@@ -208,6 +212,15 @@
 #FLOOR
 20001	0	0	33	29	20
 
+#SMALL BRICK
+20002	0	160	16	176	200
+
+#4 SMALL BRICKS
+20003	0	0	32	32	22
+
+#3 SMALL BRICKS
+20004	0	0	32	32	23
+
 #HOLDERS
 #FIREPOT
 30001	0	0	32	64	30
@@ -237,14 +250,22 @@
 40012	194	0	224	32	40
 #dagger
 40016	162	0	194	18	40
-
 #Cross
 40018	224	0	256	32	40
-
 #Holy water item
 40019	30	32	62	64	40
+#Chicken thigh
+40020	62	32	94	58	40
+#Axe
+40021	256	0	286	28	40
+#Ord
+40022	234	34	258	62	40
+40023	260	34	258	62	40
+#Double Shot
+40024	94	32	122	60	40
 
-
+#chicken thigh
+40020	62	32	94	58	40
 
 #WEAPON
 #whip
@@ -287,10 +308,24 @@
 #Right
 51017	136	4	152	20	52
 #Using effect
-50018	45	0	51	26	52
-50019	74	2	86	26	52
+50018	32	0	64	26	52
+50019	64	0	96	26	52
 50020	96	0	128	26	52
 
+#Axe
+#Left
+50021	210	0	240	28	53
+50022	180	0	210	28	53
+50023	150	0	180	28	53
+50024	120	0	150	28	53
+#Right
+51021	0	0	30	28	53
+51022	30	0	60	28	53
+51023	60	0	90	28	53
+51024	90	0	120	28	53
+
+#enemy_bullet
+50030	0	0	10	12	100
 #Effect
 #Burn
 70000	18	10	24	36	70
@@ -308,6 +343,9 @@
 
 #hit effect
 70040	0	0	16	20	74
+
+#broken_brick
+70050	0	0	36	23	76
 
 #Board element
 #Character
@@ -393,7 +431,7 @@
 
 #Orange
 80038	22	0	32	17	81
-
+80039	11	0	21	17	81
 #Door
 #Closed
 90000	3	0	19	96	90
@@ -403,7 +441,8 @@
 
 #Opened
 90002	96	0	176	96	90
-
+#board
+100000	0	0	520	80	82
 #mapID	filematrix map
 [MAPMATRIX]
 
@@ -466,9 +505,26 @@
 #downing right
 122	11036	100	11037	100	11038	100
 
+#idle stair up left
+123	10012	100
+#idle stair up right
+124	11012	100
+#idle stair down left
+125	10017	100
+#idle stair down right
+126	11017	100
 
 # ==== FLOOR =========
 201	20001	100
+
+# ==== SMALL BRICK ====
+202	20002	100
+
+# ==== 4 SMALL BRICKS ====
+203	20003	100
+
+# ==== 3 SMALL BRICKS ====
+204	20004	100
 
 # ==== HOLDER =========
 #fire pot
@@ -500,7 +556,14 @@
 417	40018	100
 #Holy water
 418	40019	100
-
+#Chicken thigh
+419	40020	100
+#Axe
+420	40021	100
+#Ord
+421	40022	100	40023	100
+#Double Shot
+422	40024	100
 # ==== WEAPON =========
 #whip
 #left
@@ -523,8 +586,16 @@
 #right
 515	51017	100
 # using
-506	50018	100	50019	100	50020	100
+506	50018	100	50019	100	50020	100	50019	100
 
+#Axe
+#Left
+507	50021	100	50022	100	50023	100	50024	100
+#Right
+517	51021	100	51022	100	51023	100	51024	100
+
+#enemy_bullet
+508	50030	100
 # ==== EFFECT =========
 #Burn
 700	70000	100	70001	100	70002	100
@@ -538,6 +609,9 @@
 
 #hit effect
 704	70040	100
+
+#broken_brick
+705	70050	100
 
 # ==== BOARD ELEMENT =========
 #Character
@@ -651,86 +725,153 @@
 
 #-
 836	80036	100
-
+#board
+999	100000	100
 #Health
 #Red
 837	80037	100
 #Orange
 838	80038	100
-
+839	80039	100
 # ==== DOOR =========
 #Closed
 900	90000	100
-#Opening
-901	90001	100
 #Opened
-902	90002	100
-
-
+901	90002	200
+#Ani Opening
+902	90000	100	90001	200	90002	200
+#Ani Closing
+903	90002	100	90001	200	90000	200
 
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # SIMON
-1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122
+1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126
 # FLOOR 
 2	201
 # HOLDER
 3	301	302	303
 # ITEMS
-4	401	402	406	407	408	411	412	416	417	418
+4	401	402	406	407	408	411	412	416	417	418	419	420	421	422
 #WEAPON
-5	501	502	503	511	512	513	504	514	505	515	506
+5	501	502	503	511	512	513	504	514	505	515	506	507	517	508
 #EFFECT
-7	700	701	702	703	704
+7	700	701	702	703	704	705
 #BOARD
-8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
+8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838	839
 #DOOR
-9	900	901	902
+9	900	901	902	903
+# SMALL BRICK
+10	202
+# BROKEN BRICK
+11	201	203	204
+#board
+12	999
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
+<<<<<<<<< Temporary merge branch 1
+# type: 0 = Simon , 1 = Brick, 2 = Ghost, 3 = Firepot, 4 = Candle
+=========
+# type: 0 = Simon , 1 = Brick
+>>>>>>>>> Temporary merge branch 2
 
-# type: 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle
+# 0 = Simon , 1 = Brick, 3 = Firepot, 4 = Candle, 5 = BrickGroup, 6=Door, 8=Broken Brick, 9=Small Brick Group
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----
 1	0	441	2
-
 # ---- Candle ----
-4	55	378	3	4
-4	183	314	3	1
-4	311	378	3	1
-4	439	314	3	0
-4	567	378	3	0
+4	55	378	3	11
+4	183	314	3	6
+4	311	378	3	3
+4	439	314	3	7
+4	567	378	3	5
 4	693	314	3	0
-#4	821	378	3	0
-#4	949	314	3	0
-#4	1077	378	3	0
-#4	1205	314	3	0
-#4	1333	186	3	0
-#4	1461	378	3	3
-#4	1589	122	3	10
-#4	1717	186	3	1
-#4	1845	378	3	3
-#4	1973	186	3	0
-#4	2101	378	3	0
-#4	2229	378	3	0
-#4	2357	378	3	0
-#4	2485	378	3	0
-#4	2613	378	3	0
-#4	2741	314	3	0
-#4	2869	186	3	0
-#4	2997	122	3	9
-#4	3127	378	3	3
-#4	3255	186	3	1
-#4	3383	154	3	0
-#4	3511	314	3	0
+4	821	378	3	0
+4	949	314	3	0
+4	1077	378	3	0
+4	1205	314	3	0
+4	1333	186	3	0
+4	1461	378	3	3
+4	1589	122	3	10
+4	1717	186	3	1
+4	1845	378	3	3
+4	1973	186	3	0
+4	2101	378	3	0
+4	2229	378	3	0
+4	2357	378	3	0
+4	2485	378	3	0
+4	2613	378	3	0
+4	2741	314	3	0
+4	2869	186	3	0
+4	2997	122	3	9
+4	3127	378	3	3
+4	3255	186	3	1
+4	3383	154	3	0
+4	3511	314	3	0
+4	3671	156	3	1
+4	3767	380	3	0
+4	3895	124	3	8
+4	4023	188	3	0
+4	4151	316	3	1
+4	4279	188	3	0
+4	4407	252	3	0
+4	4535	188	3	11
+4	4663	380	3	0
+4	4789	316	3	12
+4	4917	380	3	0
+4	5045	380	3	0
+4	5173	316	3	1
+4	5301	380	3	0
+4	5429	316	3	0
+4	5557	316	3	1
 
+#BRICK GROUPS
+5	1376	311	2	3
+5	1504	247	2	10
+5	1856	311	2	5
+5	2784	247	2	17
+5	3328	311	2	3
+5	3712	279	2	2
+5	3776	311	2	3
+5	3904	247	2	13
+5	4032	119	2	2
+5	4352	311	2	11
+5	5440	375	2	1
+5	5536	311	2	3
+
+#SMALL BRICK GROUP
+9	3056	120	10	2	1
+9	3056	280	10	10	1
+9	3072	120	10	2	1
+9	3072	280	10	10	1
+9	3584	280	10	6	1
+9	3584	457	10	8	0
+9	3584	441	10	8	0
+9	3600	280	10	7	0
+9	3616	376	10	4	1
+9	3696	312	10	8	1
+9	4080	280	10	10	1
+9	5600	120	10	6	1
+9	5600	344	10	6	1
+
+#DOOR
+6	3056	152	9	1
+6	4080	152	9	2
 # SIMON
-0	50.0	0	1
+0	150.0	350	1
+#BROKEN_BRICK
+8	3584	376	11	1	-1
+8	3584	408	11	2	10
+8	2016	312	11	0	4
+8	5472	376	11	0	-1
+
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
-50	300	98	0	316	150	2
+#50	300	98	0	316	150	2
+[ENEMY]
+0	..\Resources\Text\Enemy.txt

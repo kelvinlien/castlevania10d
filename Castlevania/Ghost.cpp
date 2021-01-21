@@ -1,7 +1,8 @@
 ﻿#include "Ghost.h"
 #include "Simon.h"
-CGhost::CGhost(float x, float y, int nx):CEnemy()
+CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 {
+	SetItem(itemType);
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
@@ -10,17 +11,40 @@ CGhost::CGhost(float x, float y, int nx):CEnemy()
 	vx = GHOST_WALKING_SPEED * this->nx;
 
 }
+void CGhost::SetState(int state)
+{
+	CEnemy::SetState(state);
+	if (state == ENEMY_STATE_DIE)
+	{
+		die_time = GetTickCount();
+		vx = 0;
+	}
+}
 void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > GHOST_DIE_TIME))
+		isVanish = true;
+	else if (state != ENEMY_STATE_DIE && isLock != true)
+		vx = GHOST_WALKING_SPEED * this->nx;
+
 	CGameObject::Update(dt);
+
 	vy += GHOST_GRAVITY * dt;
+	vector<LPGAMEOBJECT> coObjectsGhost;
+
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CBrick *>(coObjects->at(i)))
+
+			coObjectsGhost.push_back(coObjects->at(i));
+	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
 	if(isActive)
-	  CalcPotentialCollisions(coObjects, coEvents);
+	  CalcPotentialCollisions(&coObjectsGhost, coEvents);
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -41,18 +65,12 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (ny != 0) vy = 0;
 
 
-		//
-		// Collision logic with other objects
-		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
-			{
-				
-			}
-		}
+		
+		 //Collision logic with other objects
+		//	if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
+		//	{
+		//	}
+		//}
 	}
 
 	// clean up collision events
@@ -61,16 +79,22 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 }
 
 void CGhost::Render() {
+	
 	ani = GHOST_ANI_RIGHT;
-	if (this->nx < 0)
+	if (this->nx < 0 && state != ENEMY_STATE_DIE)
 		ani = GHOST_ANI_LEFT;
+	else if (state == ENEMY_STATE_DIE)
+		ani = GHOST_ANI_DIE;
 
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
-	animation_set->at(ani)->Render(x, y, color);
-
+	animation_set->at(ani)->Render(x, y ,color);
+	RenderBoundingBox();
 }
 
 void CGhost::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-
+	left = x;
+	top = y;
+	right = x + GHOST_BBOX_WIDTH;
+	bottom = y + GHOST_BBOX_HEIGHT;
 }

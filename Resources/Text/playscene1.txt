@@ -1,6 +1,8 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 100	..\Resources\Texture\texture-map-1.png	255	255	255
+75	..\Resources\Texture\blink-effect.png	0	0	0
+76	..\Resources\Texture\blink-effect-switch-scene.png	255	255	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -80,7 +82,6 @@
 
 #MAP1
 1	..\Resources\Text\matrix-map-1.txt
-
 
 [FLOOR]
 0	..\Resources\Text\Floor.txt

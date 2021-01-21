@@ -1,11 +1,16 @@
 #pragma once
 #include "Weapon.h"
 #include "Dagger.h"
-
+#include "HolyWater.h"
+#include "StopWatch.h"
+#include "Axe.h"
 
 enum Available
 {
 	DAGGER,
+	HOLYWATER,
+	STOPWATCH,
+	AXE
 };
 
 class WeaponManager {
@@ -16,7 +21,8 @@ class WeaponManager {
 	int amount;
 public:
 
-	//getter & setter 
+	//getter & setter
+	Available GetAvailable() { return available; }
 	int getAmount() { return this->amount; };
 	CWeapon *createWeapon(Available available);
 	static WeaponManager * GetInstance();
