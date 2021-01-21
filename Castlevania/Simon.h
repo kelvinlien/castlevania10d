@@ -3,6 +3,7 @@
 #include "WeaponManager.h"	
 #include "Whip.h"	
 #include "Enemy.h"	
+#include "Bullet.h"
 #include <map> 	
 #include "GameMap.h"	
 #include "Utils.h"	
@@ -22,7 +23,7 @@
 #define SIMON_ON_STAIR_SPEED_Y		0.035f
 #define SIMON_JUMP_SPEED_Y		0.5f	
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f	
-#define SIMON_GRAVITY			0.0015f	
+#define SIMON_GRAVITY			0.002f	
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f	
 #define SIMON_STATE_AUTO	0	
 #define SIMON_STATE_IDLE		 100	
@@ -45,14 +46,13 @@
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
-#define SIMON_TIME_JUMPPING_SIT 10
 #define SIMON_TIME_LEVEL_UP_WHIP 700
 #define SIMON_HURT_TIME	 500
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
+
 #define SIMON_MAX_HEALTH	16						   
 #define SIMON_MAX_LIFE	5
-
 enum animation
 {
 	IDLE_LEFT,
@@ -210,6 +210,8 @@ public:
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
 	bool IsFreeze() { return isFreeze; }
 	bool IsDoubleShot() { return isDoubleShot; }
+	bool IsFall() { return isFall; }
+
 
 	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHearts(int _hearts) { hearts = _hearts; }

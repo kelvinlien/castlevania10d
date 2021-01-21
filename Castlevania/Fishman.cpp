@@ -40,7 +40,7 @@ void CFishman::SetState(int state)
 			bullet->SetPosition(x, y + 10);
 		else
 			bullet->SetPosition(x + 15, y + 10);
-		bullet->nx = nx;
+		bullet->nx = this->nx;
 		bullet->isVanish = false;
 		isShootyet = true;
 		break;
