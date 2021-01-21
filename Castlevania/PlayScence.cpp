@@ -654,8 +654,8 @@ void CPlayScene::Load()
 		switch (currentMapID) {
 		case 1:
 			Area::GetInstance()->SetAreaID(11);
-			Area::GetInstance()->SetLimitLeftCam(0);
-			Area::GetInstance()->SetLimitRightCam(mapWidth);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_11);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_11);
 			break;
 		case 2:
 			Area::GetInstance()->SetAreaID(21);
@@ -897,12 +897,6 @@ void CPlayScene::Render()
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
     }
-	for (int i = 0; i < objects.size(); i++)
-	{
-		if (i == 101)
-			DebugOut(L"something wrong");
-		objects[i]->Render();
-	}
 }
 
 /*

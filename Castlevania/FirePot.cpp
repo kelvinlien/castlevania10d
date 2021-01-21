@@ -36,7 +36,7 @@ CFirePot::CFirePot(int itemType)
 void CFirePot::SetState(int state)
 {
 	this->state = state;
-	if (state == FIREPOT_STATE_BREAK)
+	if (state == FIREPOT_STATE_BREAK && break_time == 0)
 		break_time = GetTickCount();
 }
 
@@ -54,17 +54,13 @@ void CFirePot::Render()
 	if (state == FIREPOT_STATE_BREAK) {
 		ani = FIREPOT_ANI_BREAK;
 	}
-	//animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
 }
 
 void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	/*if (IsBroken())
-	{
-		item.Update(dt, coObjects);
-	}*/
 	CGameObject::Update(dt, coObjects);
 	vy += FIREPOT_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -80,14 +76,6 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
    
 	CalcPotentialCollisions(&firepotCoObjects, coEvents);
 	
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
 		float min_tx, min_ty, nx = 0, ny;
 
 		float rdx = 0;
@@ -102,9 +90,10 @@ void CFirePot::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			vy = 0;
 		}
 
-		if (state == FIREPOT_STATE_BREAK && ((GetTickCount() - break_time) > FIREPOT_BREAK_TIME))
+		if (state == FIREPOT_STATE_BREAK && ((GetTickCount() - break_time) > FIREPOT_BREAK_TIME)) {
 			this->isVanish = true;
-	}
+		}
+		
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

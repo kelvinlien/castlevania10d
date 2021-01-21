@@ -662,6 +662,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (x >= SIMON_AUTO_GO_AHEAD_POSITION_X && x < SIMON_AUTO_GO_BACK_POSITION_X)
 			{
+				flag = true;
 				SetState(SIMON_STATE_AUTO);
 			}
 		}
@@ -733,7 +734,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CPortal *>(e->obj))
 			{
-				if(startBlinkEffect == 0)
+				if (startBlinkEffect == 0)
 					startBlinkEffect = GetTickCount();
 				if (GetTickCount() - startBlinkEffect >= 500)
 				{
@@ -745,7 +746,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					SetState(SIMON_STATE_IDLE);
 				}
 				else
-					BlinkEffect::GetInstance()->SetIsActive(true);		
+					BlinkEffect::GetInstance()->SetIsActive(true);
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
@@ -831,12 +832,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-			else if (dynamic_cast<CPortal *>(e->obj))
+			/*else if (dynamic_cast<CPortal *>(e->obj))
 			{
 				CPortal *p = dynamic_cast<CPortal *>(e->obj);
 				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}
-			else if (dynamic_cast<CDoor *>(e->obj))
+			}*/
+			/*else if (dynamic_cast<CDoor *>(e->obj))
 			{
 				CDoor *door = dynamic_cast<CDoor *>(e->obj);
 				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
@@ -851,7 +852,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				{
 					x += dx;
 				}
-			}
+			}*/
 		}
 	}
 

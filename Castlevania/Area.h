@@ -2,8 +2,10 @@
 #pragma once
 #include <Windows.h>
 #include <d3dx9.h>
+#define LIMIT_LEFT_CAM_11	0
+#define LIMIT_RIGHT_CAM_11	1000
 #define LIMIT_LEFT_CAM_21	0
-#define LIMIT_RIGHT_CAM_21	2285
+#define LIMIT_RIGHT_CAM_21	2550
 #define LIMIT_LEFT_CAM_22	3072
 #define LIMIT_RIGHT_CAM_22	3310
 #define LIMIT_LEFT_CAM_23	4096
