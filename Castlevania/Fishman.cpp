@@ -1,6 +1,8 @@
 ﻿#include "Fishman.h"
 #include "Simon.h"
 #include "WaterSurface.h"
+#include "RepeatableEffect.h"
+#include "RepeatableEffects.h"
 
 CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 {
@@ -28,6 +30,7 @@ void CFishman::SetState(int state)
 		break;
 	case FISH_MAN_STATE_WALK:
 		if (isShoot) return;
+		isJump = false;
 		vy = 0;
 		vx = nx * FISH_MAN_WALKING_SPEED;
 		break;
@@ -49,12 +52,19 @@ void CFishman::SetState(int state)
 }
 void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (y + FISH_MAN_BBOX_HEIGHT < FISH_MAN_JUMP_EFFECT_POINT && !isUsingEffect)
+	{
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
+		isUsingEffect = true;
+	}
+
 	if (isDead && GetTickCount() - dieTime >= FISH_MAN_DIE_TIME)
 		isVanish = true;
 	if (!isDead)
 		CGameObject::Update(dt);
-
+	
 	vy += FISH_MAN_GRAVITY * dt;
+
 	bullet->Update(dt, coObjects);
 	if (isWaitToShoot && GetTickCount() - startWaitToShoot >= shootingTimePeriod)
 	{
@@ -78,10 +88,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CBrick *>(coObjects->at(i)))
-
-			coObjectsFishman.push_back(coObjects->at(i));
-		else if (dynamic_cast<CWaterSurface *>(coObjects->at(i)))
+		if (dynamic_cast<CBrick *>(coObjects->at(i)) && coObjects->at(i)->y >= 280 )
 			coObjectsFishman.push_back(coObjects->at(i));
 	}
 
@@ -93,6 +100,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (coEvents.size() == 0)
 	{
+	
 		x += dx;
 		y += dy;
 	}
@@ -103,38 +111,34 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		float rdy = 0;
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		
 
 		if (nx != 0) {}
-		if (ny != 0) {
-			SetState(FISH_MAN_STATE_WALK);
-			WaitToShoot();
-			if (shootingTimePeriod == 0) 
-				shootingTimePeriod = rand() % 2500 + 500;
-		}
-
-
-
-		//Collision logic with other objects
+		if (ny != 0) {}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<CBrick*>(e->obj))
+			{
+				if (!isJump || ny == -1)
+				{
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+					SetState(FISH_MAN_STATE_WALK);
+					WaitToShoot();
+					if (shootingTimePeriod == 0)
+						shootingTimePeriod = rand() % 1500 + 500;
+				}
+				else
+				{
+					x += dx;
+					y += dy;
+				}
+			}
 
-			if (dynamic_cast<Simon *>(e->obj)) // if e->obj is simon 
-			{
-			}
-			else if(dynamic_cast<CWaterSurface *>(e->obj))
-			{
-				//effect
-				x += dx;
-				y += dy;
-				if(!isJump)
-					this->isVanish = true;
-			}
 		}
+
 	}
 
 	// clean up collision events
@@ -155,7 +159,7 @@ void CFishman::Render() {
 	}
 	if (isShoot || isShootyet)
 	{
-		bullet->Render();
+		//bullet->Render();
 	}
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 	if (isDead) ani = FISH_MAN_DIE;

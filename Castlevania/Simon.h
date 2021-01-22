@@ -10,6 +10,7 @@
 #include "Camera.h"	
 #include <cmath> 
 #include "TriggerStair.h"
+#define SIMON_EFFECT_DROWN_POINT				400	
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310	
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350	
 #define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3180	
@@ -172,6 +173,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
+	void ReLoadAllAniSet();
 
 	//Getter & setter
 	bool IsJump() { return isJump; }
