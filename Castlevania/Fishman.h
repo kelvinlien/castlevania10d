@@ -11,7 +11,7 @@
 #define FISH_MAN_GRAVITY				0.0015f
 #define FISH_MAN_JUMPING_SPEED		-0.5f
 
-#define FISH_MAN_WAIT_TO_SHOOT_TIME		3000
+#define FISH_MAN_WAIT_TO_SHOOT_TIME		10000
 #define FISH_MAN_SHOOTING_TIME			700
 #define FISH_MAN_DIE_TIME				200
 
@@ -19,7 +19,7 @@
 #define FISH_MAN_STATE_DEAD			30
 #define FISH_MAN_STATE_SHOOT		1
 #define FISH_MAN_STATE_WALK			2
-#define FISH_MAN_STATE_JUMP			3
+#define FISH_MAN_STATE_JUMP			4
 
 
 class CFishman : public CEnemy
@@ -39,6 +39,7 @@ class CFishman : public CEnemy
 	bool isWaitToShoot = false;
 	bool canShoot = false;
 	bool isShootyet = false;
+	bool isRespawned = false;
 	CWeapon* bullet = new Bullet();
 
 	enum animation
@@ -51,7 +52,9 @@ class CFishman : public CEnemy
 		FISH_MAN_IDLE_RIGHT,
 		FISH_MAN_DIE,
 
-	};
+	}ani;
+	float xbackup;
+	float ybackup;
 public:
 
 	CFishman(float x, float y, int nx, int itemType);
@@ -62,5 +65,6 @@ public:
 	//actions
 	void Jump() {};
 	void WaitToShoot();
+	void Respawn();
 };
 

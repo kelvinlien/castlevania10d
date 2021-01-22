@@ -19,16 +19,20 @@ protected:
 	float backUpVx;
 	float backUpVy;
 
+	DWORD startDieTime;
 public:
 	CEnemy();
 	void SetActive() { if (!isActive) isActive = true; }
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom)=0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL)=0;
 	virtual void Render()=0;
+	virtual void Respawn();
 	// Getter && Setter
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }
 	void SetItem(int itemType);
 	virtual void SetState(int state);
+	DWORD GetStartDieTime() { return startDieTime; }
+	void SetStartDieTime(DWORD time) { startDieTime = time; }
 };
 

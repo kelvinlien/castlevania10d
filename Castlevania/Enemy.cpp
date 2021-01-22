@@ -4,6 +4,7 @@ CEnemy::CEnemy() :CGameObject()
 	isActive = false;
 	state = ENEMY_STATE_MOVE;
 	isLock = false;
+	isVanish = false;
 }
 void CEnemy::SetState(int state)
 {
@@ -25,6 +26,13 @@ void CEnemy::SetState(int state)
 			animation_set->at(ani)->SetLock(false);
 			break;
 	}
+}
+void CEnemy::Respawn()
+{
+	isActive = false;
+	state = ENEMY_STATE_MOVE;
+	isLock = false;
+	isVanish = false;
 }
 void CEnemy::SetItem(int itemType) {
 	ItemType type;

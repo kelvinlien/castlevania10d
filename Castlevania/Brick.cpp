@@ -8,6 +8,7 @@ void CBrick::Render()
 	RenderBoundingBox();
 }
 
+
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
 	if (CGame::GetInstance()->GetCurrentSceneID() == 5) {

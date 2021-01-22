@@ -17,6 +17,9 @@
 #include "Background.h"
 #include "Helicopter.h"
 #include "IntroBat.h"
+#include "EnemyFactory.h"
+#include "Enemy.h"
+#include "SmallBrick.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
@@ -230,18 +233,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	CGameObject *obj = NULL;
 
-	//CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
-
-	//Entity* panther = new Entity(panTest, 160);
-	//DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
-
-	//CCandle *canTest = new CCandle(1);
-	//canTest->SetPosition(600, 100);
-
-	//Entity* candle = new Entity(canTest, 0);
-	//RECT triggerZone = candle->GetTriggerZone();
-	//DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
-
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
@@ -260,14 +251,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
 		obj = new CGhost(x, y, -1, itemType);
-	}
-	break;
-	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CGhost*>(obj));
 		break;
-	case OBJECT_TYPE_BAT: {
+	}
+	//break;
+	case OBJECT_TYPE_PANTHER: 
+	{
+		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CPanther*>(obj));
+		break;
+	}
+	case OBJECT_TYPE_BAT:
+	{
 		int itemType = atof(tokens[4].c_str());
 		obj = new CBat(x, y, Simon::GetInstance()->nx * -1, itemType);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CBat*>(obj));
 		break;
 	}
 	case OBJECT_TYPE_FISHMAN: {
@@ -279,9 +280,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x + randomDistance, y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CFishman*>(obj));
+		break;
 	}
-	break;
 
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
@@ -436,16 +437,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 	}
 	
-
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && obj!= NULL) {
 		obj->SetPosition(x, y);
-
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
-	}
-
+	}	
 }
 /*
 	Parse Scene Ani_set
@@ -829,13 +827,13 @@ void CPlayScene::Update(DWORD dt)
 		}
 
 		CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
-		if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+		if (Camera::GetInstance()->GetCamX() >= LIMIT_LEFT_CAM_22 && Camera::GetInstance()->GetCamX() < LIMIT_LEFT_CAM_23)
 		{
 			Area::GetInstance()->SetAreaID(22);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
 		}
-		else if (Camera::GetInstance()->GetCamX() >= 4096)
+		else if (Camera::GetInstance()->GetCamX() >= LIMIT_LEFT_CAM_23)
 		{
 			Area::GetInstance()->SetAreaID(23);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
@@ -866,11 +864,47 @@ void CPlayScene::Update(DWORD dt)
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
 	Camera::GetInstance()->Move(mapWidth, game->GetScreenWidth(), cx, cy, dt);
+  
+	if (Camera::GetInstance()->GetCamX() >= 3072 && Camera::GetInstance()->GetCamX() < 4096)
+	{
+		Area::GetInstance()->SetAreaID(22);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+	}
+	else if (Camera::GetInstance()->GetCamX() >= 4096)
+	{
+		Area::GetInstance()->SetAreaID(23);
+		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+	}
+    board->Update();
+	Camera* cam = Camera::GetInstance();
+	//Create enemy factory
+	CEnemyFactory* factory = CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
+	{
+		CEnemy* enemy = factory->enemies[i];
+		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
+		{
+			if (enemy->GetType() == 10)
+			{
+				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
+				{
+					enemy->Respawn();
+					objects.push_back(enemy);
+				}
+			}
+			else
+			{
+				enemy->Respawn();
+				objects.push_back(enemy);
+			}
+		}
+	}
 }
 
 void CPlayScene::Render()
 {
-	//test cam
 	// nhet camera vaoo truoc tham so alpha = 255
 	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
 	{
@@ -914,8 +948,20 @@ void CPlayScene::Unload()
 	{
 		objects[i] = NULL;
 		delete objects[i];
-	}
 
+	}
+	/*for (int i = 0; i < activeEntities.size(); i++)
+	{
+	activeEntities[i] = NULL;
+	delete activeEntities[i];
+	}*/
+	//for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
+	//{
+	//	//delete CEnemyFactory::GetInstance()->enemies.at(i);
+
+	//}
+	CEnemyFactory::GetInstance()->enemies.clear();
+	activeEntities.clear();
 	objects.clear();
 	player = NULL;
 
@@ -924,7 +970,8 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	
+
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID == INTRO_SCENE_ID_1) {
@@ -949,10 +996,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	}
 	else {
 		if (ID == INTRO_SCENE_ID_2) return;
-		if (simon->IsHurt()) return;
-		if (simon->IsFreeze()) return;
-		// disable control key when Simon die or enter an auto area
-		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+		Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt() && !simon->IsOnStair()) return;
+	if (simon->IsFall() && simon->IsOnStair()) return;
+	if (simon->IsFreeze()) return;
+	// disable control key when Simon die or enter an auto area
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 		switch (KeyCode)
 		{
 		case DIK_SPACE:
@@ -979,6 +1028,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				simon->SetState(SIMON_STATE_SIT);
 			break;
 		}
+		case DIK_K:
+			simon->SetPosition(3600, 0);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+			Area::GetInstance()->SetAreaID(22);
+			break;
 		}
 	}
 }
@@ -996,7 +1051,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	{
         if (ID == INTRO_SCENE_ID_2) return;
 	// disable control key when Simon die 
-	if (simon->IsHurt()) return;
+	if (simon->IsHurt() && !simon->IsOnStair()) return;
+	if (simon->IsFall() && simon->IsOnStair()) return;
+
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
@@ -1037,12 +1094,14 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID != INTRO_SCENE_ID_1) {
         if(CGame::GetInstance()->GetCurrentSceneID() == INTRO_SCENE_ID_2) return;
-		if (simon->IsHurt()) return;
+	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
+	if (simon->IsHurt() && !simon->IsOnStair()) return;
+	if (simon->IsFall() && simon->IsOnStair()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
 	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
