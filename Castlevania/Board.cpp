@@ -162,7 +162,11 @@ void Board::RewardingPoints(CGameObject * obj)
 {
 	if (dynamic_cast<CEnemy*>(obj))
 	{
-		SetScore(GetScore() + ENEMY_POINT_WORTH);
+		if (dynamic_cast<CEnemy*>(obj)->IsDefeated())
+		{
+			SetScore(GetScore() + ENEMY_POINT_WORTH);
+			dynamic_cast<CEnemy*>(obj)->SetIsDefeated(false);
+		}
 	}
 	else if (dynamic_cast<CHolder*>(obj))
 	{

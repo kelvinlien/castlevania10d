@@ -82,7 +82,10 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			if (e != NULL) {
 				e->GetBoundingBox(l2, t2, r2, b2);
 				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+				{
 					e->SetState(ENEMY_STATE_DIE);
+					e->SetIsDefeated(true);
+				}
 			}
 			else if (dynamic_cast<CBrokenBrick *>(coObjects->at(i)))
 			{

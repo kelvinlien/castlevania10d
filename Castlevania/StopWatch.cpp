@@ -49,16 +49,16 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				CEnemy *e = NULL;
 				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
 				{
-				case 1:
+				case ENEMY_TYPE_GHOST:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
 					break;
-				case 10:
+				case ENEMY_TYPE_PANTHER:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
-				case 20:
+				case ENEMY_TYPE_BAT:
 					e = dynamic_cast<CBat *>(coObjects->at(i));
 					break;
-				case 30:
+				case ENEMY_TYPE_FISHMAN:
 					e = dynamic_cast<CFishman *>(coObjects->at(i));
 					break;
 				default:

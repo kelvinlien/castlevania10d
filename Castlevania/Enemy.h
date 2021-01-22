@@ -16,6 +16,9 @@
 #define LEFT_BOUND_SPAWN_GHOST_23	4096
 #define RIGHT_BOUND_SPAWN_GHOST_23	4800
 
+#define LEFT_BOUND_SPAWN_PANTHER	1070
+#define RIGHT_BOUND_SPAWN_PANTHER	2185
+
 
 
 
@@ -46,6 +49,8 @@ public:
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }
 	void SetItem(int itemType);
+	void SetIsDefeated(bool a) { isdefeated = a; }
+	bool IsDefeated() { return isdefeated; };
 	virtual void SetState(int state);
 	DWORD GetStartDieTime() { return startDieTime; }
 	void SetStartDieTime(DWORD time) { startDieTime = time; }
