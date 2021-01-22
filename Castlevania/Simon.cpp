@@ -36,7 +36,7 @@ Simon::Simon() : CGameObject()
 	this->x = x;
 	this->y = y;
 	CWhip::GetInstance();
-	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
 }
 
 void Simon::SetState(int state)
@@ -241,7 +241,6 @@ void Simon::Render()
 	}
 	RenderBoundingBox();
 
-	
 	if (flag)
 	{
 		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
@@ -683,6 +682,12 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			isAutoWalkOnStair = true;
 			//SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
+		
+	if (subWeapons2 != subWeapons && isUsingSubWeapon == false)
+	{
+		delete subWeapons;
+		subWeapons = subWeapons2;
+	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -943,27 +948,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-			/*else if (dynamic_cast<CPortal *>(e->obj))
-			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}*/
-			/*else if (dynamic_cast<CDoor *>(e->obj))
-			{
-				CDoor *door = dynamic_cast<CDoor *>(e->obj);
-				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
-				{
-					doorId = door->GetId();
-					SetState(SIMON_STATE_IDLE);
-					isAutoWalking = true;
-					door->SetActive(true);
-					Camera::GetInstance()->SetIsAuto(true);
-				}
-				else if (door->IsActive())
-				{
-					x += dx;
-				}
-			}*/
 		}
 	}
 
