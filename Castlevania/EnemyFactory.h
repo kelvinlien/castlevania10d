@@ -5,7 +5,7 @@ class CEnemyFactory :public CGameObject
 {
 	static CEnemyFactory * __instance;
 	int enemyNumber, enemyType;
-	DWORD respawnTime = 3000;
+	DWORD respawnTime = 6000;
 
 public:
 	vector<CEnemy*> enemies;

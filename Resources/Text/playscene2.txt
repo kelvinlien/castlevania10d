@@ -865,7 +865,7 @@
 8	5472	378	11	0	-1
 
 # SIMON
-0	50.0	377	1
+0	50	377	1
 
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id

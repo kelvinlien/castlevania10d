@@ -52,7 +52,7 @@
 #define SIMON_HURT_TIME	 500	
 #define SIMON_SIT_AFTER_FALL_TIME	 250	
 #define SIMON_UNTOUCHABLE_TIME	 2000	
-#define SIMON_MAX_HEALTH	2
+#define SIMON_MAX_HEALTH	16
 #define SIMON_MAX_LIFE 5
 enum animation
 {
@@ -195,7 +195,7 @@ public:
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
-	void SetAutoWalking(bool a) { isAutoWalking = a; }
+	void SetAutoWalking(bool isAutoWalking) { this->isAutoWalking = isAutoWalking; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsCanGoUpStair() { return canGoUpStair; }

@@ -173,7 +173,7 @@ void Simon::SetAnimation()
 	if (!isOnStair) {
 		if (isDead)
 			ani = DEATH_RIGHT;
-		else if (isHurt)
+		else if (isHurt && !isAutoWalking)
 			ani = HURT_RIGHT;
 		else if (isJump && isAttack)
 			ani = ATTACK_STAND_RIGHT;
@@ -271,13 +271,14 @@ void Simon::Stand() {
 void Simon::Hurt() {
 	startHurt = GetTickCount();
 	isHurt = true;
-	if (isOnStair || canGoDownStair || canGoUpStair) return;
-	vx = -0.1*nx;
+	if (isOnStair || canGoDownStair || canGoUpStair || isAutoWalking) return;
+	vx  = -0.1*nx;
 	vy = -0.4f;
 	y -= 17;
 }
 
 void Simon::SitAfterFall() {
+	if (isAutoWalking)  return;
 	startSit = GetTickCount();
 	isSit = true;
 	isFall = true;
@@ -446,11 +447,12 @@ void Simon::AutoWalkOnStair() {
 			currentstair = 21;
 			aboveStairOutPoint = 438;
 			belowStairOutPoint = 480;
-			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+			Camera::GetInstance()->SetCamPos(LIMIT_RIGHT_CAM_22, 0);
 			SetPosition(3808, 408);
 			backupOnStairX = this->x;
 			backupOnStairY = this->y;
 			SetState(SIMON_STATE_IDLE_ON_STAIR);
+			
 		}
 
 	}
@@ -464,7 +466,7 @@ void Simon::AutoWalkOnStair() {
 			belowStairOutPoint = 278;
 			game->GetInstance()->SwitchScene(3);
 			currentstair = 20;
-			Camera::GetInstance()->SetCamPos(200, 0);
+			Camera::GetInstance()->SetCamPos(LIMIT_RIGHT_CAM_31, 0);
 			SetPosition(768, 120);
 			backupOnStairX = this->x;
 			backupOnStairY = this->y;
@@ -814,7 +816,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					health -= 2;
 					if (!isOnStair && !canGoDownStair && !canGoUpStair) {
 						if (e->obj->nx == nx) {
-
+							if (!isAutoWalking)
 							this->nx = -e->obj->nx;
 						}
 					}
@@ -849,7 +851,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					continue;
 				if (e->ny < 0)
 				{
-					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME) && !isAutoWalking)
 					{
 
 							isHurt = false;
@@ -872,11 +874,20 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CSmallBrick *>(e->obj))
 			{
+				if (isOnStair)
+					continue;
 				if (e->ny < 0)
 				{
-					if (isJump == true)
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
 					{
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
+
+						isHurt = false;
+						isJump = false;
+						SetState(SIMON_STATE_SIT_AFTER_FALL);
+					}
+					else if (isJump)
+					{
+						y = y - (SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT);
 						isJump = false;
 					}
 				}
@@ -987,6 +998,11 @@ void Simon::ResetSimon()
 		game->GetInstance()->SwitchScene(2);
 		SetPosition(RESPAWN_POS_23, 0);
 		cam->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+		break;
+	case 31:
+		game->GetInstance()->SwitchScene(2);
+		SetPosition(RESPAWN_POS_22, 0);
+		cam->SetCamPos(LIMIT_LEFT_CAM_22, 0);
 		break;
 	default:
 		break;

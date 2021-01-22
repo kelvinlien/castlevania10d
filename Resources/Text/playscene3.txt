@@ -323,6 +323,7 @@
 80039	11	0	21	17	81
 #board
 100000	0	0	520	80	85
+
 #mapID	filematrix map
 [MAPMATRIX]
 #MAP3
@@ -616,7 +617,7 @@
 # BROKEN BRICK
 11	201
 #board
-13	999
+12	999
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type

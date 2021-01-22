@@ -14,9 +14,9 @@ void Bullet::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void Bullet::SetAnimation() {
 	if (nx > 0)
-		ani = CWeapon::animation_set->at(ANI_Bullet_RIGHT);
+		ani = CAnimationSets::GetInstance()->Get(62)->at(7);
 	else
-		ani = CWeapon::animation_set->at(ANI_Bullet_LEFT);
+		ani = CAnimationSets::GetInstance()->Get(62)->at(7);
 }
 
 void Bullet::Render() {

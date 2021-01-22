@@ -29,7 +29,8 @@
 #define PLAY_SCENE_3_ID	3
 #define INTRO_SCENE_ID_1	4
 #define INTRO_SCENE_ID_2	5
-
+#define TRIGGER_STAIR_1_PLAY_SCENE_3_ID	19
+#define TRIGGER_STAIR_2_PLAY_SCENE_3_ID	20
 
 #include"Ghost.h"
 

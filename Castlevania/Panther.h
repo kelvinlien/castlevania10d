@@ -35,7 +35,6 @@ class CPanther:public CEnemy
 	DWORD startJumpTime, dieTime;
 	float xbackup;
 	float ybackup;
-	int ani;
 
 public:
 	//CPanther(){}

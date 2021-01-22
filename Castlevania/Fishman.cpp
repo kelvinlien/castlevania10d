@@ -32,6 +32,7 @@ void CFishman::SetState(int state)
 		break;
 	case FISH_MAN_STATE_DEAD:
 		isDead = true;
+		startDieTime = GetTickCount();
 		vx = 0;
 		vy = 0;
 		dieTime = GetTickCount();
@@ -64,6 +65,12 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
 		isUsingEffect = true;
+	}
+	if (y+ FISH_MAN_BBOX_HEIGHT > FISH_MAN_JUMP_EFFECT_POINT -50 && isUsingEffect)
+	{
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
+		SetState(FISH_MAN_STATE_DEAD);
+		isVanish = true;
 	}
 
 	if (isDead && GetTickCount() - dieTime >= FISH_MAN_DIE_TIME)
@@ -127,7 +134,9 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 		
 
-		if (nx != 0) {}
+		if (nx != 0) {
+			y += dy;
+		}
 		if (ny != 0) {}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -142,7 +151,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					SetState(FISH_MAN_STATE_WALK);
 					WaitToShoot();
 					if (shootingTimePeriod == 0)
-						shootingTimePeriod = rand() % 1500 + 500;
+						shootingTimePeriod = rand() % 2500 + 500;
 				}
 				else
 				{
@@ -172,10 +181,17 @@ void CFishman::Respawn()
 	startShootTime=0;
 	startWaitToShoot=0;
 	isDead = false;
+	isUsingEffect = false;
+	startDieTime = 0;
 	y = ybackup;
+	vx = 0;
+	vy = FISH_MAN_JUMPING_SPEED;
 	srand(time(NULL));
 	Camera* cam = Camera::GetInstance();
 	float res = float_rand(cam->GetCamX(),cam->GetCamX() + SCREEN_WIDTH);
+	nx = -1 + rand() % (1+1-(-1));
+	if (nx >= 0)
+		nx = 1;
 	x = res;
 	isActive = true;
 	SetState(FISH_MAN_STATE_JUMP);
@@ -191,7 +207,7 @@ void CFishman::Render() {
 	}
 	if (isShoot || isShootyet)
 	{
-		//bullet->Render();
+		bullet->Render();
 	}
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
 	if (isDead) ani = FISH_MAN_DIE;

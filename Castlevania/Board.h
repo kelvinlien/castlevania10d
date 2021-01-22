@@ -17,8 +17,8 @@
 #define ITEM_POINT_WORTH	5
 class Board
 {
-	float x = 0.0f;
-	float y = 0.0f;
+	float x = 0;
+	float y = 0;
 
 	int time = 300;
 	int stage;

@@ -578,8 +578,8 @@ void CPlayScene::Load()
 {
 	effects= CRepeatableEffects::GetInstance();		// create instance of effects
 
-	if (id == 2)
-		if(TriggerStairs::GetInstance()->GetTriggerStairs().size()==NULL)
+	if (id == PLAY_SCENE_2_ID || id == PLAY_SCENE_3_ID)
+		if(TriggerStairs::GetInstance()->GetTriggerStairs().size() == NULL)
 			LoadTriggerStair();
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	/*if (id == 2 || id == 3)
@@ -707,9 +707,12 @@ void CPlayScene::Load()
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
 			Camera::GetInstance()->SetCamPos(0, 0);
 			break;
-			/*case 3:
+		case 3:
 			Area::GetInstance()->SetAreaID(31);
-			break;*/
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_31);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_31);
+			Camera::GetInstance()->SetCamPos(0, 0);
+			break;
 		default:
 			break;
 		}
@@ -938,6 +941,7 @@ void CPlayScene::Update(DWORD dt)
 				{
 					enemy->Respawn();
 					objects.push_back(enemy);
+
 				}
 			}
 			else
@@ -959,14 +963,25 @@ void CPlayScene::Render()
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
 	
 	//Render trigger stairs
-	if(id == 2)
+	/*if(id == 2)
 		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size() - 2; i++) 
 			TriggerStairs::GetInstance()->Get(i)->Render();
 	else if (id == 3)
 		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			TriggerStairs::GetInstance()->Get(i)->Render();*/
+	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+	{
+		if(id == PLAY_SCENE_2_ID && i != TRIGGER_STAIR_1_PLAY_SCENE_3_ID && i != TRIGGER_STAIR_2_PLAY_SCENE_3_ID)
 			TriggerStairs::GetInstance()->Get(i)->Render();
+		else if(id == PLAY_SCENE_3_ID && ( i == TRIGGER_STAIR_1_PLAY_SCENE_3_ID || i == TRIGGER_STAIR_2_PLAY_SCENE_3_ID))
+			TriggerStairs::GetInstance()->Get(i)->Render();
+	}
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
+	/*for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Render();
+	}*/
 	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{
@@ -1073,7 +1088,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				simon->SetState(SIMON_STATE_SIT);
 			break;
 		case DIK_B: {
-			CGame::GetInstance()->SwitchScene(3);
+			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
+			//CGame::GetInstance()->SwitchScene(3);
 			break;
 		}
 
