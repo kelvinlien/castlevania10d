@@ -36,7 +36,7 @@ Simon::Simon() : CGameObject()
 	this->x = x;
 	this->y = y;
 	CWhip::GetInstance();
-	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(STOPWATCH));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(AXE));
 }
 
 void Simon::SetState(int state)
