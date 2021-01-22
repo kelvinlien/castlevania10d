@@ -213,11 +213,6 @@ void Simon::ReLoadAllAniSet()
 	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
 	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
 
-void Simon::ReLoadAllAniSet()
-{
-	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
-	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
-
 }
 
 void Simon::Render()

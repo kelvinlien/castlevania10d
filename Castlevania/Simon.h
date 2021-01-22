@@ -215,6 +215,8 @@ public:
 	void SetOnStair(bool a) { isOnStair = a; }
 	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
 	void SetisFreeze(bool _status) { isFreeze = _status; }
+	void SetHealth(int _hearts) { health = _hearts; }
+	int GetHealth() { return health; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
 	void SetLife(int _life) { life = _life; }
@@ -223,7 +225,6 @@ public:
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
 	CWeapon * GetSubWeapon() { return subWeapons; }
 	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
-
 	void ResetSimon();
 	
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

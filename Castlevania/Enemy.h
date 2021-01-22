@@ -12,10 +12,10 @@ class CEnemy: public CGameObject
 protected:
 	bool isActive;
 	bool isLock;
+	bool isdefeated;
 	int type;
 	ItemType itemType;
 	int ani;
-
 	float backUpVx;
 	float backUpVy;
 
