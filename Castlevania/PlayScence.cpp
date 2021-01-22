@@ -278,7 +278,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
 
 		float randomDistance = rand() % (BRICK_WIDTH * 2 * 16) + 1;
-		//DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
 		obj->SetPosition(x + randomDistance, y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
@@ -864,6 +863,7 @@ void CPlayScene::Update(DWORD dt)
 				if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
 				{
 					current->isVanish = true;
+					current->SetState(ENEMY_STATE_DEAD);
 					delObjects.push_back(current);
 				}
 				else
@@ -950,10 +950,13 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (enemy->GetType() == OBJECT_TYPE_PANTHER)
 			{
-				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
-				{
-					enemy->Respawn();
-					objects.push_back(enemy);
+				if (Area::GetInstance()->GetAreaID() == 21) {
+					if (Simon::GetInstance()->x <= LEFT_BOUND_SPAWN_PANTHER || Simon::GetInstance()->x >= RIGHT_BOUND_SPAWN_PANTHER) {
+						{
+							enemy->Respawn();
+							objects.push_back(enemy);
+						}
+					}
 				}
 			}
 			else if(enemy->GetType() == ENEMY_TYPE_GHOST) {
