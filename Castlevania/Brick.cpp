@@ -3,9 +3,10 @@
 #include"Game.h"
 void CBrick::Render()
 {
-	if (CGame::GetInstance()->GetCurrentSceneID() != 5)
+	if (CGame::GetInstance()->GetCurrentSceneID() != 5 && CGame::GetInstance()->GetCurrentSceneID() != 6)
 		animation_set->at(0)->Render(x, y);
-	RenderBoundingBox();
+	if(CGame::GetInstance()->GetCurrentSceneID() != 6)
+		RenderBoundingBox();
 }
 
 

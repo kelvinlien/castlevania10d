@@ -157,6 +157,8 @@
     <ClCompile Include="IntroBat.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="OutroBat.cpp" />
+    <ClCompile Include="OutroPoint.cpp" />
     <ClCompile Include="Panther.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="RepeatableEffect.cpp" />
@@ -214,6 +216,8 @@
     <ClInclude Include="IntroBat.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="OutroBat.h" />
+    <ClInclude Include="OutroPoint.h" />
     <ClInclude Include="Panther.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="RepeatableEffect.h" />

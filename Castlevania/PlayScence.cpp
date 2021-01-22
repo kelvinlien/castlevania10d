@@ -20,9 +20,11 @@
 #include "EnemyFactory.h"
 #include "Enemy.h"
 #include "SmallBrick.h"
-
 #include "BlinkEffect.h"
 #include "Door.h"
+#include "OutroBat.h"
+#include "OutroPoint.h"
+
 using namespace std;
 
 /*
@@ -59,10 +61,12 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_BROKEN_BRICK	8
 #define OBJECT_TYPE_WATER_SURFACE	12
 #define OBJECT_TYPE_BAT	20
-#define OBJECT_TYPE_INTRO_FLOOR		11
+#define OBJECT_TYPE_FLOOR		11
 #define OBJECT_TYPE_HELICOPTER		14
 #define OBJECT_TYPE_INTRO_BAT		13
 #define OBJECT_TYPE_WATER_SURFACE	12
+#define OBJECT_TYPE_OUTRO_BAT	16
+#define OBJECT_TYPE_OUTRO_POINT	17
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_EFFECT	21
@@ -73,11 +77,7 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_PUSH_ANY_KEY	110
 #define OBJECT_TYPE_BACKGROUND	120
 
-
-
-
 #define MAX_SCENE_LINE 1024
-#define OBJECT_TYPE_BACKGROUND	120
 
 wchar_t * ConvertToWideChar(char * p)
 {
@@ -359,7 +359,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			if (axis == 0)
 				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
 			else
-				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+				obj->SetPosition(x, y + SMALL_BRICK_HEIGHT * i);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
@@ -368,7 +368,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BROKEN_BRICK:
 		obj = new CBrokenBrick(brickType, itemType);
 		break;
-	case OBJECT_TYPE_INTRO_FLOOR: {
+	case OBJECT_TYPE_FLOOR: {
 
 		//first brick
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
@@ -377,7 +377,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
 
-		for (int i = 1; i < 35; i++) {
+		for (int i = -5; i < 35; i++) {
 			obj = new CBrick();
 			obj->SetPosition(x + BRICK_WIDTH * i, y);
 			obj->SetAnimationSet(ani_set);
@@ -444,6 +444,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_CASTLE_AND_BAT:
 	{
 		obj = new CastleAndBat();
+		break;
+	}
+	case OBJECT_TYPE_OUTRO_BAT:
+	{
+		obj = new OutroBat();
+		break;
+	}
+	case OBJECT_TYPE_OUTRO_POINT:
+	{
+		obj = new OutroPoint();
 		break;
 	}
 	default:
@@ -677,7 +687,7 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != INTRO_SCENE_ID_2)
+	if (currentMapID != INTRO_SCENE_ID_1 && currentMapID != INTRO_SCENE_ID_2 && currentMapID != OUTRO_SCENE_ID)
 	{
 		int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();
         mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
@@ -750,7 +760,7 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
-	if (currentMapID == INTRO_SCENE_ID_1 || currentMapID == INTRO_SCENE_ID_2)
+	if (currentMapID == INTRO_SCENE_ID_1 || currentMapID == INTRO_SCENE_ID_2 || currentMapID == OUTRO_SCENE_ID)
 	{
 		vector<LPGAMEOBJECT> coObjects;
 		for (size_t i = 0; i < objects.size(); i++)
@@ -902,7 +912,7 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
-	if (cx < -14)
+	if (cx < -14 && id != OUTRO_SCENE_ID)
 	{
 		player->x = -14;
 	}
@@ -980,7 +990,7 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	// nhet camera vaoo truoc tham so alpha = 255
-	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2)
+	if (id != INTRO_SCENE_ID_1 && id != INTRO_SCENE_ID_2 && id != OUTRO_SCENE_ID)
 	{
         CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 		board->Render();
@@ -1080,7 +1090,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		}
 	}
 	else {
-		if (ID == INTRO_SCENE_ID_2) return;
+		if (ID == INTRO_SCENE_ID_2 || ID == OUTRO_SCENE_ID) return;
 		Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 		if (simon->IsHurt() && !simon->IsOnStair()) return;
 		if (simon->IsFall() && simon->IsOnStair()) return;
@@ -1166,7 +1176,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	if (ID != INTRO_SCENE_ID_1)
 	{
-        if (ID == INTRO_SCENE_ID_2) return;
+        if (ID == INTRO_SCENE_ID_2 || ID == OUTRO_SCENE_ID) return;
 	// disable control key when Simon die 
 	if (simon->IsHurt() && !simon->IsOnStair()) return;
 	if (simon->IsFall() && simon->IsOnStair()) return;
@@ -1215,7 +1225,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
 	if (ID != INTRO_SCENE_ID_1) {
-        if(CGame::GetInstance()->GetCurrentSceneID() == INTRO_SCENE_ID_2) return;
+        if(ID == INTRO_SCENE_ID_2 || ID == OUTRO_SCENE_ID) return;
 	Simon *simon = ((CPlayScene*)scence)->GetPlayer();
 	if (simon->IsHurt() && !simon->IsOnStair()) return;
 	if (simon->IsFall() && simon->IsOnStair()) return;
