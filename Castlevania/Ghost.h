@@ -1,5 +1,6 @@
 #pragma once
 #include"Enemy.h"
+#include "SmallBrick.h"
 //#include <cstdlib>
 // <ctime>
 #define GHOST_ANI_LEFT   0

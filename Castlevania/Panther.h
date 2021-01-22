@@ -1,5 +1,6 @@
 #pragma once
 #include"Enemy.h"
+#include "SmallBrick.h"
 #define PANTHER_ANI_SIT_LEFT	  0
 #define PANTHER_ANI_SIT_RIGHT     1
 #define PANTHER_ANI_RUN_LEFT	  4
