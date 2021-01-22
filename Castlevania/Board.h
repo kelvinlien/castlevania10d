@@ -58,4 +58,5 @@ public:
 	void SetSpriteSubWeap();
 	void RewardingPoints(CGameObject* obj);
 	static Board* Getinstance();
+	void ReloadAni();
 };

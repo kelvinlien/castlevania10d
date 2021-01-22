@@ -645,6 +645,7 @@ void CPlayScene::Load()
 	    qtree = new Quadtree(0, screen);
         Camera::GetInstance()->SetAreaID(currentMapID * 10 + 1);
 		board = Board::Getinstance();
+		Board::Getinstance()->ReloadAni();
 		board->SetState_OnBoard(currentMapID);
 
 		mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
@@ -659,6 +660,7 @@ void CPlayScene::Load()
 			Area::GetInstance()->SetAreaID(21);
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			Camera::GetInstance()->SetCamPos(0, 0);
 			break;
 			/*case 3:
 			Area::GetInstance()->SetAreaID(31);
@@ -908,17 +910,6 @@ void CPlayScene::Render()
 	{
         CMaps::GetInstance()->Get(id)->Draw(Camera::GetInstance()->GetPositionVector(), 255);
 		board->Render();
-
-	CRepeatableEffects::GetInstance()->Render();
-	if (BlinkEffect::GetInstance()->GetIsActive())
-	{
-		int alpha;
-		if (id == 1)
-			alpha = 255;
-		else
-			alpha = 120 + rand() % 70;
-		BlinkEffect::GetInstance()->Draw(alpha);
-	}
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
 	
 	//Render trigger stairs
@@ -930,7 +921,22 @@ void CPlayScene::Render()
 			TriggerStairs::GetInstance()->Get(i)->Render();
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
+	CRepeatableEffects::GetInstance()->Render();
+	if (BlinkEffect::GetInstance()->GetIsActive())
+	{
+		int alpha;
+		if (id == 1)
+			alpha = 255;
+		else
+			alpha = 120 + rand() % 70;
+		BlinkEffect::GetInstance()->Draw(alpha);
+	}
     }
+	else
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Render();
+	}
 }
 
 /*
