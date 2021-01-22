@@ -125,7 +125,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
 	if (tex == NULL)
 	{
-		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+		//DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
 		return;
 	}
 
@@ -159,8 +159,6 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
 
 	int ani_set_id = atoi(tokens[0].c_str());
-	if (ani_set_id == 7)
-		DebugOut(L"this is ani set 7");
 	LPANIMATION_SET s = new CAnimationSet();
 
 	CAnimations *animations = CAnimations::GetInstance();
@@ -242,7 +240,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MARIO:
 		if (player != NULL)
 		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			//DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
 		obj = Simon::GetInstance();
@@ -250,7 +248,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player->ReLoadAllAniSet();
 		Simon::GetInstance()->SetIsIdleIntro(false);
 
-		DebugOut(L"[INFO] Player object created!\n");
+		//DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
@@ -280,7 +278,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CFishman(x, y, -Simon::GetInstance()->nx, itemType);
 
 		float randomDistance = rand() % (BRICK_WIDTH * 2 * 16) + 1;
-		DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
+		//DebugOut(L"[TEST]Random distance %f \n ", randomDistance);
 		obj->SetPosition(x + randomDistance, y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
@@ -457,7 +455,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	default:
-		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+		//DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
 	
@@ -622,7 +620,7 @@ void CPlayScene::Load()
 	default:
 		break;
 	}*/
-	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
+	//DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
 	f.open(sceneFilePath);
@@ -727,7 +725,7 @@ void CPlayScene::Load()
 			break;
 		}
     }
-    DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+    //DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 void CPlayScene::LoadTriggerStair() {
 	TriggerStairs *triggerStairs = TriggerStairs::GetInstance();
@@ -1060,7 +1058,7 @@ void CPlayScene::Unload()
 	objects.clear();
 	player = NULL;
 
-	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+	//DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
