@@ -866,6 +866,10 @@ void CPlayScene::Update(DWORD dt)
 							// Conventional state for enemy: death is 30
 							enemy->SetState(30);
 					}
+					else if (Simon::GetInstance()->IsAutoWalking()) {
+						current->isVanish = true;
+						delObjects.push_back(current);
+					}
 					current->Update(dt, &coObjects);
 				}
 			}
@@ -932,6 +936,7 @@ void CPlayScene::Update(DWORD dt)
 	CEnemyFactory* factory = CEnemyFactory::GetInstance();
 	for (size_t i = 0; i < factory->enemies.size(); i++)
 	{
+		if (Simon::GetInstance()->IsAutoWalking()) return;
 		CEnemy* enemy = factory->enemies[i];
 		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
 		{
