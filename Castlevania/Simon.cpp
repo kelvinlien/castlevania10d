@@ -17,6 +17,7 @@
 #include "BrokenBrick.h"
 #include "WaterSurface.h"
 #include "RepeatableEffects.h"
+#include "Board.h"
 
 Simon* Simon::__instance = NULL;
 
@@ -979,6 +980,7 @@ void Simon::ResetSimon()
 	isDead = false;
 	nx = 1;
 	cam=Camera::GetInstance();
+	Board::Getinstance()->SetBoardHealth(SIMON_MAX_HEALTH);
 	SetHealth(SIMON_MAX_HEALTH);
 	SetState(SIMON_STATE_IDLE);
 	ReLoadAllAniSet();
