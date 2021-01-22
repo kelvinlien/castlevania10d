@@ -46,6 +46,8 @@ public:
 	int GetType() { return type; }
 	ItemType GetItemType() { return itemType; }
 	void SetItem(int itemType);
+	void SetIsDefeated(bool a) { isdefeated = a; }
+	bool IsDefeated() { return isdefeated; };
 	virtual void SetState(int state);
 	DWORD GetStartDieTime() { return startDieTime; }
 	void SetStartDieTime(DWORD time) { startDieTime = time; }
