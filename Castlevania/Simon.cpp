@@ -876,10 +876,11 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 }
 void Simon::ResetSimon()
 {
+
 	isDead = false;
 	nx = 1;
 	cam=Camera::GetInstance();
-	
+	SetHealth(SIMON_MAX_HEALTH);
 	SetState(SIMON_STATE_IDLE);
 	switch (area->GetInstance()->GetAreaID())
 	{

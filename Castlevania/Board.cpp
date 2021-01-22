@@ -18,7 +18,7 @@ Board* Board::Getinstance()
 
 Board::Board()
 {
-	ani_set = CAnimationSets::GetInstance()->Get(10);
+	ani_set = CAnimationSets::GetInstance()->Get(BOARD_ID);
 	HP_set = CAnimationSets::GetInstance()->Get(8);
 	font = new CFont();
 	doubleShot = CSprites::GetInstance()->Get(40024);
@@ -138,4 +138,12 @@ void Board::SetSpriteSubWeap()
 	else if (dynamic_cast<HolyWater *>(Simon::GetInstance()->GetSubWeapon()))
 		sprite = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
 	else sprite = NULL;
+}
+void Board::ReloadAni()
+{
+	ani_set = CAnimationSets::GetInstance()->Get(BOARD_ID);
+	HP_set = CAnimationSets::GetInstance()->Get(8);
+	font = new CFont();
+	doubleShot = CSprites::GetInstance()->Get(40024);
+	SetSpriteSubWeap();
 }

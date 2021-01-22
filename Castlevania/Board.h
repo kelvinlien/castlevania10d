@@ -8,7 +8,7 @@
 #include "Utils.h"
 #include "Simon.h"
 #include "Font.h"
-#define BOARD_ID 10
+#define BOARD_ID 13
 class Board
 {
 	float x = 0.0f;
@@ -50,5 +50,6 @@ public:
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }
 	void SetSpriteSubWeap();
+	void ReloadAni();
 	static Board* Getinstance();
 };

@@ -609,8 +609,9 @@ void CPlayScene::Load()
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"..\\Resources\\Texture\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	//to assign mapWidth
-	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	//int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
 	board=Board::Getinstance();
+	Board::Getinstance()->ReloadAni();
 	board->SetState_OnBoard(currentMapID);
 	mapWidth = CMaps::GetInstance()->Get(currentMapID)->getMapWidth();
 	int mapHeight = CMaps::GetInstance()->Get(currentMapID)->getMapHeight();

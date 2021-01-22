@@ -49,6 +49,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250	
 #define SIMON_UNTOUCHABLE_TIME	 2000	
 #define SIMON_MAX_HEALTH	2
+#define SIMON_MAX_LIFE 5
 enum animation
 {
 	IDLE_LEFT,
@@ -192,9 +193,6 @@ public:
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
 	void SetAutoWalking(bool a) { isAutoWalking = a; }
-	void SetisBuff() { isBuff = true; buffTime = GetTickCount64();}
-	void SetHealth(int _health) { health = _health; }
-	int GetHealth() { return health; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsCanGoUpStair() { return canGoUpStair; }
@@ -211,7 +209,6 @@ public:
 
 	void SetOnStair(bool a) { isOnStair = a; }
 	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
-	void SetHearts(int _hearts) {  hearts = _hearts; }
 	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHealth(int _health) {  health = _health; }
 	int GetHealth() { return health; }
