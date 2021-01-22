@@ -15,7 +15,7 @@
 #include "Door.h"
 #include "Camera.h"
 #include "Bat.h"
-
+#include "RepeatableEffects.h"
 #include "WaterSurface.h"
 
 Simon* Simon::__instance = NULL;
@@ -205,6 +205,13 @@ void Simon::SetAnimation()
 	}
 
 	if (nx < 0) ani = static_cast<animation>(ani - 1); // because animation left always < animation right 1 index
+}
+
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
+
 }
 
 void Simon::Render()
@@ -568,6 +575,14 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	DebugOut(L"[CurrentStair] %d \n", currentstair);
 	CGameObject::Update(dt);
+
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3 && this->y > SIMON_EFFECT_DROWN_POINT)
+	{
+		isVanish = true;
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
+	}
+
+
 	if (!canGoUpStair && !canGoDownStair && !isOnStair)
 		vy += SIMON_GRAVITY * dt;
 

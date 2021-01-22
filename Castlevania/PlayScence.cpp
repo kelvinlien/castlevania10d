@@ -140,7 +140,8 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
 
 	int ani_set_id = atoi(tokens[0].c_str());
-
+	if (ani_set_id == 7)
+		DebugOut(L"this is ani set 7");
 	LPANIMATION_SET s = new CAnimationSet();
 
 	CAnimations *animations = CAnimations::GetInstance();
@@ -237,6 +238,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = Simon::GetInstance();
 		player = Simon::GetInstance();
+		player->ReLoadAllAniSet();
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;

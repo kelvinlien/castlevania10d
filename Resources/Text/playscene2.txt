@@ -18,6 +18,7 @@
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
 75	..\Resources\Texture\blink-effect.png	0	0	0
+76	..\Resources\Texture\BrokenBrick.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
@@ -341,6 +342,9 @@
 #hit effect
 70040	0	0	16	20	74
 
+#broken_brick
+70050	0	0	36	23	76
+
 #Board element
 #Character
 #A
@@ -603,6 +607,9 @@
 #hit effect
 704	70040	100
 
+#broken_brick
+705	70050	100
+
 # ==== BOARD ELEMENT =========
 #Character
 #A
@@ -747,7 +754,7 @@
 #WEAPON
 5	501	502	503	511	512	513	504	514	505	515	506	507	517	508
 #EFFECT
-7	700	701	702	703	704
+7	700	701	702	703	704	705
 #BOARD
 8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
 #DOOR

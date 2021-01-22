@@ -1,4 +1,6 @@
 #include "BrokenBrick.h"
+#include "RepeatableEffect.h"
+#include "RepeatableEffects.h"
 
 CBrokenBrick::CBrokenBrick(int brickType, int itemType)
 {
@@ -73,7 +75,10 @@ void CBrokenBrick::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CalcPotentialCollisions(&firepotCoObjects, coEvents);
 
 	if (isBroken) //&& GetTickCount() - break_time >= 500)
+	{
 		this->isVanish = true;
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, RUBBLE_FRAGMENT));
+	}
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)

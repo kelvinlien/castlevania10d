@@ -47,7 +47,7 @@ void CFragment::Render()
 
 	if (isVanish == true)
 		return;
-*/
+*/	
 	animation_set->at(ani)->Render(x, y);
 }
 CFragment::~CFragment()
