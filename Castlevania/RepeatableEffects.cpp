@@ -24,8 +24,6 @@ void CRepeatableEffects::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	DebugOut(L"the size of vector is: %d \n", repeatEffects.size());
-
 	for (int i = 0; i < repeatEffects.size(); i++)
 		repeatEffects.at(i)->Update(dt, coObjects);
 }

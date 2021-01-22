@@ -27,7 +27,7 @@ Item::Item(int x, int y, ItemType ani) {
 	break;
 	case ITEM_BIG_HEART:
 		widthBBox = 24;
-		heightBBox = 16;
+		heightBBox = 20;
 		start_x = x;
 		break;
 	case ITEM_MONEY_BAG_RED:
@@ -129,7 +129,7 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	for (int i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CBrick*> (coObjects->at(i)))
+		if (dynamic_cast<CBrick*> (coObjects->at(i))|| dynamic_cast<CSmallBrick*> (coObjects->at(i)))
 			coObjectsItem.push_back(coObjects->at(i));
 	}
 	coEvents.clear();
@@ -141,8 +141,8 @@ void Item::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	float rdy = 0;
 	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-	x += min_tx * dx + nx * 0.2f;
-	y += min_ty * dy + ny * 0.2f;
+	x += min_tx * dx + nx * 0.4f;
+	y += min_ty * dy + ny * 0.4f;
 	if (nx != 0) vx = 0;
 	if (ny != 0) {
 		vx = 0;

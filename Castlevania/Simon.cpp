@@ -502,7 +502,7 @@ void Simon::Jump()
 {
 	if (isJump || isSit || isAttack || isHurt || isOnStair)
 		return;
-	vy = -SIMON_JUMP_SPEED_Y * 2;
+	vy = -SIMON_JUMP_SPEED_Y ;
 	isJump = true;
 }
 
