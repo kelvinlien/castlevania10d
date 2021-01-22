@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{C83A385D-5992-4E1B-B783-AB1D446414D5}</ProjectGuid>
     <RootNamespace>My05ScenceManager</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>Castlevania</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -145,6 +145,7 @@
     <ClCompile Include="Ghost.cpp" />	
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="Fishman.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="CastleAndBat.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePot.h" />
     <ClInclude Include="Camera.h" />

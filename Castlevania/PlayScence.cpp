@@ -17,6 +17,8 @@
 #include "Background.h"
 #include "Helicopter.h"
 #include "IntroBat.h"
+#include "EnemyFactory.h"
+#include "Enemy.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
@@ -230,18 +232,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	CGameObject *obj = NULL;
 
-	//CPanther *panTest = new CPanther(500, 100, 200, 800, -1);
-
-	//Entity* panther = new Entity(panTest, 160);
-	//DebugOut(L"[TEST] panther width and height %f %f!\n", panther->GetObjectWidth(), panther->GetObjectHeight());
-
-	//CCandle *canTest = new CCandle(1);
-	//canTest->SetPosition(600, 100);
-
-	//Entity* candle = new Entity(canTest, 0);
-	//RECT triggerZone = candle->GetTriggerZone();
-	//DebugOut(L"[TEST] candle left and bottom %d %d \n", triggerZone.left, triggerZone.bottom);
-
 	switch (object_type)
 	{
 	case OBJECT_TYPE_MARIO:
@@ -257,17 +247,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
+	}
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
-		obj = new CGhost(x, y, -1, itemType);
-	}
-	break;
-	case OBJECT_TYPE_PANTHER: 
-		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		ghost = new CGhost(x, y, -1, itemType);
+		ghost->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(ghost);
 		break;
-	case OBJECT_TYPE_BAT: {
+	}
+	//break;
+	case OBJECT_TYPE_PANTHER: 
+	{
+		panther = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		panther->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(panther);
+		break;
+	}
+	case OBJECT_TYPE_BAT:
+	{
 		int itemType = atof(tokens[4].c_str());
 		obj = new CBat(x, y, Simon::GetInstance()->nx * -1, itemType);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_FISHMAN: {
@@ -279,9 +280,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x + randomDistance, y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
-		objects.push_back(obj);
+		CEnemyFactory::GetInstance()->enemies.push_back(obj);
+		break;
 	}
-	break;
 
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
@@ -436,16 +437,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 	}
 	
-
 	// General object setup
-	if (!dynamic_cast<CBrick*>(obj) && !dynamic_cast<CFishman*>(obj)) {
+	if (!dynamic_cast<CBrick*>(obj) && obj!= NULL) {
 		obj->SetPosition(x, y);
-
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
 		objects.push_back(obj);
-	}
-
+	}	
 }
 /*
 	Parse Scene Ani_set
@@ -878,6 +876,29 @@ void CPlayScene::Update(DWORD dt)
 		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
     board->Update();
+	Camera* cam = Camera::GetInstance();
+	//Create enemy factory
+	CEnemyFactory* factory = CEnemyFactory::GetInstance();
+	for (size_t i = 0; i < factory->enemies.size(); i++)
+	{
+		CEnemy* enemy = factory->enemies[i];
+		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
+		{
+			if (enemy->GetType() == 10)
+			{
+				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
+				{
+					enemy->Respawn();
+					objects.push_back(enemy);
+				}
+			}
+			else
+			{
+				enemy->Respawn();
+				objects.push_back(enemy);
+			}
+		}
+	}
 }
 
 void CPlayScene::Render()
@@ -921,8 +942,20 @@ void CPlayScene::Unload()
 	{
 		objects[i] = NULL;
 		delete objects[i];
-	}
 
+	}
+	/*for (int i = 0; i < activeEntities.size(); i++)
+	{
+		activeEntities[i] = NULL;
+		delete activeEntities[i];
+	}*/
+	for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
+	{
+		//delete CEnemyFactory::GetInstance()->enemies.at(i);
+
+	}
+	CEnemyFactory::GetInstance()->enemies.clear();
+	activeEntities.clear();
 	objects.clear();
 	player = NULL;
 
@@ -995,6 +1028,12 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
 			Area::GetInstance()->SetAreaID(22);
 		}
+	}
+	case DIK_N:
+	{
+		game->SwitchScene(2);
+		break;
+	}
 	}
 }
 

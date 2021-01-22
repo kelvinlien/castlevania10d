@@ -16,17 +16,14 @@
 #include "Background.h"
 #include "Title.h"
 #include "CastleAndBat.h"
-#include"Ghost.h"
 #include "RepeatableEffects.h"
 #include  "Bat.h"
 #include "TriggerStair.h"
 #include "Board.h"
+#include "Fishman.h"
 #include"Ghost.h"
-
 #include "Quadtree.h"
-#include "SmallBrick.h"
-#include "BrokenBrick.h"
-
+#include "Area.h"
 #define PLAY_SCENE_1_ID	1
 #define PLAY_SCENE_2_ID	2
 #define PLAY_SCENE_3_ID	3
@@ -35,12 +32,16 @@
 
 
 
+#include "BrokenBrick.h"
 class CPlayScene: public CScene
 {
 protected: 
 	CRepeatableEffects *effects;	//list contain effects
 	Simon *player;					// A play scene has to have player, right?
-
+	CGhost *ghost;					// Beta ghost for testing purpose
+	CPanther *panther;
+	CBat* bat;
+	CFishman* fishman;
 	Quadtree *qtree;
 	Board* board;
 	Item item; //temp item to save when item created

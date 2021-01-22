@@ -1,10 +1,12 @@
 #pragma once
 #include"Enemy.h"
+#include"Simon.h"
 #define BAT_ANI_LEFT   0
 #define BAT_ANI_RIGHT  1
 #define BAT_ANI_DIE	 2
 
 #define BAT_STATE_FLY 20
+#define BAT_STATE_IDLE 21
 #define ENEMY_STATE_DIE  30
 
 #define BAT_BBOX_WIDTH	32
@@ -22,12 +24,14 @@ class CBat :public CEnemy
 {
 	DWORD die_time;
 	float amplitude = BAT_SPEED_AMPLITUDE;
+	
 public:
 	CBat(float x, float y, int nx, int itemType);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void SetState(int state);
+	virtual void Respawn();
 };
 
 #pragma once

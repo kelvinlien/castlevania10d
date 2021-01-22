@@ -1,11 +1,17 @@
 ﻿#include "Fishman.h"
 #include "Simon.h"
-#include "WaterSurface.h"
-
+float float_rand(float min, float max)
+{
+	float scale = rand() / (float)RAND_MAX; /* [0, 1.0] */
+	return min + scale * (max - min);      /* [min, max] */
+}
 CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 {
 	SetItem(itemType);
 	this->nx = nx;
+	this->x = x;
+	this->y = y;
+	this->ybackup = y;
 	this->type = 30; // 30 là fishman nên thay bằng enum
 	isActive = true;
 	SetState(FISH_MAN_STATE_JUMP);
@@ -16,6 +22,7 @@ void CFishman::SetState(int state)
 	switch (state)
 	{
 	case FISH_MAN_STATE_JUMP:
+		vx = 0;
 		vy = FISH_MAN_JUMPING_SPEED;
 		isJump = true;
 		break;
@@ -34,7 +41,7 @@ void CFishman::SetState(int state)
 		vx = 0;
 		isShoot = true;
 		startShootTime = GetTickCount();
-		shootingTimePeriod = rand() % 2500 + 500;
+		shootingTimePeriod = rand() % 5500 + 3500;
 		bullet->SetIsThrown(true);
 		if (nx == -1)
 			bullet->SetPosition(x, y + 10);
@@ -49,7 +56,10 @@ void CFishman::SetState(int state)
 void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (isDead && GetTickCount() - dieTime >= FISH_MAN_DIE_TIME)
+	{
+		startDieTime = GetTickCount();
 		isVanish = true;
+	}
 	if (!isDead)
 		CGameObject::Update(dt);
 
@@ -141,6 +151,24 @@ void CFishman::WaitToShoot() {
 	if (startWaitToShoot != 0) return;
 	isWaitToShoot = true;
 	startWaitToShoot = GetTickCount();
+}
+
+void CFishman::Respawn()
+{
+	isWaitToShoot = false;
+	isShoot = false;
+	isShootyet = false;
+	startShootTime=0;
+	startWaitToShoot=0;
+	isDead = false;
+	y = ybackup;
+	srand(time(NULL));
+	Camera* cam = Camera::GetInstance();
+	float res = float_rand(cam->GetCamX(),cam->GetCamX() + SCREEN_WIDTH);
+	x = res;
+	isActive = true;
+	SetState(FISH_MAN_STATE_JUMP);
+	isVanish = false;
 }
 
 void CFishman::Render() {

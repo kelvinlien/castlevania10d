@@ -18,9 +18,32 @@ void CBat::SetState(int state)
 		vx = 0;
 	}
 }
+void CBat::Respawn()
+{
+	y = Simon::GetInstance()->GetPostionY();
+	srand(time(NULL));
+	int res = rand() % (2 - 1 + 1) + 1;
+	Camera* cam = Camera::GetInstance();
+	switch (res)
+	{
+	case 1:
+		x = cam->GetCamX() - 20;
+		nx = 1;
+		break;
+	case 2:
+		x = cam->GetCamX() + SCREEN_WIDTH + 20;
+		nx = -1;
+		break;
+	}
+	isActive = true;
+	SetState(BAT_STATE_IDLE);
+	isVanish = false;
+}
 void CBat::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (state == ENEMY_STATE_DIE && ((GetTickCount() - die_time) > BAT_DIE_TIME))
+	{
+		startDieTime = GetTickCount();
 		isVanish = true;
 	else if (state != ENEMY_STATE_DIE && isLock != true)
 		vx = BAT_FLY_SPEED_X * this->nx;

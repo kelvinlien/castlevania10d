@@ -61,6 +61,7 @@
     <ClCompile Include="CastleAndBat.cpp" />
     <ClCompile Include="IntroBat.cpp" />
     <ClCompile Include="Helicopter.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -124,5 +125,6 @@
     <ClInclude Include="CastleAndBat.h" />
     <ClInclude Include="IntroBat.h" />
     <ClInclude Include="Helicopter.h" />
+    <ClInclude Include="EnemyFactory.h" />
   </ItemGroup>
 </Project>
