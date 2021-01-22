@@ -151,10 +151,10 @@ void Board::SetSpriteSubWeap()
 	else if( dynamic_cast<StopWatch *>(Simon::GetInstance()->GetSubWeapon()))
 		item = CSprites::GetInstance()->Get(STOPWATCH_SPRITE);
 	else if (dynamic_cast<HolyWater *>(Simon::GetInstance()->GetSubWeapon()))
-		sprite = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
+		item = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
 	else if (dynamic_cast<Axe *>(Simon::GetInstance()->GetSubWeapon()))
-		sprite = CSprites::GetInstance()->Get(AXE_SPRITE);
-	else sprite = NULL;
+		item = CSprites::GetInstance()->Get(AXE_SPRITE);
+	else item = NULL;
 
 }
 

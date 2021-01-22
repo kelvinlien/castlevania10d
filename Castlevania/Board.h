@@ -34,12 +34,12 @@ class Board
 	DWORD flashingTime = 0;
 	LPANIMATION_SET ani_set;
 	CSprite * board;
-	CSprite * item;  //394-34
+	CSprite * item;
 	CSprite * WhiteHP;
 	CSprite * simonRedHP;
 	CSprite * bossOrangeHP;
-
 	CSprite * doubleShot;
+
 	Camera* cam= Camera::GetInstance();;
 	Simon* simon = Simon::GetInstance();
 	static Board* _instance;
