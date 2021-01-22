@@ -7,6 +7,7 @@
 
 enum Available
 {
+	UNKNOWN,
 	DAGGER,
 	HOLYWATER,
 	STOPWATCH,

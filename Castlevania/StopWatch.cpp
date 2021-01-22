@@ -21,7 +21,7 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				CEnemy *e = NULL;
 				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
 				{
-				case 1:
+				case 2:
 					e = dynamic_cast<CGhost *>(coObjects->at(i));
 					break;
 				case 10:

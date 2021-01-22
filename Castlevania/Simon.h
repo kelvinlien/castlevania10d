@@ -93,6 +93,7 @@ class Simon : public CGameObject
 	int currentFrame;
 
 	CWeapon *subWeapons;
+	CWeapon *subWeapons2;
 	static Simon * __instance;
 	animation ani;
 	Area *area;
@@ -102,6 +103,7 @@ class Simon : public CGameObject
 	int hearts = 5;
 	int health = 2;
 	int life = SIMON_MAX_LIFE;
+
 
 	//time variables
 	DWORD startSit;
@@ -222,7 +224,7 @@ public:
 	void SetLife(int _life) { life = _life; }
 	int GetLife() { return life; }
 	void SetIsIdleIntro(bool a) { isIdleIntro = a; }
-	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	void SetSubWeapons(CWeapon* wp) { subWeapons2 = wp; if (subWeapons == NULL) subWeapons = subWeapons2; }
 	CWeapon * GetSubWeapon() { return subWeapons; }
 	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
 	void ResetSimon();

@@ -91,7 +91,7 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				//e->obj->isVanish = true;
 				switch (dynamic_cast<CEnemy*>(e->obj)->GetType())
 				{
-				case 1:
+				case 2:
 					enemy = dynamic_cast<CGhost*>(e->obj);
 					break;
 				case 10:
