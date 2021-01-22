@@ -843,7 +843,7 @@ void CPlayScene::Update(DWORD dt)
 
 					CBrokenBrick *brokenBrick = dynamic_cast<CBrokenBrick*>(current);
 
-					if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10)
+					if (brokenBrick->GetItemType() == 4 || brokenBrick->GetItemType() == 10 || brokenBrick->GetItemType() == 13)
 					{
 						ItemType type = brokenBrick->GetItemType();
 						obj = new Item(brokenBrick->x, brokenBrick->y, type);
@@ -998,13 +998,6 @@ void CPlayScene::Render()
 		board->Render();
 	LPDIRECT3DTEXTURE9 bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
 	
-	//Render trigger stairs
-	/*if(id == 2)
-		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size() - 2; i++) 
-			TriggerStairs::GetInstance()->Get(i)->Render();
-	else if (id == 3)
-		for (int i = 20; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
-			TriggerStairs::GetInstance()->Get(i)->Render();*/
 	for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 	{
 		if(id == PLAY_SCENE_2_ID && i != TRIGGER_STAIR_1_PLAY_SCENE_3_ID && i != TRIGGER_STAIR_2_PLAY_SCENE_3_ID)
@@ -1014,10 +1007,6 @@ void CPlayScene::Render()
 	}
 	for (int i = 0; i < activeEntities.size(); i++)
 		activeEntities[i]->GetGameObject()->Render();
-	/*for (size_t i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Render();
-	}*/
 	CRepeatableEffects::GetInstance()->Render();
 	if (BlinkEffect::GetInstance()->GetIsActive())
 	{

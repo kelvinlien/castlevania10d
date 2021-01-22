@@ -22,6 +22,9 @@ void CBrokenBrick::SetItem(int itemType) {
 	case 10:
 		type = ITEM_CHICKEN_THIGH;
 		break;
+	case 13:
+		type = ITEM_DOUBLE_SHOT;
+		break;
 	default:
 		break;
 	}
