@@ -55,6 +55,8 @@
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponManager.cpp" />
     <ClCompile Include="Whip.cpp" />
+    <ClCompile Include="OutroBat.cpp" />
+    <ClCompile Include="OutroPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -112,5 +114,7 @@
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponManager.h" />
     <ClInclude Include="Whip.h" />
+    <ClInclude Include="OutroBat.h" />
+    <ClInclude Include="OutroPoint.h" />
   </ItemGroup>
 </Project>

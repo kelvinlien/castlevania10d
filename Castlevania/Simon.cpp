@@ -241,7 +241,7 @@ void Simon::Render()
 	RenderBoundingBox();
 
 	
-	if (flag)
+	if (flag && CGame::GetInstance()->GetCurrentSceneID() == 1)
 	{
 		int startCol = (int)Camera::GetInstance()->GetCamX() / 32;
 		int endCol = startCol + SCREEN_WIDTH / 32;
@@ -772,6 +772,16 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					CGame::GetInstance()->SwitchScene(1);
 			}
 		}
+		else if (CGame::GetInstance()->GetCurrentSceneID() == 6)
+		{
+
+			flag = true;
+			SetState(SIMON_STATE_AUTO);
+			if (x >= SIMON_STOP_OUTRO_X) {
+				isIdleIntro = true;
+				vx = 0;
+			}
+		}
 
 		if (CGame::GetInstance()->GetCurrentSceneID() != 1)
 		{
@@ -908,18 +918,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					x += dx;
 				}
 			}
-			
-			else if (dynamic_cast<CSmallBrick *>(e->obj))
-			{
-				if (e->ny < 0)
-				{
-					if (isJump == true)
-					{
-						y -= SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
-						isJump = false;
-					}
-				}
-			}
 			else if (dynamic_cast<CBrokenBrick *>(e->obj))
 			{
 				if (e->ny < 0)
@@ -938,27 +936,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 				}
 			}
-			/*else if (dynamic_cast<CPortal *>(e->obj))
-			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}*/
-			/*else if (dynamic_cast<CDoor *>(e->obj))
-			{
-				CDoor *door = dynamic_cast<CDoor *>(e->obj);
-				if (!door->IsActive() && this->x - door->GetPostionX() < 0)
-				{
-					doorId = door->GetId();
-					SetState(SIMON_STATE_IDLE);
-					isAutoWalking = true;
-					door->SetActive(true);
-					Camera::GetInstance()->SetIsAuto(true);
-				}
-				else if (door->IsActive())
-				{
-					x += dx;
-				}
-			}*/
 		}
 	}
 

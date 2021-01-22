@@ -75,6 +75,12 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		x = playerX;
 		y = 0.0f;
 	}
+	else if (CGame::GetInstance()->GetCurrentSceneID() == 6)
+	{
+		if (playerX < 0) return;
+		x = playerX;
+		y = 0.0f;
+	}
 	DebugOut(L"Cam x, Simon x, playerX, area id and Area limits %f %f %f %d %f %f\n", this->x, Simon::GetInstance()->x, playerX, Area::GetInstance()->GetAreaID(),Area::GetInstance()->GetLimitLeftCam(), Area::GetInstance()->GetLimitRightCam());
 }
 
