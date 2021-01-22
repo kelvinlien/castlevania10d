@@ -95,7 +95,9 @@ class Simon : public CGameObject
 	int doorId;
 	int hearts = 5;
 	int health = SIMON_MAX_HEALTH;
-	//time variables	
+	int life = SIMON_MAX_LIFE;
+
+	//time variables
 	DWORD startSit;
 	DWORD startHurt;
 	DWORD startUntouchable;
@@ -122,7 +124,11 @@ class Simon : public CGameObject
 	bool isFall = false;
 	bool isUntouchable = false;
 	bool isDead = false;
-	bool isBuff = false;
+	bool isFreeze = false;
+	bool isDoubleShot = false;
+
+	//flag is true when simon comes and render portal, back part of the castle  
+	//bool isBuff = false;
 	bool isAutoWalking = false;
 	//flag is true when simon comes and render portal, back part of the castle  	
 	bool flag;
@@ -200,13 +206,24 @@ public:
 	void SetStairOutPoint(int i);
 	float GetAboveStairOutPoint() { return aboveStairOutPoint; }
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
+	bool IsFreeze() { return isFreeze; }
+	bool IsDoubleShot() { return isDoubleShot; }
 
 	void SetOnStair(bool a) { isOnStair = a; }
 	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
 	void SetHearts(int _hearts) {  hearts = _hearts; }
+	void SetisFreeze(bool _status) { isFreeze = _status; }
+	void SetHealth(int _health) {  health = _health; }
+	int GetHealth() { return health; }
+	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
+	void SetLife(int _life) { life = _life; }
+	int GetLife() { return life; }
+
 
 	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	CWeapon * GetSubWeapon() { return subWeapons; }
+	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
 
 	void ResetSimon();
 	

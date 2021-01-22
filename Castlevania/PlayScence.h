@@ -18,6 +18,7 @@
 #include  "Bat.h"
 #include "TriggerStair.h"
 
+#include "Board.h"
 #include"Ghost.h"
 
 #include "Quadtree.h"
@@ -30,6 +31,9 @@ protected:
 	CRepeatableEffects *effects;	//list contain effects
 	Simon *player;					// A play scene has to have player, right?
 
+	CGhost *ghost;					// Beta ghost for testing purpose
+	
+	Board* board;
 	Quadtree *qtree;
 
 	Item item; //temp item to save when item created
@@ -46,6 +50,7 @@ protected:
 	void _ParseSection_SCENE_ANI_SET(string line);
 	void _ParseSection_SCENE_OBJECT(string line);
 public:
+	
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();

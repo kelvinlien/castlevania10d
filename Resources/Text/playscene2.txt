@@ -23,6 +23,8 @@
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
 200	..\Resources\Texture\texture-map-2.png	255	255	255
+85	..\Resources\Texture\board.png	255	0	255
+
 100	..\Resources\Texture\enemy_bullet.png	255	0	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -249,10 +251,8 @@
 40012	194	0	224	32	40
 #dagger
 40016	162	0	194	18	40
-
 #Cross
 40018	224	0	256	32	40
-
 #Holy water item
 40019	30	32	62	64	40
 #Chicken thigh
@@ -429,7 +429,7 @@
 
 #Orange
 80038	22	0	32	17	81
-
+80039	11	0	21	17	81
 #Door
 #Closed
 90000	3	0	19	96	90
@@ -439,7 +439,8 @@
 
 #Opened
 90002	96	0	176	96	90
-
+#board
+100000	0	0	520	80	85
 #mapID	filematrix map
 [MAPMATRIX]
 
@@ -722,13 +723,14 @@
 
 #-
 836	80036	100
-
+#board
+999	100000	100
 #Health
 #Red
 837	80037	100
 #Orange
 838	80038	100
-
+839	80039	100
 # ==== DOOR =========
 #Closed
 900	90000	100
@@ -756,13 +758,15 @@
 #EFFECT
 7	700	701	702	703	704	705
 #BOARD
-8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838
+8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838	839
 #DOOR
 9	900	901	902
 # SMALL BRICK
 10	202
 # BROKEN BRICK
 11	201	203	204
+#board
+13	999
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type

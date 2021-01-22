@@ -7,6 +7,7 @@
 #include "Bat.h"
 #include "Fishman.h"
 
+#include "Board.h"
 CWhip* CWhip::__instance = NULL;
 
 CWhip* CWhip::GetInstance()
@@ -32,6 +33,7 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		SetPosition((Simon::GetInstance()->x - 20), Simon::GetInstance()->y);
 	else if (nx < 0)
 		SetPosition((Simon::GetInstance()->x - 80), Simon::GetInstance()->y);
+	Board* board = Board::Getinstance();
 
 	/*float l1, t1, r1, b1;
 	float l2, t2, r2, b2;
@@ -85,7 +87,10 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				if (e != NULL) {
 					e->GetBoundingBox(l2, t2, r2, b2);
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					{
 						e->SetState(ENEMY_STATE_DIE);
+						board->SetScore(board->GetScore() + 10);
+					}
 				}
 			}
 			else if (dynamic_cast<CCandle *>(coObjects->at(i)))

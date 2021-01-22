@@ -595,9 +595,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		else
 			subWeapons->Update(dt, coObjects);
 	}
-	if (isBuff && GetTickCount64()-buffTime > 10)
+	if (isDoubleShot && GetTickCount64()-buffTime > 6000)
 	{
-		isBuff = false;
+		isDoubleShot = false;
 	}
 	//Ensure render time >= render attack time
 	if (isAttack == true && GetTickCount() - attackTime > 350) {
@@ -768,6 +768,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			if (dynamic_cast<Item *>(e->obj))
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
+
 				item->BeingProcessed();
 
 			}

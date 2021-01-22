@@ -3,7 +3,7 @@
 #include "Weapon.h"
 #include "Game.h"
 #include "BlinkEffect.h"
-
+#include "Board.h"
 
 Item::Item(int x, int y, ItemType ani) {
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
@@ -179,6 +179,7 @@ void Item::GetBoundingBox(float &l, float &t, float &r, float &b) {
 void Item::BeingProcessed()
 {
 	Simon *simon = Simon::GetInstance();
+	Board* board = Board::Getinstance();
 	isEaten = true;
 	switch (ani)
 	{
@@ -189,10 +190,11 @@ void Item::BeingProcessed()
 		simon->SetHearts(simon->GetHearts() + 5);
 		break;
 	case ITEM_ORD:
-		simon->SetHealth(SIMON_MAX_HEALTH); 
+		simon->SetHealth(16); 
+		board->SetFinish(true);
 		break;
 	case ITEM_DOUBLE_SHOT:
-		simon->SetisBuff();
+		simon->SetIsDoubleShot(true);
 		break;
 	case ITEM_MONEY_BAG_RED:
 		effect = ONE_THOUSAND_EFFECT;
