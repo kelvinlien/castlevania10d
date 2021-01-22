@@ -9,7 +9,7 @@
 
 #define FISH_MAN_WALKING_SPEED		0.1f
 #define FISH_MAN_GRAVITY				0.0015f
-#define FISH_MAN_JUMPING_SPEED		-0.5f
+#define FISH_MAN_JUMPING_SPEED		-1.0f
 
 #define FISH_MAN_WAIT_TO_SHOOT_TIME		3000
 #define FISH_MAN_SHOOTING_TIME			700
@@ -39,6 +39,7 @@ class CFishman : public CEnemy
 	bool isWaitToShoot = false;
 	bool canShoot = false;
 	bool isShootyet = false;
+	bool isUsingEffect = false;
 	CWeapon* bullet = new Bullet();
 
 	enum animation

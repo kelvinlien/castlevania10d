@@ -653,4 +653,4 @@
 #50	300	98	0	316	150	2
 
 [ENEMY]
-#0	..\Resources\Text\Enemy.txt
+0	..\Resources\Text\Enemy3.txt

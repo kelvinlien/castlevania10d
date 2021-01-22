@@ -1,0 +1,150 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+60	..\Resources\Texture\ghost.png	255	0	255
+61	..\Resources\Texture\panther.png	255	0	255
+62	..\Resources\Texture\fishman.png	255	0	255
+63	..\Resources\Texture\bat.png	255	0	255
+31	..\Resources\Texture\hit-effect.png	255	0	255
+32	..\Resources\Texture\burn.png	255	0	255
+33	..\Resources\Texture\enemy_bullet.png	255	0	255
+
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#ENEMY
+
+#Ghost
+#Left
+60001	0	0	32	64	60
+60002	36	0	68	64	60
+
+#Right
+60011	77	0	109	64	60
+60012	113	0	145	64	60
+
+
+#Panther
+#Left
+#Idle
+61000	2	0	67	32	61
+#Leap
+61001	210	0	275	32	61
+#Moving
+61002	70	0	135	32	61
+61003	138	0	203	32	61
+
+#Right
+#Idle
+61010	497	0	562	32	61
+#Leap
+61011	287	0	352	32	61
+#Moving
+61012	429	0	494	32	61
+61013	358	0	423	32	61
+
+#Fishman
+#Left
+#Idle
+62000	69	0	101	64	62
+#Moving
+62001	34	0	66	64	62
+62002	0	0	32	64	62
+
+#Right
+#Idle
+62010	115	0	147	64	62
+#Moving
+62011	148	0	180	64	62
+62012	184	0	216	64	62
+
+#effect
+30011	0	0	16	20	31
+30012	43	0	85	44	32
+
+#Bat
+#left
+63000	32	0	64	32	63
+63001	64	0	96	32	63
+63002	96	0	128	32	63
+#right
+63010	192	0	224	32	63
+63011	160	0	192	32	63
+63012	128	0	160	32	63
+
+#enemy_bullet
+30013	0	0	10	12	33
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ==== ENEMY  =========
+#ghost
+#moving left
+600	60001	100	60002	100
+#moving right
+601	60011	100	60012	100
+
+#panther
+#idle left
+610	61000	100
+#idle right
+611	61010	100
+
+#leap left
+612	61001	100
+#leap right
+613	61011	100
+
+#moving left
+614	61002	100	61003	100
+#moving right
+615	61012	100	61013	100
+
+
+#fishman
+#shoot left
+620	62002	100
+#shoot right
+621	62012	100
+
+#moving left
+622	62000	500	62001	500
+
+#moving right
+623	62010	500	62011	500
+
+#bat
+#left
+630	63000	100	63001	100	63002	100
+#right
+631	63010	100	63011	100	63012	100
+
+#break
+303	30011	100	30012	100
+#idle left
+624	62000	100
+#idle right
+625	62010	100
+
+#bat
+#left
+630	63000	100	63001	100	63002	100
+#right
+631	63010	100	63011	100	63012	100
+
+#enemy_bullet
+313	30013	100
+
+#
+# id	ani1	ani2	ani3
+#
+[ANIMATION_SETS]
+#ENEMY
+61	600	601	303
+62	610	611	612	613	614	615	303	313
+63	620	621	622	623	624	625	303
+64	630	631	303
+
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings per object type
+# type: 2 = Ghost, 10 = Panther, 20 = Bat, 30 = Fishman
+#	FISHMAN
+30	80.0	402	63	1
