@@ -877,7 +877,6 @@ void CPlayScene::Update(DWORD dt)
 		Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
 		Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
 	}
-    board->Update();
 	Camera* cam = Camera::GetInstance();
 	//Create enemy factory
 	CEnemyFactory* factory = CEnemyFactory::GetInstance();
