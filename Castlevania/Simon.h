@@ -100,7 +100,7 @@ class Simon : public CGameObject
 	Camera* cam;
 	int doorId;
 	int hearts = 5;
-	int health = SIMON_MAX_HEALTH;
+	int health = 2;
 	int life = SIMON_MAX_LIFE;
 
 	//time variables

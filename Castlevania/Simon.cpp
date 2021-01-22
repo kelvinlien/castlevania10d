@@ -578,8 +578,8 @@ void Simon::CalcPotentialCollisions(
 
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
-	DebugOut(L"[CurrentStair] %d \n", currentstair);
 	CGameObject::Update(dt);
+
 
 	if (CGame::GetInstance()->GetCurrentSceneID() == 3 && this->y > SIMON_EFFECT_DROWN_POINT)
 	{
@@ -852,7 +852,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					continue;
 				if (e->ny < 0)
 				{
-					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME) && !isAutoWalking)
+					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
 					{
 
 							isHurt = false;

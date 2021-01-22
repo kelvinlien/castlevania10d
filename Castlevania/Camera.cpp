@@ -75,7 +75,7 @@ void Camera::Move(float mapWidth, float screenWidth, float playerX, float player
 		x = playerX;
 		y = 0.0f;
 	}
-	DebugOut(L"Cam x, Simon x, playerX, area id and Area limits %f %f %f %d %f %f\n", this->x, Simon::GetInstance()->x, playerX, Area::GetInstance()->GetAreaID(),Area::GetInstance()->GetLimitLeftCam(), Area::GetInstance()->GetLimitRightCam());
+	//DebugOut(L"Cam x, Simon x, playerX, area id and Area limits %f %f %f %d %f %f\n", this->x, Simon::GetInstance()->x, playerX, Area::GetInstance()->GetAreaID(),Area::GetInstance()->GetLimitLeftCam(), Area::GetInstance()->GetLimitRightCam());
 }
 
 Camera * Camera::GetInstance()
