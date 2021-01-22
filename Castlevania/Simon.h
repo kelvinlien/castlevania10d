@@ -51,7 +51,7 @@
 #define SIMON_SIT_AFTER_FALL_TIME	 250
 #define SIMON_UNTOUCHABLE_TIME	 2000
 
-#define SIMON_MAX_HEALTH	16						   
+#define SIMON_MAX_HEALTH	2						   
 #define SIMON_MAX_LIFE	5
 enum animation
 {

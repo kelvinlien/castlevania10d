@@ -260,7 +260,7 @@ void Simon::Render()
 void Simon::Stand() {
 	if (isAttack || isJump || isOnStair)   //Check neu dang nhay ma OnKeyUp DIK_DOWN va luc do dang attack hoac jump thi break.
 		return;
-	y = y - ( SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT + 2);
+	y = y - ( SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT);
 	isSit = false;
 	isFall = false;
 	isJump = false;
@@ -286,7 +286,7 @@ void Simon::SitAfterFall() {
 		vx = 0;
 	}
 	else {
-		y += 17;
+		y += 15;
 		vx = 0;
 		vy = 0;
 	}
@@ -647,16 +647,19 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+
+		
 
 		if (!isHurt) {
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
 			}
 			if (ny != 0) {
 				vy = 0;
 			}
+
 		}
 		
 
@@ -775,7 +778,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					}
 					else if (isJump)
 					{
-						y = y - (SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT + 2);
+						y = y - (SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT);
 						isJump = false;
 					}
 				}

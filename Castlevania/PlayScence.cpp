@@ -946,14 +946,14 @@ void CPlayScene::Unload()
 	}
 	/*for (int i = 0; i < activeEntities.size(); i++)
 	{
-		activeEntities[i] = NULL;
-		delete activeEntities[i];
+	activeEntities[i] = NULL;
+	delete activeEntities[i];
 	}*/
-	for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
-	{
-		//delete CEnemyFactory::GetInstance()->enemies.at(i);
+	//for (int i = 0; i < CEnemyFactory::GetInstance()->enemies.size(); i++)
+	//{
+	//	//delete CEnemyFactory::GetInstance()->enemies.at(i);
 
-	}
+	//}
 	CEnemyFactory::GetInstance()->enemies.clear();
 	activeEntities.clear();
 	objects.clear();
