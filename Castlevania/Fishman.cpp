@@ -16,7 +16,7 @@ CFishman::CFishman(float x, float y, int nx, int itemType) :CEnemy()
 	this->x = x;
 	this->y = y;
 	this->ybackup = y;
-	this->type = 30; // 30 là fishman nên thay bằng enum
+	this->type = ENEMY_TYPE_FISHMAN;
 	isActive = true;
 	SetState(FISH_MAN_STATE_JUMP);
 }

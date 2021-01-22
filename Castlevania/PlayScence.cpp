@@ -940,13 +940,32 @@ void CPlayScene::Update(DWORD dt)
 		CEnemy* enemy = factory->enemies[i];
 		if (enemy->isVanish == true && GetTickCount() - enemy->GetStartDieTime() >= factory->GetRespawnTime())
 		{
-			if (enemy->GetType() == 10)
+			if (enemy->GetType() == OBJECT_TYPE_PANTHER)
 			{
 				if (enemy->GetPostionX() < (cam->GetCamX()-SCREEN_WIDTH/2) || enemy->GetPostionX() > (cam->GetCamX() + (SCREEN_WIDTH*3)/2))
 				{
 					enemy->Respawn();
 					objects.push_back(enemy);
-
+				}
+			}
+			else if(enemy->GetType() == ENEMY_TYPE_GHOST) {
+				if (Area::GetInstance()->GetAreaID() == 21) {
+					if (Simon::GetInstance()->x >= LEFT_BOUND_SPAWN_GHOST_21 && Simon::GetInstance()->x <= RIGHT_BOUND_SPAWN_GHOST_21) {
+						enemy->Respawn();
+						objects.push_back(enemy);
+					}
+				}
+				else if (Area::GetInstance()->GetAreaID() == 23) {
+					if (Simon::GetInstance()->x >= LEFT_BOUND_SPAWN_GHOST_23 && Simon::GetInstance()->x <= RIGHT_BOUND_SPAWN_GHOST_23) {
+						enemy->Respawn();
+						objects.push_back(enemy);
+					}
+				}
+			}
+			else if (enemy->GetType() == ENEMY_TYPE_BAT) {
+				if (Area::GetInstance()->GetAreaID() == 22) {
+					enemy->Respawn();
+					objects.push_back(enemy);
 				}
 			}
 			else

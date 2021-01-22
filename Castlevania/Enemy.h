@@ -6,6 +6,21 @@
 #define ENEMY_STATE_MOVE	700
 #define ENEMY_STATE_DEAD	30
 
+#define ENEMY_TYPE_GHOST	2
+#define ENEMY_TYPE_PANTHER	10
+#define ENEMY_TYPE_BAT		20
+#define ENEMY_TYPE_FISHMAN	30
+
+#define LEFT_BOUND_SPAWN_GHOST_21	0
+#define RIGHT_BOUND_SPAWN_GHOST_21	800
+#define LEFT_BOUND_SPAWN_GHOST_23	4096
+#define RIGHT_BOUND_SPAWN_GHOST_23	4800
+
+
+
+
+
+
 using namespace std;
 class CEnemy: public CGameObject
 {
