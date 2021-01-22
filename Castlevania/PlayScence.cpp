@@ -359,7 +359,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			if (axis == 0)
 				obj->SetPosition(x + SMALL_BRICK_WIDTH * i, y);
 			else
-				obj->SetPosition(x, y + SMALL_BRICK_BBOX_HEIGHT * i);
+				obj->SetPosition(x, y + SMALL_BRICK_HEIGHT * i);
 			obj->SetAnimationSet(ani_set);
 			objects.push_back(obj);
 		}
