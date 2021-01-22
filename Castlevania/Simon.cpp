@@ -412,7 +412,7 @@ void Simon::AutoWalkOnStair() {
 		belowStairOutPoint = 480;
 		if (y+SIMON_BBOX_HEIGHT > 472 && nx==1)
 		{
-			aboveStairOutPoint = 120;
+			aboveStairOutPoint = 100;
 			belowStairOutPoint = 215;
 			game->GetInstance()->SwitchScene(3);
 			currentstair = 19;
@@ -423,8 +423,8 @@ void Simon::AutoWalkOnStair() {
 	}
 	else if (currentstair == 19)
 	{
-		aboveStairOutPoint = 120;
-		if (GetPostionY() < 120 )
+			aboveStairOutPoint = 100;
+		if (GetPostionY() < 100 )
 		{
 			game->GetInstance()->SwitchScene(2);
 			currentstair = 18;
@@ -440,8 +440,8 @@ void Simon::AutoWalkOnStair() {
 	}
 	else if (currentstair == 20)
 	{
-		aboveStairOutPoint = 120;
-		if (GetPostionY() < 120)
+		aboveStairOutPoint = 100;
+		if (GetPostionY() < 100)
 		{
 			game->GetInstance()->SwitchScene(2);
 			currentstair = 21;
@@ -462,7 +462,7 @@ void Simon::AutoWalkOnStair() {
 		belowStairOutPoint = 480;
 		if (y + SIMON_BBOX_HEIGHT > 442 && nx == 1) 
 		{
-			aboveStairOutPoint = 120;
+			aboveStairOutPoint = 100;
 			belowStairOutPoint = 278;
 			game->GetInstance()->SwitchScene(3);
 			currentstair = 20;
@@ -585,7 +585,10 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		isVanish = true;
 		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
 	}
-
+	if (health == 0)
+	{
+		SetState(SIMON_STATE_DIE);
+	}
 
 	if (!canGoUpStair && !canGoDownStair && !isOnStair)
 		vy += SIMON_GRAVITY * dt;
@@ -867,6 +870,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 			else if (dynamic_cast<CBrick *>(e->obj))
 			{
+
 				if (isOnStair)
 					continue;
 				if (e->ny < 0)
@@ -965,6 +969,7 @@ void Simon::ResetSimon()
 	isUntouchable = false;
 	isDead = false;
 	nx = 1;
+	if(life>0) life = GetLife() - 1;
 	cam=Camera::GetInstance();
 	Board::Getinstance()->SetBoardHealth(SIMON_MAX_HEALTH);
 	SetHealth(SIMON_MAX_HEALTH);
