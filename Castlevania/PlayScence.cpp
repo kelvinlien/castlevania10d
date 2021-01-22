@@ -1016,7 +1016,7 @@ void CPlayScene::Unload()
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
-	
+
 
 	int ID = CGame::GetInstance()->GetCurrentSceneID();
 
@@ -1043,57 +1043,26 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	else {
 		if (ID == INTRO_SCENE_ID_2) return;
 		Simon *simon = ((CPlayScene*)scence)->GetPlayer();
-	if (simon->IsHurt() && !simon->IsOnStair()) return;
-	if (simon->IsFall() && simon->IsOnStair()) return;
-	if (simon->IsFreeze()) return;
-	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
-	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+		if (simon->IsHurt() && !simon->IsOnStair()) return;
+		if (simon->IsFall() && simon->IsOnStair()) return;
+		if (simon->IsFreeze()) return;
+		// disable control key when Simon die or enter an auto area
+		if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+		if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 
-	switch (KeyCode) {
-	case DIK_SPACE:
-		if (!simon->IsJump()) {
-			if (simon->IsLevelUp()) return;
-			simon->SetState(SIMON_STATE_JUMP);
-		}
-		break;
-	case DIK_A: {
-		if (simon->IsLevelUp()) return;
-		simon->SetState(SIMON_STATE_ATTACK);
-		break;
-	}
-	case DIK_DOWN:
-		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
-			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
-				return;
-		if (simon->IsLevelUp()) return;
-		if (simon->IsOnStair())
-			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
-		else
-			simon->SetState(SIMON_STATE_SIT);
-		break;	
-	case DIK_B: {
-		CGame::GetInstance()->SwitchScene(3);
-		break;
-	}
-
-	/*if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
-		switch (KeyCode)
-		{
+		switch (KeyCode) {
 		case DIK_SPACE:
 			if (!simon->IsJump()) {
 				if (simon->IsLevelUp()) return;
 				simon->SetState(SIMON_STATE_JUMP);
 			}
 			break;
-		case DIK_A:
-		{
+		case DIK_A: {
 			if (simon->IsLevelUp()) return;
 			simon->SetState(SIMON_STATE_ATTACK);
 			break;
 		}
 		case DIK_DOWN:
-		{
 			for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 				if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
 					return;
@@ -1103,14 +1072,46 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			else
 				simon->SetState(SIMON_STATE_SIT);
 			break;
-		}
-		case DIK_K:
-			simon->SetPosition(3600, 0);
-			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
-			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
-			Area::GetInstance()->SetAreaID(22);
+		case DIK_B: {
+			CGame::GetInstance()->SwitchScene(3);
 			break;
-		}*/
+		}
+
+					/*if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+						switch (KeyCode)
+						{
+						case DIK_SPACE:
+							if (!simon->IsJump()) {
+								if (simon->IsLevelUp()) return;
+								simon->SetState(SIMON_STATE_JUMP);
+							}
+							break;
+						case DIK_A:
+						{
+							if (simon->IsLevelUp()) return;
+							simon->SetState(SIMON_STATE_ATTACK);
+							break;
+						}
+						case DIK_DOWN:
+						{
+							for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+								if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
+									return;
+							if (simon->IsLevelUp()) return;
+							if (simon->IsOnStair())
+								simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+							else
+								simon->SetState(SIMON_STATE_SIT);
+							break;
+						}
+						case DIK_K:
+							simon->SetPosition(3600, 0);
+							Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+							Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+							Area::GetInstance()->SetAreaID(22);
+							break;
+						}*/
+		}
 	}
 }
 
