@@ -52,6 +52,9 @@ public:
 	void SetTime(int _time) { this->time = time; }
 	int GetTime() { return time; }
 
+	void SetBoardHealth(int BoardHealth) { this->board_health = BoardHealth; }
+	int GetBoardHealth() { return board_health; }
+
 	bool Check_isFinish (){ return isFinish;}
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }

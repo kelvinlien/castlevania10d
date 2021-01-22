@@ -193,6 +193,12 @@ void Item::BeingProcessed()
 		simon->SetHealth(SIMON_MAX_HEALTH); 
 		board->SetFinish(true);
 		break;
+	case ITEM_CHICKEN_THIGH:
+		if (simon->GetHealth() + 6 >= 16)
+			simon->SetHealth(SIMON_MAX_HEALTH);
+		else
+			simon->SetHealth(simon->GetHealth() + 6);
+		break;
 	case ITEM_DOUBLE_SHOT:
 		simon->SetIsDoubleShot(true);
 		break;
