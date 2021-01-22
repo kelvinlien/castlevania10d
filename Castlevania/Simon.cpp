@@ -716,8 +716,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
 			StopAtFirstStepOnStair();
-			
-			
 		}
 	}
 	else
@@ -733,8 +731,15 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		
 
 		if (!isHurt) {
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCOLLISIONEVENT e = coEventsResult[i];
+				if (!dynamic_cast<Item*>(e->obj))
+				{
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+				}
+			}
 			if (nx != 0 && state != SIMON_STATE_AUTO) {
 				vx = 0;
 			}
@@ -804,7 +809,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			if (dynamic_cast<Item *>(e->obj))
 			{
 				Item *item = dynamic_cast<Item *>(e->obj);
-
 				item->BeingProcessed();
 
 			}
