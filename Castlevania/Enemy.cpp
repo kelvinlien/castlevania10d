@@ -2,6 +2,7 @@
 CEnemy::CEnemy() :CGameObject()
 {
 	isActive = false;
+	isdefeated = false;
 	state = ENEMY_STATE_MOVE;
 	isLock = false;
 	isVanish = false;

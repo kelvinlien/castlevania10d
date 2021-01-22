@@ -16,6 +16,8 @@
 #include "Bat.h"
 #include "BrokenBrick.h"
 #include "WaterSurface.h"
+#include "RepeatableEffects.h"
+
 Simon* Simon::__instance = NULL;
 
 Simon* Simon::GetInstance()
@@ -211,6 +213,11 @@ void Simon::ReLoadAllAniSet()
 	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
 	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
 
+void Simon::ReLoadAllAniSet()
+{
+	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
+
 }
 
 void Simon::Render()
@@ -378,6 +385,8 @@ void Simon::AutoWalkOnStair() {
 	x += dx;
 	y += dy;
 	
+
+	
 	simonAutoWalkDistance = abs(x - backupOnStairX);
 
 	if (simonAutoWalkDistance >= autoWalkDistance)
@@ -401,9 +410,75 @@ void Simon::AutoWalkOnStair() {
 		SetState(SIMON_STATE_IDLE_ON_STAIR);
 	}
 
+	if (currentstair == 18)
+	{
+		aboveStairOutPoint = 438;
+		belowStairOutPoint = 480;
+		if (y+SIMON_BBOX_HEIGHT > 472 && nx==1)
+		{
+			aboveStairOutPoint = 120;
+			belowStairOutPoint = 215;
+			game->GetInstance()->SwitchScene(3);
+			currentstair = 19;
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+	}
+	else if (currentstair == 19)
+	{
+		aboveStairOutPoint = 120;
+		if (GetPostionY() < 120 )
+		{
+			game->GetInstance()->SwitchScene(2);
+			currentstair = 18;
+			aboveStairOutPoint = 438;
+			belowStairOutPoint = 480;
+			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
+			SetPosition(3168, 408);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+
+	}
+	else if (currentstair == 20)
+	{
+		aboveStairOutPoint = 120;
+		if (GetPostionY() < 120)
+		{
+			game->GetInstance()->SwitchScene(2);
+			currentstair = 21;
+			aboveStairOutPoint = 438;
+			belowStairOutPoint = 480;
+			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_23, 0);
+			SetPosition(3808, 408);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+
+	}
+	else if (currentstair == 21)
+	{
+		aboveStairOutPoint = 438;
+		belowStairOutPoint = 480;
+		if (y + SIMON_BBOX_HEIGHT > 442 && nx == 1) 
+		{
+			aboveStairOutPoint = 120;
+			belowStairOutPoint = 278;
+			game->GetInstance()->SwitchScene(3);
+			currentstair = 20;
+			Camera::GetInstance()->SetCamPos(200, 0);
+			SetPosition(768, 120);
+			backupOnStairX = this->x;
+			backupOnStairY = this->y;
+			SetState(SIMON_STATE_IDLE_ON_STAIR);
+		}
+	}
 	if (this->y + SIMON_BBOX_HEIGHT < aboveStairOutPoint || !readyToUpStair && this->y + SIMON_BBOX_HEIGHT > belowStairOutPoint) {
-		SetState(SIMON_STATE_IDLE);
-		return;
+			SetState(SIMON_STATE_IDLE);
+			return;
 	}
 }
 
@@ -423,7 +498,6 @@ void Simon::Sit()
 	y += SIMON_BBOX_HEIGHT - SIMON_SIT_BBOX_HEIGHT;
 	isJump = false;
 	isSit = true;
-
 }
 
 void Simon::Jump()
@@ -506,7 +580,16 @@ void Simon::CalcPotentialCollisions(
 
 void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
+	DebugOut(L"[CurrentStair] %d \n", currentstair);
 	CGameObject::Update(dt);
+
+	if (CGame::GetInstance()->GetCurrentSceneID() == 3 && this->y > SIMON_EFFECT_DROWN_POINT)
+	{
+		isVanish = true;
+		CRepeatableEffects::GetInstance()->repeatEffects.push_back(new CRepeatableEffect(this->x, this->y, WATER_FRAGMENT));
+	}
+
+
 	if (!canGoUpStair && !canGoDownStair && !isOnStair)
 		vy += SIMON_GRAVITY * dt;
 
@@ -635,8 +718,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 		if (nx != 0 && (readyToDownStair || readyToUpStair) && GetTickCount() - time >= 150)
 		{
 			StopAtFirstStepOnStair();
+			
+			
 		}
-
 	}
 	else
 	{
@@ -692,12 +776,13 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 			}
 		}
 
-		if (CGame::GetInstance()->GetCurrentSceneID() == 2)
+		if (CGame::GetInstance()->GetCurrentSceneID() != 1)
 		{
 			for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
 			{
 				if (triggerStairs->Get(i)->IsContainSimon())
 				{
+					currentstair = i;
 					SetReadyToGoStair(i);
 					if (readyToUpStair || readyToDownStair)
 					{
@@ -888,7 +973,7 @@ void Simon::ResetSimon()
 	isDead = false;
 	nx = 1;
 	cam=Camera::GetInstance();
-	SetHealth(2);
+	SetHealth(SIMON_MAX_HEALTH);
 	SetState(SIMON_STATE_IDLE);
 	ReLoadAllAniSet();
 	switch(area->GetInstance()->GetAreaID())
@@ -1091,12 +1176,14 @@ void Simon::SetStairOutPoint(int i)
 		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
 		{
 			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			aboveStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+			//if(i < 18)
+				aboveStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
 		}
 		else
 		{
 			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			belowStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
+			//if (i < 18)
+				belowStairOutPoint = triggerStairs->Get(i + 1)->GetOutPoint();
 		}
 	}
 	else
@@ -1104,12 +1191,14 @@ void Simon::SetStairOutPoint(int i)
 		if (triggerStairs->Get(i)->GetType() == TYPE_BELOW)
 		{
 			belowStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			aboveStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+			//if (i < 18)
+				aboveStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
 		}
 		else
 		{
 			aboveStairOutPoint = triggerStairs->Get(i)->GetOutPoint();
-			belowStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
+			//if (i < 18)
+				belowStairOutPoint = triggerStairs->Get(i - 1)->GetOutPoint();
 		}
 	}
 }

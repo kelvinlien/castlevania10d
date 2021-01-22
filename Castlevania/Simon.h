@@ -11,6 +11,7 @@
 #include "Camera.h"	
 #include <cmath> 
 #include "TriggerStair.h"
+#define SIMON_EFFECT_DROWN_POINT				400	
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310	
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350	
 #define SIMON_AUTO_GO_LEFT_INTRO_X		232	
@@ -46,13 +47,13 @@
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
-#define SIMON_TIME_LEVEL_UP_WHIP 700
-#define SIMON_HURT_TIME	 500
-#define SIMON_SIT_AFTER_FALL_TIME	 250
-#define SIMON_UNTOUCHABLE_TIME	 2000
-
-#define SIMON_MAX_HEALTH	2						   
-#define SIMON_MAX_LIFE	5
+#define SIMON_TIME_JUMPPING_SIT 10
+#define SIMON_TIME_LEVEL_UP_WHIP 700	
+#define SIMON_HURT_TIME	 500	
+#define SIMON_SIT_AFTER_FALL_TIME	 250	
+#define SIMON_UNTOUCHABLE_TIME	 2000	
+#define SIMON_MAX_HEALTH	2
+#define SIMON_MAX_LIFE 5
 enum animation
 {
 	IDLE_LEFT,
@@ -142,8 +143,9 @@ class Simon : public CGameObject
 	bool canGoUpStair;
 	bool canGoDownStair;
 	bool isOnStair;
-	bool isAutoWalkOnStair = false;
-
+	bool isAutoWalkOnStair;
+	
+	int currentstair;
 	int directionY;
 	int stairNx, stairNy;
 	DWORD time;
@@ -194,9 +196,6 @@ public:
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
 	void SetAutoWalking(bool a) { isAutoWalking = a; }
-	void SetisBuff() { isDoubleShot = true; buffTime = GetTickCount64();}
-	void SetHealth(int _health) { health = _health; }
-	int GetHealth() { return health; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsCanGoUpStair() { return canGoUpStair; }
@@ -213,6 +212,8 @@ public:
 	bool IsFall() { return isFall; }
 
 
+	void SetOnStair(bool a) { isOnStair = a; }
+	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
 	void SetisFreeze(bool _status) { isFreeze = _status; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
@@ -224,7 +225,7 @@ public:
 	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
 
 	void ResetSimon();
-
+	
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
 };

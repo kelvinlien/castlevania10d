@@ -50,6 +50,8 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_PANTHER	10
 #define OBJECT_TYPE_FISHMAN	30
 #define OBJECT_TYPE_FIREPOT	3
+//#define OBJECT_TYPE_WHIP	4
+
 #define OBJECT_TYPE_CANDLE	4
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_DOOR			6
@@ -60,6 +62,7 @@ See scene1.txt, scene2.txt for detail format specification
 #define OBJECT_TYPE_INTRO_FLOOR		11
 #define OBJECT_TYPE_HELICOPTER		14
 #define OBJECT_TYPE_INTRO_BAT		13
+#define OBJECT_TYPE_WATER_SURFACE	12
 
 #define OBJECT_TYPE_BRICKS_GROUP	5
 #define OBJECT_TYPE_EFFECT	21
@@ -156,7 +159,8 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	if (tokens.size() < 2) return; // skip invalid lines - an animation set must at least id and one animation id
 
 	int ani_set_id = atoi(tokens[0].c_str());
-
+	if (ani_set_id == 7)
+		DebugOut(L"this is ani set 7");
 	LPANIMATION_SET s = new CAnimationSet();
 
 	CAnimations *animations = CAnimations::GetInstance();
@@ -304,14 +308,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		for (int i = 1; i < amountOfBrick; i++) {
 			if (i != 99 && i != 119)
 			{
-				obj = new CBrick();
-				if (currentMapID == 1)
-					obj->SetPosition(x + BRICK_WIDTH * i, y);
-				else
-					obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
+				if (i != 99 && i != 119)
+				{
+					obj = new CBrick();
+					if (currentMapID == 1)
+						obj->SetPosition(x + BRICK_WIDTH * i, y);
+					else
+						obj->SetPosition(x + BRICK_WIDTH * 2 * i, y);
 
-				obj->SetAnimationSet(ani_set);
-				objects.push_back(obj);
+					obj->SetAnimationSet(ani_set);
+					objects.push_back(obj);
+				}
 			}
 		}
 		break;
@@ -339,7 +346,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int amountOfSmallBrick = amount;
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
-		for (int i = 0; i <= amountOfSmallBrick; i++)
+		//for (int i = 0; i <= amountOfSmallBrick; i++)
+		////first small brick
+		//LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		//obj = new CSmallBrick();
+		//obj->SetPosition(x, y);
+		//obj->SetAnimationSet(ani_set);
+		//objects.push_back(obj);
+		for (int i = 1; i <= amountOfSmallBrick; i++)
 		{
 			obj = new CSmallBrick();
 			if (axis == 0)
@@ -562,11 +576,42 @@ void CPlayScene::_ParseSection_SCENE_OBJECT(string line)
 
 void CPlayScene::Load()
 {
-	if (id == 2 || id == 3)
-		LoadTriggerStair();
+	effects= CRepeatableEffects::GetInstance();		// create instance of effects
 
+	if (id == 2)
+		if(TriggerStairs::GetInstance()->GetTriggerStairs().size()==NULL)
+			LoadTriggerStair();
 	int currentMapID = CGame::GetInstance()->GetCurrentSceneID();
+	/*if (id == 2 || id == 3)
+		LoadTriggerStair();*/
 
+	/*switch (currentMapID) {
+	case 2:
+		if (Area::GetInstance()->GetAreaID() == 0 || Area::GetInstance()->GetAreaID() == 21) {
+			Area::GetInstance()->SetAreaID(21);
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_21);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_21);
+			Camera::GetInstance()->SetCamX(3150);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 22) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
+		}
+		else if (Area::GetInstance()->GetAreaID() == 23) {
+			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_23);
+			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_23);
+		}
+
+		break;
+	case 3:
+		Area::GetInstance()->SetAreaID(31);
+		Area::GetInstance()->SetLimitLeftCam(0);
+		Area::GetInstance()->SetLimitRightCam(240);
+		Camera::GetInstance()->SetCamX(0);
+		break;
+	default:
+		break;
+	}*/
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -683,8 +728,6 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(new TriggerStair(2768, 183, TYPE_ABOVE, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(3408, 247, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(3536, 377, TYPE_BELOW, DIRECT_LEFT));
-	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));
-	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(3984, 377, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(3856, 249, TYPE_ABOVE, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(4304, 185, TYPE_ABOVE, DIRECT_RIGHT));
@@ -693,8 +736,11 @@ void CPlayScene::LoadTriggerStair() {
 	triggerStairs->Add(new TriggerStair(4816, 377, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(5456, 313, TYPE_BELOW, DIRECT_RIGHT));
 	triggerStairs->Add(new TriggerStair(5520, 249, TYPE_ABOVE, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3152, 377, TYPE_ABOVE, DIRECT_RIGHT));//18
 	triggerStairs->Add(new TriggerStair(176, 152, TYPE_BELOW, DIRECT_LEFT));
 	triggerStairs->Add(new TriggerStair(880, 216, TYPE_BELOW, DIRECT_LEFT));
+	triggerStairs->Add(new TriggerStair(3792, 377, TYPE_ABOVE, DIRECT_RIGHT));//21
+
 }
 void CPlayScene::Update(DWORD dt)
 {
@@ -858,6 +904,7 @@ void CPlayScene::Update(DWORD dt)
 		player->x = 5555;
 	}
 
+
 	CGame *game = CGame::GetInstance();
 
 
@@ -1000,7 +1047,37 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (simon->IsFall() && simon->IsOnStair()) return;
 	if (simon->IsFreeze()) return;
 	// disable control key when Simon die or enter an auto area
-	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking()) return;
+	if (simon->GetState() == SIMON_STATE_DIE || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
+
+	switch (KeyCode) {
+	case DIK_SPACE:
+		if (!simon->IsJump()) {
+			if (simon->IsLevelUp()) return;
+			simon->SetState(SIMON_STATE_JUMP);
+		}
+		break;
+	case DIK_A: {
+		if (simon->IsLevelUp()) return;
+		simon->SetState(SIMON_STATE_ATTACK);
+		break;
+	}
+	case DIK_DOWN:
+		for (int i = 0; i < TriggerStairs::GetInstance()->GetTriggerStairs().size(); i++)
+			if (TriggerStairs::GetInstance()->Get(i)->IsContainSimon() && TriggerStairs::GetInstance()->Get(i)->GetType() == 1 && !simon->IsOnStair())
+				return;
+		if (simon->IsLevelUp()) return;
+		if (simon->IsOnStair())
+			simon->SetState(SIMON_STATE_GO_DOWN_STAIR);
+		else
+			simon->SetState(SIMON_STATE_SIT);
+		break;	
+	case DIK_B: {
+		CGame::GetInstance()->SwitchScene(3);
+		break;
+	}
+
+	/*if (simon->GetState() == SIMON_STATE_DIE || simon->GetState() == SIMON_STATE_AUTO || simon->IsAutoWalking() || simon->IsReadyToUpStair() || simon->IsReadyToDownStair()) return;
 		switch (KeyCode)
 		{
 		case DIK_SPACE:
@@ -1033,7 +1110,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
 			Area::GetInstance()->SetAreaID(22);
 			break;
-		}
+		}*/
 	}
 }
 

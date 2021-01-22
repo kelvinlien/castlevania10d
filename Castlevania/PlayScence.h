@@ -31,6 +31,7 @@
 #define INTRO_SCENE_ID_2	5
 
 
+#include"Ghost.h"
 
 #include "BrokenBrick.h"
 class CPlayScene: public CScene

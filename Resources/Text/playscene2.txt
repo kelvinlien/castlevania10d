@@ -18,7 +18,7 @@
 73	..\Resources\Texture\effect1000.png	255	0	255
 74	..\Resources\Texture\hit-effect.png	255	0	255
 75	..\Resources\Texture\blink-effect.png	0	0	0
-76	..\Resources\Texture\broken_brick.png	255	0	255
+76	..\Resources\Texture\BrokenBrick.png	255	0	255
 80	..\Resources\Texture\font.png	255	0	255
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
