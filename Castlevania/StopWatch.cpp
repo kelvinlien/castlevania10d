@@ -2,7 +2,7 @@
 #include"Ghost.h"
 #include"Panther.h"
 #include"Fishman.h"
-
+#include "Bat.h"
 StopWatch::StopWatch()
 {
 	isVanish = true;
@@ -26,6 +26,9 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					break;
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case 20:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
 					break;
 				case 30:
 					e = dynamic_cast<CFishman *>(coObjects->at(i));
@@ -51,6 +54,9 @@ void StopWatch::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					break;
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case 20:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
 					break;
 				case 30:
 					e = dynamic_cast<CFishman *>(coObjects->at(i));
