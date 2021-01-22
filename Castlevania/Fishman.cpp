@@ -1,5 +1,6 @@
 ﻿#include "Fishman.h"
 #include "Simon.h"
+#include "WaterSurface.h"
 float float_rand(float min, float max)
 {
 	float scale = rand() / (float)RAND_MAX; /* [0, 1.0] */

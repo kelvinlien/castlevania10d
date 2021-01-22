@@ -45,6 +45,7 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		startDieTime = GetTickCount();
 		isVanish = true;
+	}
 	else if (state != ENEMY_STATE_DIE && isLock != true)
 		vx = BAT_FLY_SPEED_X * this->nx;
 

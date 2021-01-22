@@ -19,6 +19,7 @@
 #include "IntroBat.h"
 #include "EnemyFactory.h"
 #include "Enemy.h"
+#include "SmallBrick.h"
 
 #include "BlinkEffect.h"
 #include "Door.h"
@@ -247,20 +248,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	}
 	case OBJECT_TYPE_GHOST: {
 		int itemType = atof(tokens[4].c_str());
-		ghost = new CGhost(x, y, -1, itemType);
-		ghost->SetAnimationSet(animation_sets->Get(ani_set_id));
-		CEnemyFactory::GetInstance()->enemies.push_back(ghost);
+		obj = new CGhost(x, y, -1, itemType);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CGhost*>(obj));
 		break;
 	}
 	//break;
 	case OBJECT_TYPE_PANTHER: 
 	{
-		panther = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
-		panther->SetAnimationSet(animation_sets->Get(ani_set_id));
-		CEnemyFactory::GetInstance()->enemies.push_back(panther);
+		obj = new CPanther(x, y, jumpLeftX, jumpRightX, directX);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CPanther*>(obj));
 		break;
 	}
 	case OBJECT_TYPE_BAT:
@@ -268,7 +268,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int itemType = atof(tokens[4].c_str());
 		obj = new CBat(x, y, Simon::GetInstance()->nx * -1, itemType);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		CEnemyFactory::GetInstance()->enemies.push_back(obj);
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CBat*>(obj));
 		break;
 	}
 	case OBJECT_TYPE_FISHMAN: {
@@ -280,7 +280,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x + randomDistance, y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
-		CEnemyFactory::GetInstance()->enemies.push_back(obj);
+		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CFishman*>(obj));
 		break;
 	}
 
@@ -1027,13 +1027,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			Area::GetInstance()->SetLimitLeftCam(LIMIT_LEFT_CAM_22);
 			Area::GetInstance()->SetLimitRightCam(LIMIT_RIGHT_CAM_22);
 			Area::GetInstance()->SetAreaID(22);
+			break;
 		}
-	}
-	case DIK_N:
-	{
-		game->SwitchScene(2);
-		break;
-	}
 	}
 }
 

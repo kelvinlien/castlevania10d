@@ -883,7 +883,6 @@ void Simon::ResetSimon()
 	isFall = false;
 	isUntouchable = false;
 	isDead = false;
-	isBuff = false;
 	nx = 1;
 	cam=Camera::GetInstance();
 	SetHealth(2);
