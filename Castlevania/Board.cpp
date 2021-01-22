@@ -60,6 +60,15 @@ void Board::Render()
 	doubleShot->Draw(x + 312.0f, y + 35.0f, GenerateAlpha());
 }
 
+void Board::ReloadAni()
+{
+	ani_set = CAnimationSets::GetInstance()->Get(BOARD_ID);
+	HP_set = CAnimationSets::GetInstance()->Get(8);
+	font = new CFont();
+	doubleShot = CSprites::GetInstance()->Get(40024);
+	SetSpriteSubWeap();
+}
+
 void Board::Update()
 {
 	x = cam->GetCamX();
