@@ -2,6 +2,9 @@
 #include "Candle.h"
 #include "Ghost.h"
 #include "Panther.h"
+#include "BrokenBrick.h"
+#include "Bat.h"
+#include "Fishman.h"
 
 HolyWater::HolyWater()
 {
@@ -105,25 +108,59 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 		GetBoundingBox(l1, t1, r1, b1);
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (dynamic_cast<CEnemy *>(coObjects->at(i)))
+			if (dynamic_cast<CFirePot*>(coObjects->at(i)))
 			{
-				CEnemy *e = NULL;
-				switch (dynamic_cast<CEnemy *>(coObjects->at(i))->GetType())
+				CFirePot* e = dynamic_cast<CFirePot*>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(FIREPOT_STATE_BREAK);
+			}
+			else if (dynamic_cast<CEnemy*>(coObjects->at(i)))
+			{
+				CEnemy* e = NULL;
+
+				switch (dynamic_cast<CEnemy*>(coObjects->at(i))->GetType())
 				{
-				case 1:
-					e = dynamic_cast<CGhost *>(coObjects->at(i));
+				case ENEMY_TYPE_GHOST:
+					e = dynamic_cast<CGhost*>(coObjects->at(i));
 					break;
-				case 10:
-					e = dynamic_cast<CPanther *>(coObjects->at(i));
+				case ENEMY_TYPE_PANTHER:
+					e = dynamic_cast<CPanther*>(coObjects->at(i));
 					break;
+				case ENEMY_TYPE_BAT:
+					e = dynamic_cast<CBat*>(coObjects->at(i));
+					break;
+				case ENEMY_TYPE_FISHMAN:
+					e = dynamic_cast<CFishman*>(coObjects->at(i));
 				default:
 					break;
 				}
 				if (e != NULL) {
 					e->GetBoundingBox(l2, t2, r2, b2);
 					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-						e->isVanish = true;
+						e->SetState(ENEMY_STATE_DIE);
 				}
+				else if (dynamic_cast<CBrokenBrick*>(coObjects->at(i)))
+				{
+					CBrokenBrick* e = dynamic_cast<CBrokenBrick*>(coObjects->at(i));
+					e->GetBoundingBox(l2, t2, r2, b2);
+					if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+						e->SetState(STATE_BRICK_BREAK);
+				}
+			}
+			else if (dynamic_cast<CCandle*>(coObjects->at(i)))
+			{
+				CCandle* e = dynamic_cast<CCandle*>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(CANDLE_STATE_BREAK);
+			}
+			else if (dynamic_cast<CBrokenBrick*>(coObjects->at(i)))
+			{
+				CBrokenBrick* e = dynamic_cast<CBrokenBrick*>(coObjects->at(i));
+				e->GetBoundingBox(l2, t2, r2, b2);
+				if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
+					e->SetState(STATE_BRICK_BREAK);
 			}
 		}
 	}
