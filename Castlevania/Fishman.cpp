@@ -3,6 +3,7 @@
 #include "WaterSurface.h"
 #include "RepeatableEffect.h"
 #include "RepeatableEffects.h"
+#include "SmallBrick.h"
 
 float float_rand(float min, float max)
 {
@@ -111,6 +112,8 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		if (dynamic_cast<CBrick *>(coObjects->at(i)) && coObjects->at(i)->y >= 280 )
 			coObjectsFishman.push_back(coObjects->at(i));
+		if (dynamic_cast<CSmallBrick*>(coObjects->at(i)))
+			coObjectsFishman.push_back(coObjects->at(i));
 	}
 
 	coEvents.clear();
@@ -135,7 +138,7 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 
 		if (nx != 0) {
-			y += dy;
+			x += dx;
 		}
 		if (ny != 0) {}
 
@@ -158,6 +161,10 @@ void CFishman::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					x += dx;
 					y += dy;
 				}
+			}
+			if (dynamic_cast<CSmallBrick*>(e->obj))
+			{
+				nx = nx * (-1);
 			}
 
 		}
@@ -188,7 +195,7 @@ void CFishman::Respawn()
 	vy = FISH_MAN_JUMPING_SPEED;
 	srand(time(NULL));
 	Camera* cam = Camera::GetInstance();
-	float res = float_rand(cam->GetCamX(),cam->GetCamX() + SCREEN_WIDTH);
+	float res = float_rand(cam->GetCamX()+50,cam->GetCamX() + 500.0);
 	nx = -1 + rand() % (1+1-(-1));
 	if (nx >= 0)
 		nx = 1;
