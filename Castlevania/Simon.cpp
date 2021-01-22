@@ -579,7 +579,7 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 
-
+	DebugOut(L"Simon x :%f \n", this->x);
 	if (CGame::GetInstance()->GetCurrentSceneID() == 3 && this->y > SIMON_EFFECT_DROWN_POINT)
 	{
 		isVanish = true;
