@@ -7,7 +7,7 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
-	this->type = 1; // 1 là ghost nên thay bằng enum
+	this->type = ENEMY_TYPE_GHOST;
 	isActive=true;
 	this->xbackup = x;
 	this->ybackup = y;

@@ -10,7 +10,7 @@ CPanther::CPanther(float x, float y, float xJumpLeft, float xJumpRight, int nx) 
 	this->ybackup = y;
 	this->xJumpRight = xJumpRight;
 	this->xJumpLeft = xJumpLeft;
-	type = 10;  // panther type
+	type = ENEMY_TYPE_PANTHER;  // panther type
 
 	isActive = false;
 	isJump = false;
