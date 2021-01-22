@@ -2,6 +2,7 @@
 #include "Sprites.h"
 #include "GameObject.h"
 #include "Animations.h"
+#include "SmallBrick.h"
 
 #define ITEM_ANI_SET_ID	4
 
