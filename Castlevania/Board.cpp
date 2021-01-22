@@ -3,10 +3,12 @@
 #include"Simon.h"
 #include"StopWatch.h"
 #include "HolyWater.h"
+#include "Axe.h"
 
 #define DAGGER_SPRITE		40016
 #define STOPWATCH_SPRITE	40012
 #define	HOLYWATER_SPRITE	40019
+#define	AXE_SPRITE			51021
 Board* Board::_instance = NULL;
 
 Board* Board::Getinstance()
@@ -149,8 +151,11 @@ void Board::SetSpriteSubWeap()
 	else if( dynamic_cast<StopWatch *>(Simon::GetInstance()->GetSubWeapon()))
 		item = CSprites::GetInstance()->Get(STOPWATCH_SPRITE);
 	else if (dynamic_cast<HolyWater *>(Simon::GetInstance()->GetSubWeapon()))
-		item = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
-	else item = NULL;
+		sprite = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
+	else if (dynamic_cast<Axe *>(Simon::GetInstance()->GetSubWeapon()))
+		sprite = CSprites::GetInstance()->Get(AXE_SPRITE);
+	else sprite = NULL;
+
 }
 
 void Board::RewardingPoints(CGameObject * obj)

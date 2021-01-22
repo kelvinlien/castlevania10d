@@ -6,7 +6,7 @@ CBat::CBat(float x, float y, int nx, int itemType) :CEnemy()
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
-	this->type = 20; // 20 là bat nên thay bằng enum
+	this->type = ENEMY_TYPE_BAT;
 	isActive = true;
 	vx = BAT_FLY_SPEED_X * this->nx;
 }
@@ -55,8 +55,10 @@ void CBat::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (vy >= BAT_FLY_SPEED_Y || vy <= -BAT_FLY_SPEED_Y)
 		amplitude *= -1;
 
-	x += dx;
-	y += dy;
+	if (!isLock) {
+		x += dx;
+		y += dy;
+	}
 
 }
 

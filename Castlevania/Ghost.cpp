@@ -7,7 +7,7 @@ CGhost::CGhost(float x, float y, int nx, int itemType):CEnemy()
 	this->nx = nx;
 	this->x = x;
 	this->y = y;
-	this->type = 1; // 1 là ghost nên thay bằng enum
+	this->type = ENEMY_TYPE_GHOST;
 	isActive=true;
 	this->xbackup = x;
 	this->ybackup = y;
@@ -66,7 +66,7 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CBrick *>(coObjects->at(i)))
+		if (dynamic_cast<CBrick *>(coObjects->at(i)) || dynamic_cast<CSmallBrick *>(coObjects->at(i)))
 
 			coObjectsGhost.push_back(coObjects->at(i));
 	}
@@ -93,8 +93,21 @@ void CGhost::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0){}
+		if (nx != 0){
+			x += dx;
+		}
 		if (ny != 0) vy = 0;
+
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			 if (dynamic_cast<CSmallBrick*>(e->obj))
+			{
+				this->nx *= -1;
+				vx *= nx;
+			}
+		}
 	}
 
 	// clean up collision events
