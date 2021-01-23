@@ -66,6 +66,9 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
 					break;
+				case ENEMY_TYPE_BAT:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
+					break;
 				case ENEMY_TYPE_FISHMAN:
 					e = dynamic_cast<CFishman *>(coObjects->at(i));
 					break;
@@ -120,6 +123,9 @@ void CWhip::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 					break;
 				case 10:
 					e = dynamic_cast<CPanther *>(coObjects->at(i));
+					break;
+				case ENEMY_TYPE_BAT:
+					e = dynamic_cast<CBat *>(coObjects->at(i));
 					break;
 				case ENEMY_TYPE_FISHMAN:
 					e = dynamic_cast<CFishman *>(coObjects->at(i));

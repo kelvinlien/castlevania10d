@@ -875,10 +875,9 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 				{
 					if (isHurt && (GetTickCount() - startHurt > SIMON_HURT_TIME))
 					{
-
-							isHurt = false;
-							isJump = false;
-							SetState(SIMON_STATE_SIT_AFTER_FALL);
+						isHurt = false;
+						isJump = false;
+						SetState(SIMON_STATE_SIT_AFTER_FALL);
 					}
 					else if (isJump)
 					{
