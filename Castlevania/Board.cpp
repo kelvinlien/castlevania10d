@@ -4,7 +4,8 @@
 #include"StopWatch.h"
 #include "HolyWater.h"
 #include "Axe.h"
-
+#include "Boss.h"
+#include "Game.h"
 #define DAGGER_SPRITE		40016
 #define STOPWATCH_SPRITE	40012
 #define	HOLYWATER_SPRITE	40019
@@ -49,7 +50,7 @@ void Board::Render()
 		WhiteHP->DrawBoard((120) + i * 10, 52);
 	}
 	//enemy
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < CBoss::GetInstance()->GetHealthBoss(); i++)
 	{
 		bossOrangeHP->DrawBoard((120) + i * 10, 52);
 	}
@@ -130,7 +131,10 @@ void Board::Update()
 			score += 100;
 		}
 		if (simon->GetHearts() == 0)
+		{
 			isFinish = false;
+			CGame::GetInstance()->SwitchScene(6);
+		}
 	}
 	SetSpriteSubWeap();
 	if (Simon::GetInstance()->IsDoubleShot() && flashingTime == 0)

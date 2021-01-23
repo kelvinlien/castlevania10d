@@ -24,6 +24,8 @@
 #include "Door.h"
 #include "OutroBat.h"
 #include "OutroPoint.h"
+#include "Boss.h"
+
 
 using namespace std;
 
@@ -60,6 +62,7 @@ See scene1.txt, scene2.txt for detail format specification
 #define	OBJECT_TYPE_SMALL_BRICK_GROUP	9
 #define OBJECT_TYPE_BROKEN_BRICK	8
 #define OBJECT_TYPE_WATER_SURFACE	12
+#define OBJECT_TYPE_BOSS	15
 #define OBJECT_TYPE_BAT	20
 #define OBJECT_TYPE_FLOOR		11
 #define OBJECT_TYPE_HELICOPTER		14
@@ -284,6 +287,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		CEnemyFactory::GetInstance()->enemies.push_back(dynamic_cast<CFishman*>(obj));
 		break;
 	}
+
+	case OBJECT_TYPE_BOSS:
+		obj = new CBoss();
+		break;
 
 	case OBJECT_TYPE_BRICK: {
 		int amountOfBrick;
@@ -863,9 +870,12 @@ void CPlayScene::Update(DWORD dt)
 				float camRightLimit = Camera::GetInstance()->GetCamX() + CGame::GetInstance()->GetScreenWidth();
 				if ((eX + eBBWidth <= camLeftLimit && eD < 0) || (eX >= camRightLimit && eD > 0))
 				{
-					current->isVanish = true;
-					current->SetState(ENEMY_STATE_DEAD);
-					delObjects.push_back(current);
+					if (!dynamic_cast<CBoss*>(current))
+					{
+						current->isVanish = true;
+						current->SetState(ENEMY_STATE_DEAD);
+						delObjects.push_back(current);
+					}
 				}
 				else
 				{
@@ -1113,7 +1123,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 				simon->SetState(SIMON_STATE_SIT);
 			break;
 		case DIK_B: {
-			Camera::GetInstance()->SetCamPos(LIMIT_LEFT_CAM_22, 0);
+			Camera::GetInstance()->SetCamPos(5000, 0);
+			Simon::GetInstance()->SetPosition(5000, 0);
 			//CGame::GetInstance()->SwitchScene(3);
 			break;
 		}

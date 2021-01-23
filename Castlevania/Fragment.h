@@ -11,7 +11,9 @@
 enum  type
 {
 	WATER_FRAGMENT,
-	RUBBLE_FRAGMENT
+	RUBBLE_FRAGMENT,
+	BOSS_DEAD_EFFECT,
+	BOSS_INJURED_EFFECT
 };
 
 class CFragment :public CGameObject
