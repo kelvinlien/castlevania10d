@@ -15,6 +15,9 @@
 #define ENEMY_POINT_WORTH	10
 #define HOLDER_POINT_WORTH	5
 #define ITEM_POINT_WORTH	5
+#define ONE_THOUSAND_POINT	1000
+#define FOUR_HUNDRED_POINT	400
+#define SEVEN_HUNDRED_POINT	700
 class Board
 {
 	float x = 0;

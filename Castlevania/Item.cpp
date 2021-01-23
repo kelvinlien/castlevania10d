@@ -84,6 +84,7 @@ Item::Item(int x, int y, ItemType ani) {
 		widthBBox = 24;
 		heightBBox = 28;
 		start_x = x;
+		existingTime = 10000;
 		break; 
 	case ITEM_DOUBLE_SHOT:
 		widthBBox = 28;

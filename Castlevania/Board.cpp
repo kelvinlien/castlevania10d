@@ -182,7 +182,22 @@ void Board::RewardingPoints(CGameObject * obj)
 		Item* item = dynamic_cast<Item*>(obj);
 		if (item->isEaten)
 		{
-			SetScore(GetScore() + ITEM_POINT_WORTH);
+			if (item->effect == ONE_THOUSAND_EFFECT)
+			{
+				SetScore(GetScore() + ONE_THOUSAND_POINT);
+			}
+			else if (item->effect == FOUR_HUNDRED_EFFECT)
+			{
+				SetScore(GetScore() + FOUR_HUNDRED_POINT);
+			}
+			else if (item->effect == SEVEN_HUNDRED_EFFECT)
+			{
+				SetScore(GetScore() + SEVEN_HUNDRED_POINT);
+			}
+			else
+			{
+				SetScore(GetScore() + ITEM_POINT_WORTH);
+			}
 		}
 	}
 }
