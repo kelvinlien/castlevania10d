@@ -4,6 +4,7 @@
 61	..\Resources\Texture\panther.png	255	0	255
 62	..\Resources\Texture\fishman.png	255	0	255
 63	..\Resources\Texture\bat.png	255	0	255
+64	..\Resources\Texture\boss.png	255	0	255
 31	..\Resources\Texture\hit-effect.png	255	0	255
 32	..\Resources\Texture\burn.png	255	0	255
 33	..\Resources\Texture\enemy_bullet.png	255	0	255
@@ -70,13 +71,14 @@
 63011	160	0	192	32	63
 63012	128	0	160	32	63
 
-<<<<<<<<< Temporary merge branch 1
-#effect
-30011	0	0	16	20	31
-30012	43	0	85	44	32
 
-=========
->>>>>>>>> Temporary merge branch 2
+#Boss
+#Idle
+64000	0	0	96	46	64
+#Fly
+64001	96	0	192	46	64
+64002	192	0	288	46	64
+
 #enemy_bullet
 30013	0	0	10	12	33
 
@@ -124,6 +126,13 @@
 #right
 631	63010	100	63011	100	63012	100
 
+#Boss
+#Idle
+640	64000	100
+#Fly
+641	64001	100	64002	100
+
+
 #break
 303	30011	100	30012	100
 #idle left
@@ -150,6 +159,9 @@
 63	620	621	622	623	624	625	303
 64	630	631	303
 
+#Boss
+65	640	641
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
 # type: 2 = Ghost, 10 = Panther, 20 = Bat, 30 = Fishman
@@ -166,3 +178,6 @@
 
 #	BAT
 20	4000.0	200	64	1
+
+#	BOSS
+15	5292	132	65

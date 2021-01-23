@@ -36,7 +36,7 @@ Simon::Simon() : CGameObject()
 	this->x = x;
 	this->y = y;
 	CWhip::GetInstance();
-	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(DAGGER));
+	SetSubWeapons(WeaponManager::GetInstance()->createWeapon(AXE));
 }
 
 void Simon::SetState(int state)
@@ -213,7 +213,6 @@ void Simon::ReLoadAllAniSet()
 {
 	CWhip::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(5));
 	SetSubWeapons(WeaponManager::GetInstance()->createWeapon((WeaponManager::GetInstance()->GetAvailable())));
-
 }
 
 void Simon::Render()
@@ -579,7 +578,6 @@ void Simon::Update(DWORD dt, vector< LPGAMEOBJECT>*coObjects)
 {
 	CGameObject::Update(dt);
 
-	DebugOut(L"Simon x :%f \n", this->x);
 	if (CGame::GetInstance()->GetCurrentSceneID() == 3 && this->y > SIMON_EFFECT_DROWN_POINT)
 	{
 		isVanish = true;
