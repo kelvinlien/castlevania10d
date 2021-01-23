@@ -31,14 +31,14 @@
 
 //Time
 #define BOSS_WAITING_TIME	1500
-#define	BOSS_STOP_TIME		150
+#define	BOSS_STOP_TIME		100
 
 class CBoss :public CEnemy
 {
 	static CBoss * __instance;
 	int percentFlyToSimon;
 	int ny;
-	int health = 2;
+	int health = 16;
 
 	//flag variables
 	bool isFlying;
@@ -79,6 +79,7 @@ public:
 	int RandomPercentFlyToSimon() { return  rand() % 3 + 1; } // to decide how many percent Boss can fly to Simon
 	void RandomWaitingPos(); //to random waiting pos
 	void SetDirect(D3DXVECTOR2 targetPos);
+	void ReloadAni();
 	//bool IsOutCamera() { return (this->x <= leftBound || this->x >= rightBound || this->y <= topBound || this->y >= bottomBound); }
 
 };

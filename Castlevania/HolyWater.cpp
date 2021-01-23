@@ -5,6 +5,7 @@
 #include "BrokenBrick.h"
 #include "Bat.h"
 #include "Fishman.h"
+#include "Boss.h"
 
 HolyWater::HolyWater()
 {
@@ -132,6 +133,10 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					break;
 				case ENEMY_TYPE_FISHMAN:
 					e = dynamic_cast<CFishman*>(coObjects->at(i));
+					break;
+				case ENEMY_TYPE_BOSS:
+					e = dynamic_cast<CBoss*>(coObjects->at(i));
+					break;
 				default:
 					break;
 				}
@@ -180,7 +185,10 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				e->obj->isVanish = true;
+				if(dynamic_cast<CEnemy*>(e->obj)->GetType()!=15)
+					e->obj->isVanish = true;
+				else
+					dynamic_cast<CBoss *>(e->obj)->SetState(ENEMY_STATE_HURT);
 				if (!isBreak)
 				{
 					x += dx;

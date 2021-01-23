@@ -50,6 +50,7 @@ void Board::Render()
 		WhiteHP->DrawBoard((120) + i * 10, 52);
 	}
 	//enemy
+	DebugOut(L"[TEST] Health point %d\n", CBoss::GetInstance()->GetHealthBoss());
 	for (int i = 0; i < CBoss::GetInstance()->GetHealthBoss(); i++)
 	{
 		bossOrangeHP->DrawBoard((120) + i * 10, 52);

@@ -117,7 +117,7 @@ void CBoss::SetState(int state)
 			backUpVy = vy;
 			vx = 0;
 			vy = 0;
-			health--;
+			health=health-8;
 		}
 		break;
 	}
@@ -202,7 +202,7 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			FlyBack(targetPos);
 		}
 	}
-	DebugOut(L"[TEST] Health point %d\n", health);
+	//DebugOut(L"[TEST] Health point %d\n", GetHealthBoss());
 }
 
 void CBoss::Render()
@@ -249,4 +249,10 @@ void CBoss::FlyBack(D3DXVECTOR2 targetPos) {
 	}
 	x += dx;
 	y += dy;
+}
+
+
+void CBoss::ReloadAni()
+{
+	CBoss::GetInstance()->SetAnimationSet(CAnimationSets::GetInstance()->Get(65));
 }

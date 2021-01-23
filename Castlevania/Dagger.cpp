@@ -4,7 +4,7 @@
 #include "BrokenBrick.h"
 #include "Bat.h"
 #include "Fishman.h"
-
+#include "Boss.h"
 Dagger::Dagger()
 {
 	isVanish = true;
@@ -88,6 +88,9 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					break;
 				case ENEMY_TYPE_FISHMAN:
 					e = dynamic_cast<CFishman*>(coObjects->at(i));
+					break;
+				case ENEMY_TYPE_BOSS:
+					e = dynamic_cast<CBoss*>(coObjects->at(i));
 				default:
 					break;
 				}
@@ -159,7 +162,12 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				case 10:
 					enemy = dynamic_cast<CPanther*>(e->obj);
 					break;
-
+				case 20:
+					enemy = dynamic_cast<CBat*>(e->obj);
+					break;
+				case 15:
+					enemy = dynamic_cast<CBoss*>(e->obj);
+					break;
 				default:
 					break;
 				}

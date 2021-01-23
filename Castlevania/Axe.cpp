@@ -5,6 +5,7 @@
 #include "BrokenBrick.h"
 #include "Bat.h"
 #include "Fishman.h"
+#include "Boss.h"
 
 Axe::Axe()
 {
@@ -100,6 +101,10 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						break;
 					case ENEMY_TYPE_FISHMAN:
 						e = dynamic_cast<CFishman*>(coObjects->at(i));
+						break;
+					case 15:
+						e = dynamic_cast<CBoss*>(coObjects->at(i));
+						break;
 					default:
 						break;
 					}
@@ -107,13 +112,6 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 						e->GetBoundingBox(l2, t2, r2, b2);
 						if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
 							e->SetState(ENEMY_STATE_DIE);
-					}
-					else if (dynamic_cast<CBrokenBrick*>(coObjects->at(i)))
-					{
-						CBrokenBrick* e = dynamic_cast<CBrokenBrick*>(coObjects->at(i));
-						e->GetBoundingBox(l2, t2, r2, b2);
-						if (!(r1 < l2 || l1 > r2 || t1 > b2 || b1 < t2))
-							e->SetState(STATE_BRICK_BREAK);
 					}
 				}
 				else if (dynamic_cast<CCandle*>(coObjects->at(i)))
@@ -148,7 +146,10 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CEnemy*>(e->obj))
 			{
-				e->obj->isVanish = true;
+				if (dynamic_cast<CEnemy*>(e->obj)->GetType() != 15)
+					e->obj->isVanish = true;
+				else
+					dynamic_cast<CBoss *>(e->obj)->SetState(ENEMY_STATE_HURT);
 				SetIsThrown(false);
 			}
 			if (dynamic_cast<CCandle*>(e->obj))

@@ -289,7 +289,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	case OBJECT_TYPE_BOSS:
-		obj = new CBoss();
+		obj = CBoss::GetInstance();
+		CBoss::GetInstance()->ReloadAni();
 		break;
 
 	case OBJECT_TYPE_BRICK: {
@@ -898,7 +899,7 @@ void CPlayScene::Update(DWORD dt)
 			}
 		}
 
-		CRepeatableEffects::GetInstance()->Update(dt, &coObjects);
+		CRepeatableEffects::GetInstance()->Update(dt, &objects);
 		if (Camera::GetInstance()->GetCamX() >= LIMIT_LEFT_CAM_22 && Camera::GetInstance()->GetCamX() < LIMIT_LEFT_CAM_23)
 		{
 			Area::GetInstance()->SetAreaID(22);
