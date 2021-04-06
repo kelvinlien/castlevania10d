@@ -15,10 +15,13 @@
 #define ENEMY_POINT_WORTH	10
 #define HOLDER_POINT_WORTH	5
 #define ITEM_POINT_WORTH	5
+#define ONE_THOUSAND_POINT	1000
+#define FOUR_HUNDRED_POINT	400
+#define SEVEN_HUNDRED_POINT	700
 class Board
 {
-	float x = 0.0f;
-	float y = 0.0f;
+	float x = 0;
+	float y = 0;
 
 	int time = 300;
 	int stage;
@@ -33,9 +36,13 @@ class Board
 	DWORD healtime;
 	DWORD flashingTime = 0;
 	LPANIMATION_SET ani_set;
-	CSprite * sprite;
-	LPANIMATION_SET HP_set;
+	CSprite * board;
+	CSprite * item;
+	CSprite * WhiteHP;
+	CSprite * simonRedHP;
+	CSprite * bossOrangeHP;
 	CSprite * doubleShot;
+
 	Camera* cam= Camera::GetInstance();;
 	Simon* simon = Simon::GetInstance();
 	static Board* _instance;
@@ -52,10 +59,14 @@ public:
 	void SetTime(int _time) { this->time = time; }
 	int GetTime() { return time; }
 
+	void SetBoardHealth(int BoardHealth) { this->board_health = BoardHealth; }
+	int GetBoardHealth() { return board_health; }
+
 	bool Check_isFinish (){ return isFinish;}
 	void SetFinish(bool _isFinish) { isFinish = _isFinish; }
 	void SetState_OnBoard(int _stage) { this->stage = _stage; }
 	void SetSpriteSubWeap();
 	void RewardingPoints(CGameObject* obj);
 	static Board* Getinstance();
+	void ReloadAni();
 };

@@ -1,5 +1,6 @@
 #include "BlinkEffect.h"
 #include "GameMap.h"
+#include "Define.h"
 BlinkEffect* BlinkEffect::__instance = NULL;
 
 void BlinkEffect::Draw(int alpha)
@@ -10,9 +11,9 @@ void BlinkEffect::Draw(int alpha)
 	CMaps* maps = CMaps::GetInstance();
 	int mapHeight = maps->Get(mapID)->getMapHeight();
 	if(mapID == 1)
-		game->Draw(cam->GetCamX(), cam->GetCamY(), CTextures::GetInstance()->Get(BLINK_EFFECT_SWITCH_SCENE_TEXTURE_ID), 0, 0, 800, 508, alpha);
+		game->Draw(cam->GetCamX(), cam->GetCamY(), CTextures::GetInstance()->Get(BLINK_EFFECT_SWITCH_SCENE_TEXTURE_ID), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, alpha);
 	else
-		game->Draw(cam->GetCamX(), cam->GetCamY() + SCREEN_HEIGHT_WITHOUT_FLOOR - mapHeight, CTextures::GetInstance()->Get(BLINK_EFFECT_TEXTURE_ID), 0, 0, 800, 508, alpha);
+		game->Draw(cam->GetCamX(), cam->GetCamY() + SCREEN_HEIGHT_WITHOUT_FLOOR - mapHeight, CTextures::GetInstance()->Get(BLINK_EFFECT_TEXTURE_ID), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, alpha);
 }
 
 BlinkEffect * BlinkEffect::GetInstance()

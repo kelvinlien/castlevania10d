@@ -9,6 +9,7 @@
 50	..\Resources\Texture\whip.png	255	0	255
 51	..\Resources\Texture\dagger.png	255	0	255
 52	..\Resources\Texture\holy_water.png	255	0	255
+53	..\Resources\Texture\axe.png	255	0	255
 70	..\Resources\Texture\burn.png	255	0	255
 71	..\Resources\Texture\effect400.png	255	0	255
 72	..\Resources\Texture\effect700.png	255	0	255
@@ -20,6 +21,7 @@
 81	..\Resources\Texture\heal.png	0	0	0
 90	..\Resources\Texture\door.png	255	0	255
 300	..\Resources\Texture\texture-map-3.png	255	255	255
+85	..\Resources\Texture\board.png	255	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -211,6 +213,18 @@
 50019	74	2	86	26	52
 50020	96	0	128	26	52
 
+#Axe
+#Left
+50021	210	0	240	28	53
+50022	180	0	210	28	53
+50023	150	0	180	28	53
+50024	120	0	150	28	53
+#Right
+51021	0	0	30	28	53
+51022	30	0	60	28	53
+51023	60	0	90	28	53
+51024	90	0	120	28	53
+
 #Effect
 #Burn
 70000	18	10	24	36	70
@@ -319,6 +333,9 @@
 
 #Orange
 80038	22	0	32	17	81
+80039	11	0	21	17	81
+#board
+100000	0	0	520	80	85
 
 #mapID	filematrix map
 [MAPMATRIX]
@@ -381,6 +398,16 @@
 #downing right
 122	11036	100	11037	100	11038	100
 
+#idle stair up left
+123	10012	100
+#idle stair up right
+124	11012	100
+#idle stair down left
+125	10017	100
+#idle stair down right
+126	11017	100
+
+
 # ==== FLOOR =========
 201	20001	100
 
@@ -439,6 +466,12 @@
 515	51017	100
 # using
 506	50018	100	50019	100	50020	100
+
+#Axe
+#Left
+507	50021	100	50022	100	50023	100	50024	100
+#Right
+517	51021	100	51022	100	51023	100	51024	100
 
 # ==== EFFECT =========
 #Burn
@@ -573,16 +606,19 @@
 #-
 836	80036	100
 
+#board
+999	100000	100
 #Health
 #Red
 837	80037	100
 #Orange
 838	80038	100
+839	80039	100
 
 # id	ani1	ani2	ani3
 [ANIMATION_SETS]
 # SIMON
-1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122
+1	101	102	103	104	105	106	107	108	109	110	111	112	113	114	115	116	117	118	119	120	121	122	123	124	125	126
 # FLOOR 
 2	201
 # HOLDER
@@ -590,15 +626,17 @@
 # ITEMS
 4	401	402	406	407	408	411	412	416	417	418
 #WEAPON
-5	501	502	503	511	512	513	504	514	505	515	506
+5	501	502	503	511	512	513	504	514	505	515	506	507	517
 #EFFECT
 7	700	701	702	703	704	705	706
 #BOARD
-8	800	801	802	803	804	805	806	807
+8	800	801	802	803	804	805	806	807	808	809	810	811	812	813	814	815	816	817	818	819	820	821	822	823	824	825	826	827	828	829	830	831	832	833	834	835	836	837	838	839
 # SMALL BRICK
 10	202
 # BROKEN BRICK
 11	201
+#board
+12	999
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -633,7 +671,7 @@
 8	928	280	11	0	-1
 
 # SIMON
-0	50	0	1
+0	128	120	1
 
 # WATER SURFACE
 12	0	410	0	1024	412
@@ -643,4 +681,4 @@
 #50	300	98	0	316	150	2
 
 [ENEMY]
-0	..\Resources\Text\Enemy.txt
+0	..\Resources\Text\Enemy3.txt

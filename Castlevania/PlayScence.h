@@ -13,23 +13,38 @@
 #include "Item.h"
 #include "GameMap.h"
 #include "Panther.h"
-#include"Ghost.h"
+#include "Background.h"
+#include "Title.h"
+#include "CastleAndBat.h"
 #include "RepeatableEffects.h"
 #include  "Bat.h"
 #include "TriggerStair.h"
 #include "Board.h"
+#include "Fishman.h"
+#include"Ghost.h"
+#include "Quadtree.h"
+#include "Area.h"
+#define PLAY_SCENE_1_ID	1
+#define PLAY_SCENE_2_ID	2
+#define PLAY_SCENE_3_ID	3
+#define INTRO_SCENE_ID_1	4
+#define INTRO_SCENE_ID_2	5
+#define OUTRO_SCENE_ID	6
+#define TRIGGER_STAIR_1_PLAY_SCENE_3_ID	19
+#define TRIGGER_STAIR_2_PLAY_SCENE_3_ID	20
+
 #include"Ghost.h"
 
-#include "Quadtree.h"
-#include "SmallBrick.h"
 #include "BrokenBrick.h"
-
 class CPlayScene: public CScene
 {
 protected: 
 	CRepeatableEffects *effects;	//list contain effects
 	Simon *player;					// A play scene has to have player, right?
-
+	CGhost *ghost;					// Beta ghost for testing purpose
+	CPanther *panther;
+	CBat* bat;
+	CFishman* fishman;
 	Quadtree *qtree;
 	Board* board;
 	Item item; //temp item to save when item created
@@ -55,7 +70,8 @@ public:
 	virtual void Unload();
 	virtual void LoadTriggerStair();
 
-	Simon * GetPlayer() { return player; }
+	Simon * GetPlayer() { return player; } 
+	vector<LPGAMEOBJECT> GetObjects() { return objects; }
 	//friend class CPlayScenceKeyHandler;
 };
 

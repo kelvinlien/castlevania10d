@@ -3,10 +3,13 @@
 #include"Simon.h"
 #include"StopWatch.h"
 #include "HolyWater.h"
-
+#include "Axe.h"
+#include "Boss.h"
+#include "Game.h"
 #define DAGGER_SPRITE		40016
 #define STOPWATCH_SPRITE	40012
 #define	HOLYWATER_SPRITE	40019
+#define	AXE_SPRITE			51021
 Board* Board::_instance = NULL;
 
 Board* Board::Getinstance()
@@ -18,8 +21,11 @@ Board* Board::Getinstance()
 
 Board::Board()
 {
+	board = CSprites::GetInstance()->Get(100000);
 	ani_set = CAnimationSets::GetInstance()->Get(BOARD_ID);
-	HP_set = CAnimationSets::GetInstance()->Get(8);
+	WhiteHP = CSprites::GetInstance()->Get(80039);
+	bossOrangeHP = CSprites::GetInstance()->Get(80038);
+	simonRedHP= CSprites::GetInstance()->Get(80037);
 	font = new CFont();
 	doubleShot = CSprites::GetInstance()->Get(40024);
 }
@@ -30,35 +36,47 @@ Board::~Board()
 
 void Board::Render()
 {
-	ani_set->at(0)->Render(x + 140, y + 20);
-	font->Render(std::to_string(score), x + 245, 35, 8);
-	font->Render(std::to_string(time), x + 440, 35, 4);
-	font->Render(std::to_string(stage), x + 620, 35, 2);
-	font->Render(std::to_string(simon->GetHearts()), x + 540, 55, 2);
-	font->Render(std::to_string(simon->GetLife()), x + 540, 75, 2);
+	//ani_set->at(0)->Render(x, y);
+	board->DrawBoard(0, 0);
+	font->Render(std::to_string(score), 107, 15, 8);
+	font->Render(std::to_string(time), 304, 15, 4);
+	font->Render(std::to_string(stage), 480, 15, 2);
+	font->Render(std::to_string(simon->GetHearts()), 400, 35, 2);
+	font->Render(std::to_string(simon->GetLife()), 400, 55, 2);
 	//Khung HP 
 	for (int i = 0; i < 16; i++)
 	{
-		HP_set->at(39)->Render((x + 260) + i * 10, 52);
-		HP_set->at(39)->Render((x + 260) + i * 10, 72);
+		WhiteHP->DrawBoard((120) + i * 10, 32);
+		WhiteHP->DrawBoard((120) + i * 10, 52);
 	}
 	//enemy
-	for (int i = 0; i < 16; i++)
+	DebugOut(L"[TEST] Health point %d\n", CBoss::GetInstance()->GetHealthBoss());
+	for (int i = 0; i < CBoss::GetInstance()->GetHealthBoss(); i++)
 	{
-		HP_set->at(38)->Render((x + 260) + i * 10, 72);
+		bossOrangeHP->DrawBoard((120) + i * 10, 52);
 	}
 	//simon
-	DebugOut(L" BOARD HEALTH RENDER----- : %d\n", board_health);
 	for (int i = 0; i < board_health; i++)
 	{
-		HP_set->at(37)->Render((x + 260) + i * 10, 52);
+		simonRedHP->DrawBoard((120) + i * 10, 32);
 	}
 	if(time_flag)
 		healtime = GetTickCount();
-	if (sprite != NULL)
-		sprite->Draw(x+452.0f, y +52.7f,255);
+	if (item != NULL)
+		item->DrawBoard(312.0f, 32.7f,255);
 	if(Simon::GetInstance()->IsDoubleShot())
-	doubleShot->Draw(x + 452.0f, y + 55.0f, GenerateAlpha());
+	doubleShot->DrawBoard(312.0f, 35.0f, GenerateAlpha());
+}
+
+void Board::ReloadAni()
+{
+	board = CSprites::GetInstance()->Get(100000);
+	WhiteHP = CSprites::GetInstance()->Get(80039);
+	bossOrangeHP = CSprites::GetInstance()->Get(80038);
+	simonRedHP = CSprites::GetInstance()->Get(80037);
+	font = new CFont();
+	doubleShot = CSprites::GetInstance()->Get(40024);
+	SetSpriteSubWeap();
 }
 
 void Board::Update()
@@ -114,9 +132,11 @@ void Board::Update()
 			score += 100;
 		}
 		if (simon->GetHearts() == 0)
+		{
 			isFinish = false;
+			CGame::GetInstance()->SwitchScene(6);
+		}
 	}
-		DebugOut(L" BOARD HEALTH UPDATE : %d\n",board_health);
 	SetSpriteSubWeap();
 	if (Simon::GetInstance()->IsDoubleShot() && flashingTime == 0)
 		flashingTime = GetTickCount();
@@ -132,19 +152,26 @@ int Board::GenerateAlpha() {
 void Board::SetSpriteSubWeap()
 {
 	if (dynamic_cast<Dagger *>(Simon::GetInstance()->GetSubWeapon()))
-		 sprite = CSprites::GetInstance()->Get(DAGGER_SPRITE);
+		 item = CSprites::GetInstance()->Get(DAGGER_SPRITE);
 	else if( dynamic_cast<StopWatch *>(Simon::GetInstance()->GetSubWeapon()))
-		sprite = CSprites::GetInstance()->Get(STOPWATCH_SPRITE);
+		item = CSprites::GetInstance()->Get(STOPWATCH_SPRITE);
 	else if (dynamic_cast<HolyWater *>(Simon::GetInstance()->GetSubWeapon()))
-		sprite = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
-	else sprite = NULL;
+		item = CSprites::GetInstance()->Get(HOLYWATER_SPRITE);
+	else if (dynamic_cast<Axe *>(Simon::GetInstance()->GetSubWeapon()))
+		item = CSprites::GetInstance()->Get(AXE_SPRITE);
+	else item = NULL;
+
 }
 
 void Board::RewardingPoints(CGameObject * obj)
 {
 	if (dynamic_cast<CEnemy*>(obj))
 	{
-		SetScore(GetScore() + ENEMY_POINT_WORTH);
+		if (dynamic_cast<CEnemy*>(obj)->IsDefeated())
+		{
+			SetScore(GetScore() + ENEMY_POINT_WORTH);
+			dynamic_cast<CEnemy*>(obj)->SetIsDefeated(false);
+		}
 	}
 	else if (dynamic_cast<CHolder*>(obj))
 	{
@@ -155,7 +182,22 @@ void Board::RewardingPoints(CGameObject * obj)
 		Item* item = dynamic_cast<Item*>(obj);
 		if (item->isEaten)
 		{
-			SetScore(GetScore() + ITEM_POINT_WORTH);
+			if (item->effect == ONE_THOUSAND_EFFECT)
+			{
+				SetScore(GetScore() + ONE_THOUSAND_POINT);
+			}
+			else if (item->effect == FOUR_HUNDRED_EFFECT)
+			{
+				SetScore(GetScore() + FOUR_HUNDRED_POINT);
+			}
+			else if (item->effect == SEVEN_HUNDRED_EFFECT)
+			{
+				SetScore(GetScore() + SEVEN_HUNDRED_POINT);
+			}
+			else
+			{
+				SetScore(GetScore() + ITEM_POINT_WORTH);
+			}
 		}
 	}
 }

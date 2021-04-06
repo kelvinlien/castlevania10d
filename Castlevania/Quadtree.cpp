@@ -1,4 +1,5 @@
 #include "Quadtree.h"
+#include "Define.h"
 
 void Quadtree::Split()
 {
@@ -217,8 +218,8 @@ void Quadtree::RetrieveFromCamera(vector<Entity*> &return_entities_list)
 	float l, t, r, b;
 	l = cam->GetCamX();
 	t = cam->GetCamY();
-	r = l + 800;
-	b = t + 508;
+	r = l + SCREEN_WIDTH;
+	b = t + SCREEN_HEIGHT;
 	RECT pRect;
 	pRect.left = l;
 	pRect.top = t;

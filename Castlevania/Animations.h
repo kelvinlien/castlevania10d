@@ -38,6 +38,7 @@ public:
 	LPANIMATION_FRAME Get(int id);
 	int GetCurrentFrame() { return currentFrame; }
 	void SetLock(bool a) { isLock = a; }
+	bool GetLock() { return isLock; }
 };
 
 typedef CAnimation *LPANIMATION;
@@ -47,7 +48,6 @@ class CAnimations
 	static CAnimations * __instance;
 
 	unordered_map<int, LPANIMATION> animations;
-
 public:
 	void Add(int id, LPANIMATION ani);
 	LPANIMATION Get(int id);

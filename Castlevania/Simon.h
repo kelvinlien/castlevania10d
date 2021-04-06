@@ -3,6 +3,7 @@
 #include "WeaponManager.h"	
 #include "Whip.h"	
 #include "Enemy.h"	
+#include "Bullet.h"
 #include <map> 	
 #include "GameMap.h"	
 #include "Utils.h"	
@@ -10,17 +11,21 @@
 #include "Camera.h"	
 #include <cmath> 
 #include "TriggerStair.h"
+#define SIMON_EFFECT_DROWN_POINT				400	
 #define SIMON_AUTO_GO_AHEAD_POSITION_X	1310	
 #define SIMON_AUTO_GO_BACK_POSITION_X	1350	
-#define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3180	
+#define SIMON_AUTO_GO_LEFT_INTRO_X		232
+#define SIMON_STOP_OUTRO_X	350
+#define SIMON_AUTO_GO_THROUGH_FIRST_DOOR	3175	
 #define SIMON_AUTO_GO_THROUGH_SECOND_DOOR	4204
+
 #define SIMON_WALKING_SPEED		0.15f 	
 // ON STAIR SPEED
 #define SIMON_ON_STAIR_SPEED_X		0.035f
 #define SIMON_ON_STAIR_SPEED_Y		0.035f
 #define SIMON_JUMP_SPEED_Y		0.5f	
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f	
-#define SIMON_GRAVITY			0.0015f	
+#define SIMON_GRAVITY			0.002f	
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f	
 #define SIMON_STATE_AUTO	0	
 #define SIMON_STATE_IDLE		 100	
@@ -44,13 +49,12 @@
 #define SIMON_BBOX_HEIGHT 63
 #define SIMON_SIT_BBOX_HEIGHT	46
 #define SIMON_TIME_JUMPPING_SIT 10
-#define SIMON_TIME_LEVEL_UP_WHIP 700
-#define SIMON_HURT_TIME	 500
-#define SIMON_SIT_AFTER_FALL_TIME	 250
-#define SIMON_UNTOUCHABLE_TIME	 2000
-#define SIMON_MAX_HEALTH	16						   
-#define SIMON_MAX_LIFE	5
-
+#define SIMON_TIME_LEVEL_UP_WHIP 700	
+#define SIMON_HURT_TIME	 500	
+#define SIMON_SIT_AFTER_FALL_TIME	 250	
+#define SIMON_UNTOUCHABLE_TIME	 2000	
+#define SIMON_MAX_HEALTH	16
+#define SIMON_MAX_LIFE 5
 enum animation
 {
 	IDLE_LEFT,
@@ -81,7 +85,8 @@ enum animation
 	IDLE_STAIR_UP_LEFT,
 	IDLE_STAIR_UP_RIGHT,
 	IDLE_STAIR_DOWN_LEFT,
-	IDLE_STAIR_DOWN_RIGHT
+	IDLE_STAIR_DOWN_RIGHT,
+	IDLE_INTRO
 };
 class TriggerStairs;
 class Simon : public CGameObject
@@ -89,6 +94,7 @@ class Simon : public CGameObject
 	int currentFrame;
 
 	CWeapon *subWeapons;
+	CWeapon *subWeapons2;
 	static Simon * __instance;
 	animation ani;
 	Area *area;
@@ -99,11 +105,13 @@ class Simon : public CGameObject
 	int health = SIMON_MAX_HEALTH;
 	int life = SIMON_MAX_LIFE;
 
+
 	//time variables
 	DWORD startSit;
 	DWORD startHurt;
 	DWORD startUntouchable;
 	DWORD attackTime;
+	DWORD introSceneTime;
 	DWORD buffTime;
 	DWORD dieTime;
 	//to handle on stair
@@ -114,8 +122,7 @@ class Simon : public CGameObject
 	float backupOnStairX;
 	float backupOnStairY;
 
-
-	//Flag of Simon's state	
+	//Flag of Simon's state
 	bool isJump;
 	bool isAttack = false;
 	bool isSit = false;
@@ -131,6 +138,7 @@ class Simon : public CGameObject
 	bool isAutoWalking = false;
 	//flag is true when simon comes and render portal, back part of the castle  	
 	bool flag;
+	bool isIdleIntro = false;
 
 	//Flag of trigger stair
 	bool readyToUpStair;
@@ -138,8 +146,9 @@ class Simon : public CGameObject
 	bool canGoUpStair;
 	bool canGoDownStair;
 	bool isOnStair;
-	bool isAutoWalkOnStair = false;
-
+	bool isAutoWalkOnStair;
+	
+	int currentstair;
 	int directionY;
 	int stairNx, stairNy;
 	DWORD time;
@@ -177,6 +186,7 @@ public:
 
 	//Set animation
 	void SetAnimation();
+	void ReLoadAllAniSet();
 
 	//Getter & setter
 	bool IsJump() { return isJump; }
@@ -188,10 +198,7 @@ public:
 	bool IsUntouchable() { return isUntouchable; }
 	bool IsFlagOn() { return flag; }
 	bool IsAutoWalking() { return isAutoWalking; }
-	void SetAutoWalking(bool a) { isAutoWalking = a; }
-	void SetisBuff() { isDoubleShot = true; buffTime = GetTickCount64();}
-	void SetHealth(int _health) { health = _health; }
-	int GetHealth() { return health; }
+	void SetAutoWalking(bool isAutoWalking) { this->isAutoWalking = isAutoWalking; }
 	bool IsReadyToUpStair() { return readyToUpStair; }
 	bool IsReadyToDownStair() { return readyToDownStair; }
 	bool IsCanGoUpStair() { return canGoUpStair; }
@@ -205,20 +212,24 @@ public:
 	float GetBelowStairOutPoint() { return belowStairOutPoint; }
 	bool IsFreeze() { return isFreeze; }
 	bool IsDoubleShot() { return isDoubleShot; }
+	bool IsFall() { return isFall; }
 
+
+	void SetOnStair(bool a) { isOnStair = a; }
+	void SetAutoWalkOnStair(bool a) { isAutoWalkOnStair = a; }
 	void SetisFreeze(bool _status) { isFreeze = _status; }
+	void SetHealth(int _hearts) { health = _hearts; }
+	int GetHealth() { return health; }
 	void SetHearts(int _hearts) { hearts = _hearts; }
 	int GetHearts() { return hearts; }
 	void SetLife(int _life) { life = _life; }
 	int GetLife() { return life; }
-
-
-	void SetSubWeapons(CWeapon* wp) { subWeapons = wp; }
+	void SetIsIdleIntro(bool a) { isIdleIntro = a; }
+	void SetSubWeapons(CWeapon* wp) { subWeapons2 = wp; if (subWeapons == NULL) subWeapons = subWeapons2; }
 	CWeapon * GetSubWeapon() { return subWeapons; }
 	void SetIsDoubleShot(bool doubleshot) { isDoubleShot = doubleshot; buffTime = GetTickCount64();}
-
 	void ResetSimon();
-
+	
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	static Simon * GetInstance();
 };
